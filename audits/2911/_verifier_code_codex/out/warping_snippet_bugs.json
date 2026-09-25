@@ -1,0 +1,18 @@
+{
+  "func_line_start": 78,
+  "func_line_end": 106,
+  "params": [
+    "box_warp",
+    "cir2squ_flag",
+    "coordinates",
+    "mode",
+    "padding_mode",
+    "sph2cir_flag",
+    "sphere_features"
+  ],
+  "undefined_names_used": [
+    "N",
+    "coordinates_sph"
+  ],
+  "VERDICT": "BUG: undefined names referenced at runtime -> NameError: ['N', 'coordinates_sph']"
+}

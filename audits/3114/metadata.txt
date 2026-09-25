@@ -1,0 +1,5 @@
+paper_number: 3114
+title: Accelerated Evolving Set Processes for Local PageRank Computation
+authors: Binbin Huang, Luo Luo, Yanghua Xiao, Deqing Yang, Baojian Zhou
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/946ecab300b0695fe24b53a92e632935-Abstract-Conference.html
+category: empirical

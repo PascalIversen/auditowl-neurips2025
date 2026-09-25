@@ -1,0 +1,20 @@
+== Repo files (excluding .git / checkpoints) ==
+  CLEXNET_tutorial.ipynb
+  README.md
+  tut_img/fig1.png
+  tut_img/fig2.png
+  tut_img/fig3.png
+
+Dependency-spec files present: NONE
+
+== Keyword presence in notebook (the ONLY code file) ==
+  [ABSENT] UNOS / semi-synthetic real data: {'UNOS': 0, 'PTR': 0, 'liver': 0, 'AGE_DON': 0, 'COLD_ISCH': 0, 'ETHCAT': 0}
+  [ABSENT] one-hot encoding (paper says 76 dims after OHE): {'OHE': 0, 'OneHot': 0, 'one-hot': 0, 'get_dummies': 0}
+  [ABSENT] boundary-intersection reason sampler (Table 2 row 3): {'boundary': 0, 'intersection': 0}
+  [ABSENT] confounding sweep psi (Fig 4 / Exp 5.2): {'psi': 0, '\\psi': 0}
+  [FOUND] F-scaling sweep sigma (Fig 5/6 / Exp A.1): {'sigma': 2, 'F(sigma)': 0, 'scaling factor': 0}
+
+== Reason-generation mechanisms implemented in make_dataset ==
+  ipw_reasons branch present: True
+  uniform (else w=1/N) branch present: True
+  boundary-intersection branch present: False

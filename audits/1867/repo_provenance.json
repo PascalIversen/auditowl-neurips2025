@@ -1,0 +1,18 @@
+{
+  "paper_id": "1867_A_Differential_and_Pointwise_Control_Approach_to_Reinforceme",
+  "title": "A Differential and Pointwise Control Approach to Reinforcement Learning",
+  "repos": [
+    {
+      "name": "mpnguyen2__dfPO",
+      "role": "core",
+      "evidence": "git remote is github.com/mpnguyen2/dfPO; owner 'mpnguyen2' = first author Minh P. Nguyen (UT Austin), matching paper authors Minh H. Nguyen / Chandrajit Bajaj. README is titled 'Differential Reinforcement Learning' and describes 'Differential Policy Optimization (dfPO)', Pontryagin's maximum principle, Hamiltonian phase space, operator G = Id + Delta_t*S*grad g, and regret bound O(K^5/6) -- identical to the paper's headline method and contributions. The three README experiments (Surface modeling, Grid-based modeling, Molecular dynamics) match the paper's tasks exactly, and envs/{surface,grid,molecule}.py implement them. policy.py implements the trajectory operator update 'action + step_size*(rate*action - dH)' with dH the Hamiltonian gradient via torch.autograd; query_system.py implements the zero-/first-order pointwise differential rollout; train.py is the dfPO training loop. Paper sec 4.2 cites this exact URL as the official codebase."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "core_present_note": "Single cloned repo is the author's own dfPO implementation.",
+  "confidence": "high",
+  "rationale": "The one cloned repo (mpnguyen2/dfPO) is the paper's own core-method implementation by every decisive signal: repo owner = first author, README method name (dfPO / Differential RL) and theory (Pontryagin/Hamiltonian/regret O(K^5/6)) match the paper verbatim, the three experimental environments match, and the core operator/rollout/training code is present and implements the paper's algorithm (not a baseline wrapper). The paper itself (sec 4.2) names this exact URL as the official codebase. No baseline/dependency/different-paper/stub repos were cloned; the SB3 baselines appear only as a benchmark harness inside the author repo, not as separately cloned code.",
+  "audit_impact": "None negative. The audit explicitly corrected the upstream 'no code released' framing, confirmed the repo resolves and is the author's, and wrote NO spurious missing-code findings. Its substantive findings (high: ttest-on-synthetic-data; medium: paper-vs-code t-test mismatch and near-zero baseline std; low: per-seed values not persisted, Dropbox-hosted weights, unpinned deps, untagged moving branch) are all leveled at genuine statistical-integrity / reproducibility issues INSIDE authentic author core code. They are not misattributed to a baseline or dependency, so the verdict and findings stand.",
+  "recommended_action": "No change to source-present status or findings. Paper is correctly counted source-present with the author's own dfPO repo as core. Optionally update code_links.txt: the '[no-author-signal]' tag on https://github.com/mpnguyen2/dfPO is a fetch-heuristic miss -- owner 'mpnguyen2' is in fact the first author and the repo is author core; retag as [author-cue]/core."
+}

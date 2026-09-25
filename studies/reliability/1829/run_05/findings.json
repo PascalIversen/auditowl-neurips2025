@@ -1,0 +1,146 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T06:05:52.959977+00:00",
+  "findings": [
+    {
+      "id": "/no-significance-test-code",
+      "category": "missing",
+      "topic": "statistical integrity / result traceability",
+      "title": "No code computes the std/t-test/CI tables (Tables 13, 14, 15, 26)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "experiments/exp_forecast.py",
+      "line_start": 786,
+      "line_end": 793,
+      "quote": "mse_list = []\nmae_list = []\n\nif self.imp_mode:\n    mae, mse, rmse, mape, mspe = metric(preds_array[mask_mat], trues_array[mask_mat])\n    f = open(\"result_imputation.txt\", 'a')\nelse:\n    mae, mse, rmse, mape, mspe, r2, pear, mase = metric(preds_array, trues_array)\n",
+      "claim": "The evaluation path computes a single per-run MSE/MAE/etc. via metric(); no script in the repo aggregates multiple runs into standard deviations, performs a Student's t-test, or computes confidence intervals.",
+      "concern": "Tables 13 (std over 7 seeds), 14 (99% CIs), 15 (Student's t-test p-values such as 5.12E-11), and 26 (OLinear-C std) are statistical claims with no code that produces them, so these robustness/significance results are not reproducible from the repo.",
+      "resolution": "Provide the script that runs the 7 seeds, collects per-seed metrics, and computes the standard deviations, 99% CIs, and Student's t-test p-values reported in Tables 13/14/15/26.",
+      "cross_refs": [
+        "no-seed-sweep-code"
+      ],
+      "check_script": "_audit_code/check_stats_and_seed_code.py",
+      "paper_ref": "Tables 13, 14, 15, 26; Appendix F/I.7",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-significance-test-code",
+      "audit": "",
+      "audit_md_line": 60
+    },
+    {
+      "id": "/no-seed-sweep-code",
+      "category": "missing",
+      "topic": "reproducibility / seeding",
+      "title": "'Seven random seeds' claimed, but code uses one hardcoded seed with no sweep",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "run.py",
+      "line_start": 467,
+      "line_end": 471,
+      "quote": "if args.fix_seed:\n    fix_seed = 2023  # 2023  # if args.task_name == 'forecasting' else 2021\n    random.seed(fix_seed)\n    torch.manual_seed(fix_seed)\n    np.random.seed(fix_seed)\n",
+      "claim": "When fix_seed is set (all released scripts use --fix_seed 1), the seed is the constant 2023; there is no mechanism that iterates over seven distinct seeds, and --itr defaults to 1 (the only itr-loop varies a loss hyperparameter, not the seed).",
+      "concern": "The paper repeatedly reports robustness 'over seven random seeds' (Tables 13/14/15/26, §F), but the provided code only ever runs a single fixed seed, so the seven-seed runs that underpin those tables cannot be reproduced.",
+      "resolution": "Add a seed argument or a seed-list loop (and document the seven seed values used), so reviewers can reproduce the per-seed metrics behind Tables 13/14/15/26.",
+      "cross_refs": [
+        "no-significance-test-code"
+      ],
+      "check_script": "_audit_code/check_stats_and_seed_code.py",
+      "paper_ref": "Tables 13, 14, 15, 26; Appendix F",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-seed-sweep-code",
+      "audit": "",
+      "audit_md_line": 92
+    },
+    {
+      "id": "/missing-headline-data-and-qmats",
+      "category": "missing",
+      "topic": "expected code completeness / data availability",
+      "title": "Headline long-term datasets and their precomputed Q-matrices are absent",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "model/OLinear.py",
+      "line_start": 24,
+      "line_end": 32,
+      "quote": "q_mat_dir = configs.Q_MAT_file if self.Q_chan_indep else configs.q_mat_file\nif not os.path.isfile(q_mat_dir):\n    q_mat_dir = os.path.join(configs.root_path, q_mat_dir)\nassert os.path.isfile(q_mat_dir)\ndevice = torch.device(\"cuda:0\" if torch.cuda.is_available() else \"cpu\")\nself.Q_mat = torch.from_numpy(np.load(q_mat_dir)).to(torch.float32).to(device)\n\nassert (self.Q_mat.ndim == 3 if self.Q_chan_indep else self.Q_mat.ndim == 2)\nassert (self.Q_mat.shape[0] == self.enc_in if self.Q_chan_indep else self.Q_mat.shape[0] == self.seq_len)\n",
+      "claim": "The model requires a precomputed Q-matrix .npy on disk (assert os.path.isfile). For 14 of 23 OLinear scripts — including the core benchmarks ECL/electricity, ETT(h1/h2/m1/m2), Traffic, Solar, PEMS03/04/07/08, Exchange, METR-LA — neither the data CSV/NPZ nor the referenced Q-matrix file (e.g. electricity_96_ratio0.7.npy) is present in the repo.",
+      "concern": "The headline tables (Table 2/17 etc.) cannot be reproduced out-of-the-box: the scripts crash at model construction because the Q-matrix files are missing, and the underlying datasets are not shipped.",
+      "resolution": "Ship the precomputed Q-matrices for the main benchmarks (or a one-command script that regenerates them from the downloaded data), since the data CSVs are linked in the README but the Q-matrices are not provided for these datasets.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_missing_data_qmat.py",
+      "paper_ref": "Table 2 / Table 17 (long-term forecasting)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-headline-data-and-qmats",
+      "audit": "",
+      "audit_md_line": 121
+    },
+    {
+      "id": "/unpinned-dependencies",
+      "category": "missing",
+      "topic": "dependencies / environment",
+      "title": "requirements.txt pins no versions and no Python version is given",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "requirements.txt",
+      "line_start": 1,
+      "line_end": 13,
+      "quote": "pandas\nscikit-learn\nnumpy\nmatplotlib\ntorch\nfvcore\neinops\nthop\ntimm\nreformer_pytorch\nopenpyxl\nseaborn\npywt\n",
+      "claim": "All 13 dependencies are listed as bare package names with no version constraints, and no Python/CUDA/torch version is specified anywhere.",
+      "concern": "The numerical results depend on the torch/numpy versions (e.g. eigendecomposition sign/order conventions in eigh, default dtypes); an unpinned environment cannot be reliably rebuilt and may not reproduce the reported metrics.",
+      "resolution": "Pin exact versions (torch, numpy, scikit-learn, pandas, etc.) and state the Python version, e.g. via a frozen environment file.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_requirements_pinned.py",
+      "paper_ref": "Appendix D (Implementation details)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "unpinned-dependencies",
+      "audit": "",
+      "audit_md_line": 154
+    },
+    {
+      "id": "/test-set-selection-machinery",
+      "category": "methodology",
+      "topic": "hyperparameter tuning / test-set leakage",
+      "title": "Driver/test code can select best result by test-set MSE+MAE (dormant in released scripts)",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "question",
+      "file": "run.py",
+      "line_start": 568,
+      "line_end": 580,
+      "quote": "for test_bs in sorted(test_batch_size_list):\n    print('>>>>>>>testing : {} (test_batch_size: {})<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.\n          format(setting, test_bs))\n    mse0, mae0 = exp.test(setting, test=args.test_mode, test_batch_size=test_bs)\n\n    if mse0 < mse:\n        mse, mae = mse0, mae0\n        best_batch_size = test_bs\nprint(f'\\tbest_test_batch_size: {best_batch_size}, best_mse: {mse:.5f}, best_mae: {mae:.5f}')\n\nif mse + mae <= best_mse + best_mae:\n    best_lamda1 = lamda1\n    best_mse, best_mae, best_ii = mse, mae, ii\n",
+      "claim": "The driver evaluates on the test set (exp.test, flag='test') and keeps the configuration with the lowest test mse+mae across test_batch_size values and across a lamda1 hyperparameter sweep (lines 530-580); exp_forecast.py:852-858 similarly picks the min-(mse+mae) 'stage' on the test set.",
+      "concern": "If activated, selecting the reported metric by minimising test-set mse+mae over batch sizes / lamda1 / stages is test-set tuning; the reported number would be the best over several test-set evaluations rather than a held-out estimate.",
+      "resolution": "Confirm that the released numbers used a single fixed lamda1 (1.0), a single test_batch_size, and the single-output OLinear/OLinear-C model (so this selection is a no-op); if any sweep was used for headline numbers, re-select configurations on validation, not test.",
+      "cross_refs": [],
+      "paper_ref": "Appendix D; Tables 2/3/17",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "test-set-selection-machinery",
+      "audit": "",
+      "audit_md_line": 212
+    }
+  ]
+}

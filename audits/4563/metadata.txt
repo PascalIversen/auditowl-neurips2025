@@ -1,0 +1,5 @@
+paper_number: 4563
+title: Automated Model Discovery via Multi-modal & Multi-step Pipeline
+authors: Lee Jung-Mok, Nam Hyeon-Woo, Moon Ye-Bin, Junhyun Nam, Tae-Hyun Oh
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/dd96a5717f18a7389bc3d4cbd96a3bef-Abstract-Conference.html
+category: empirical

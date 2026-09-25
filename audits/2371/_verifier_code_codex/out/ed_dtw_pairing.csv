@@ -1,0 +1,6 @@
+case,value,note
+ed_orig_vs_same_order,0.000000,0 because sample i paired with identical sample i
+ed_orig_vs_same_set_shuffled,13.671082,"same SET of curves, only row order changed -> nonzero, index pairing"
+ed_30orig_vs_100gen,14.002829,loop runs over ori_data.shape[0]=30
+ed_30orig_vs_first30gen,14.002829,identical to above -> gen[30:100] never used
+truncation_confirmed,True,True => 70/100 generated samples ignored

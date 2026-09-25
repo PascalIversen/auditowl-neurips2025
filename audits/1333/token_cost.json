@@ -1,0 +1,19 @@
+{
+  "folder": "1333_Latent_Harmony_Synergistic_Unified_UHD_Image_Restoration_via",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 9049,
+    "output": 16176,
+    "cache_write": 331718,
+    "cache_read": 4321078
+  },
+  "total_tokens": 4678021,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 14.05
+}

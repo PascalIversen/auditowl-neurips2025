@@ -1,0 +1,25 @@
+OK  FID (Table 3): 2 files ['metrics/calculate_fid.py', 'train_stage1_multi_cond.py']
+NONE CLIP-FID (Table 3): 0 files []
+OK  FVD (Tables 3,4): 5 files ['metrics/calculate_fvd.py', 'metrics/fvd/tensorflow/fvd.py', 'metrics/fvd/videogpt/fvd.py', 'metrics/fvd/styleganv/fvd.py', 'train_stage2_multi_cond.py']
+NONE IDS / identity sim (Table 3): 0 files []
+NONE PSNR (Table 4): 0 files []
+OK  SSIM (Table 4): 2 files ['metrics/calculate_ssim.py', 'train_stage1_multi_cond.py']
+NONE LPIPS (Table 4): 0 files []
+NONE Hand SSIM (Table 4): 0 files []
+NONE BLEU (Tables 1,2,7): 0 files []
+NONE ROUGE (Tables 1,2,7): 0 files []
+NONE COMET (Tables 1,2): 0 files []
+NONE Back-translation SLT model (App. C): 0 files []
+OK  Norm. DTW (Tables 10,11): 3 files ['eval_compress_video_from_origin.py', 'eval_compress_vq_video.py', 'train_multihead_t2vqpgpt.py']
+OK  Token accuracy (not in paper tables): 2 files ['eval_multihead_t2vqpgpt.py', 'train_multihead_t2vqpgpt.py']
+
+--- README file existence ---
+MISSING: train.sh
+MISSING: train_stage_1.py
+MISSING: train_stage_2.py
+EXISTS: train_compress_vq_multicond.py
+EXISTS: train_multihead_t2vqpgpt.py
+MISSING: scripts/RWTH-T/3_process_annotation.py
+
+--- hardcoded /deepo_data paths ---
+19 .py files contain hardcoded '/deepo_data' paths

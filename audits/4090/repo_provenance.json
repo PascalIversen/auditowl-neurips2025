@@ -1,0 +1,17 @@
+{
+  "paper_id": "4090_Unifying_Reconstruction_and_Density_Estimation_via_Invertibl",
+  "title": "Unifying Reconstruction and Density Estimation via Invertible Contraction Mapping in One-Class Classification",
+  "repos": [
+    {
+      "name": "wxl1122__URD",
+      "role": "core",
+      "evidence": "README states exactly: 'URD — Unifying Reconstruction and Density Estimation via Invertible Contraction Mapping in One-Class Classification (Accepted by NeurIPS 2025)'. The paper itself says 'Code is available at URD'. Repo owner 'wxl1122' matches first author Xiaolei Wang. Contains the paper's named method: contraction-mapping flow network (Unifying_INN/model/INN.py UniINN), forward reconstruction + backward density estimation entrypoint (main.py), flow_net/ invertible residual network, and tabular AD pipeline — all consistent with paper §3-4."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo wxl1122__URD is unambiguously the authors' own official release: the README title and venue match exactly, the paper cites it by name ('Code is available at URD'), and the modules implement the paper's core contributions (contraction mapping flow UniINN, RE+DE loss, AD scoring). The audit correctly treated it as the paper's code. All findings are substantive coverage/bug findings (missing image-domain code, incomplete dataset list, hardcoded data path, cuDNN typo, test-set model selection) written against the correct repo — no misclassification.",
+  "audit_impact": "None. The repo provenance is correct. All 6 findings were written against the genuine author implementation; none need to be reassigned or discarded. The two high-severity missing findings (image-domain code, datasets) remain valid and actionable.",
+  "recommended_action": "No action needed on repo provenance. Findings stand as written."
+}

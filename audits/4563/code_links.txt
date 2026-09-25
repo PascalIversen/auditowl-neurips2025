@@ -1,0 +1,5 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/kaist-ami/Automated-Model-Discovery	[author-org: KAIST AMI lab (Tae-Hyun Oh); README = official impl, exact 5-author roster, links arXiv 2509.25946 + OpenReview qGFvTIMS3W; located post-audit 2026-05-31]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/jamesrobertlloyd/gpss-research	[no-author-signal -- gpss-research benchmark time-series datasets / dependency]

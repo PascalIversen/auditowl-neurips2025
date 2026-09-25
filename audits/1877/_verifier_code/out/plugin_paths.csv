@@ -1,0 +1,9 @@
+script,flag,referenced_path,exists
+examples/train/grpo/globe/train_all_rewards.sh,external_plugins,examples/train/grpo/geo/plugin.py,False
+examples/train/grpo/globe/train_all_rewards.sh,custom_register_path,examples/train/grpo/geo/dataset.py,False
+examples/train/grpo/globe/train_one_reward.sh,external_plugins,examples/train/grpo/geo/plugin.py,False
+examples/train/grpo/globe/train_one_reward.sh,custom_register_path,examples/train/grpo/geo/dataset.py,False
+examples/train/grpo/globe/train_rm.sh,custom_register_path,examples/train/grpo/geo/dataset.py,False
+examples/train/grpo/globe/train_sft.sh,custom_register_path,examples/train/grpo/geo/dataset.py,False
+examples/train/grpo/globe/train_two_rewards.sh,external_plugins,examples/train/grpo/geo/plugin.py,False
+examples/train/grpo/globe/train_two_rewards.sh,custom_register_path,examples/train/grpo/geo/dataset.py,False

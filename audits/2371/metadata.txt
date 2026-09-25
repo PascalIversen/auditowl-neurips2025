@@ -1,0 +1,5 @@
+paper_number: 2371
+title: Forging Time Series with Language: A Large Language Model Approach to Synthetic Data Generation
+authors: Cécile Rousseau, Tobia Boschi, Giandomenico Cornacchia, Dhaval Salwala, Alessandra Pascale, Juan Moreno
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/70fb27f33beefef137e09bbd875c28ad-Abstract-Conference.html
+category: empirical

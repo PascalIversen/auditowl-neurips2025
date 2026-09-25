@@ -1,0 +1,52 @@
+{
+  "discrepancy_id": "4b9f947a",
+  "paper_url": "https://arxiv.org/abs/2403.20127",
+  "paper_url_versioned": "https://arxiv.org/pdf/2403.20127v1.pdf",
+  "code_url": "https://github.com/kaito25atugich/Detector",
+  "code_url_versioned": "https://github.com/kaito25atugich/Detector/tree/e475ec560905632be91e6442b3813f4e3832e7a3",
+  "discrepancy_date": "2025-05-21T04:04:53.000Z",
+  "origin_type": "GitHub Issue",
+  "origin_url": "https://github.com/kaito25atugich/Detector/issues/1",
+  "origin_discrepancy_text": "How did you use Phi1.5 for Binoculars?\nHi, in your paper, you claim:\n\n> Due to GPU constraints, Binoculars employs the pre-trained and instruct-tuned Phi1.5 [27] instead of Falcon. \n\nHowever, I could not find the code for said implementation. The only invocations of `Binoculars` is like this:\n\nhttps://github.com/kaito25atugich/Detector/blob/e475ec560905632be91e6442b3813f4e3832e7a3/detector.py#L440-L446\n\n\u2026which does not use Phi.\n\nCould you please point out what model combination you used for Phi? This is confusing because Phi1.5 does not have an official finetuned version. Thanks!\n",
+  "discrepancy_description_pooled_gpt_5": null,
+  "discrepancy_description_pooled_gemini_2_5_pro": null,
+  "discrepancy_description_pooled_gpt_oss_20b": null,
+  "is_valid_discrepancy_gemini": true,
+  "is_valid_discrepancy_gpt": true,
+  "is_valid_discrepancy_reason_gemini": "The paper explicitly states that Phi1.5 is used for the Binoculars detector due to GPU constraints, but the implementation in the code assigns the Binoculars models to Falcon, Yi, and Open-LLaMA, without any use of Phi1.5.",
+  "is_valid_discrepancy_reason_gpt": "The paper states that Binoculars uses a pre-trained and instruct-tuned Phi-1.5 pair due to GPU constraints, but the released code instantiates Binoculars with OpenLLaMA (and previously Yi-6B) model pairs; there is no code path that uses Phi-1.5 for Binoculars.",
+  "discrepancy_description_gemini": "The paper states in the experimental configuration that the Binoculars detector employs the pre-trained and instruct-tuned Phi1.5 models instead of Falcon due to GPU constraints. However, the provided code does not implement or provide an option to use Phi1.5 for Binoculars. Instead, the code assigns the observer and performer models to variants of Falcon (`tiiuae/falcon-7b`), Yi (`01-ai/Yi-6B`), and Open-LLaMA (`openlm-research/open_llama_3b_v2`), with Open-LLaMA being the final active assignment before instantiation. This creates a clear discrepancy between the methodology described in the paper and the shared codebase.",
+  "discrepancy_description_gpt": "The paper states that, for Binoculars, the authors use a pre-trained and instruct-tuned Phi-1.5 pair as a substitute for Falcon because of GPU constraints. In the code, however, the Binoculars implementation constructs the observer/performer models using OpenLLaMA 3B v2 and its instruct-tuned variant (and earlier commented choices of Yi-6B), not Phi-1.5. There is no code that loads or references a Phi-1.5 model for Binoculars. The only references to any Phi family in the repo are for generating estimated prompts (phi-2), which is unrelated to Binoculars. Therefore, the paper\u2019s claim about using Phi-1.5 for Binoculars does not match the provided code.",
+  "relevant_paper_sections_gemini": [
+    "Due to GPU constraints, Binoculars employs the pre-trained and instruct-tuned Phi1.5 [27] instead of Falcon."
+  ],
+  "relevant_paper_sections_gpt": [
+    "To begin, we utilize the GPT2-XL [23] as the detection model, excluding Binoculars. Due to GPU constraints, Binoculars employs the pre-trained and instruct-tuned Phi1.5 [27] instead of Falcon.",
+    "Hans et al. proposed Binoculars, a detection method utilizing two closely related language models, Falcon-7b [26] and Falcon-7b-instruct, by employing a metric called cross-perplexity [8]."
+  ],
+  "relevant_code_files_gemini": [
+    "detector.py",
+    "tmp/detector_ep.py"
+  ],
+  "relevant_code_files_gpt": [
+    "detector.py",
+    "tmp/detector_ep.py",
+    "detection.py"
+  ],
+  "changed_code_files": {
+    "file_name": [],
+    "discrepancy_code": []
+  },
+  "changed_code_snippets": {
+    "original_file": [],
+    "original_code": [],
+    "changed_code": []
+  },
+  "discrepancy_type": "Difference",
+  "discrepancy_category": "Model",
+  "arxiv_subject": "cs",
+  "arxiv_categories": [
+    "cs.AI"
+  ],
+  "arxiv_year": 2024
+}

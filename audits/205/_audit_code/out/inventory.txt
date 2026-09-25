@@ -1,0 +1,33 @@
+=== Repo files (non-.git) ===
+  LICENCE
+  README.md
+  data/catdog.png
+  data/densenet_temperatures.csv
+  data/electricity.csv
+  data/imagenet_class_index.json
+  data/recalX_overview.png
+  demo_images.ipynb
+  demo_tabular.ipynb
+  recalx/__init__.py
+  recalx/__pycache__/__init__.cpython-310.pyc
+  recalx/__pycache__/calibration.cpython-310.pyc
+  recalx/__pycache__/model.cpython-310.pyc
+  recalx/calibration.py
+  recalx/image_wrapper.py
+  recalx/model.py
+  recalx/perturbations.py
+  requirements.txt
+
+=== Grep for artefact-producing code ===
+[ABSENT] sensitivity (Table 3 / Quantus / Sens metric): []
+[FOUND] remove-and-retrain / ROAR: ['demo_images.ipynb', 'README.md', 'demo_tabular.ipynb', 'recalx/image_wrapper.py']
+[FOUND] LIME explainer usage: ['README.md']
+[ABSENT] KernelSHAP / Feature Ablation: []
+[ABSENT] Popordanoska/[51] kernel CE estimator: []
+[FOUND] image temperature learning script: ['demo_images.ipynb', 'README.md']
+[ABSENT] blur perturbation: []
+[FOUND] tabular ResNet (Gorishniy): ['demo_images.ipynb']
+[ABSENT] covertype/credit/pol datasets: []
+[ABSENT] ViT / SigLIP models: []
+[ABSENT] regression / quantile CE (Appendix C): []
+[ABSENT] ImageNet val data loader: []

@@ -1,0 +1,178 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-02T13:56:09.592286+00:00",
+  "findings": [
+    {
+      "id": "/math10k-test-leakage",
+      "category": "methodology",
+      "topic": "train/test contamination",
+      "title": "math_10k.json contains 84-95% of MultiArith/AddSub/SingleEq test questions verbatim",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "out/math10k_test_overlap.csv",
+      "csv_row": 1,
+      "quote": "MultiArith,600,569,94.8\n",
+      "claim": "Every math model in Table 3 is fine-tuned on ft-training_set/math_10k.json (see math_running_commands, --data_path 'math_10k.json'). A normalized set-intersection shows 569/600 (94.8%) of MultiArith, 331/395 (83.8%) of AddSub and 449/508 (88.4%) of SingleEq test questions appear verbatim — with identical answers — inside math_10k.json (SVAMP/GSM8K/AQuA: 0%). The authors' own README 'Special Announcement' states MAWPS (which supplies these problems) is in math_10k.json and that 'we can't utilize MultiArith, AddSub, and SingleEq as evaluation benchmarks with models trained with math_10k.json.'",
+      "concern": "Paper §4.2 and intro finding (2) headline that PEFT LLMs (e.g. LLaMA-13B+LoRA) beat GPT-3.5 (>175B) specifically on MultiArith, AddSub and SingleEq — the three datasets whose test items were memorized during fine-tuning — so those gains reflect train-on-test contamination, not generalization, and the 0% overlap on the harder SVAMP/GSM8K/AQuA (where the paper concedes a gap) is consistent with this.",
+      "resolution": "Re-run the arithmetic evaluation with the contaminated test items removed (or on MAWPS as the README now does) and report which Table 3 conclusions survive; confirm whether the paper's MultiArith/AddSub/SingleEq columns should be withdrawn.",
+      "cross_refs": [
+        "§4.2",
+        "Table 3",
+        "README Special Announcement",
+        "trained-weights-not-in-repo"
+      ],
+      "check_script": "_audit_code/check_math10k_test_overlap.py",
+      "paper_ref": "Table 3; §4.2 Arithmetic Reasoning; intro finding (2)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "math10k-test-leakage",
+      "audit": "",
+      "audit_md_line": 53,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/deps-unpinned",
+      "category": "missing",
+      "topic": "reproducibility / dependencies",
+      "title": "requirements.txt has zero version pins and installs transformers from git HEAD",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "requirements.txt",
+      "line_start": 1,
+      "line_end": 9,
+      "quote": "accelerate\nappdirs\nbitsandbytes\nblack\nblack[jupyter]\ndatasets\nfire\ngit+https://github.com/huggingface/transformers.git\ngradio\n",
+      "claim": "The only dependency spec pins no versions and pulls transformers from an unpinned git HEAD; there is no torch/peft version, and the bundled peft fork depends on specific transformers internals (e.g. prepare_model_for_int8_training, model.config.model_type).",
+      "concern": "The environment cannot be deterministically rebuilt: a future transformers HEAD can (and historically does) break the int8/adapter wiring, so the reported numbers are not reproducible from the stated environment.",
+      "resolution": "Pin exact versions (torch, transformers commit, bitsandbytes, accelerate, datasets, peft) used to produce the paper's results.",
+      "cross_refs": [],
+      "paper_ref": "§3.3 Implementations",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "deps-unpinned",
+      "audit": "",
+      "audit_md_line": 79
+    },
+    {
+      "id": "/trained-weights-not-in-repo",
+      "category": "missing",
+      "topic": "expected code completeness / pretrained models",
+      "title": "Adapter weights for the Table 3/4 numbers are not in the repo",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 154,
+      "line_end": 154,
+      "quote": "    --lora_weights './trained_models/llama-lora'",
+      "claim": "Every evaluation command loads adapter weights from ./trained_models/… , but no trained_models/ directory exists in the repo; only one external Google Drive link (README line 43) for a LLaMA-13B subset is provided.",
+      "concern": "None of the 32 model×method adapters behind Tables 3 and 4 are shipped, so the reported numbers cannot be reproduced without full retraining (expensive for LLaMA-13B) or an unverifiable external download.",
+      "resolution": "Release the trained adapter checkpoints (or a manifest of hashes) for the configurations reported in Tables 3 and 4.",
+      "cross_refs": [
+        "math10k-test-leakage"
+      ],
+      "paper_ref": "Tables 3, 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "trained-weights-not-in-repo",
+      "audit": "",
+      "audit_md_line": 111
+    },
+    {
+      "id": "/prefix-training-config-differs",
+      "category": "difference",
+      "topic": "evaluation consistency (paper vs code)",
+      "title": "Prefix-Tuning command uses batch size 8 / 5 epochs, not the paper's 16 / 3",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "math_running_commands",
+      "line_start": 5,
+      "line_end": 5,
+      "quote": "CUDA_VISIBLE_DEVICES=0 python finetune.py   --base_model 'yahma/llama-7b-hf'   --data_path 'math_10k.json'   --output_dir './trained_models/llama-7b-prefix-math-vt10/'   --batch_size 8  --micro_batch_size 4   --num_epochs 5   --learning_rate 3e-2   --cutoff_len 256   --val_set_size 120 --eval_step 10 --save_step 10  --adapter_name prefix-tuning --num_virtual_tokens 10\n",
+      "claim": "The provided Prefix-Tuning training command uses --batch_size 8 and --num_epochs 5, whereas §3.3 states 'we maintain a batch size of 16' and 'Each of the PEFT methods is fine-tuned for three epochs.' All other methods' commands use 16 / 3.",
+      "concern": "The Prefix-Tuning rows in Table 3 (and Fig 3a virtual-token sweep) were trained under a different batch-size/epoch budget than the paper claims was held constant across methods, so the method comparison is not on the uniform footing the paper asserts.",
+      "resolution": "Clarify whether Prefix-Tuning used 8/5 or 16/3, and whether the batch-size/epoch difference (not just learning rate) was intended.",
+      "cross_refs": [
+        "Table 3",
+        "Figure 3(a)"
+      ],
+      "paper_ref": "§3.3 Implementations ('batch size of 16', 'three epochs')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "prefix-training-config-differs",
+      "audit": "",
+      "audit_md_line": 136
+    },
+    {
+      "id": "/aqua-answer-letter-first-match",
+      "category": "bug",
+      "topic": "answer extraction / metric computation",
+      "title": "AQuA extractor returns the first A-E char anywhere, matching letters inside words",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "evaluate.py",
+      "line_start": 290,
+      "line_end": 298,
+      "quote": "def extract_answer_letter(args, sentence: str) -> str:\n    sentence_ = sentence.strip()\n    pred_answers = re.findall(r'A|B|C|D|E', sentence_)\n    if pred_answers:\n        if not pred_answers:\n            return ''\n        return pred_answers[0]\n    else:\n        return ''\n",
+      "claim": "For AQuA the predicted option is `pred_answers[0]`, the first regex match of A|B|C|D|E over the whole generated rationale — which matches capital letters embedded in ordinary words (e.g. the 'A' in 'Answer', 'D' in 'Divide'). Demo: extract_answer_letter('Answer: D') returns 'A'.",
+      "concern": "The choice-letter metric for AQuA is systematically mis-extracted whenever the rationale contains a capitalized A/B/C/D/E word before the final answer, biasing AQuA accuracy toward 'A' and making the reported AQuA column unreliable (it sits near the 20% 5-way chance level).",
+      "resolution": "Extract the letter from the final answer span (e.g. last match, or parse 'answer is (X)') and confirm the reported AQuA numbers are unchanged.",
+      "cross_refs": [
+        "Table 3 AQuA column"
+      ],
+      "paper_ref": "Table 3, AQuA column",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "aqua-answer-letter-first-match",
+      "audit": "",
+      "audit_md_line": 162
+    },
+    {
+      "id": "/finetune-datapath-not-at-root",
+      "category": "bug",
+      "topic": "reproducibility / file paths",
+      "title": "Documented finetune command's --data_path 'math_10k.json' is not at the repo root",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 98,
+      "line_end": 98,
+      "quote": "  --data_path 'math_10k.json' \\",
+      "claim": "The README and math_running_commands invoke finetune.py with --data_path 'math_10k.json', but the file is at ft-training_set/math_10k.json; no math_10k.json exists at the repo root (verified: ls math_10k.json -> No such file or directory).",
+      "concern": "Running the documented training command verbatim from the repo root fails immediately with a load_dataset FileNotFoundError, blocking reproduction until the user discovers the correct path.",
+      "resolution": "Fix the documented path to ft-training_set/math_10k.json (and likewise for commonsense_170k.json), or move the data files to the root.",
+      "cross_refs": [],
+      "paper_ref": "§3.2 (Math10K)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "finetune-datapath-not-at-root",
+      "audit": "",
+      "audit_md_line": 194
+    }
+  ]
+}

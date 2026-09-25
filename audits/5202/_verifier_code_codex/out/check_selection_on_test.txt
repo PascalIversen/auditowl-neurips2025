@@ -1,0 +1,8 @@
+('main.all_model_types', "'validation','training','combined'")
+('main.num_models_to_test', '2')
+('active_log_model_metrics_selects_by', 'success_rate_with_monitor (TEST coverage)')
+('prints_Best_Model_line', 'yes')
+('ltp_all_run.sh heads_swept', '1 2 4 8')
+('ltp_all_run.sh attn_drops_for_main', '0.1 0.2')
+
+Wrote /home/author/Projects/neurips_audit/audits/5202_Graph_Neural_Network_Based_Action_Ranking_for_Planning/_verifier_code_codex/out/selection_on_test.csv

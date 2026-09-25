@@ -1,0 +1,5 @@
+paper_number: 3242
+title: Robust Estimation Under Heterogeneous Corruption Rates
+authors: Syomantak Chaudhuri, Jerry Li, Thomas Courtade
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/99fc8bc48b917c301a80cb74d91c0c06-Abstract-Conference.html
+category: empirical

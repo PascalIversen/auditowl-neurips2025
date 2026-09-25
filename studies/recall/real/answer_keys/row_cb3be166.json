@@ -1,0 +1,53 @@
+{
+  "discrepancy_id": "cb3be166",
+  "paper_url": "https://arxiv.org/abs/2407.02398",
+  "paper_url_versioned": "https://arxiv.org/pdf/2407.02398v1.pdf",
+  "code_url": "https://github.com/YangLing0818/consistency_flow_matching",
+  "code_url_versioned": "https://github.com/YangLing0818/consistency_flow_matchin/tree/81000db385ad21fd702d0bd6ab53d45678f0d50f",
+  "discrepancy_date": "2025-04-28T21:19:36.000Z",
+  "origin_type": "GitHub Issue",
+  "origin_url": "https://github.com/YangLing0818/consistency_flow_matching/issues/12",
+  "origin_discrepancy_text": "some problem about ema model\nIn your paper, you use ema model during computer loss, while in your code, it seems that no ema model used in loss function\n\nVelocity Consistency Loss While Condition 1 directly constraints the vector field to be consistent, learning vector fields that only satisfy Condition 1 may lead to trivial solutions. On the other hand, Condition 2 ensures the consistency of the vector field from a trajectory viewpoint, offering a way to directly define straight flows. Motivated by this, Consistency-FM learns a consistency vector field to satisfy both conditions:\n\n$$\n\\begin{aligned}\n& \\mathcal{L}_{\\theta}=E_{t \\sim \\mathcal{U}} E_{x_{t}, x_{t+\\Delta t}}\\left\\|f_{\\theta}\\left(t, x_{t}\\right)-f_{\\theta^{-}}\\left(t+\\Delta t, x_{t+\\Delta t}\\right)\\right\\|_{2}^{2}+\\alpha\\left\\|v_{\\theta}\\left(t, x_{t}\\right)-v_{\\theta^{-}}\\left(t+\\Delta t, x_{t+\\Delta t}\\right)\\right\\|_{2}^{2} \\\\\n& f_{\\theta}\\left(t, x_{t}\\right)=x_{t}+(1-t) * v_{\\theta}\\left(t, x_{t}\\right)\n\\end{aligned}\n$$\n\nwhere $\\mathcal{U}$ is the uniform distribution on $[0,1-\\Delta t], \\alpha$ is a positive scalar, $\\Delta t$ denotes a time interval which is a small and positive scalar. $\\theta^{-}$denotes the running average of past values of $\\theta$ using exponential moving average (EMA), $x_{t}$ and $x_{t+\\Delta t}$ follows a pre-defined distribution which can be efficiently sampled, for example, VP-SDE [1] or OT path [7]. Note that by setting $t=1$, Condition 2 implies that $\\gamma_{x}(t)+(1-t) * v\\left(t, \\gamma_{x}(t)\\right)=\\gamma_{x}(1) \\sim p_{1}$, and thus training with $\\mathcal{L}_{\\theta}$ can not only regularize the velocity but also learn the data distribution. Furthermore, if Condition 2 is met, then the straight flows $\\gamma_{x}(t)+(1-t) * v\\left(t, \\gamma_{x}(t)\\right)$ can directly predict $x_{1}$ from each time point $t$ [15].",
+  "discrepancy_description_pooled_gpt_5": null,
+  "discrepancy_description_pooled_gemini_2_5_pro": null,
+  "discrepancy_description_pooled_gpt_oss_20b": null,
+  "is_valid_discrepancy_gemini": true,
+  "is_valid_discrepancy_gpt": true,
+  "is_valid_discrepancy_reason_gemini": "The paper indicates that the target components of the loss function are computed using the parameter's exponential moving average (EMA). However, in the code, the target components are calculated using the online model, and the EMA model is never passed to or evaluated in the loss function.",
+  "is_valid_discrepancy_reason_gpt": "The paper\u2019s main loss explicitly uses an EMA teacher network (\u03b8\u207b) on the right-hand side targets, while the training code computes both sides with the same online model parameters and never swaps in EMA weights during loss computation. EMA is only maintained and applied for evaluation/sampling, not for forming the training targets.",
+  "discrepancy_description_gemini": "In the paper, Equation 6 introduces the Consistency-FM loss tracking $\theta$ against $\theta^-$, explicitly describing $\theta^-$ as \"the running average of past values of $\theta$ using exponential moving average (EMA)\". This means the network evaluations at time $t+\\Delta t$ should utilize the EMA parameters. However, in the implemented code (`losses.py`), the loss function `get_consistency_flow_matching_loss_fn` only uses the current online model parameters to compute both the predictions at time $t$ and the targets at time $t+\\Delta t$ (`vt` and `vr`). While an EMA model is maintained and updated in the training step function, it is not passed to the loss calculation, resulting in the code missing the momentum-based target computation described theoretically.",
+  "discrepancy_description_gpt": "In the paper, the velocity consistency loss is defined with a teacher-student formulation that uses an EMA copy of the network parameters \u03b8\u207b for the target at time t+\u0394t: both f_{\u03b8\u207b}(t+\u0394t, x_{t+\u0394t}) and v_{\u03b8\u207b}(t+\u0394t, x_{t+\u0394t}) are computed with \u03b8\u207b. The paper explicitly states that \u03b8\u207b is the running average of past \u03b8 via EMA. In the code, the training loss function get_consistency_flow_matching_loss_fn computes vt = model(xt, t) and vr = model(xr, r) using the same current model parameters; vr is computed under torch.no_grad() but still with the online model, and the EMA is not copied into the model before computing loss. EMA is updated after each optimization step and used for evaluation/sampling (by copying EMA weights into the model), but not as a teacher in the loss. Therefore, there is a mismatch: the paper describes an EMA-teacher-based loss, while the implementation trains with an online-only loss (\u03b8\u207b = \u03b8). Although the paper later analyzes the no-EMA case (\u03b8\u207b = \u03b8) in Theorem 1, the main loss description uses EMA, which the training code does not.",
+  "relevant_paper_sections_gemini": [
+    "$\\mathcal{L}_{\theta}=E_{t \\sim \\mathcal{U}} E_{x_{t}, x_{t+\\Delta t}}\\left\\|f_{\theta}\\left(t, x_{t}\right)-f_{\theta^{-}}\\left(t+\\Delta t, x_{t+\\Delta t}\right)\right\\|_{2}^{2}+\\alpha\\left\\|v_{\theta}\\left(t, x_{t}\right)-v_{\theta^{-}}\\left(t+\\Delta t, x_{t+\\Delta t}\right)\right\\|_{2}^{2}$",
+    "where $\\mathcal{U}$ is the uniform distribution on $[0,1-\\Delta t], \\alpha$ is a positive scalar, $\\Delta t$ denotes a time interval which is a small and positive scalar. $\theta^{-}$denotes the running average of past values of $\theta$ using exponential moving average (EMA)"
+  ],
+  "relevant_paper_sections_gpt": [
+    "Velocity Consistency Loss ... Consistency-FM learns a consistency vector field to satisfy both conditions:\n\nL_\u03b8 = E_{t\u223cU} E_{x_t, x_{t+\u0394t}} || f_\u03b8(t, x_t) \u2212 f_{\u03b8\u207b}(t+\u0394t, x_{t+\u0394t}) ||_2^2 + \u03b1 || v_\u03b8(t, x_t) \u2212 v_{\u03b8\u207b}(t+\u0394t, x_{t+\u0394t}) ||_2^2,\n f_\u03b8(t, x_t) = x_t + (1\u2212t) * v_\u03b8(t, x_t)\n\n... \u03b8\u207b denotes the running average of past values of \u03b8 using exponential moving average (EMA) ...",
+    "Theorem 1. Consider no exponential moving average, i.e., \u03b8\u207b = \u03b8. ..."
+  ],
+  "relevant_code_files_gemini": [
+    "losses.py"
+  ],
+  "relevant_code_files_gpt": [
+    "losses.py",
+    "run_lib.py",
+    "run_lib_pytorch.py",
+    "models/ema.py"
+  ],
+  "changed_code_files": {
+    "file_name": [],
+    "discrepancy_code": []
+  },
+  "changed_code_snippets": {
+    "original_file": [],
+    "original_code": [],
+    "changed_code": []
+  },
+  "discrepancy_type": "Difference",
+  "discrepancy_category": "Loss",
+  "arxiv_subject": "cs",
+  "arxiv_categories": [
+    "cs.CV"
+  ],
+  "arxiv_year": 2024
+}

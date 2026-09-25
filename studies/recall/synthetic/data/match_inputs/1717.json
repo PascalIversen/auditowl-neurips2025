@@ -1,0 +1,181 @@
+{
+  "paper": "1717",
+  "seeds": [
+    {
+      "sid": "S01",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/models/resnet.py",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the ResNet50 backbone experiment implementation",
+      "description": "Delete the sole ResNet backbone module. The repository would no longer contain the feature-extraction implementation needed to train or evaluate the ResNet50 versions reported in Table 3, including the claimed replication of the DINOv2 ordering with a fully convolutional backbone."
+    },
+    {
+      "sid": "S04",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/models/transformer.py",
+          "line": 292,
+          "action": "replace"
+        },
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/models/transformer.py",
+          "line": 313,
+          "action": "replace"
+        },
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/models/transformer.py",
+          "line": 335,
+          "action": "replace"
+        },
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/models/transformer.py",
+          "line": 397,
+          "action": "replace"
+        }
+      ],
+      "title": "Replace ROI cross-attention with a convolutional global token mixer",
+      "description": "Replace the decoder's multi-head cross-attention with a trainable two-layer 1D convolution over the rasterized backbone tokens, global average pooling, and a learned query projection. This is a coherent convolutional integration model with real gradients, but it is not the content-dependent ROI cross-attention claimed by the paper."
+    },
+    {
+      "sid": "S06",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/visualize_results.ipynb",
+          "line": 417,
+          "action": "replace"
+        }
+      ],
+      "title": "Fit the regression baselines jointly on training and test fMRI",
+      "description": "In the result-generation notebook's linear-regression path, concatenate held-out test features and test fMRI with the training samples before fitting both hemispheric regressions. The test targets are therefore part of the fitted main baseline models whose test predictions are reported."
+    },
+    {
+      "sid": "S08",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/engine.py",
+          "line": 53,
+          "action": "replace"
+        }
+      ],
+      "title": "Clear all gradients immediately before every optimizer step",
+      "description": "Move gradient clearing to after backpropagation and clipping but before optimizer.step(). The loop still runs, reports losses, calls backward, and calls the optimizer, yet every step sees empty gradients and no trainable weight is ever updated."
+    }
+  ],
+  "baseline": [
+    {
+      "id": "1717/missing-bert-text-modality",
+      "category": "missing",
+      "file": "models/backbone.py",
+      "line_start": 58,
+      "line_end": 68,
+      "title": "No BERT backbone in repo; Table 6 text-modality results untraceable"
+    },
+    {
+      "id": "1717/missing-saliency-baseline",
+      "category": "missing",
+      "file": "paper.pdf",
+      "line_start": null,
+      "line_end": null,
+      "title": "DeepGaze saliency-integration baseline absent from repo (Tables 1/3/5)"
+    },
+    {
+      "id": "1717/missing-yolo-selectivity",
+      "category": "missing",
+      "file": "paper.pdf",
+      "line_start": null,
+      "line_end": null,
+      "title": "YOLO-based category-selectivity analysis absent (Tables 7\u201310)"
+    },
+    {
+      "id": "1717/missing-braindive",
+      "category": "missing",
+      "file": "paper.pdf",
+      "line_start": null,
+      "line_end": null,
+      "title": "BrainDiVE image-generation pipeline absent (Figs S9/S10)"
+    },
+    {
+      "id": "1717/missing-pca-feature-extraction",
+      "category": "missing",
+      "file": "paper.pdf",
+      "line_start": null,
+      "line_end": null,
+      "title": "PCA+regression baseline loads precomputed features; no PCA-fit code in repo"
+    },
+    {
+      "id": "1717/ridge-baseline-no-gridsearch",
+      "category": "missing",
+      "file": "main.py",
+      "line_start": 207,
+      "line_end": 210,
+      "title": "Paper's grid-searched ridge penalty not implemented in repo"
+    },
+    {
+      "id": "1717/missing-dependencies",
+      "category": "missing",
+      "file": "main.py",
+      "line_start": 1,
+      "line_end": 14,
+      "title": "No dependency specification (requirements.txt / environment.yml) in repo"
+    },
+    {
+      "id": "1717/missing-test-fmri-and-weights",
+      "category": "missing",
+      "file": "main.py",
+      "line_start": 52,
+      "line_end": 56,
+      "title": "Test fMRI, noise ceiling, saved predictions and weights absent; data_dir hardcoded"
+    },
+    {
+      "id": "1717/missing-trainsize-sweep",
+      "category": "missing",
+      "file": "datasets/nsd.py",
+      "line_start": 229,
+      "line_end": 234,
+      "title": "No training-set-size sweep driver (Table 2)"
+    },
+    {
+      "id": "1717/missing-supplementary-analyses",
+      "category": "missing",
+      "file": "paper.pdf",
+      "line_start": null,
+      "line_end": null,
+      "title": "ROI-query cosine-similarity analysis (Figs S5\u2013S8) not in repo"
+    },
+    {
+      "id": "1717/hardcoded-absolute-paths",
+      "category": "bug",
+      "file": "datasets/nsd_utils.py",
+      "line_start": 153,
+      "line_end": 154,
+      "title": "Notebooks hardcode internal /engram cluster paths and chdir"
+    },
+    {
+      "id": "1717/cv-random-resample-not-kfold",
+      "category": "difference",
+      "file": "datasets/nsd.py",
+      "line_start": 229,
+      "line_end": 241,
+      "title": "Paper's '10-fold cross validation' is 10 unseeded random 90/10 resamples, ensembled"
+    }
+  ],
+  "unassigned": [
+    {
+      "fid": "run_02/bert-backbone-missing",
+      "run": "run_02",
+      "category": "missing",
+      "loc": "main.py:76",
+      "title": "Table 6 BERT text-modality experiment has no backbone implementation",
+      "claim": "The `--backbone_arch` choices (main.py:75-79) are only DINOv2/ResNet/CLIP variants; there is no `bert` option, and no BERT feature-extraction path exists anywhere in the `.py` files or notebook code cells (grep for `bert` over code cells returns nothing). Only BLIP caption *generation* exists (test_wrapper.ipynb CELL 24-25).",
+      "concern": "Section 4.4 and Table 6 report a headline 'text modality' result using BERT features as the decoder backbone, but no code in the repo can extract BERT features or run the decoder on them, so Table 6 is not reproducible."
+    }
+  ]
+}

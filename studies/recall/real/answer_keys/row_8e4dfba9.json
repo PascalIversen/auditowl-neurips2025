@@ -1,0 +1,51 @@
+{
+  "discrepancy_id": "8e4dfba9",
+  "paper_url": "https://arxiv.org/abs/2412.11803",
+  "paper_url_versioned": "https://arxiv.org/pdf/2412.11803v2.pdf",
+  "code_url": "https://github.com/AmourWaltz/UAlign",
+  "code_url_versioned": "https://github.com/AmourWaltz/UAlign/tree/a40d21decece8e8e06bc752c520ea10b93e3c1b8",
+  "discrepancy_date": "2025-07-27T12:38:11.000Z",
+  "origin_type": "GitHub Issue",
+  "origin_url": "https://github.com/AmourWaltz/UAlign/issues/2",
+  "origin_discrepancy_text": "A question about the collection process of confidence and SE.\nThe confidence formula in the paper ( formula (1) ) is like:\n\n$$\nc_{i}=\\operatorname{Conf}\\left(\\boldsymbol{x}_{i}\\right)=\\frac{1}{K} \\sum_{k=1}^{K} \\mathbb{1}\\left(\\boldsymbol{\\hat{y}}_{i}=\\boldsymbol{y}_{i}{{}^{(k)}}\\right)\n$$\n\nI think the confidence score of the each question $x_i$ is the mean of \"greedy scores\", while you implement it by maximization:\n\n```python\ndef calculate_confidence(probabilities):\n    \"\"\"Calculate the confidence of a probability distribution.\"\"\"\n    return max(probabilities)\n```\n\nhttps://github.com/AmourWaltz/UAlign/blob/main/code/uncertainty.py#L66\n\n",
+  "discrepancy_description_pooled_gpt_5": null,
+  "discrepancy_description_pooled_gemini_2_5_pro": null,
+  "discrepancy_description_pooled_gpt_oss_20b": null,
+  "is_valid_discrepancy_gemini": true,
+  "is_valid_discrepancy_gpt": true,
+  "is_valid_discrepancy_reason_gemini": "The paper defines the confidence score as the mean of the correctness indicators across sampled outputs, but the code implements it by taking the maximum of these values.",
+  "is_valid_discrepancy_reason_gpt": "The paper defines confidence as the average correctness over K samples, while the code computes confidence as the maximum over the binary correctness list (i.e., 1 if any sample is correct, else 0). This is a clear mismatch between the paper\u2019s definition and the implementation.",
+  "discrepancy_description_gemini": "The paper describes the accuracy-based confidence score as the mean accuracy of the candidate responses, computed by taking the average of the indicator functions that check if each sampled response matches the ground-truth answer. In the provided code, the confidence score calculation is implemented by returning the maximum value of the sampled correctness scores (`max(probabilities)`) instead of their average. This creates a discrepancy where the code leverages a binary indicator reflecting whether at least one correct response was generated (1 if yes, 0 otherwise), rather than the continuous proportion of correct responses specified by the formula in the paper.",
+  "discrepancy_description_gpt": "The paper specifies \u201caccuracy-based confidence\u201d for a question as the mean accuracy across K sampled responses, i.e., the fraction of correct generations among the K samples. In the code, however, the function calculate_confidence takes the list of per-sample correctness indicators (greedy_scores) and returns max(greedy_scores), which reduces confidence to a binary value: 1 if any sample is correct, 0 otherwise. Moreover, while the code also computes greedy_scores_avg (the intended mean), it does not use that for the confidence fed into the downstream datasets; instead, the binary max value is stored as \"confidence\" and used for reward/align data. Thus, the implemented confidence deviates from the paper\u2019s definition by using maximization rather than averaging.",
+  "relevant_paper_sections_gemini": [
+    "Accuracy-based Confidence A natural idea of aggregating varied responses is to measure the accuracy among the candidate outputs to denote confidence scores *Manakul et al. (2023); Xiong et al. (2024)*. Given a question $\boldsymbol{x}_{i}$, the accuracy of candidate responses in $\boldsymbol{Y}_{i}$ by comparing with the ground-truth answer $\boldsymbol{\\hat{y}}_{i}$ serves as the confidence score $c_{i}$, computed as follows.\n\n$$\nc_{i}=\\operatorname{Conf}\\left(\boldsymbol{x}_{i}\right)=\frac{1}{K} \\sum_{k=1}^{K} \\mathbb{1}\\left(\boldsymbol{\\hat{y}}_{i}=\boldsymbol{y}_{i}{{}^{(k)}}\right)\n$$"
+  ],
+  "relevant_paper_sections_gpt": [
+    "Accuracy-based Confidence A natural idea of aggregating varied responses is to measure the accuracy among the candidate outputs to denote confidence scores (Manakul et al., 2023; Xiong et al., 2024). Given a question x_i, the accuracy of candidate responses in Y_i by comparing with the ground-truth answer y\u0302_i serves as the confidence score c_i, computed as follows.\n\nc_i = Conf(x_i) = (1/K) \u2211_{k=1}^{K} 1(y\u0302_i = y_i^{(k)})",
+    "In the k-th sampling process for the i-th question x_i, we employ each few-shot exemplar p_k\u2208P with the question x_i to the LLM to generate the k-th response y_i^{(k)}. By taking K times of the sampling process, we can obtain an answer set Y_i = {y_i^{(k)}}_{k=1}^{K} to x_i."
+  ],
+  "relevant_code_files_gemini": [
+    "code/uncertainty.py"
+  ],
+  "relevant_code_files_gpt": [
+    "code/uncertainty.py",
+    "code/sample.py",
+    "code/eval.py"
+  ],
+  "changed_code_files": {
+    "file_name": [],
+    "discrepancy_code": []
+  },
+  "changed_code_snippets": {
+    "original_file": [],
+    "original_code": [],
+    "changed_code": []
+  },
+  "discrepancy_type": "Difference",
+  "discrepancy_category": "Evaluation",
+  "arxiv_subject": "cs",
+  "arxiv_categories": [
+    "cs.CL"
+  ],
+  "arxiv_year": 2024
+}

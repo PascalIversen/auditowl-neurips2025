@@ -1,0 +1,15 @@
+PARTIAL   | Table 1 synthetic columns              | model zoo + instance_metrics present; numbers not pinned (random draw)
+MISSING   | Table 1 UNOS-PTR columns               | no UNOS/PTR/liver/feature code: True
+PARTIAL   | Table 2 Uniform reason mech            | else-branch w=1/N present
+PARTIAL   | Table 2 IPW reason mech                | KernelDensity branch present
+MISSING   | Table 2 Boundary Intersection          | no 'boundary'/'intersection' code: True
+PARTIAL   | Table 3 synthetic obs-test             | Obs-Test rows present (some commented)
+MISSING   | Table 3 UNOS-PTR columns               | no UNOS code
+MISSING   | Table 4 Assumption-1 support           | no matching/Euclidean-support code: True
+MISSING   | Fig 4 confounding sweep psi            | rho fixed at single value; no sweep loop over rho/psi
+MISSING   | Figs 5-6 F/sigma sweep                 | F_scale param exists but no loop sweeping it: True
+MISSING   | Table 6 / Fig 7 lambda-rho-M sweep     | single fixed configs only; no grid loop
+MISMATCH  | Hyperparam Table 7 k=3                 | code default k_cluster=5: True
+MISSING   | Dependency specification               | no requirements/environment file: True
+
+wrote /home/author/Projects/neurips_audit/audits/5243_Causal_Explanation_Guided_Learning_for_Organ_Allocation/_verifier_code_codex/out/traceability.csv

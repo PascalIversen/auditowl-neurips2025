@@ -1,0 +1,5 @@
+paper_number: 261
+title: RiOSWorld: Benchmarking the Risk of Multimodal Computer-Use Agents
+authors: Jingyi Yang, Shuai Shao, Dongrui Liu, Jing Shao
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/0c79d6ed1788653643a1ac67b6ea32a7-Abstract-Conference.html
+category: empirical

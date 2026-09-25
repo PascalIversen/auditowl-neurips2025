@@ -1,0 +1,8 @@
+check,result,detail
+amcparser_plot_motion_gc_module_present,False,
+acatis_prepare_module_present,False,
+auroc_computation_found,False,
+driver_can_build_lstm_forecaster,False,
+active_group_lasso_regularizer_call_in_loop,False,
+hardcoded_home_harsh_paths,True,GC-xLSTM/prepare_data.py:32;GC-xLSTM/prepare_data.py:35;GC-xLSTM/xlstm_neural_gc.py:284;GC-xLSTM/xlstm_neural_gc.py:285;GC-xLSTM/xlstm_neural_gc.py:287;GC-xLSTM/configs/mocap-salsa.yaml:44;GC-xLSTM/configs/fmri.yaml:44;GC-xLSTM/configs/fmri.yaml:45;GC-xLSTM/configs/mocap-run.yaml:44
+driver_imports_amcparser_at_toplevel,True,datasets.mocap.all_asfamc.AMCParser.plot_motion_gc

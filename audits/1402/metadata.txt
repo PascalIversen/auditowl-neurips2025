@@ -1,0 +1,5 @@
+paper_number: 1402
+title: Memory Injection Attacks on LLM Agents via Query-Only Interaction
+authors: Shen Dong, Shaochen Xu, Pengfei He, Yige Li, Jiliang Tang, Tianming Liu, Hui Liu, Zhen J. Xiang
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/42a97bbd9844d2bf68596730af80bcdf-Abstract-Conference.html
+category: empirical

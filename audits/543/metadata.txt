@@ -1,0 +1,5 @@
+paper_number: 543
+title: ProRL: Prolonged Reinforcement Learning Expands Reasoning Boundaries in Large Language Models
+authors: Mingjie Liu, Shizhe Diao, Ximing Lu, Jian Hu, Xin Dong, Yejin Choi, Jan Kautz, Yi Dong
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/1a22b912945fb7c0bdd079e792b31b6f-Abstract-Conference.html
+category: empirical

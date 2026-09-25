@@ -1,0 +1,17 @@
+{
+  "paper_id": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models",
+  "title": "Unlocking Dataset Distillation with Diffusion Models",
+  "repos": [
+    {
+      "name": "Brian-Moser__prune_and_distill",
+      "role": "partial_core",
+      "evidence": "Repo owner is Brian Moser (first author). Paper abstract footnote explicitly cites this URL. Repo contains the LD3M implementation: src/distill_dm_LD3M.py, src/distill_dc_LD3M.py, src/distill_mtt_LD3M.py, modified DDIM at src/latentdiff/ldm/models/diffusion/ddim.py with the linearly-decaying residual (Eq. 7), and LD3M wiring in src/glad_utils.py. The README BibTeX cites 'arXiv:2403.03881' (LD3M preprint). However, the README title and primary documentation are for a DIFFERENT paper ('Distill the Best, Ignore the Rest: Improving Dataset Distillation with Loss-Value-Based Pruning', IJCNN 2025); all README reproduction commands carry pruning flags (--percent, --order) and depend on absent per-class JSON files. Key LD3M pieces missing: no CIFAR-10 LDM path, no gradient-norm/SNR analysis scripts, no ablation toggles for Tables 6-7."
+    }
+  ],
+  "core_present": "partial",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The cloned repo (Brian-Moser/prune_and_distill) is the paper's own author-cited code URL and contains the LD3M core method implementation (modified DDIM with linearly-decaying residual connections, LD3M distillation entrypoints, and LD3M utility functions). The README is primarily documented for a follow-up pruning paper (IJCNN 2025), but LD3M is embedded as the underlying method. The auditor correctly identified the repo and wrote substantive findings against the real LD3M implementation rather than treating it as completely absent. The 'repo-is-pruning-paper' finding (difference/medium) accurately captures the documentation mismatch. All other findings (pruning-json-missing, cifar-ld3m-missing, trace-table1-gradnorm-missing, ablation-diffusion-toggle-missing) are legitimate reproducibility issues written against the actual LD3M code. The audit verdict is correct: code is present (partial), and findings are valid.",
+  "audit_impact": "Audit is substantively correct. The audit correctly identifies the LD3M implementation and writes valid findings. The 'repo-is-pruning-paper' difference finding accurately characterizes the documentation mismatch. No findings were incorrectly written against a non-core repo. The partial_core status (embedded in a follow-up-paper repo, with missing CIFAR/ablation/analysis scripts) is accurately reflected in the findings. No re-audit needed.",
+  "recommended_action": "No re-audit required. The audit findings are valid and well-grounded in the actual LD3M implementation. The partial_core designation is appropriate: the core Eq. 7 residual mechanism and main ImageNet experiments are present, but CIFAR results, analysis scripts, and ablation toggles are missing. Consider flagging the paper as 'code partially present' rather than fully present."
+}

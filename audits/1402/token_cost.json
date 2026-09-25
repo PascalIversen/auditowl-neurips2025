@@ -1,0 +1,19 @@
+{
+  "folder": "1402_Memory_Injection_Attacks_on_LLM_Agents_via_Query_Only_Intera",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 28015,
+    "output": 18121,
+    "cache_write": 257995,
+    "cache_read": 4090141
+  },
+  "total_tokens": 4394272,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 12.75
+}

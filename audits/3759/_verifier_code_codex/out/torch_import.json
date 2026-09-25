@@ -1,0 +1,86 @@
+[
+  {
+    "file": "script/graph_contrastive_script.py",
+    "uses_torch": true,
+    "imports_torch": false,
+    "first_torch_use_line": 61,
+    "first_torch_use": "device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')"
+  },
+  {
+    "file": "script/simclr_lr_decoder.py",
+    "uses_torch": true,
+    "imports_torch": false,
+    "first_torch_use_line": 152,
+    "first_torch_use": "device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')"
+  },
+  {
+    "file": "script/simclr_mlp_decoder.py",
+    "uses_torch": true,
+    "imports_torch": false,
+    "first_torch_use_line": 190,
+    "first_torch_use": "device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')"
+  },
+  {
+    "file": "script/spectrogram_cnn_encoder.py",
+    "uses_torch": true,
+    "imports_torch": false,
+    "first_torch_use_line": 56,
+    "first_torch_use": "device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')"
+  },
+  {
+    "file": "script/spectrogram_contrastive_script.py",
+    "uses_torch": true,
+    "imports_torch": false,
+    "first_torch_use_line": 68,
+    "first_torch_use": "device = torch.device(\"cuda\")"
+  },
+  {
+    "file": "script/spectrogram_encoder_decoder_script.py",
+    "uses_torch": true,
+    "imports_torch": false,
+    "first_torch_use_line": 69,
+    "first_torch_use": "device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')"
+  },
+  {
+    "file": "script/spectrogram_lr_decoder.py",
+    "uses_torch": true,
+    "imports_torch": false,
+    "first_torch_use_line": 55,
+    "first_torch_use": "device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')"
+  },
+  {
+    "file": "script/spectrogram_mlp_decoder.py",
+    "uses_torch": true,
+    "imports_torch": false,
+    "first_torch_use_line": 55,
+    "first_torch_use": "device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')"
+  },
+  {
+    "file": "script/spectrogram_simclr_lr.py",
+    "uses_torch": true,
+    "imports_torch": false,
+    "first_torch_use_line": 55,
+    "first_torch_use": "device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')"
+  },
+  {
+    "file": "script/spectrogram_temporal_augmentation.py",
+    "uses_torch": true,
+    "imports_torch": false,
+    "first_torch_use_line": 56,
+    "first_torch_use": "device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')"
+  },
+  {
+    "file": "script/vit_encoder.py",
+    "uses_torch": true,
+    "imports_torch": false,
+    "first_torch_use_line": 68,
+    "first_torch_use": "device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')"
+  },
+  {
+    "file": "script/w2v2_across_session.py",
+    "uses_torch": true,
+    "imports_torch": false,
+    "first_torch_use_line": 233,
+    "first_torch_use": "print(torch.cuda.is_available())"
+  }
+]

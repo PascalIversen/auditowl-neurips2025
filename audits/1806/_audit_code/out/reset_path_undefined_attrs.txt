@@ -1,0 +1,4 @@
+self.tol: reads=[('bayesqp.py', 662)]  writes=[]
+  -> verdict: UNDEFINED (read, never assigned)
+self.subsampling_option: reads=[('bayesqp.py', 586)]  writes=[]
+  -> verdict: UNDEFINED (read, never assigned)

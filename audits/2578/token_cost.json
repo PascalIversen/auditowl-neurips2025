@@ -1,0 +1,19 @@
+{
+  "folder": "2578_DOVE_Efficient_One_Step_Diffusion_Model_for_Real_World_Video",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 23194,
+    "output": 14739,
+    "cache_write": 334421,
+    "cache_read": 4954524
+  },
+  "total_tokens": 5326878,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 15.16
+}

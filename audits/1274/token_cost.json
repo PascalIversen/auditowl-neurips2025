@@ -1,0 +1,19 @@
+{
+  "folder": "1274_Efficient_Adaptive_Experimentation_with_Noncompliance",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 10152,
+    "output": 5100,
+    "cache_write": 230502,
+    "cache_read": 3852575
+  },
+  "total_tokens": 4098329,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 10.64
+}

@@ -1,0 +1,17 @@
+{
+  "paper_id": "2585_Sample_Complexity_of_Distributionally_Robust_Average_Reward_",
+  "title": "Sample Complexity of Distributionally Robust Average-Reward Reinforcement Learning",
+  "repos": [
+    {
+      "name": "supplement",
+      "role": "core",
+      "evidence": "NeurIPS Supplemental ZIP unpacked into code/supplement/. Contains dr_rl_empirical_kl.py and dr_rl_empirical_chi_square.py (Algorithms 2/3 with robust Bellman and dual_opt), model/hard_mdp_unichain.py (Definition 5.1 Hard MDP), Reduction_DMDP_parallel.py and Anchored_AMDP_parallel.py (algorithm drivers), plot.py (Figure-2 log-log slope fit via np.polyfit), dr_q_learning.py (DR RVI Q-learning baseline, Table 2), model/large_scale.py + add_large_scale_*.py (Table 3/Figure 3). The workspace file is named DR-AMDP.code-workspace, matching the paper's subject. All empirical artefacts from the paper are produced by this code. No GitHub repo was cloned; sole source is the supplemental ZIP recorded in code_links.txt."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "stale_no_code_finding",
+  "confidence": "high",
+  "rationale": "The original audit ran before the supplemental ZIP was fetched and therefore found no code, correctly noting that 'no code directory, source files, or resolvable code URL exists in the audited artefact.' A post-hoc supplement fetch recovered the complete experimental codebase from the NeurIPS Supplemental-Conference.zip. All three high/medium severity 'missing' findings (no-experiment-code-released, fig2-slope-not-traceable, tables-h-not-traceable) were subsequently marked supplement_verdict: false_positive in findings_verified.json. The authors' checklist claim 'complete experimental code in the supplemental materials' is accurate; the audit missed it because the supplement ZIP was not fetched during the original clone step. The core implementation is now present under code/supplement/.",
+  "audit_impact": "Three findings totalling 2 high + 1 medium severity are false positives: the code they claim is absent is in fact present in the supplemental ZIP. The two methodology 'question' items (single-run-no-error-bars, large-scale-violates-assumption) remain valid observations but are status:question, not findings. Net impact: the paper should be reclassified from missing-code to source-present; the high-severity missing findings should be dropped or downgraded in any aggregate severity/coverage analysis.",
+  "recommended_action": "Mark all three 'missing' findings as resolved/false-positive in the aggregate (already done via supplement_verdict fields). Confirm code/supplement is retained in the audit folder or at a resolvable URL so future re-audits do not repeat the same miss. No further repo investigation needed."
+}

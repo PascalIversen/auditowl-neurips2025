@@ -1,0 +1,8 @@
+requirements.txt: requirements.txt -> EXISTS=False
+environment.yml: environment.yml -> EXISTS=False
+setup.py: setup.py -> EXISTS=False
+pyproject.toml: pyproject.toml -> EXISTS=False
+data/factual_recall/qa_raw.json: data/factual_recall/qa_raw.json -> EXISTS=False
+data/sentiment_analysis/sentiment_vl.json: data/sentiment_analysis/sentiment_vl.json -> EXISTS=False
+vqa questions json: vqa/v2_OpenEnded_mscoco_val2014_questions.json -> EXISTS=False
+precomputed .pt result files in data/: 0

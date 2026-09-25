@@ -1,0 +1,19 @@
+{
+  "folder": "4932_Centralized_Reward_Agent_for_Knowledge_Sharing_and_Transfer_",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 7948,
+    "output": 12419,
+    "cache_write": 250392,
+    "cache_read": 3224004
+  },
+  "total_tokens": 3494763,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 10.58
+}

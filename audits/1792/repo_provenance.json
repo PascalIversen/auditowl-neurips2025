@@ -1,0 +1,17 @@
+{
+  "paper_id": "1792_Ada_R1_Hybrid_CoT_via_Bi_Level_Adaptive_Reasoning_Optimizati",
+  "title": "Ada-R1: Hybrid-CoT via Bi-Level Adaptive Reasoning Optimization",
+  "repos": [
+    {
+      "name": "StarDewXXX__AdaR1",
+      "role": "core",
+      "evidence": "Owner/name match the paper's stated official URL exactly: paper_text.txt line 24 'Our code is coming soon at https://github.com/StarDewXXX/AdaR1'. README.md line 5 'Our paper [Ada-R1: From Long-CoT to Hybrid-CoT via Bi-Level Adaptive Reasoning Optimization] has been accepted at NeurIPS 2025'. The author script Dataset-Construction/.../scripts/constrcut_adaptive_dataset.py implements the paper's core bi-level optimization: construct_pairwise_json_data(bi_level=True) builds BOTH group-level inter-group long-vs-short preference by gain sign (lines 156-167) AND instance-level inner-group shortest-correct-vs-longest preference (lines 114-148), matching the paper's named Group-Level + Instance-Level Preference (paper_text.txt lines 51-52). mergekit/examples naive_merge config = Stage-1 long+short CoT merge; LLaMA-Factory-YAMLs/ds-7b-dpo-mix.yaml (stage: dpo, dataset ds-7b_dpo_bilevel) = Stage-2 bi-level DPO training."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "Exactly one repo was cloned (StarDewXXX__AdaR1) and it is unambiguously the paper's own official repository: the GitHub owner/name match the URL printed in the paper, the README self-identifies as the NeurIPS 2025 Ada-R1 paper, and the author-written constrcut_adaptive_dataset.py implements the paper's distinctive two-stage bi-level adaptive reasoning optimization (group-level long/short selection + instance-level concise-correct preference) feeding DPO YAMLs. Bundled mergekit / deepscaler-release(verl) / referenced LLaMA-Factory are third-party frameworks the author repo orchestrates (Stage-1 merge, dataset gen, DPO trainer), not mis-cloned baselines or a different paper. No contamination (single repo, no extra non-core clones). The audit's own findings explicitly state the repo 'provides a merge config, training YAMLs, and a preference-dataset builder', so the audit correctly treated this as the author core, not as missing or wrong code.",
+  "audit_impact": "None to the provenance classification - source-present is justified and the audit's high-severity findings (no result-aggregation/eval pipeline; no DPO trainer or checkpoints, only LLaMA-Factory YAMLs; missing dependency spec) plus method-deviation findings (length-normalized gain vs paper's accuracy-margin rule; instance-level fallback prefers a shorter WRONG response; dead weight/transform code) are legitimate code-level critiques of the genuine author repository, NOT false 'no code' or 'wrong repo' claims. No finding was written against a non-core repo. No stale 'no code exists' finding (findings acknowledge the author builder/configs exist while noting the reproduction pipeline is incomplete and labeled '[In Progress]').",
+  "recommended_action": "Keep paper_verdict=correct and retain the existing findings as-is. No reclassification, no repo re-clone, and no contamination cleanup needed. Optionally note in the audit that incompleteness (missing eval/aggregation script and released checkpoints) reflects an author repo with an '[In Progress]' reproduce guide rather than a provenance error."
+}

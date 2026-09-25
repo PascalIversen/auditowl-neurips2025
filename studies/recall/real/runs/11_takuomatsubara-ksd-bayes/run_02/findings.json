@@ -1,0 +1,172 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-02T14:01:36.728450+00:00",
+  "findings": [
+    {
+      "id": "/illustration-figs-no-code",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No script reproduces the KSD illustration (Fig. 1) or the PIF plot (Fig. 3)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "line_start": null,
+      "line_end": null,
+      "quote": "Figure 1: Illustrating the insensitivity to mixture proportions of KSD.\n",
+      "claim": "The repo ships reproduce scripts for the four applications plus the Ising supplement, but nothing computes Figure 1 (density / gradient / KSD^2 for the mixture model of Eq. 11 with n=1000 samples) or Figure 3 (the posterior influence function for the normal location model). A whole-tree grep finds no occurrence of 'PIF', 'influence', 'mixture', or 'mixing' in any .m or .py file (_audit_code/out/checks.txt, section [3]).",
+      "concern": "Two figures that are used to motivate the method (KSD's insensitivity to mixture proportions) and to illustrate its headline bias-robustness (bounded PIF tails) cannot be regenerated from the provided code.",
+      "resolution": "Authors: please add the scripts that produced Figures 1 and 3, or state that they are analytic plots and give the closed-form expressions evaluated.",
+      "cross_refs": [],
+      "check_script": "_audit_code/checks.py",
+      "paper_ref": "Figures 1 (Sec. 3.5) and 3 (Sec. 6.1)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "illustration-figs-no-code",
+      "audit": "",
+      "audit_md_line": 55
+    },
+    {
+      "id": "/python-deps-unpinned",
+      "category": "missing",
+      "topic": "dependencies / reproducibility",
+      "title": "Ising app has no dependency spec and calls deprecated APIs (e.g. sns.distplot)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "applications/V0_Ising/RobustKSD.py",
+      "line_start": 10,
+      "line_end": 18,
+      "quote": "import torch\nimport torch.autograd as autograd\n\nimport pyro\nimport pyro.distributions as dist\nfrom pyro.nn import PyroModule\nfrom pyro.infer import MCMC, NUTS, HMC, Importance, EmpiricalMarginal, Predictive, SVI, Trace_ELBO\nfrom pyro.optim import Adam\nfrom pyro.contrib import autoguide\n",
+      "claim": "The Python Ising application imports torch, pyro, pandas, matplotlib and seaborn, but the repo contains no requirements.txt / environment.yml / setup.py / pyproject.toml pinning versions (_audit_code/out/checks.txt, section [4]). Some calls are already deprecated/removed in current libraries (e.g. seaborn.distplot at RobustKSD.py:220 was removed in seaborn >= 0.14; several pyro.infer imports have moved).",
+      "concern": "Without pinned versions the Ising experiment (Figure 11) may not run on a modern Pyro/seaborn stack, blocking reproduction of that panel.",
+      "resolution": "Authors: please add a requirements file (or environment.yml) pinning torch/pyro/seaborn versions used, and update or note the deprecated seaborn/pyro calls.",
+      "cross_refs": [],
+      "check_script": "_audit_code/checks.py",
+      "paper_ref": "Appendix D.5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "python-deps-unpinned",
+      "audit": "",
+      "audit_md_line": 80
+    },
+    {
+      "id": "/ising-weight-sigmoid-vs-indicator",
+      "category": "difference",
+      "topic": "weighting function",
+      "title": "Robust Ising weight M(x) coded as a sigmoid, not the paper's hard indicator",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "applications/V0_Ising/RobustKSD.py",
+      "line_start": 148,
+      "line_end": 151,
+      "quote": "def HK(self, X):\n    M = ( 1 / ( 1 + torch.exp(-( self.thres - torch.sum(X, dim=1).abs() )) ) ).reshape(X.shape[0], 1)\n    K = torch.exp( - torch.cdist(X, X, p=0) / X.shape[1] * self.gamma )\n    return M * K * M.t()\n",
+      "claim": "Appendix D.5 defines the robust weighting function as the hard indicator M(x) = 1{ |sum_i x(i)| <= 90 } * Id. The code instead uses a logistic/sigmoid relaxation M(x) = 1/(1+exp(-(thres - |sum_i x(i)|))) with thres=90, whose value transitions smoothly (e.g. 0.88, 0.50, 0.12 at |sum x| = 88, 90, 92) rather than snapping between 1 and 0.",
+      "concern": "For configurations with |sum x| near 90 the coded weight differs materially from the stated indicator; the smoothing is a sensible (differentiable) choice for HMC but is not what the paper describes.",
+      "resolution": "Authors: please state that the indicator is implemented as a sigmoid relaxation (and why), or use the hard indicator; confirm results are unchanged.",
+      "cross_refs": [],
+      "paper_ref": "Appendix D.5, weighting function (ii)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ising-weight-sigmoid-vs-indicator",
+      "audit": "",
+      "audit_md_line": 121
+    },
+    {
+      "id": "/egm-outlier-no-centering",
+      "category": "difference",
+      "topic": "preprocessing",
+      "title": "Sachs outlier removal thresholds value/sd, paper says '10 SD from the mean'",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "applications/EGM/load_Sachs_dataset.m",
+      "line_start": 19,
+      "line_end": 25,
+      "quote": "% standardise\nX = bsxfun(@rdivide,X,std(X,0,1));\n\n% dataset with outliers removed\nX_max = 10; % outlier threshold\noutliers = (max(X,[],2) > X_max);\nX(outliers,:) = [];\n",
+      "claim": "The paper (Sec. 6.4) says samples 'greater than 10 standard deviations from their mean' were removed. The code scales each protein by its std WITHOUT subtracting the mean, then removes rows whose scaled value exceeds 10 — i.e. it thresholds x/sd > 10 (10 SD from zero), not (x-mean)/sd > 10.",
+      "concern": "The removal criterion differs from the prose; because the sqrt-transformed data have positive means the code removes slightly more points, though the provided X.mat already has exactly n=7449 columns matching the paper, so the net effect is negligible.",
+      "resolution": "Authors: confirm whether centering was intended; note that X.mat (11x7449) matches the paper regardless.",
+      "cross_refs": [],
+      "check_script": "_audit_code/checks.py",
+      "paper_ref": "Section 6.4 (dataset preprocessing)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "egm-outlier-no-centering",
+      "audit": "",
+      "audit_md_line": 148
+    },
+    {
+      "id": "/gauss-beta-min-inconsistent",
+      "category": "difference",
+      "topic": "weight beta",
+      "title": "Fig. 2 y-varying panels use raw beta_n, not min(1,beta_n) from Eq. (15)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "applications/Gauss/reproduce_results_Gauss.m",
+      "line_start": 117,
+      "line_end": 119,
+      "quote": "out = run_Gauss(X,scalar,robust);\nAn = A0 + out.w * out.An; % posterior precision\nvn = v0 + out.w * out.vn;\n",
+      "claim": "Eq. (15) defines the default weight as beta = min(1, beta_n). The epsilon-varying loop applies this cap (lines 37/46: beta = min(1,out.w)), but the y-varying loop (bottom row of Figure 2) uses the raw out.w = beta_n without the min. The same inconsistency recurs in aux_reproduce_results_Gauss.m.",
+      "concern": "The bottom row of Figure 2 is generated with a weight rule that departs from the paper's stated default; the effect is inert only if beta_n <= 1 throughout (expected here since that loop is misspecified/contaminated), so it likely does not change the figure but is an undocumented deviation.",
+      "resolution": "Authors: apply min(1,out.w) consistently, or confirm beta_n <= 1 in the y-varying setting so the panels are unaffected.",
+      "cross_refs": [
+        "egm-contamination-unseeded"
+      ],
+      "paper_ref": "Eq. (15), Section 5.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "gauss-beta-min-inconsistent",
+      "audit": "",
+      "audit_md_line": 179
+    },
+    {
+      "id": "/egm-contamination-unseeded",
+      "category": "methodology",
+      "topic": "reproducibility / seeding",
+      "title": "EGM driver (Fig. 6) sets no explicit RNG seed, unlike the other four drivers",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "applications/EGM/reproduce_results_EGM.m",
+      "line_start": 14,
+      "line_end": 17,
+      "quote": "% dataset\nZ1 = dataset.X; % \"correct\" data\nZ2 = 10*ones(d,n); % \"incorrect\" data\nrnd = rand(1,n); % use same underlying randomness for all Bernoulli variables\n",
+      "claim": "The contamination mask is drawn with rand(1,n), but reproduce_results_EGM.m never calls rng(...) — it is the ONLY one of the five drivers with zero rng() seeds (the other four all set rng(0); _audit_code/out/checks.txt, section [1]). MATLAB initialises its default stream deterministically at startup, so a fresh-session run is reproducible; but running the script twice in one session, or after any other rand/randn call, silently re-draws which of the 7449 cells are corrupted for epsilon in {0.01,0.02,0.05}, changing the closed-form posteriors, the selected top-5 edges, and the 'Edges = X/5' counts in Figure 6 (the epsilon=0 column is unaffected since rnd is then unused).",
+      "concern": "Reproducibility of the Figure 6 edge-agreement counts relies on MATLAB's implicit default-stream state rather than being pinned like the other four experiments, so the exact numbers can differ under a different invocation order.",
+      "resolution": "Authors: add rng(<seed>) at the top of reproduce_results_EGM.m matching the run used for Figure 6, or report the counts averaged over seeds with a spread.",
+      "cross_refs": [
+        "gauss-beta-min-inconsistent"
+      ],
+      "check_script": "_audit_code/checks.py",
+      "paper_ref": "Figure 6, Section 6.4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "egm-contamination-unseeded",
+      "audit": "",
+      "audit_md_line": 207
+    }
+  ]
+}

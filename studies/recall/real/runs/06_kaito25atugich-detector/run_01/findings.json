@@ -1,0 +1,262 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-01T10:52:27.989117+00:00",
+  "findings": [
+    {
+      "id": "/missing-xsum-ai-dataset",
+      "category": "missing",
+      "topic": "data availability / result traceability",
+      "title": "XSum AI-generated data and prompt file absent; neither documented run executes",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "detection.py",
+      "line_start": 30,
+      "line_end": 33,
+      "quote": "if dataset_name == \"HC3\":\n    file_path_ai = \"./txtdata/HC3_ai.json\"\nelse:\n    file_path_ai = f\"./txtdata/{file_ai}_{token_size}.json\"\n",
+      "claim": "For the paper's default (dataset_name=xsum, ai_source=llama2, token_size=200) the black-box run loads `./txtdata/xsum_from_ai_llama2_200.json`, and the white-box run additionally calls get_prompts→`./txtdata/xsum_prompt.json` (detector.py:1021); `txtdata/` ships only xsum_human.json, HC3_{ai,human,prompt}.json, writingprompts_{human,prompt}.json — the two XSum files are absent.",
+      "concern": "XSum is the paper's only dataset (Table 2/3/4); with the AI-generated summaries and the prompt file missing, `python detection.py` and `python detection.py --prompt` both fail with FileNotFoundError, so the headline results cannot be reproduced from the repo, and regenerating requires gated Llama-2-7b-chat access plus network.",
+      "resolution": "Ship xsum_from_ai_llama2_200.json and xsum_prompt.json (the exact 200+200 samples behind Table 2), or provide a resolvable, network-only fetch that does not depend on gated weights.",
+      "cross_refs": [
+        "committed-results-contradict-table2",
+        "length-confound-human-vs-ai"
+      ],
+      "check_script": "_audit_code/check_data_present.py",
+      "paper_ref": "Section 5.1 (Configuration); abstract 'Code is available'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-xsum-ai-dataset",
+      "audit": "",
+      "audit_md_line": 66
+    },
+    {
+      "id": "/tables34-sweep-not-reproducible",
+      "category": "missing",
+      "topic": "ablations / result traceability",
+      "title": "Tables 3–4 substitution-rate/sample-size sweeps have no driver script or outputs",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "detection_all.sh",
+      "line_start": 1,
+      "line_end": 4,
+      "quote": "python detection.py # black-box detection\npython detection.py --prompt # white-box detection\npython detection.py --binoculars_only # black-box detection\npython detection.py --binoculars_only  --prompt # white-box detection\n",
+      "claim": "The documented reproduction driver runs a single fixed configuration (default perturbation_num=5, pct_words_num=0.1, and one fast_sample_num) and never varies substitution rate or sample size; results/ contains only that one config; no script emits the SR∈{10,20,30,100}% × SS∈{5,10,10000} grid of Tables 3–4.",
+      "concern": "The Table 3–4 rows (the paper's sample-size/substitution-rate robustness claim for the Fast series) trace to no computing script and no committed output, so those numbers cannot be checked or regenerated without reverse-engineering the argument grid.",
+      "resolution": "Add a sweep driver (or a documented list of exact commands) that produces every Table 3 and Table 4 row, and commit the resulting output JSONs.",
+      "cross_refs": [
+        "missing-xsum-ai-dataset"
+      ],
+      "check_script": "_audit_code/check_data_present.py",
+      "paper_ref": "Tables 3 and 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "tables34-sweep-not-reproducible",
+      "audit": "",
+      "audit_md_line": 94
+    },
+    {
+      "id": "/readme-refs-missing-script",
+      "category": "missing",
+      "topic": "reproducibility / documentation",
+      "title": "README step 2 runs a script that does not exist",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 32,
+      "line_end": 32,
+      "quote": "python detection_binoculars_only.py\n",
+      "claim": "README 'How to use' step 2 instructs `python detection_binoculars_only.py`, but no such file exists in the repo; the actual Binoculars entry point is the `--binoculars_only` flag on detection.py (detection.py:94,113-115).",
+      "concern": "A user following the README verbatim to reproduce the Binoculars row hits 'No such file or directory'.",
+      "resolution": "Replace the command with `python detection.py --binoculars_only` (add `--prompt` for white-box), or add the referenced script.",
+      "cross_refs": [],
+      "paper_ref": "Table 2, Binoculars row",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "readme-refs-missing-script",
+      "audit": "",
+      "audit_md_line": 122
+    },
+    {
+      "id": "/whitebox-prompt-label-overwrite",
+      "category": "bug",
+      "topic": "white-box evaluation loop",
+      "title": "prompt_label = idx overwrites the label-conditional; white-box prompts every human text and over-indexes AI texts",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "detector.py",
+      "line_start": 980,
+      "line_end": 985,
+      "quote": "prompt_label = -1\nif is_prompt:\n    if label_list[idx]:\n        prompt_label = idx - len(human_texts)\n    prompt_label = idx\ndetector.detect(text, prompt_label)\n",
+      "claim": "In the eval loop over all_texts = human_texts + ai_texts, the intended mapping (init -1 → human text gets NO prompt; AI text at idx gets prompt_list[idx - len(human_texts)]) is destroyed: line 984 unconditionally sets prompt_label = idx, making line 983 dead code. detect() then takes the `prompt_label >= 0` branch for every item.",
+      "concern": "Contra paper §4.2/Fig.4 ('For human-generated text, only x is input'), every human text is scored WITH a prepended prompt; and each AI text (idx = 200..399) indexes prompt_list at 200..399 instead of 0..199 — for the paper's 200+200 config with a 200-row prompt list this is out of range, so `python detection.py --prompt` raises IndexError at the first AI text (idx=200). The white-box column (the paper's headline result) cannot be produced by this code as written, and where it does not crash it uses the wrong prompt for both classes.",
+      "resolution": "Guard the override (e.g. `else: prompt_label = -1`) so human texts stay unprompted and AI texts map to prompt_list[idx - len(human_texts)]; confirm which code state produced the committed white-box results.",
+      "cross_refs": [
+        "committed-results-contradict-table2",
+        "missing-xsum-ai-dataset"
+      ],
+      "check_script": "_audit_code/check_prompt_label.py",
+      "paper_ref": "Section 4.2 and Figure 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "whitebox-prompt-label-overwrite",
+      "audit": "",
+      "audit_md_line": 148
+    },
+    {
+      "id": "/evaluation-py-syntax-error",
+      "category": "bug",
+      "topic": "prompt-estimation evaluation",
+      "title": "evaluation.py has an unclosed call and cannot be imported or run",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "evaluation.py",
+      "line_start": 25,
+      "line_end": 26,
+      "quote": "ai_texts = random.sample(list(ai_prompt_texts.values()), size)\nhuman_texts = random.sample(list(human_prompt_texts.values())\n",
+      "claim": "Line 26 opens `random.sample(list(...))` but never closes the sample() call (missing `, size)`), so the module raises SyntaxError: '(' was never closed at line 26 (confirmed by ast.parse over all repo .py files).",
+      "concern": "The BERTScore prompt-estimation evaluation script is dead on arrival — it cannot be executed to reproduce any prompt-similarity analysis; it also reads two `xsum_est_prompt_for_summary_*` files that are not in txtdata/, and its dependency `evaluate` is absent from requirements.txt.",
+      "resolution": "Fix the call to `random.sample(list(human_prompt_texts.values()), size)`; add `evaluate`/`bert_score` to requirements and ship the input files (or a fetch).",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_syntax.py",
+      "paper_ref": null,
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "evaluation-py-syntax-error",
+      "audit": "",
+      "audit_md_line": 178
+    },
+    {
+      "id": "/roc-threshold-uses-tpr-not-fpr",
+      "category": "bug",
+      "topic": "operating-point thresholds",
+      "title": "get_roc_metrics compares TPR against FPR targets when picking thresholds",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "utils.py",
+      "line_start": 61,
+      "line_end": 66,
+      "quote": "def get_roc_metrics(true_labels, scores):\n    fpr, tpr, thresholds = roc_curve(true_labels, scores)\n    thresholds_dict = dict()\n    for fpr_rate in [0.01, 0.05, 0.1, 0.25]:\n        idx = find_max_index(tpr, fpr_rate)\n        thresholds_dict[fpr_rate] = thresholds[idx]\n",
+      "claim": "The loop iterates over FPR targets (0.01…0.25) but passes `tpr` (not `fpr`) to find_max_index, so `thresholds_dict[fpr_rate]` is the threshold at the largest index where TPR ≤ fpr_rate — an operating point defined on the wrong ROC axis.",
+      "concern": "Any TPR@low-FPR operating point read from the saved `threshold` field is computed against TPR instead of FPR and is therefore wrong; the reported ROC-AUC itself is unaffected because it uses auc(fpr, tpr).",
+      "resolution": "Pass `fpr` to find_max_index (`find_max_index(fpr, fpr_rate)`) so the threshold is chosen at the target false-positive rate.",
+      "cross_refs": [],
+      "paper_ref": "Section 6 (discussion of high TPR at low FPR)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "roc-threshold-uses-tpr-not-fpr",
+      "audit": "",
+      "audit_md_line": 204
+    },
+    {
+      "id": "/committed-results-contradict-table2",
+      "category": "difference",
+      "topic": "result faithfulness (artefact vs paper)",
+      "title": "Committed results/*.json do not reproduce Table 2; Entropy/Rank/Log-Rank white-box AUC ≈ 1 − paper",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "out/results_vs_table2.csv",
+      "csv_row": 6,
+      "quote": "entropy,0.330,0.672,0.978,0.022,0.978,WB-FLIPPED(~1-paper) BB-mismatch\n",
+      "claim": "Recomputing ROC-AUC from the repo's own committed results (and matching the stored roc_auc): Entropy WB=0.022, Rank WB=0.023, Log-Rank WB=0.001 — each ≈ (1 − Table 2 value) of 0.978/0.977/0.999; several black-box cells also differ (LRR 0.532→0.406, NPR 0.560→0.679, Entropy 0.330→0.672, Rank 0.432→0.568) and DetectGPT/NPR white-box differ (1.000→0.934, 0.934→0.819).",
+      "concern": "The committed artefacts contradict Table 2 and, taken at face value, refute the abstract's 'increase in AUC of at least 0.1 across all detectors' for Entropy/Rank/Log-Rank (their committed white-box AUC is far below black-box). Either the paper's Table 2 or these committed results are wrong; the white-box flips are consistent with the prompt-handling bug (see whitebox-prompt-label-overwrite), while the black-box mismatches indicate the shipped results are from a different code/config than Table 2.",
+      "resolution": "State which commit and command produced Table 2, commit those exact result JSONs, and reconcile the Entropy/Rank/Log-Rank white-box sign convention (the AUC≈1−paper pattern) against the reported values.",
+      "cross_refs": [
+        "whitebox-prompt-label-overwrite",
+        "missing-xsum-ai-dataset"
+      ],
+      "check_script": "_audit_code/check_results_vs_table2.py",
+      "paper_ref": "Table 2; abstract headline claim",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "committed-results-contradict-table2",
+      "audit": "",
+      "audit_md_line": 235,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/binoculars-model-not-phi15",
+      "category": "difference",
+      "topic": "model configuration",
+      "title": "Binoculars uses OpenLLaMA-3B-v2, not the paper's Phi-1.5 (nor Falcon)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "detector.py",
+      "line_start": 437,
+      "line_end": 441,
+      "quote": "observer_name_or_path = \"01-ai/Yi-6B\"\nperformer_name_or_path = \"HenryJJ/Instruct_Yi-6B_Dolly15K\"\n\nobserver_name_or_path = \"openlm-research/open_llama_3b_v2\"\nperformer_name_or_path = \"mediocredev/open-llama-3b-v2-instruct\"\n",
+      "claim": "Detector.__init__ reassigns the Binoculars observer/performer three times; the last assignment wins, so the models actually loaded are openlm-research/open_llama_3b_v2 and mediocredev/open-llama-3b-v2-instruct — not the Phi-1.5 pair the paper names, and not the Falcon pair (the class default at detector.py:217-218).",
+      "concern": "Binoculars is a headline detector in Table 2 (0.877 / 0.999); its reported numbers depend on the specific base/instruct model pair, and the code silently uses a different one than the paper states, so the Binoculars rows are not reproduced with the described configuration.",
+      "resolution": "Either use the paper's Phi-1.5 pair or update §5.1 to state OpenLLaMA-3B-v2; remove the dead Falcon/Yi assignments to make the intended model unambiguous.",
+      "cross_refs": [],
+      "paper_ref": "Section 5.1: 'Binoculars employs the pre-trained and instruct-tuned Phi1.5 [27] instead of Falcon.'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "binoculars-model-not-phi15",
+      "audit": "",
+      "audit_md_line": 259
+    },
+    {
+      "id": "/length-confound-human-vs-ai",
+      "category": "methodology",
+      "topic": "evaluation validity / shortcut features",
+      "title": "Human (short XSum reference summaries) vs AI (≤200-token) texts differ systematically in length",
+      "severity": "medium",
+      "confidence": "low",
+      "status": "question",
+      "file": "generate_human_dataset.py",
+      "line_start": 26,
+      "line_end": 30,
+      "quote": "train_data = batch[\"document\"][0]\nif len(train_data) < 1000 or len(train_data) >= 1500:\n    continue\nhuman_txts[counter] = batch[\"summary\"][0]\ncontext_txts[counter] = train_data\n",
+      "claim": "The human class is the XSum reference summary (batch['summary'], a single sentence; measured median 121 / mean 123 chars over the 200 shipped human samples), while the AI class is Llama-2 output generated with max_new_tokens=200 (generate_ai_dataset.py:58,77). The document (not the human summary) is length-filtered to 1000–1500 chars.",
+      "concern": "Likelihood/rank/entropy-based scores are strongly length-dependent; if AI texts are several times longer than the one-sentence human summaries, detectors (and the black-box vs white-box gap) may be exploiting a length/format shortcut rather than the prompt effect the paper attributes the gap to.",
+      "resolution": "Report and match the token-length distributions of the human vs AI classes (or add a length-controlled / length-only baseline); ship the AI summaries so the gap can be quantified — it cannot be measured now because xsum_from_ai_llama2_200.json is absent (see missing-xsum-ai-dataset).",
+      "cross_refs": [
+        "missing-xsum-ai-dataset"
+      ],
+      "check_script": "_audit_code/check_data_present.py",
+      "paper_ref": "Section 5.1 (200 XSum human samples; Llama2 up to 200 tokens)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "length-confound-human-vs-ai",
+      "audit": "",
+      "audit_md_line": 289
+    }
+  ]
+}

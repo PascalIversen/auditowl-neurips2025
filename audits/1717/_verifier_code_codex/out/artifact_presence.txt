@@ -1,0 +1,12 @@
+[ABSENT] BERT backbone (Table 6)
+[PRESENT] BLIP captioning (text modality)
+    test_wrapper.ipynb:313: processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+    test_wrapper.ipynb:314: model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-bas
+    test_wrapper.ipynb:361: processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+    test_wrapper.ipynb:362: model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-bas
+[ABSENT] DeepGaze / saliency baseline (Tab1/3/5)
+[ABSENT] YOLO category selectivity (Tab7-10)
+[ABSENT] BrainDiVE image generation (Fig S9/S10)
+[ABSENT] PCA .fit feature extraction (PCA+regression)
+[ABSENT] Ridge / RidgeCV / alpha grid search
+[ABSENT] k-fold / cross-validation primitive

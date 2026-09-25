@@ -1,0 +1,230 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T15:18:38.007444+00:00",
+  "findings": [
+    {
+      "id": "/fastervqa-no-compute-script",
+      "category": "missing",
+      "topic": "result traceability / metrics",
+      "title": "FasterVQA column (Tab. 2, Fig. 1) has no computation script in the repo",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/zhengchen1999__DOVE/README.md",
+      "line_start": 269,
+      "line_end": 269,
+      "quote": "> **TODO:** Add metric computation scripts for FasterVQA, DOVER, and $E^*_{warp}$.\n",
+      "claim": "FasterVQA is reported for every dataset in Table 2 and is one of the two headline bars in Fig. 1, but the repo contains no script that computes it: eval_metrics.py only computes psnr/ssim/lpips/dists/clipiqa via pyiqa, and a repo-wide search finds 'fastervqa' only inside this README TODO line.",
+      "concern": "A headline metric used in the main quantitative table and the teaser figure cannot be reproduced from the released code.",
+      "resolution": "Authors: release the FasterVQA computation script (model checkpoint, preprocessing, and exact invocation), or state which external tool/version produced the Table 2 FasterVQA numbers.",
+      "cross_refs": [
+        "dover-external-dependency-missing",
+        "ewarp-broken-import"
+      ],
+      "check_script": "_audit_code/check_metric_scripts.py",
+      "paper_ref": "Table 2 FasterVQA row; Figure 1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "fastervqa-no-compute-script",
+      "audit": "",
+      "audit_md_line": 50
+    },
+    {
+      "id": "/dover-external-dependency-missing",
+      "category": "missing",
+      "topic": "result traceability / metrics",
+      "title": "DOVER metric script imports unbundled DOVER package (not in repo or requirements)",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/zhengchen1999__DOVE/finetune/scripts/eval_dover.py",
+      "line_start": 150,
+      "line_end": 154,
+      "quote": "from DOVER.evaluate_a_set_of_videos import evaluate_set as dover\n\ninput_path = os.path.abspath(input_path)\n\ndover_results = dover(input_path, device=device)\n",
+      "claim": "eval_dover.py relies on `from DOVER.evaluate_a_set_of_videos import evaluate_set`, but no `DOVER` package/dir exists anywhere in the repo and `dover` is not listed in requirements.txt; there is no fetch/setup instruction for it.",
+      "concern": "DOVER is a headline metric (Table 2, Table 3 'Performance' column, Fig. 1); without the bundled or pinned DOVER package the script cannot run, so the reported DOVER numbers are not reproducible from the release.",
+      "resolution": "Authors: vendor the DOVER code (or pin its version + weights and document the install), and provide the exact command used to produce the Table 2/3 DOVER values.",
+      "cross_refs": [
+        "dover-eval-off-by-one",
+        "fastervqa-no-compute-script"
+      ],
+      "check_script": "_audit_code/check_metric_scripts.py",
+      "paper_ref": "Table 2 DOVER row; Table 3 Performance column",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "dover-external-dependency-missing",
+      "audit": "",
+      "audit_md_line": 75
+    },
+    {
+      "id": "/running-time-no-harness",
+      "category": "missing",
+      "topic": "result traceability / efficiency claim",
+      "title": "No timing harness for Tab. 3 running times / '~28× faster' headline claim",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "For fairness, all methods are measured running time on the same A100 GPU, generating a\n33-frame 720×1280 video. Our method is approximately 28× faster than MGLD-VSR [50].\n",
+      "claim": "Table 3 and Figure 1 report per-method wall-clock running times (e.g. DOVE 14.90 s vs MGLD-VSR 425.23 s) and a '~28× faster' headline, but the repo contains no benchmarking/timing script that measures inference time on a 33-frame 720×1280 video; inference_script.py only runs SR and never times or logs latency.",
+      "concern": "The central efficiency claim (28× speed-up) — the paper's main selling point — has no accompanying measurement code, so the timing comparison cannot be independently reproduced or audited for fairness.",
+      "resolution": "Authors: release the timing script (warm-up, repetitions, what is included/excluded, e.g. VAE tiling, model load) used for Table 3, or document the exact measurement protocol.",
+      "cross_refs": [],
+      "paper_ref": "Table 3; Figure 1 (Time panel); Abstract '28×'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "running-time-no-harness",
+      "audit": "",
+      "audit_md_line": 104,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/pyiqa-diffusers-not-in-requirements",
+      "category": "missing",
+      "topic": "dependencies / environment",
+      "title": "requirements.txt omits pyiqa and diffusers (needed to run inference + metrics)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/zhengchen1999__DOVE/requirements.txt",
+      "line_start": 1,
+      "line_end": 20,
+      "quote": "accelerate>=1.1.1\ntransformers>=4.46.2\nnumpy==1.26.0\ntorch>=2.5.0\ntorchvision>=0.20.0\nsentencepiece>=0.2.0\nSwissArmyTransformer>=0.4.12\ngradio>=5.5.0\nimageio>=2.35.1\nimageio-ffmpeg>=0.5.1\nopenai>=1.54.0\nmoviepy>=2.0.0\nscikit-video>=1.1.11\npydantic>=2.10.3\nwandb\npeft\nopencv-python\ndecord\nav\ntorchdiffeq\n",
+      "claim": "`pyiqa` (imported by eval_metrics.py and inference_script.py) and `diffusers` (imported throughout) are not in requirements.txt; neither is version-pinned. diffusers in particular is unpinned despite the code using model-specific APIs (CogVideoXPipeline, CogVideoXDPMScheduler.get_velocity).",
+      "concern": "The environment cannot be rebuilt from requirements.txt alone, and an unpinned diffusers risks API drift in get_velocity / pipeline signatures.",
+      "resolution": "Add pyiqa and a pinned diffusers (and its pyiqa version) to requirements.txt; the README mentions installing them separately but the pin is still missing.",
+      "cross_refs": [],
+      "paper_ref": "n/a",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "pyiqa-diffusers-not-in-requirements",
+      "audit": "",
+      "audit_md_line": 127
+    },
+    {
+      "id": "/ewarp-broken-import",
+      "category": "bug",
+      "topic": "result traceability / metrics",
+      "title": "eval_ewarp.py imports nonexistent `ewarp` module and chdirs into a missing RAFT dir",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/zhengchen1999__DOVE/finetune/scripts/eval_ewarp.py",
+      "line_start": 146,
+      "line_end": 150,
+      "quote": "original_dir = os.getcwd()\nraft_dir = os.path.join(original_dir, \"RAFT\")\nos.chdir(raft_dir)\nfrom ewarp import Ewarp as Ewarp\nresults, avg_score = Ewarp(args)\n",
+      "claim": "After chdir into script-dir, eval_ewarp.py changes directory to `<finetune/scripts>/RAFT` and does `from ewarp import Ewarp`; but there is no `finetune/scripts/RAFT` directory (RAFT lives at finetune/utils/RAFT) and there is no `ewarp.py` module anywhere in the repo.",
+      "concern": "E*_warp (temporal-consistency metric) is reported for every dataset in Table 2 and in Fig. 1, but its script crashes immediately on import/chdir, so the reported E*_warp values are not reproducible from the release; README TODO confirms the script was not finished.",
+      "resolution": "Authors: add the missing `ewarp.py` (and ensure the RAFT path resolves to finetune/utils/RAFT), or document the external tool/version used to compute E*_warp.",
+      "cross_refs": [
+        "fastervqa-no-compute-script"
+      ],
+      "check_script": "_audit_code/check_metric_scripts.py",
+      "paper_ref": "Table 2 E*_warp row; Figure 1 (E*_warp panel)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ewarp-broken-import",
+      "audit": "",
+      "audit_md_line": 172
+    },
+    {
+      "id": "/eval-gt-path-mismatch",
+      "category": "bug",
+      "topic": "evaluation / reproduction script",
+      "title": "inference.sh passes --gt datasets/test/UDM10/GT for 5 non-UDM10 eval blocks",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/zhengchen1999__DOVE/inference.sh",
+      "line_start": 15,
+      "line_end": 25,
+      "quote": "# SPMCS\npython inference_script.py \\\n    --input_dir datasets/test/SPMCS/LQ-Video \\\n    --model_path pretrained_models/DOVE \\\n    --output_path results/DOVE/SPMCS \\\n    --is_vae_st \\\n\npython eval_metrics.py \\\n    --gt datasets/test/UDM10/GT \\\n    --pred results/DOVE/SPMCS \\\n    --metrics psnr,ssim,lpips,dists,clipiqa\n",
+      "claim": "In inference.sh, the eval_metrics.py call for SPMCS (and identically for YouHQ40, RealVSR, MVSR4x, VideoLQ) sets --gt to datasets/test/UDM10/GT instead of the matching dataset's GT; only the UDM10 block uses the correct GT. _audit_code/check_inference_sh_gt.py confirms 5/6 blocks mismatch.",
+      "concern": "eval_metrics.py matches GT↔pred by filename stem and skips names with no GT match (eval_metrics.py:174-176); pointing every dataset at UDM10/GT will silently skip all/most samples or score against unrelated frames, so the canonical reproduction script does not reproduce Table 2 for those 5 datasets.",
+      "resolution": "Fix each --gt line to point at the corresponding datasets/test/<DATASET>/GT (the README's single manual example at README lines 259-262 uses the correct GT).",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_inference_sh_gt.py",
+      "paper_ref": "Table 2 (SPMCS, YouHQ40, RealVSR, MVSR4x rows)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "eval-gt-path-mismatch",
+      "audit": "",
+      "audit_md_line": 201
+    },
+    {
+      "id": "/dover-eval-off-by-one",
+      "category": "bug",
+      "topic": "metrics / indexing",
+      "title": "eval_dover.py off-by-one assigns DOVER scores to the wrong filenames",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/zhengchen1999__DOVE/finetune/scripts/eval_dover.py",
+      "line_start": 158,
+      "line_end": 159,
+      "quote": "for i, name in enumerate(pred_names):\n    results[name] = dover_results[i-1]\n",
+      "claim": "Per-sample DOVER scores are indexed with `dover_results[i-1]` instead of `dover_results[i]`, so pred_names[0] gets the last score (index -1) and every name is shifted by one relative to evaluate_set's output order.",
+      "concern": "The per-sample DOVER values written to metrics_dover.json are mis-attributed to filenames; the dataset-level average (np.mean over all values) is unaffected because i-1 over 0..N-1 is a permutation, so the headline DOVER number is not changed, but any per-clip analysis is wrong.",
+      "resolution": "Change to `results[name] = dover_results[i]` (after confirming evaluate_set returns results in pred_names order).",
+      "cross_refs": [
+        "dover-external-dependency-missing"
+      ],
+      "paper_ref": "Table 2 DOVER row (per-sample)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "dover-eval-off-by-one",
+      "audit": "",
+      "audit_md_line": 236
+    },
+    {
+      "id": "/div2k-image-count",
+      "category": "difference",
+      "topic": "training data description",
+      "title": "Paper says DIV2K '900 images'; README/official link is the 800-image train split",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "The image dataset is DIV2K [3], with 900 images, which follows the RealESRGAN [38] degradation process.\n",
+      "claim": "§4.1 states the image training set is DIV2K with 900 images, but the released README lists DIV2K-HR as 800 images and links the official DIV2K_train_HR.zip, which is the standard 800-image training split. The code uses a DIV2K_train_HR.txt filelist (built by prepare_dataset.py) that is not shipped, so the exact count cannot be re-derived from the repo.",
+      "concern": "The reported image-dataset size in the paper does not match the released dataset description; minor, but a reproduction using the linked data would use 800 images, not 900.",
+      "resolution": "Authors: confirm whether 800 or 900 images were used (e.g. DIV2K train 800 + 100 from val/other), and reconcile §4.1 with the README.",
+      "cross_refs": [],
+      "paper_ref": "Section 4.1 Datasets; README 'Train Datasets' table",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "div2k-image-count",
+      "audit": "",
+      "audit_md_line": 263,
+      "line_start": null,
+      "line_end": null
+    }
+  ]
+}

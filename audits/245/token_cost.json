@@ -1,0 +1,19 @@
+{
+  "folder": "245_Adaptive_Data_Borrowing_for_Improving_Treatment_Effect_Estim",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 10978,
+    "output": 20586,
+    "cache_write": 239692,
+    "cache_read": 6088901
+  },
+  "total_tokens": 6360157,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 15.34
+}

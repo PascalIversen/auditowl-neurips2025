@@ -1,0 +1,17 @@
+{
+  "paper_id": "4932_Centralized_Reward_Agent_for_Knowledge_Sharing_and_Transfer_",
+  "title": "Centralized Reward Agent for Knowledge Sharing and Transfer in Multi-Task Reinforcement Learning",
+  "repos": [
+    {
+      "name": "mahaozhe__CenRA",
+      "role": "core",
+      "evidence": "Repo owner 'mahaozhe' = Haozhe Ma (first author). README title: 'Knowledge Sharing and Transfer via Centralized Reward Agent for Multi-Task Reinforcement Learning'. Paper line 97 states 'The source code is accessible at: https://github.com/mahaozhe/CenRA'. Repo contains CenRA/Algorithms.py (CenRA_dis/CenRA_con classes), CenRA/Agents.py (DQNAgent/SACAgent), CenRA/Networks.py, and run-2dmaze.py/run-3dpickup.py/run-mujococar.py — directly implementing the paper's CenRA framework for the three non-Meta-World environments reported in the paper."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo mahaozhe__CenRA is unambiguously the paper's own implementation: the repo owner matches the first author, the paper provides the GitHub URL explicitly, and the README and code structure (CenRA_dis/CenRA_con algorithms, centralized reward agent + distributed policy agents) directly implement the paper's CenRA framework. The audit correctly identified this as the paper's code and wrote legitimate 'missing code' findings against real gaps (Meta-World benchmark absent, no eval script, no baseline code, no transfer driver, alpha hard-coded), plus one confirmed runtime bug. No misclassification occurred.",
+  "audit_impact": "None — the audit correctly used the author's own core repo and all findings are written against the right codebase. The missing-code findings (metaworld-benchmark-absent, eval-script-missing, baselines-not-implemented, knowledge-transfer-driver-missing, alpha-ablation-not-controllable) accurately reflect genuine incompleteness in the released repo relative to the paper's results.",
+  "recommended_action": "No corrective action needed on the audit classification. The paper is correctly counted as source-present (partial). The legitimate findings should be forwarded to authors as-is."
+}

@@ -1,0 +1,129 @@
+{
+  "paper": "1829",
+  "n_runs": 10,
+  "counts": {
+    "n_findings": {
+      "mean": 5.2,
+      "sd": 1.6193277068654826,
+      "cv": 0.31140917439720817,
+      "min": 2.0,
+      "max": 8.0
+    },
+    "n_high": {
+      "mean": 0.2,
+      "sd": 0.42163702135578396,
+      "cv": 2.1081851067789197,
+      "min": 0.0,
+      "max": 1.0
+    },
+    "per_run_findings": [
+      4,
+      8,
+      6,
+      5,
+      5,
+      6,
+      6,
+      4,
+      2,
+      6
+    ],
+    "per_run_high": [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ]
+  },
+  "alignment": {
+    "anchor": {
+      "n_canonical_issues": 28,
+      "detection_rate_hist": [
+        0,
+        22,
+        4,
+        1,
+        1,
+        0
+      ],
+      "stable_core_ge80": 1,
+      "flaky_le30": 24,
+      "midband": 3,
+      "stable_core_fraction": 0.03571428571428571,
+      "mean_run_core_share": 0.14416666666666667,
+      "jaccard_mean": 0.14626768293434958,
+      "jaccard_ci95": [
+        0.11169659507159507,
+        0.18372111222111218
+      ],
+      "alpha_presence_nominal": 0.08485155195681693,
+      "severity_within_issue_sd_mean": 0.5411225206650074,
+      "severity_majority_match_rate": 0.55
+    },
+    "semantic": {
+      "n_canonical_issues": 28,
+      "detection_rate_hist": [
+        0,
+        21,
+        6,
+        1,
+        0,
+        0
+      ],
+      "stable_core_ge80": 0,
+      "flaky_le30": 24,
+      "midband": 4,
+      "stable_core_fraction": 0.0,
+      "mean_run_core_share": 0.0,
+      "jaccard_mean": 0.10093579260245925,
+      "jaccard_ci95": [
+        0.06913993722327055,
+        0.13646270858770856
+      ],
+      "alpha_presence_nominal": 0.0026086956521756965,
+      "severity_within_issue_sd_mean": 0.5477225575051661,
+      "severity_majority_match_rate": 0.6
+    }
+  },
+  "post_verify": {
+    "survival_rate_mean": 1.0,
+    "survival_per_run": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "n_canonical_issues_kept": 28,
+    "stable_core_ge80": 1,
+    "stable_core_fraction": 0.03571428571428571,
+    "jaccard_mean": 0.14626768293434958,
+    "alpha_presence_nominal": 0.08485155195681693
+  },
+  "headline": {
+    "any_high_per_run": [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "any_high_agreement": 0.8
+  }
+}

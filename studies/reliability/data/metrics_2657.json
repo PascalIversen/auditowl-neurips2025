@@ -1,0 +1,129 @@
+{
+  "paper": "2657",
+  "n_runs": 10,
+  "counts": {
+    "n_findings": {
+      "mean": 6.7,
+      "sd": 1.70293863659264,
+      "cv": 0.2541699457600955,
+      "min": 3.0,
+      "max": 9.0
+    },
+    "n_high": {
+      "mean": 0.9,
+      "sd": 0.7378647873726218,
+      "cv": 0.8198497637473576,
+      "min": 0.0,
+      "max": 2.0
+    },
+    "per_run_findings": [
+      7,
+      6,
+      7,
+      9,
+      8,
+      7,
+      5,
+      3,
+      8,
+      7
+    ],
+    "per_run_high": [
+      1,
+      0,
+      2,
+      1,
+      2,
+      0,
+      1,
+      0,
+      1,
+      1
+    ]
+  },
+  "alignment": {
+    "anchor": {
+      "n_canonical_issues": 19,
+      "detection_rate_hist": [
+        0,
+        13,
+        0,
+        3,
+        2,
+        1
+      ],
+      "stable_core_ge80": 2,
+      "flaky_le30": 13,
+      "midband": 4,
+      "stable_core_fraction": 0.10526315789473684,
+      "mean_run_core_share": 0.3282142857142857,
+      "jaccard_mean": 0.37091309924643256,
+      "jaccard_ci95": [
+        0.332635101010101,
+        0.41106603735770386
+      ],
+      "alpha_presence_nominal": 0.3197492163009439,
+      "severity_within_issue_sd_mean": 0.3731568012680742,
+      "severity_majority_match_rate": 0.7284313725490196
+    },
+    "semantic": {
+      "n_canonical_issues": 18,
+      "detection_rate_hist": [
+        0,
+        11,
+        1,
+        1,
+        2,
+        3
+      ],
+      "stable_core_ge80": 3,
+      "flaky_le30": 12,
+      "midband": 3,
+      "stable_core_fraction": 0.16666666666666666,
+      "mean_run_core_share": 0.4600000000000001,
+      "jaccard_mean": 0.447708834375501,
+      "jaccard_ci95": [
+        0.4087657327240661,
+        0.48944033589866925
+      ],
+      "alpha_presence_nominal": 0.39454621647510046,
+      "severity_within_issue_sd_mean": 0.43515586825362323,
+      "severity_majority_match_rate": 0.718121693121693
+    }
+  },
+  "post_verify": {
+    "survival_rate_mean": 0.9666666666666666,
+    "survival_per_run": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.6666666666666666,
+      1.0,
+      1.0
+    ],
+    "n_canonical_issues_kept": 19,
+    "stable_core_ge80": 2,
+    "stable_core_fraction": 0.10526315789473684,
+    "jaccard_mean": 0.35693602693602694,
+    "alpha_presence_nominal": 0.31024930747922785
+  },
+  "headline": {
+    "any_high_per_run": [
+      1,
+      0,
+      1,
+      1,
+      1,
+      0,
+      1,
+      0,
+      1,
+      1
+    ],
+    "any_high_agreement": 0.7
+  }
+}

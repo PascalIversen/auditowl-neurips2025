@@ -1,0 +1,7 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/surkovv/sdxl-unbox	[author: first author Viacheslav Surkov; linked from official project page sdxl-unbox.epfl.ch as the code release; located post-audit 2026-05-31]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/wendlerc/RIEBench	[author: co-author Chris Wendler -- RIEBench editing eval; companion repo, not cloned]
+https://github.com/black-forest-labs/flux	[known-org:black-forest-labs -- FLUX base model dependency]
+https://github.com/epfl-dlab/zip2zip	[same lab (epfl-dlab) but UNRELATED tokenization paper -- red herring, not this paper's code]

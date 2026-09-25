@@ -1,0 +1,19 @@
+{
+  "folder": "3101_When_Does_Closeness_in_Distribution_Imply_Representational_S",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 23748,
+    "output": 17911,
+    "cache_write": 296443,
+    "cache_read": 6715428
+  },
+  "total_tokens": 7053530,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 17.33
+}

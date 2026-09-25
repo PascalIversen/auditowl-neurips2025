@@ -1,0 +1,5 @@
+paper_number: 2989
+title: FFN Fusion: Rethinking Sequential Computation in Large Language Models
+authors: Akhiad Bercovich, Mohammed Dabbah, Omri Puny, Ido Galil, Amnon Geifman, Yonatan Geifman, Izik Golan, Ehud Karpas, Itay Levy, Zach Moshe, Najeeb Nabwani, Tomer Ronen, Itamar Schen, Ido Shahaf, Oren Tropp, Ran Zilberstein, Ran El-Yaniv
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/8de34183092ab7093305c29bea2ea230-Abstract-Conference.html
+category: empirical

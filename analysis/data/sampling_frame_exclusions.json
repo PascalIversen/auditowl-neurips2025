@@ -1,0 +1,44 @@
+{
+ "1308": {
+  "category": "justified_no_code",
+  "checklist_answer": "No",
+  "checklist_justification": "We do not find it necessary to release the code. Our experiments concern the training of rather standard architectures and they can be readily reproduced without needing to upload the code.",
+  "checklist_question": "Open access to data and code",
+  "title": "Neural Collapse is Globally Optimal in Deep Regularized ResNets and Transformers"
+ },
+ "1906": {
+  "category": "theory",
+  "checklist_answer": "NA",
+  "checklist_justification": "The paper is a theory work and does not include experiments requiring code.",
+  "checklist_question": "Open access to data and code",
+  "title": "Simultaneous Swap Regret Minimization via KL-Calibration"
+ },
+ "218": {
+  "category": "theory",
+  "checklist_answer": "NA",
+  "checklist_justification": "Our work does not involve any experiment.",
+  "checklist_question": "Open access to data and code",
+  "title": "Tighter CMI-Based Generalization Bounds via Stochastic Projection and Quantization"
+ },
+ "2788": {
+  "category": "theory",
+  "checklist_answer": "NA",
+  "checklist_justification": "No datasets or code are used or required, as the paper does not include experiments.",
+  "checklist_question": "Open access to data and code",
+  "title": "Smoothed Agnostic Learning of Halfspaces over the Hypercube"
+ },
+ "4393": {
+  "category": "justified_no_code",
+  "checklist_answer": "No",
+  "checklist_justification": "All experiments performed are simple enough to reproduce without access to code. Code is available upon request.",
+  "checklist_question": "Open access to data and code",
+  "title": "Self-Supervised Discovery of Neural Circuits in Spatially Patterned Neural Responses with Graph Neural Networks"
+ },
+ "459": {
+  "category": "theory",
+  "checklist_answer": "NA",
+  "checklist_justification": "our experiments are illustrative, we do not use specific datasets.",
+  "checklist_question": "Open access to data and code",
+  "title": "Sampling from multi-modal distributions with polynomial query complexity in fixed dimension via reverse diffusion"
+ }
+}

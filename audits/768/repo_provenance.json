@@ -1,0 +1,17 @@
+{
+  "paper_id": "768_A_High_Dimensional_Statistical_Method_for_Optimizing_Transfe",
+  "title": "A High-Dimensional Statistical Method for Optimizing Transfer Quantities in Multi-Source Transfer Learning",
+  "repos": [
+    {
+      "name": "zqy0126__OTQMS",
+      "role": "core",
+      "evidence": "Repo owner 'zqy0126' matches first author 'Qingyue Zhang'. README commands run 'sources_model_pretrain' and 'main' with '--otherpoint_list [\"m\",\"all\",\"none\"]' where 'm' is OTQMS. Paper states code at https://github.com/zqy0126/OTQMS. Repo contains misc.py:fisher_and_get_multis_optimal_m, solve_quadratic_problem (the core optimal-quantity selection), algorithms.py (Computheta), datasets.py (DomainNet/OfficeHome), and output_images/ with PDFs matching paper figures (OTQMS_domain_selection, teaser_on_Cifar10, data_usage_runtime_comparison). This is the paper's own released implementation."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "One repo was cloned: zqy0126__OTQMS. The paper explicitly states code at https://github.com/zqy0126/OTQMS. The repo owner matches the first author (Qingyue Zhang = zqy0126), the repo name OTQMS is the paper's algorithm name, the README runs the exact commands described in Algorithm 1, and the code implements the paper's core components (Fisher-based optimal transfer quantity selection, OTQMS training loop, DomainNet/OfficeHome evaluation). The audit correctly identified this as the author code and wrote substantive findings against it (objective-extra-term, fisher-minmax-normalization, pretrained-ckpt-path-mismatch, lr-mismatch, model-selection-on-test, etc.), all of which are legitimate code-vs-paper discrepancies within the core implementation. No non-core repos were cloned.",
+  "audit_impact": "None. The cloned repo is correctly identified as the paper's core implementation. All findings are written against the right code. The audit verdict (source present) is correct.",
+  "recommended_action": "No change needed. The provenance is clean: one core repo, correctly classified, with all findings targeted at genuine paper-vs-code discrepancies."
+}

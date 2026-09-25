@@ -1,0 +1,129 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T06:07:19.734476+00:00",
+  "findings": [
+    {
+      "id": "/orthotrans-plugin-baselines-missing",
+      "category": "missing",
+      "topic": "generality / plug-in experiments",
+      "title": "OrthoTrans plug-in code for iTransformer/PatchTST/RLinear (Table 5) absent",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "experiments/exp_basic.py",
+      "line_start": 13,
+      "line_end": 26,
+      "quote": "self.model_dict = {\n    'OLinear': OLinear,\n    'OLinear_C': OLinear_C,\n    'OLinear_attn_var': OLinear_attn_var,\n    'OLinear_ablation_var_temp': OLinear_ablation_var_temp,\n    'OLinear_ablation_lin_design': OLinear_ablation_lin_design,\n    'OLinear_no_Q_neither': OLinear_no_Q_neither,\n    'OLinear_FFT': OLinear_FFT,\n    'OLinear_wavelet': OLinear_wavelet,\n    'OLinear_wavelet2': OLinear_wavelet2,\n    'OLinear_Legendre': OLinear_Legendre,\n    'OLinear_Laguerre': OLinear_Laguerre,\n    'OLinear_cheby': OLinear_cheby,\n}\n",
+      "claim": "The model registry contains only OLinear and its ablation variants; no iTransformer, PatchTST, RLinear, or DLinear implementation exists in model/, and no script sets --iTrans_ortho_trans 1 / --PatchTST_ortho_trans 1 / --DLinear_ortho_trans 1 (the flags exist in run.py:78-80 but are dead).",
+      "concern": "Table 5's generality result ('OrthoTrans yields average MSE improvements of 5.1% and 10.1% for iTransformer and PatchTST') cannot be reproduced because the baseline forecasters OrthoTrans is plugged into are not in the repo.",
+      "resolution": "Authors: please add the iTransformer/PatchTST/RLinear model implementations and the plug-in run scripts used to generate Table 5 (and Table 6's plug-in rows).",
+      "cross_refs": [
+        "Table 5"
+      ],
+      "paper_ref": "Section 5.2 'OrthoTrans as a plug-in'; Table 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "orthotrans-plugin-baselines-missing",
+      "audit": "",
+      "audit_md_line": 58,
+      "verdict": "keep",
+      "reason": "Quote matches exp_basic.py:13-26 exactly; model/ contains only OLinear variants with no iTransformer/PatchTST/RLinear files; run.py:78-80 confirms the ortho_trans flags exist but are dead (no consuming model in the repo).",
+      "changed": "nothing"
+    },
+    {
+      "id": "/basis-script-undefined-model",
+      "category": "bug",
+      "topic": "ablation scripts",
+      "title": "Basis-ablation scripts (ECL/PEMS03/Solar) call undefined model OLinear_wavelet_concat",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "scripts/ablation/basis/ECL_orthoLinear_basis.sh",
+      "line_start": 6,
+      "line_end": 6,
+      "quote": "model_names=(OLinear_FFT OLinear_wavelet_concat OLinear_wavelet2 OLinear_cheby OLinear_Laguerre OLinear_Legendre)\n",
+      "claim": "Three of seven basis-ablation scripts (ECL, PEMS03, Solar) list model names 'OLinear_wavelet_concat' / 'OLinear_wavelet2_concat' that are not keys of experiments/exp_basic.py:model_dict (only 'OLinear_wavelet' and 'OLinear_wavelet2' exist) and are not defined anywhere in model/orthoLinear_basis/.",
+      "concern": "Running these scripts crashes with a KeyError at self.model_dict[self.args.model] when it reaches the wavelet entry, so the wavelet-basis comparison for those datasets cannot be reproduced as scripted.",
+      "resolution": "Authors: rename 'OLinear_wavelet_concat'/'OLinear_wavelet2_concat' to the shipped 'OLinear_wavelet'/'OLinear_wavelet2' in the ECL/PEMS03/Solar basis scripts, or add the missing model files.",
+      "cross_refs": [],
+      "paper_ref": "Section 5.2 'Comparison with other transformation bases'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "basis-script-undefined-model",
+      "audit": "",
+      "audit_md_line": 97,
+      "verdict": "keep",
+      "reason": "ECL_orthoLinear_basis.sh:6 quote matches exactly; grep confirms OLinear_wavelet_concat / OLinear_wavelet2_concat appear in ECL/PEMS03/Solar scripts but are absent from model/orthoLinear_basis/ (only OLinear_wavelet.py and OLinear_wavelet2.py exist) and from exp_basic.py model_dict.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/itr-best-of-n-selected-on-test",
+      "category": "methodology",
+      "topic": "selective reporting / test-set selection",
+      "title": "Driver reports best of N runs/configs selected by test MSE+MAE",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "run.py",
+      "line_start": 568,
+      "line_end": 580,
+      "quote": "for test_bs in sorted(test_batch_size_list):\n    print('>>>>>>>testing : {} (test_batch_size: {})<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.\n          format(setting, test_bs))\n    mse0, mae0 = exp.test(setting, test=args.test_mode, test_batch_size=test_bs)\n\n    if mse0 < mse:\n        mse, mae = mse0, mae0\n        best_batch_size = test_bs\nprint(f'\\tbest_test_batch_size: {best_batch_size}, best_mse: {mse:.5f}, best_mae: {mae:.5f}')\n\nif mse + mae <= best_mse + best_mae:\n    best_lamda1 = lamda1\n    best_mse, best_mae, best_ii = mse, mae, ii\n",
+      "claim": "exp.test() returns the TEST-set MSE/MAE; across the itr loop (and any lamda1 sweep / multiple test_batch_size) the driver keeps the run with the lowest test MSE+MAE as best_mse/best_mae, which is what gets logged to best_log.txt / best_results/. The robust/ scripts run this with --itr 7 --fix_seed 0 (e.g. scripts/OLinear/robust/Weather_orthoLinear.sh:51,57), i.e. 7 seeds, reporting the best of 7 by test score.",
+      "concern": "Selecting the best of multiple training runs (or hyper-parameter settings) by test-set MSE/MAE is test-set selection; if any reported number is taken from best_results/ rather than a fixed single seed or a mean over seeds, it overstates performance — and the per-seed values needed for the Table 13 std are not aggregated by any script in the repo.",
+      "resolution": "Authors: confirm the main Tables 2/3 numbers come from the single-seed itr=1 main scripts (not the itr=7 robust best-of-7), and that Table 13's mean/std is computed over all 7 logged per-seed runs rather than the 'global best' the driver prints. Consider selecting by validation, not test.",
+      "cross_refs": [
+        "itr-test-batch-size-selection"
+      ],
+      "paper_ref": "run.py driver loop; Appendix F Table 13 (std over 7 seeds)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "itr-best-of-n-selected-on-test",
+      "audit": "",
+      "audit_md_line": 127,
+      "verdict": "keep",
+      "reason": "run.py:568-580 quote matches exactly; the loop selects the best test-MSE+MAE across itr runs and logs to best_results/, confirming test-set selection as described.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/itr-test-batch-size-selection",
+      "category": "methodology",
+      "topic": "test-set selection (latent)",
+      "title": "Latent: reported metric is the min over test_batch_size choices (test-set min)",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "question",
+      "file": "run.py",
+      "line_start": 463,
+      "line_end": 463,
+      "quote": "test_batch_size_list = [args.test_batch_size]\n",
+      "claim": "When more than one test batch size is supplied, run.py:573-575 keeps the lowest test MSE across them. In the shipped scripts test_batch_size_list ends up with a single element (line 463 plus the dedup append at 486-487), so the selection does not actually trigger; the mechanism is latent.",
+      "concern": "Were a second test batch size ever added, the reported number would be the per-batch-size minimum chosen on the test set, a mild test-set selection; with drop_last=False this can shift the metric slightly.",
+      "resolution": "Authors: confirm no reported number used more than one test_batch_size; if so, fix the metric to a single deterministic batch size.",
+      "cross_refs": [
+        "itr-best-of-n-selected-on-test"
+      ],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "itr-test-batch-size-selection",
+      "audit": "",
+      "audit_md_line": 163,
+      "verdict": "keep",
+      "reason": "run.py:463 quote matches exactly; lines 486-487 confirm the dedup append keeps the list at a single element under all shipped scripts, so the latent-mechanism characterization is accurate.",
+      "changed": "nothing"
+    }
+  ]
+}

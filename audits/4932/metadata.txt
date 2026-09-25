@@ -1,0 +1,5 @@
+paper_number: 4932
+title: Centralized Reward Agent for Knowledge Sharing and Transfer in Multi-Task Reinforcement Learning
+authors: Haozhe Ma, Zhengding Luo, Thanh Vinh Vo, Kuankuan Sima, Tze-Yun Leong
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/eeb273b238606e9186452bed7190a8ab-Abstract-Conference.html
+category: empirical

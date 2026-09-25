@@ -1,0 +1,10 @@
+=== ESTIMATION ERROR (Fig 1 / Fig 3) ===
+Fig1 main S=4,A=3,O=4: num_experiments=5 num_checkpoints=30 obs_frob_shape=(5, 30)
+Fig3-left S=3,A=2,O=5: num_experiments=10 num_checkpoints=30 obs_frob_shape=(10, 30)
+Fig3-right S=5,A=3,O=5 (file1_first_two): num_experiments=2 num_checkpoints=30 obs_frob_shape=(2, 30)
+Fig3-right S=5,A=3,O=5 (file2_last_three): num_experiments=3 num_checkpoints=30 obs_frob_shape=(3, 30)
+
+=== REGRET (Fig 2) — counting per-algorithm run indices present ===
+pomdp1: ORACLE runs=[0, 1, 2] MixedSpectral runs=[0, 1, 2] SEEU runs=[0, 1, 2] SMUCRL runs=[0, 1, 2]
+pomdp3: ORACLE runs=[0, 1, 2, 3, 4] MixedSpectral runs=[0, 1, 2, 3, 4] SEEU runs=[0, 1, 2, 3, 4] SMUCRL runs=[0, 1, 2, 3, 4]
+pomdp5: ORACLE runs=[0, 1, 2, 3, 4] MixedSpectral runs=[0, 1, 2, 3, 4] SEEU runs=[0, 1, 2, 3, 4] SMUCRL runs=[0, 1, 2, 3, 4]

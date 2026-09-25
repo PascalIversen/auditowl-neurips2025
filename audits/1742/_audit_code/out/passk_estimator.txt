@@ -1,0 +1,2 @@
+max |repo_estimator - closed_form Eq.2| over grid = 8.882e-16
+VERDICT: estimator matches paper Eq.2

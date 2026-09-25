@@ -1,0 +1,88 @@
+{
+  "paper": "2578",
+  "repo": "zhengchen1999__DOVE",
+  "design": "major_recall_study DESIGN.md",
+  "seeds": [
+    {
+      "id": "S01",
+      "slot": "MAJOR-MISS",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "zhengchen1999__DOVE/finetune/models/dove/lora_one_s2_trainer.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "zhengchen1999__DOVE/finetune/models/dove/sft_one_s2_trainer.py",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the entire stage-2 pixel-space refinement implementation",
+      "description": "Delete both stage-2 trainer modules. The remaining launch script names dove-s2, but no model registration or executable stage-2 loss/decoder path remains anywhere, so neither the mixed image/video refinement nor the S2-I and S2-I/V ablations can be produced.",
+      "expected_reasoning": "The paper makes stage-2 a necessary half of the proposed latent-pixel strategy and attributes the perceptual gains in Table 1a to pixel-space and mixed image/video refinement. A reader should trace the stage-2 launch script through model registration to these two files, observe that the SFT class is only a wrapper around the implementation in lora_one_s2_trainer.py, and conclude that deleting both leaves no runnable code for equations (4)-(7), the 80% image branch, or the reported stage-2 ablation results.",
+      "paper_anchor": "After fine-tuning in pixel space during stage-2 (S2), perceptual metrics (i.e., LPIPS, CLIP-IQA, and DOVER), improve significantly. Furthermore, using a mixed training scheme with both images and videos in stage-2 (S2-I/V) leads to further performance gains, demonstrating the effectiveness of hybrid training.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    {
+      "id": "S03",
+      "slot": "MAJOR-DIFF",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "zhengchen1999__DOVE/finetune/models/dove/sft_one_s1_trainer.py",
+          "line": 1,
+          "action": "replace"
+        }
+      ],
+      "title": "Train an x0-prediction Transformer instead of the claimed v-prediction denoiser",
+      "description": "Wrap the SFT Transformer's output so the inherited velocity reconstruction algebra resolves exactly to the raw Transformer output. The resulting model is a fully differentiable direct clean-latent predictor trained by MSE, rather than the CogVideoX v-prediction method in Equation (2).",
+      "expected_reasoning": "The paper defines z_sr = sqrt(alpha_bar_t) z_lr - sqrt(1-alpha_bar_t) v_theta(z_lr,c,t). In the inherited trainer, scheduler.get_velocity applies that formula. The wrapper algebra returns (sqrt(alpha) z_lr - prediction)/sqrt(1-alpha) as the apparent velocity, so get_velocity cancels the wrapper and yields prediction itself. Gradients still flow through the complete Transformer and the MSE objective is functional, but the trained parameterization is direct x0 prediction, contradicting the stated v-prediction method.",
+      "paper_anchor": "Since CogVideoX adopts the v-prediction formulation, the denoising process is defined as: zsr = \u221a\u03b1\u0304tzlr \u2212 \u221a1 \u2212 \u03b1\u0304tv\u03b8 (zlr, c, t).",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    {
+      "id": "S05",
+      "slot": "MAJOR-METH",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "zhengchen1999__DOVE/finetune/train_ddp_one_s1.sh",
+          "line": 26,
+          "action": "replace"
+        }
+      ],
+      "title": "Train stage-1 directly on the UDM10 test ground truths",
+      "description": "Point the main 10,000-step stage-1 run at UDM10's GT-Video manifest while leaving validation on the same UDM10 split. The test videos are therefore training samples, creating direct train-test overlap in the main model.",
+      "expected_reasoning": "The paper says HQ-VSR is the video training set and UDM10 is a synthetic evaluation dataset used for all ablations. The launch script controls the released main stage-1 run. After the patch, data_root and video_column resolve to UDM10/GT-Video.txt, while validation_dir and validation manifests below still resolve to UDM10 LQ/GT videos. RealSRDataset degrades those test HR videos into training pairs, so the model is optimized on the very content used to report UDM10 metrics.",
+      "paper_anchor": "The video dataset, HQ-VSR, includes 2,055 high-quality videos, and adopts the RealBasicVSR [5] degradation pipeline to synthesize LQ-HQ pairs. The synthetic datasets include UDM10 [34], SPMCS [53], and YouHQ40 [63], using the same degradations as training.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    {
+      "id": "S07",
+      "slot": "MAJOR-BUG",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "zhengchen1999__DOVE/finetune/datasets/utils.py",
+          "line": 480,
+          "action": "replace"
+        }
+      ],
+      "title": "Independently crop LQ and HQ time windows in paired training",
+      "description": "Draw a second temporal start index for LQ frames while retaining the shared spatial crop. Training remains runnable and tensor shapes agree, but the LR input clip and HR regression target almost always depict different moments.",
+      "expected_reasoning": "Both stages rely on paired_random_crop_video to create aligned LQ-HQ examples. The paper's latent MSE, pixel MSE/DISTS, and frame-difference loss all assume frame t in the prediction corresponds to frame t in the HR target. The patched function samples start_idx for HQ and lq_start_idx independently, so the losses optimize mismatched content despite valid shapes and gradients. Fixing the resulting failure requires recovering temporal pairing at the dataset boundary, not a superficial syntax correction.",
+      "paper_anchor": "Thus, fine-tuning is required to ensure that the reconstructed output xsr, closely matches the high-resolution (HR) ground truth xhr.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    }
+  ]
+}

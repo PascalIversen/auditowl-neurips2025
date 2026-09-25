@@ -1,0 +1,13 @@
+{
+  "findings": [
+    {
+      "id": "570_Exploring_Neural_Granger_Causality_with_xLSTMs_Unveiling_Tem/tuning-and-selection-against-eval-graph",
+      "verdict": "lowered",
+      "reason": "The code uses true_GC to save a separate best-accuracy checkpoint and logs per-lambda Acc./BA, but the reported GC_est metrics are computed from the restored best-loss xlstm rather than best_accuracy_model, so medium severity is appropriate.",
+      "changed": "nothing",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding"
+    }
+  ]
+}

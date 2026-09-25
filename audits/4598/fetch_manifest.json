@@ -1,0 +1,10 @@
+{
+  "FujitsuResearch__qep": {
+    "repo": "https://github.com/FujitsuResearch/qep",
+    "clone_status": "cached",
+    "size_mb": 0.8,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

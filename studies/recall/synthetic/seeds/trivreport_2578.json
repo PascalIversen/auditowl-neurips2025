@@ -1,0 +1,236 @@
+{
+  "paper": "2578",
+  "n_flags": 20,
+  "flags": [
+    {
+      "file": "zhengchen1999__DOVE/finetune/utils/metric_utils.py",
+      "line": null,
+      "reason": "This module is imported unconditionally by finetune.utils and Trainer but is absent, so the documented training entry point fails at import time.",
+      "confidence": "high"
+    },
+    {
+      "file": "zhengchen1999__DOVE/finetune/train_ddp_one_s2.sh",
+      "line": 9,
+      "reason": "The Stage-2 launcher requests model_name dove-s2, but the repository registers only dove-s1, so get_model_cls necessarily rejects this command.",
+      "confidence": "high"
+    },
+    {
+      "file": "zhengchen1999__DOVE/inference_script.py",
+      "line": null,
+      "reason": "The core inference program invoked by README.md and inference.sh is absent, so none of the supplied testing commands can run.",
+      "confidence": "high"
+    },
+    {
+      "file": "zhengchen1999__DOVE/eval_metrics.py",
+      "line": null,
+      "reason": "The quantitative metric program invoked throughout README.md and inference.sh is absent, preventing reproduction of the reported evaluation.",
+      "confidence": "high"
+    },
+    {
+      "file": "zhengchen1999__DOVE/finetune/train_ddp_one_s1.sh",
+      "line": 27,
+      "reason": "The released Stage-1 recipe trains for 10,000 steps on datasets/test/UDM10/GT-Video, directly contaminating the named test benchmark.",
+      "confidence": "high"
+    },
+    {
+      "file": "zhengchen1999__DOVE/finetune/datasets/real_sr_dataset.py",
+      "line": 63,
+      "reason": "Whenever validation references are configured, the dataset overwrites the first training examples with those validation GT videos, explicitly leaking validation targets into training.",
+      "confidence": "high"
+    },
+    {
+      "file": "zhengchen1999__DOVE/finetune/datasets/utils.py",
+      "line": 481,
+      "reason": "Paired HQ and LQ crops draw independent temporal start indices, so corresponding training clips usually depict different frames despite the function promising alignment.",
+      "confidence": "high"
+    },
+    {
+      "file": "zhengchen1999__DOVE/finetune/datasets/degradation.py",
+      "line": 544,
+      "reason": "RandomVideoCompression cyclically shifts every decoded sequence by one frame, destroying temporal alignment with the HQ target for no documented reason.",
+      "confidence": "high"
+    },
+    {
+      "file": "zhengchen1999__DOVE/finetune/datasets/real_sr_image_video_dataset.py",
+      "line": 132,
+      "reason": "The dataset length is the video count but images are not repeated when shorter; with the documented 2,055 HQ-VSR videos and 800 DIV2K images, indexing fails past image 799.",
+      "confidence": "high"
+    },
+    {
+      "file": "zhengchen1999__DOVE/finetune/datasets/real_sr_image_video_dataset.py",
+      "line": 181,
+      "reason": "Stage-2 returns hq_image/lq_image samples, but the only trainer collate/loss path discards these keys and uses only videos, so DIV2K and image_ratio cannot affect training.",
+      "confidence": "high"
+    },
+    {
+      "file": "zhengchen1999__DOVE/finetune/train_ddp_one_s2.sh",
+      "line": 92,
+      "reason": "Stage-2 enables DISTS and frame-difference losses, but the sole compute_loss implementation uses only latent MSE and never reads either configured loss weight.",
+      "confidence": "high"
+    },
+    {
+      "file": "zhengchen1999__DOVE/inference.sh",
+      "line": 23,
+      "reason": "SPMCS, YouHQ40, RealVSR, and MVSR4x predictions are all evaluated against UDM10/GT instead of their matching ground truth, invalidating or crashing those evaluations.",
+      "confidence": "high"
+    },
+    {
+      "file": "zhengchen1999__DOVE/finetune/scripts/eval_dover.py",
+      "line": 159,
+      "reason": "Each result name is assigned dover_results[i-1], cyclically shifting scores so every per-sample DOVER score is attached to the wrong video.",
+      "confidence": "high"
+    },
+    {
+      "file": "zhengchen1999__DOVE/finetune/models/dove/sft_one_s1_trainer.py",
+      "line": 24,
+      "reason": "The SFT wrapper computes (alpha*x-v)/sigma; the later get_velocity conversion then returns v itself, which validation decodes as if it were a clean latent.",
+      "confidence": "high"
+    },
+    {
+      "file": "zhengchen1999__DOVE/finetune/datasets/real_sr_dataset.py",
+      "line": 83,
+      "reason": "The empty-prompt asset is documented and bundled under pretrained_models/prompt_embeddings, but training only searches data_root/cache/prompt_embeddings and otherwise encodes text inside DataLoader workers.",
+      "confidence": "high"
+    },
+    {
+      "file": "zhengchen1999__DOVE/README.md",
+      "line": 229,
+      "reason": "The documented final checkpoint conversion uses checkpoint/DOVE-/checkpoint-500 rather than the Stage-2 output checkpoint/DOVE-s2, so the command targets a nonexistent directory.",
+      "confidence": "high"
+    },
+    {
+      "file": "zhengchen1999__DOVE/finetune/trainer.py",
+      "line": 744,
+      "reason": "Validation unconditionally dereferences ref_video.shape before checking whether a reference exists, although validation_ref_videos is optional in the argument schema.",
+      "confidence": "medium"
+    },
+    {
+      "file": "zhengchen1999__DOVE/finetune/train_ddp_one_s2.sh",
+      "line": 31,
+      "reason": "Stage-2 sets two frames while its own comment requires frame counts of 8N+1, and the corresponding schema validity check is commented out.",
+      "confidence": "medium"
+    },
+    {
+      "file": "zhengchen1999__DOVE/requirements.txt",
+      "line": 1,
+      "reason": "The install manifest omits deepspeed even though the bundled accelerate configuration always selects DEEPSPEED, and also omits imported packages such as diffusers, pyiqa, safetensors, and PyYAML.",
+      "confidence": "medium"
+    },
+    {
+      "file": "zhengchen1999__DOVE/finetune/scripts/VBench",
+      "line": null,
+      "reason": "The auxiliary evaluation scripts chdir/import bundled VBench, DOVER, and scripts/RAFT trees that are absent, so the provided VBench/DOVER/Ewarp evaluators are not self-contained.",
+      "confidence": "medium"
+    }
+  ],
+  "candidates": {
+    "S01": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "finetune/models/dove/lora_one_s2_trainer.py",
+          "line": null
+        },
+        {
+          "file": "finetune/models/dove/sft_one_s2_trainer.py",
+          "line": null
+        }
+      ],
+      "matched_flags": []
+    },
+    "S02": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "inference_script.py",
+          "line": null
+        },
+        {
+          "file": "eval_metrics.py",
+          "line": null
+        },
+        {
+          "file": "finetune/scripts/eval_metrics.py",
+          "line": null
+        },
+        {
+          "file": "finetune/utils/metric_utils.py",
+          "line": null
+        }
+      ],
+      "matched_flags": [
+        "This module is imported unconditionally by finetune.utils and Trainer but is absent, so the documented training entry point fails at import time.",
+        "The core inference program invoked by README.md and inference.sh is absent, so none of the supplied testing commands can run.",
+        "The quantitative metric program invoked throughout README.md and inference.sh is absent, preventing reproduction of the reported evaluation."
+      ]
+    },
+    "S03": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "finetune/models/dove/sft_one_s1_trainer.py",
+          "line": 1
+        }
+      ],
+      "matched_flags": []
+    },
+    "S04": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "finetune/models/dove/lora_one_s1_trainer.py",
+          "line": 199
+        }
+      ],
+      "matched_flags": []
+    },
+    "S05": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "finetune/train_ddp_one_s1.sh",
+          "line": 26
+        }
+      ],
+      "matched_flags": [
+        "The released Stage-1 recipe trains for 10,000 steps on datasets/test/UDM10/GT-Video, directly contaminating the named test benchmark."
+      ]
+    },
+    "S06": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "finetune/datasets/real_sr_dataset.py",
+          "line": 62
+        }
+      ],
+      "matched_flags": [
+        "Whenever validation references are configured, the dataset overwrites the first training examples with those validation GT videos, explicitly leaking validation targets into training."
+      ]
+    },
+    "S07": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "finetune/datasets/utils.py",
+          "line": 480
+        }
+      ],
+      "matched_flags": [
+        "Paired HQ and LQ crops draw independent temporal start indices, so corresponding training clips usually depict different frames despite the function promising alignment."
+      ]
+    },
+    "S08": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "finetune/datasets/degradation.py",
+          "line": 536
+        }
+      ],
+      "matched_flags": [
+        "RandomVideoCompression cyclically shifts every decoded sequence by one frame, destroying temporal alignment with the HQ target for no documented reason."
+      ]
+    }
+  }
+}

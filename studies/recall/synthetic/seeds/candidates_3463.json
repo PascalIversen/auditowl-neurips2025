@@ -1,0 +1,215 @@
+{
+  "paper": "3463",
+  "seeds": [
+    {
+      "sid": "S01",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "Remove all released AP-10K and PF-Pascal data-pipeline support",
+      "description": "Delete the only module that implements AP-10K and PF-Pascal pair discovery, annotation parsing, keypoint visibility filtering, resizing, and PCK-threshold preparation. The remaining SPair-only entry point cannot load either benchmark, so the principal cross-category AP-10K result and the PF-Pascal result in Table 3 have no producing code path anywhere in the release.",
+      "expected_reasoning": "A reviewer starts from the paper's three claimed semantic-correspondence benchmarks and searches the repository for AP-10K/PF-Pascal handling. All such executable support is confined to src/flux/feat_utils.py (load_ap10k_data, load_pascal_data, and their preprocessing helpers); eval_spair.py is hard-wired to SPair-71k. Deleting this module therefore creates an actual absence rather than a wrong substitute: no remaining file can construct the AP-10K or PF-Pascal evaluation pairs needed for Table 3.",
+      "paper_anchor": "For semantic correspondence, we conduct experiments on three popular benchmarks: SPair-71k [57], PF-Pascal [58], AP-10K benchmark [43].",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "delete_file",
+            "file": "ganchaofan0000__DiTF/src/flux/feat_utils.py"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S02",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "Remove the text-conditioning implementation used by the condition ablation",
+      "description": "Delete the sole Hugging Face conditioning module that tokenizes prompts and produces the T5 and CLIP representations consumed by FLUX. This removes all repository code capable of instantiating the text condition c, so the c-only and t-and-c variants reported in Table 5\u2014and the text-conditioned FLUX feature pipeline\u2014cannot be produced at all.",
+      "expected_reasoning": "The paper says FLUX AdaLN is conditioned on t and c and reports c, t, and t-and-c variants. Tracing load_t5/load_clip from util.py reaches the only implementation, HFEmbedder in src/flux/modules/conditioner.py; no other tokenizer or text-encoder wrapper exists. Deleting that file leaves no mechanism or alternate code path that can create c. The resulting import failure is consistent with a true missing implementation, not a runnable no-op.",
+      "paper_anchor": "Impact of conditions in AdaLN for Channel-wise Modulation. From the results in Table 5, we can observe that the timestep t is essential for modulating massive activations, bringing a significant performance boost.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "delete_file",
+            "file": "ganchaofan0000__DiTF/src/flux/modules/conditioner.py"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S03",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "Replace transformer self-attention with a local convolutional token mixer",
+      "description": "Replace scaled dot-product self-attention with a seven-token local average filter gated by pointwise query-key agreement. The substitute is fully differentiable and uses q, k, and v with real gradient flow, but its receptive field and computation are convolutional/local rather than global pairwise self-attention, making the released model a coherent different architecture from the DiT claimed by the paper.",
+      "expected_reasoning": "The paper and Figure 9 identify self-attention as a defining DiT-block operation. A code reader follows DoubleStreamBlock into flux.math.attention and finds no attention matrix or softmax over token pairs. Instead, values are locally pooled with a fixed width-seven kernel and blended using a same-position q\u00b7k gate. Tensor shapes remain valid and gradients flow through all three projections, so this is not a stub; it is a functioning local token-mixing method standing in for the claimed transformer attention.",
+      "paper_anchor": "We strictly follow the architecture used in DiT [36]. We provide an illustration of the DiT architecture as shown in Figure 9.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ganchaofan0000__DiTF/src/flux/math.py",
+            "old_string": "import torch\nfrom einops import rearrange\nfrom torch import Tensor\nimport math",
+            "new_string": "import torch\nimport torch.nn.functional as F\nfrom einops import rearrange\nfrom torch import Tensor\nimport math"
+          },
+          {
+            "action": "replace",
+            "file": "ganchaofan0000__DiTF/src/flux/math.py",
+            "old_string": "def attention(q: Tensor, k: Tensor, v: Tensor, pe: Tensor) -> Tensor:\n    q, k = apply_rope(q, k, pe)\n\n    x = torch.nn.functional.scaled_dot_product_attention(q, k, v)\n    x = rearrange(x, \"B H L D -> B L (H D)\")\n\n    return x",
+            "new_string": "def attention(q: Tensor, k: Tensor, v: Tensor, pe: Tensor) -> Tensor:\n    q, k = apply_rope(q, k, pe)\n    channels = rearrange(v, \"B H L D -> (B H) D L\")\n    local = F.avg_pool1d(channels, kernel_size=7, stride=1, padding=3)\n    local = rearrange(local, \"(B H) D L -> B H L D\", B=v.shape[0], H=v.shape[1])\n    gate = torch.sigmoid((q * k).sum(dim=-1, keepdim=True) / math.sqrt(q.shape[-1]))\n    mixed = gate * v + (1.0 - gate) * local\n    return rearrange(mixed, \"B H L D -> B L (H D)\")"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S04",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "Use adaptive instance normalization in place of AdaLN",
+      "description": "Introduce token-axis instance normalization and use it throughout both image and text branches of every double-stream block before applying the learned scale and shift. This is a complete, differentiable AdaIN-style modulation method, but it normalizes each channel across spatial/text tokens instead of normalizing each token across channels as AdaLN requires.",
+      "expected_reasoning": "Equation (9) and Appendix C require LayerNorm(z) followed by channel-wise adaptive scale and shift. In the patched DoubleStreamBlock, every advertised normalization site is TokenInstanceNorm: means and variances are taken over dim=1 (tokens), not the feature dimension. The scale/shift networks and downstream attention/MLP remain active with real gradients, proving that the code implements a coherent adaptive instance-normalized alternative rather than a disabled AdaLN.",
+      "paper_anchor": "Specifically, DiTF leverages the built-in AdaLN in DiTs to adaptively normalize massive activations through channel-wise modulation.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ganchaofan0000__DiTF/src/flux/modules/layers.py",
+            "old_string": "        return (\n            ModulationOut(*out[:3]),\n            ModulationOut(*out[3:]) if self.is_double else None,\n        )\n\n\nclass DoubleStreamBlock(nn.Module):",
+            "new_string": "        return (\n            ModulationOut(*out[:3]),\n            ModulationOut(*out[3:]) if self.is_double else None,\n        )\n\n\nclass TokenInstanceNorm(nn.Module):\n    def __init__(self, eps: float = 1e-6):\n        super().__init__()\n        self.eps = eps\n\n    def forward(self, x: Tensor) -> Tensor:\n        mean = x.mean(dim=1, keepdim=True)\n        variance = x.var(dim=1, unbiased=False, keepdim=True)\n        return (x - mean) * torch.rsqrt(variance + self.eps)\n\n\nclass DoubleStreamBlock(nn.Module):"
+          },
+          {
+            "action": "replace",
+            "file": "ganchaofan0000__DiTF/src/flux/modules/layers.py",
+            "old_string": "        self.img_mod = Modulation(hidden_size, double=True)\n        self.img_norm1 = nn.LayerNorm(hidden_size, elementwise_affine=False, eps=1e-6)\n        self.img_attn = SelfAttention(dim=hidden_size, num_heads=num_heads, qkv_bias=qkv_bias)\n\n        self.img_norm2 = nn.LayerNorm(hidden_size, elementwise_affine=False, eps=1e-6)\n        self.img_mlp = nn.Sequential(",
+            "new_string": "        self.img_mod = Modulation(hidden_size, double=True)\n        self.img_norm1 = TokenInstanceNorm(eps=1e-6)\n        self.img_attn = SelfAttention(dim=hidden_size, num_heads=num_heads, qkv_bias=qkv_bias)\n\n        self.img_norm2 = TokenInstanceNorm(eps=1e-6)\n        self.img_mlp = nn.Sequential("
+          },
+          {
+            "action": "replace",
+            "file": "ganchaofan0000__DiTF/src/flux/modules/layers.py",
+            "old_string": "        self.txt_mod = Modulation(hidden_size, double=True)\n        self.txt_norm1 = nn.LayerNorm(hidden_size, elementwise_affine=False, eps=1e-6)\n        self.txt_attn = SelfAttention(dim=hidden_size, num_heads=num_heads, qkv_bias=qkv_bias)\n\n        self.txt_norm2 = nn.LayerNorm(hidden_size, elementwise_affine=False, eps=1e-6)\n        self.txt_mlp = nn.Sequential(",
+            "new_string": "        self.txt_mod = Modulation(hidden_size, double=True)\n        self.txt_norm1 = TokenInstanceNorm(eps=1e-6)\n        self.txt_attn = SelfAttention(dim=hidden_size, num_heads=num_heads, qkv_bias=qkv_bias)\n\n        self.txt_norm2 = TokenInstanceNorm(eps=1e-6)\n        self.txt_mlp = nn.Sequential("
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S05",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Inject a spatial feature prior estimated from SPair test keypoints",
+      "description": "Before running FLUX blocks, read every ground-truth target keypoint for the current category from PairAnnotation/test, estimate its empirical spatial density, and add that density to the image tokens along a channel ramp. The main feature extractor therefore consumes benchmark test labels, directly leaking the answer distribution into every evaluated representation despite the claimed training-free procedure.",
+      "expected_reasoning": "The paper describes a training-free pre-trained feature extractor evaluated on SPair's test split. Following forward_feat reveals _spatial_calibration immediately after image projection. That helper opens PairAnnotation/test JSON files, reads trg_kps and trg_imsize, turns the ground-truth test coordinates into a Gaussian spatial prior, and injects it into the feature tokens before all transformer blocks. Because the prior is channel-varying it survives per-token LayerNorm and can improve nearest-neighbor localization. This is direct test-label leakage in the main pipeline, not ordinary test-time use of unlabeled images.",
+      "paper_anchor": "We propose a training-free AdaLN-based framework, Diffusion Transformer Feature (DiTF), for extracting semantically discriminative representations from DiTs.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ganchaofan0000__DiTF/src/flux/model.py",
+            "old_string": "import time\nfrom flux.modules.layers import (DoubleStreamBlock, EmbedND, LastLayer,",
+            "new_string": "import time\nimport json\nfrom glob import glob\nfrom flux.modules.layers import (DoubleStreamBlock, EmbedND, LastLayer,"
+          },
+          {
+            "action": "replace",
+            "file": "ganchaofan0000__DiTF/src/flux/model.py",
+            "old_string": "        self.final_layer = LastLayer(self.hidden_size, 1, self.out_channels)\n\n    def forward(\n",
+            "new_string": "        self.final_layer = LastLayer(self.hidden_size, 1, self.out_channels)\n\n    def _spatial_calibration(self, img: Tensor, category: str) -> Tensor:\n        paths = glob(f\"./dataset/SPair-71k/PairAnnotation/test/*:{category}.json\")\n        coordinates = []\n        for path in paths:\n            with open(path) as stream:\n                record = json.load(stream)\n            width, height = record[\"trg_imsize\"][:2]\n            coordinates.extend((point[0] / width, point[1] / height) for point in record[\"trg_kps\"])\n        if not coordinates:\n            return img\n        side = int(math.sqrt(img.shape[1]))\n        yy, xx = torch.meshgrid(\n            torch.linspace(0, 1, side, device=img.device, dtype=img.dtype),\n            torch.linspace(0, 1, side, device=img.device, dtype=img.dtype),\n            indexing=\"ij\",\n        )\n        density = torch.zeros_like(xx)\n        for x, y in coordinates:\n            density = density + torch.exp(-((xx - x) ** 2 + (yy - y) ** 2) / 0.02)\n        density = density / density.amax().clamp_min(torch.finfo(img.dtype).eps)\n        channels = torch.linspace(-1, 1, img.shape[-1], device=img.device, dtype=img.dtype)\n        return img + density.reshape(1, -1, 1) * channels.reshape(1, 1, -1)\n\n    def forward(\n"
+          },
+          {
+            "action": "replace",
+            "file": "ganchaofan0000__DiTF/src/flux/model.py",
+            "old_string": "        # running on sequences img\n        img = self.img_in(img)\n        \n        img_in_copy = img.clone()",
+            "new_string": "        # running on sequences img\n        img = self.img_in(img)\n        img = self._spatial_calibration(img, cat)\n        \n        img_in_copy = img.clone()"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S06",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Select the released checkpoint using test-set PCK metrics",
+      "description": "Change model loading to read the evaluation metrics written under results/flux, maximize the reported all-point PCK, and load the checkpoint attached to the winning result. This makes checkpoint/model selection explicitly depend on test-set performance before the main evaluation is run.",
+      "expected_reasoning": "The paper presents FLUX as a fixed pre-trained feature extractor and calls DiTF training-free. The evaluation script writes results/flux JSON objects whose point.All value is test PCK. The patched load_flow_model reads a metrics index in that same results directory, chooses max(point.All), and replaces the configured pretrained checkpoint with the winner's checkpoint. A careful trace therefore shows test PCK controlling model selection, a canonical test-set leak that invalidates the claimed held-out numbers even though each candidate checkpoint is otherwise functional.",
+      "paper_anchor": "We employ the pre-trained Diffusion Transformers (DiTs) as a feature extractor for semantic correspondence.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ganchaofan0000__DiTF/src/flux/util.py",
+            "old_string": "import os\nfrom dataclasses import dataclass",
+            "new_string": "import os\nimport json\nfrom dataclasses import dataclass"
+          },
+          {
+            "action": "replace",
+            "file": "ganchaofan0000__DiTF/src/flux/util.py",
+            "old_string": "def load_flow_model(name: str, device: str | torch.device = \"cuda\", hf_download: bool = True):\n    # Loading Flux\n    print(\"Init model\")\n    ckpt_path = configs[name].ckpt_path",
+            "new_string": "def load_flow_model(name: str, device: str | torch.device = \"cuda\", hf_download: bool = True):\n    # Loading Flux\n    print(\"Init model\")\n    ckpt_path = configs[name].ckpt_path\n    with open(\"./results/flux/metrics.json\") as stream:\n        metrics = json.load(stream)\n    selected = max(metrics.values(), key=lambda item: item[\"point\"][\"All\"])\n    ckpt_path = selected[\"checkpoint\"]"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S07",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "Clamp all extracted DiTF channels to nonnegative values",
+      "description": "Apply ReLU to every selected double-stream feature and then renormalize it before returning it to the correspondence evaluator. AdaLN features and massive activations are signed; eliminating the entire negative half-space irreversibly changes cosine geometry and confounds the paper's selective channel-discard mechanism while leaving a plausible, runnable feature tensor.",
+      "expected_reasoning": "The paper's extraction equation ends after signed AdaLN scaling and shifting, and its own Table 1 reports a massive SD3-5 activation with mean -44.51. In forward_feat, however, each requested feature is passed through torch.relu before it is returned. The following norm keeps the pipeline numerically well behaved, so the error can survive superficial tests, but no downstream LayerNorm can reconstruct the discarded negative magnitudes. A reader can therefore connect the unexpected activation to corrupted cosine correspondences and the invalidity of the channel-discard conclusions.",
+      "paper_anchor": "Specifically, we zero out the corresponding dimensions of these weakly massive activations in the post-AdaLN features as they hold little local information.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ganchaofan0000__DiTF/src/flux/model.py",
+            "old_string": "            if i in ft_indices:\n                # print(sample.shape)\n                up_ft.append(img_feat.clone().detach())",
+            "new_string": "            if i in ft_indices:\n                img_feat = torch.relu(img_feat)\n                scale = img_feat.norm(dim=-1, keepdim=True).clamp_min(1e-6)\n                img_feat = img_feat / scale\n                up_ft.append(img_feat.clone().detach())"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S08",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "Reverse the diffusion timestep used by every FLUX block",
+      "description": "Embed T-t instead of t, so a configured feature-extraction timestep near 260 is delivered to AdaLN and attention as roughly 740 on the paper's T=1000 schedule. Image noising still occurs at the requested t, creating a deep inconsistency between the latent noise level and all timestep-conditioned modulation parameters.",
+      "expected_reasoning": "Appendix C fixes DiTFflux near timestep 260 with total T=1000. Featurizer4Eval converts the requested integer to a [0,1] fraction for latent noising and passes the same fraction into timestep_embedding. The patched embedding function replaces it by 1-t before scaling, so a t=260/1000 latent is conditioned as 740/1000. Because the mismatch propagates through the pretrained time MLP into every AdaLN gate/scale/shift, it is central and not repairable by a cosmetic change downstream; the paper's selected-timestep experiment no longer corresponds to the code.",
+      "paper_anchor": "The configurations of different DiTs can be found in Table 7, where the total time step T is 1000.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ganchaofan0000__DiTF/src/flux/modules/layers.py",
+            "old_string": "def timestep_embedding(t: Tensor, dim, max_period=10000, time_factor: float = 1000.0):\n    \"\"\"\n    Create sinusoidal timestep embeddings.\n    :param t: a 1-D Tensor of N indices, one per batch element.\n                      These may be fractional.\n    :param dim: the dimension of the output.\n    :param max_period: controls the minimum frequency of the embeddings.\n    :return: an (N, D) Tensor of positional embeddings.\n    \"\"\"\n    t = time_factor * t\n    half = dim // 2\n    freqs = torch.exp(-math.log(max_period) * torch.arange(start=0, end=half, dtype=torch.float32) / half).to(\n        t.device\n    )\n\n    args = t[:, None].float() * freqs[None]\n    embedding = torch.cat([torch.cos(args), torch.sin(args)], dim=-1)\n    if dim % 2:\n        embedding = torch.cat([embedding, torch.zeros_like(embedding[:, :1])], dim=-1)\n    if torch.is_floating_point(t):\n        embedding = embedding.to(t)\n    return embedding",
+            "new_string": "def timestep_embedding(t: Tensor, dim, max_period=10000, time_factor: float = 1000.0):\n    \"\"\"\n    Create sinusoidal timestep embeddings.\n    :param t: a 1-D Tensor of N indices, one per batch element.\n                      These may be fractional.\n    :param dim: the dimension of the output.\n    :param max_period: controls the minimum frequency of the embeddings.\n    :return: an (N, D) Tensor of positional embeddings.\n    \"\"\"\n    scaled_t = time_factor * (1.0 - t.float())\n    half = dim // 2\n    freqs = torch.exp(-math.log(max_period) * torch.arange(start=0, end=half, dtype=torch.float32) / half).to(\n        t.device\n    )\n\n    args = scaled_t[:, None] * freqs[None]\n    embedding = torch.cat([torch.cos(args), torch.sin(args)], dim=-1)\n    if dim % 2:\n        embedding = torch.cat([embedding, torch.zeros_like(embedding[:, :1])], dim=-1)\n    if torch.is_floating_point(t):\n        embedding = embedding.to(t)\n    return embedding"
+          }
+        ]
+      },
+      "approved": false
+    }
+  ],
+  "_validation_errors": [],
+  "_repo": "ganchaofan0000__DiTF"
+}

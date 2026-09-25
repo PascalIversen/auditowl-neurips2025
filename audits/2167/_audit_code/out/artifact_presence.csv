@@ -1,0 +1,12 @@
+check,pattern,num_hits,sample_locations
+hypervolume_computation,hypervol|pymoo|pareto|nondomin|hv\b,0,
+baseline_dice,\bDiCE\b|generate_dice|dice_ml,0,
+baseline_cchvae,cchvae|c_chvae,0,
+baseline_revise,\brevise\b,0,
+baseline_tabcf,tabcf,0,
+baseline_wachter,wachter,0,
+baseline_carla,\bcarla\b,0,
+german_credit_experiment,german,0,
+sensitivity_p_sweep_driver,p_values\s*=\s*\[.*0\.08|0\.25.*1\.0|sensitivity,0,
+model_selection_nll_nice_realnvp,NICE|RealNVP|real_nvp,10,counterfactuals/generative_models/__init__.py:4; counterfactuals/generative_models/__init__.py:5; counterfactuals/generative_models/real_nvp.py:6; counterfactuals/generative_models/real_nvp.py:11; counterfactuals/generative_models/real_nvp.py:26
+alpha_actionability_penalty,\balpha\b.*=.*\b(10|1000)\b|actionab.*penalt,0,

@@ -1,0 +1,216 @@
+{
+  "schema_version": "1",
+  "audit": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_",
+  "audit_md": "audits/4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_/audit.md",
+  "generated_at": "2026-05-30T05:45:34.936428+00:00",
+  "findings": [
+    {
+      "id": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_/cfe-teacher-validation-absent",
+      "category": "missing",
+      "topic": "CFE generation",
+      "title": "Paper's teacher-prediction check on CFEs is not implemented; labels hard-set to 1 - y",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/FaisalHamman__CoD/cfx-generator/utils.py",
+      "quote": "counterfactual_sentiment = 0 if raw_datasets[\"train\"][i]['label'] == 1 else 1\n",
+      "line_start": 164,
+      "line_end": 173,
+      "claim": "The CFE generator prompts the LLM for a flipped-sentiment sentence and stores it with label `1 - y` (`counterfactual_sentiment`), then concatenates it to the training set. It never loads the teacher model or checks whether the generated sentence actually flips the teacher's prediction; grep for \"teacher\"/\"predict\"/\"flip\"/\"validate\" in `cfx-generator/` returns nothing.",
+      "concern": "The paper's CFE definition and method rely on a teacher-validation step (\"We then check whether this generated example indeed flips the teacher model's prediction, ensuring its utility as a true CFE\"); without it, the \"counterfactuals\" are unvalidated label-flipped paraphrases, so the central premise (boundary-near, teacher-flipping examples) is not enforced by the code that produced the results.",
+      "resolution": "Point to the script that filters generated sentences by teacher prediction, or confirm the headline tables were produced from the unvalidated `cfx` datasets in `cfx-generator/utils.py`.",
+      "cross_refs": [
+        "paper-says-pair-in-minibatch"
+      ],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "cfe-teacher-validation-absent",
+      "audit": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_",
+      "audit_md_line": 48
+    },
+    {
+      "id": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_/prompt-variant-ablation-no-code",
+      "category": "missing",
+      "topic": "ablations",
+      "title": "Prompt-template ablation (Table 7) variants are defined but never used",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/FaisalHamman__CoD/cfx-generator/prompts.py",
+      "quote": "prompt_templates_sst2_variants  = {\n",
+      "line_start": 106,
+      "line_end": 106,
+      "claim": "`prompt_templates_sst2_variants` (the SST2 prompt variants for the Table 7 robustness ablation) is defined in `prompts.py`, but the generator (`utils.py`) always indexes `prompt_templates[self.dataset_name]`; no code path selects a variant, so Table 7 cannot be reproduced from the repo.",
+      "concern": "The prompt-robustness ablation reported in Table 7 has no driver code, so the claim \"COD is robust to prompt choices\" is not reproducible from the artefact.",
+      "resolution": "Add or point to the script that loops over `prompt_templates_sst2_variants` and runs generation + distillation per variant.",
+      "cross_refs": [],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "prompt-variant-ablation-no-code",
+      "audit": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_",
+      "audit_md_line": 71
+    },
+    {
+      "id": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_/random-softlabel-ablation-no-code",
+      "category": "missing",
+      "topic": "ablations",
+      "title": "Random soft labels ablation (Table 9) has no implementation",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "code/FaisalHamman__CoD/text-classification/ted_no_trainer_qwen.py",
+      "quote": "kl_loss = kl_div(\n    outputs.logits, teacher_outputs.logits.detach())\n",
+      "line_start": 963,
+      "line_end": 964,
+      "claim": "Table 9 reports an ablation that replaces the teacher's soft labels with random values. The KD loss always uses the teacher's real logits; there is no flag or code path that randomizes/corrupts the teacher logits (grep for `rand`/`noise`/`corrupt` over the soft-label path finds nothing relevant). The α=0 variant is reproducible (`--kl_alpha 0`), but the random-soft-label variant is not.",
+      "concern": "One of the two Table-9 conditions cannot be reproduced from the code.",
+      "resolution": "Provide the script/flag that substitutes random soft labels for the teacher logits.",
+      "cross_refs": [],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "random-softlabel-ablation-no-code",
+      "audit": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_",
+      "audit_md_line": 95
+    },
+    {
+      "id": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_/synthetic-moons-experiment-no-code",
+      "category": "missing",
+      "topic": "synthetic experiment",
+      "title": "2D-moons motivating experiment (Fig. 1, Fig. 3) has no code in the repo",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/FaisalHamman__CoD/README.md",
+      "quote": "Supported datasets: `sst2`, `cola`, `imdb`, `sentiment140`, `amazon`, `yelp`.\n",
+      "line_start": 41,
+      "line_end": 41,
+      "claim": "The repo's datasets and scripts cover only the six text-classification benchmarks. There is no script implementing the synthetic 2D `make_moons` teacher (`[2->64->64->2]`) and CFE-infused student used for Fig. 1 / Fig. 3, which the paper presents as the core intuition-validating experiment.",
+      "concern": "The illustrative decision-boundary figures motivating the method cannot be reproduced from the artefact.",
+      "resolution": "Add the synthetic 2D-moons notebook/script, or note it is out of scope for the released code.",
+      "cross_refs": [],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "synthetic-moons-experiment-no-code",
+      "audit": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_",
+      "audit_md_line": 119
+    },
+    {
+      "id": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_/ted-no-trainer-broken-imports",
+      "category": "bug",
+      "topic": "repository hygiene",
+      "title": "ted_no_trainer.py references undefined TED/Qwen config classes at import time",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "question",
+      "file": "code/FaisalHamman__CoD/text-classification/ted_no_trainer.py",
+      "quote": "from transformers import QwenConfig, QwenForSequenceClassification \n",
+      "line_start": 54,
+      "line_end": 54,
+      "claim": "`ted_no_trainer.py` imports `QwenConfig, QwenForSequenceClassification` (line 54) and builds `CONFIG_MAPPING` from `TEDDebertaV2Config`/`QwenConfig` (lines 66-67) while the `models.ted_deberta_v2` import is commented out (line 51); transformers 4.28 has no `QwenConfig`, so this module would raise ImportError. The headline KD/LWD/Qwen runs invoke `ted_no_trainer_qwen.py` (these imports commented out) instead, so this file may be vestigial.",
+      "concern": "If any reported number used `ted_no_trainer.py` directly it would not import; it is unclear which TED-table runs used which file.",
+      "resolution": "Confirm whether `ted_no_trainer.py` is used for any reported table (e.g., the TED stage-2 in `run_seed_ted.sh`) and, if so, how it imports successfully.",
+      "cross_refs": [],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": false,
+        "condition_satisfiable": true
+      },
+      "id_local": "ted-no-trainer-broken-imports",
+      "audit": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_",
+      "audit_md_line": 152
+    },
+    {
+      "id": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_/eval-on-validation-not-test",
+      "category": "difference",
+      "topic": "evaluation set",
+      "title": "Accuracy is computed on the validation split, but the paper says \"on the test set\"",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/FaisalHamman__CoD/text-classification/ted_no_trainer_qwen.py",
+      "quote": "if \"test\" in raw_datasets:\n        del raw_datasets[\"test\"]\n",
+      "line_start": 749,
+      "line_end": 750,
+      "claim": "The distillation script deletes the `test` split (line 749-750) and sets `eval_dataset = processed_datasets[\"validation\"]` (line 793); all reported accuracies come from the validation split. The paper states \"Performance is evaluated using accuracy on the test set for each dataset.\" For SST2/CoLA/IMDB the GLUE/HF test splits are unlabeled (paper Appendix C.1), so the validation split is a legitimate held-out set — but it is not the \"test set\" the paper names. Confirmed for `ted_no_trainer.py`, `ted_no_trainer_qwen.py`, `learn_filters_glue_no_trainer.py` by `_audit_code/check_eval_split.py`.",
+      "concern": "The reported metric is computed on a different (validation) split than the paper states, which matters because that same split is also used for checkpoint selection (see model-selection finding).",
+      "resolution": "Clarify that \"test set\" in the paper means the validation split actually used, and report which split each dataset's numbers come from.",
+      "cross_refs": [
+        "save-best-selects-on-eval-set"
+      ],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "eval-on-validation-not-test",
+      "audit": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_",
+      "audit_md_line": 178
+    },
+    {
+      "id": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_/paper-says-pair-in-minibatch",
+      "category": "difference",
+      "topic": "training procedure",
+      "title": "Headline runs concatenate+shuffle original/CFE rows; paper says each input-CFE pair shares a mini-batch",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/FaisalHamman__CoD/cfx-generator/utils.py",
+      "quote": "raw_datasets[\"train\"] = concatenate_datasets([raw_datasets[\"train\"], new_dataset])\n",
+      "line_start": 179,
+      "line_end": 179,
+      "claim": "In the `cfx` data mode used by every headline run script (`run_seed.sh`, `run_seed_qwen.sh`, `run_seed_ted.sh` pass `data_type ... cfx`), originals and CFEs are concatenated into one split (`utils.py:179`) and the training DataLoader uses `shuffle=True` (`ted_no_trainer_qwen.py:812`), so an input and its CFE generally land in different mini-batches. The same-mini-batch pairing and the symmetric pair loss are implemented only in the `pair_cfx` branch (`ted_no_trainer_qwen.py:986-995`), which no headline script uses.",
+      "concern": "The paper states \"we ensure that each input-CFE pair is included in the same mini-batch, enabling the student to jointly learn from both examples\"; the actually-run pipeline does not enforce this, so the described mechanism differs from the executed one.",
+      "resolution": "Confirm whether the reported tables used `cfx` (concatenate+shuffle) or `pair_cfx` (paired) mode, and reconcile with the paper's mini-batch-pairing description.",
+      "cross_refs": [
+        "cfe-teacher-validation-absent"
+      ],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "paper-says-pair-in-minibatch",
+      "audit": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_",
+      "audit_md_line": 202
+    },
+    {
+      "id": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_/save-best-selects-on-eval-set",
+      "category": "methodology",
+      "topic": "model selection / held-out test set",
+      "title": "Reported accuracy is the max-over-epochs validation accuracy, and validation is the only held-out set",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/FaisalHamman__CoD/text-classification/ted_no_trainer_qwen.py",
+      "quote": "if args.save_best:\n    if eval_metric[task_to_metrics[args.task_name]] > best_eval:\n        best_eval = eval_metric[task_to_metrics[args.task_name]]\n",
+      "line_start": 1085,
+      "line_end": 1087,
+      "claim": "With `--save_best` (set by every headline run script), the script evaluates on the validation split after each epoch and writes `all_results.json` only when the epoch's validation accuracy exceeds the running best (lines 1085-1100), i.e. the reported number is the maximum validation accuracy over all epochs (`num_train_epochs` = 40-100 in the scripts). The test split was deleted (see eval-on-validation finding), so the same split is used both to pick the best epoch and as the reported result, and no untouched test set exists. `_audit_code/check_eval_split.py` confirms `save_best_takes_max` and `deletes_test_split` for the distillation scripts.",
+      "concern": "Selecting the best of up to ~100 per-epoch evaluations on the very set whose score is reported is an optimistic, selection-on-the-evaluation-set estimate with no independent held-out test set, inflating all reported accuracies (Tables 1-3, 5-9) by an unknown amount; the bias can differ between methods/k and thus affect the COD-vs-baseline gaps.",
+      "resolution": "Re-report using a fixed final-epoch (or validation-selected, test-evaluated) protocol with a genuinely held-out test set disjoint from the selection set; quantify how much the \"best-epoch on the reported split\" inflates each cell.",
+      "cross_refs": [
+        "eval-on-validation-not-test"
+      ],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "save-best-selects-on-eval-set",
+      "audit": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_",
+      "audit_md_line": 227
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+EADHead.__init__ default for eeg_decoder = None
+
+  LINE  GUARDED?   SOURCE
+----------------------------------------------------------------------------------------------------
+   169  False      self.eeg_decoder = eeg_decoder
+   425  True       self.eeg_decoder = build_transformer_layer_sequence(self.eeg_decoder)
+   489  True       for p in self.eeg_decoder.parameters():
+   785  False      ego_eeg_query = self.eeg_decoder(
+
+RESULT: self.eeg_decoder is CALLED without a None-guard at line(s) [785].
+        With the advertised default eeg_decoder=None this raises
+        TypeError: 'NoneType' object is not callable.
+
+planning-MLP input width, EAD_head.py:428: ego_fut_dec_in_dim = self.embed_dims*3 + len(self.ego_lcf_feat_idx) \
+                            EAD_head.py:429: if self.ego_lcf_feat_idx is not None else self.embed_dims*3
+  -> width is embed_dims*3 unconditionally (VAD upstream uses *2), i.e. the
+     third slot for the cognition feature is hardcoded into the checkpoint shape.

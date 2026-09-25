@@ -1,0 +1,19 @@
+{
+  "folder": "1717_Transformer_brain_encoders_explain_human_high_level_visual_r",
+  "model": "claude-opus-4-8",
+  "audit_runs": 2,
+  "tokens": {
+    "input": 19826,
+    "output": 52967,
+    "cache_write": 769358,
+    "cache_read": 14052452
+  },
+  "total_tokens": 14894603,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 39.77
+}

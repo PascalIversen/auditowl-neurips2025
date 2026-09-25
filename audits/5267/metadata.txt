@@ -1,0 +1,5 @@
+paper_number: 5267
+title: NeSyPr: Neurosymbolic Proceduralization For Efficient Embodied Reasoning
+authors: Wonje Choi, Jooyoung Kim, Honguk Woo
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/fee6424a319905353c3d7ffdfcfeee67-Abstract-Conference.html
+category: empirical

@@ -1,0 +1,14 @@
+=== run_hiflow.py default config ===
+loads_lora_by_default: True
+lora_call_commented: False
+height/width base: ('1024', '1024')
+target_heights: [2048, 4096]
+target_widths: [2048, 4096]
+num_inference_steps_highres: [16, 10,]
+alphas: [1.0, 0.25,]
+betas: [0.5, 0.5,]
+
+=== cascade comparison ===
+paper cascade stages: 1K -> 2K -> 3K -> 4K  (3 upscale steps)
+code cascade stages:  1024 -> 2048 -> 4096  (2 upscale steps)
+3K (3072) stage present in code default: False

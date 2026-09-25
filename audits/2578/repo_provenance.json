@@ -1,0 +1,17 @@
+{
+  "paper_id": "2578_DOVE_Efficient_One_Step_Diffusion_Model_for_Real_World_Video",
+  "title": "DOVE: Efficient One-Step Diffusion Model for Real-World Video Super-Resolution",
+  "repos": [
+    {
+      "name": "zhengchen1999__DOVE",
+      "role": "core",
+      "evidence": "README states: 'DOVE: Efficient One-Step Diffusion Model for Real-World Video Super-Resolution', NeurIPS 2025, by Zheng Chen et al. — exactly matching paper title, venue, and all seven author surnames. Repo owner 'zhengchen1999' is first author Zheng Chen; paper itself cites 'https://github.com/zhengchen1999/DOVE'. Contains two-stage training scripts (train_ddp_one_s1.sh/s2.sh), inference entrypoint (inference_script.py), eval scripts (eval_metrics.py), HQ-VSR dataset links, and pretrained model links — fully implementing the paper's latent-pixel training strategy and one-step VSR method."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "One repo was cloned: zhengchen1999/DOVE. Its README explicitly names the NeurIPS 2025 paper title, all seven co-authors (matching metadata.txt), and links to the paper's arXiv (2505.16239). The paper's own text (line 20) gives the same URL. The repo contains the complete core method: two-stage fine-tuning code (Stage-1 latent-space adaptation, Stage-2 pixel-space refinement), inference script, metric evaluation helpers, dataset and pretrained-model links. The audit correctly identified this as the author repo and wrote findings against it — none of the findings claim the repo is non-core. The findings (missing eval dependencies, pipeline code not released, eval script bugs) are legitimate code-quality/reproducibility issues written against the correct repo.",
+  "audit_impact": "No provenance problem. The audit correctly cloned the authors' own implementation. All five verified findings are written against zhengchen1999/DOVE and concern reproducibility gaps within the genuine author code (missing external eval deps, unreleased data pipeline, eval script bugs). No finding was misdirected at a wrong repo.",
+  "recommended_action": "No action needed on repo provenance. The existing findings (video-metric-scripts-missing-deps, pipeline-code-missing, eval-dover-off-by-one, eval-ewarp-broken, inference-sh-wrong-gt) are all correctly targeted at the author's own repo and should be retained as-is."
+}

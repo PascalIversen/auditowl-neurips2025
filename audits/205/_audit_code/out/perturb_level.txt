@@ -1,0 +1,4 @@
+unperturbed NON-reference sample (true level 0.0): inferred=1.0
+unperturbed reference sample      (true level 0.0): inferred=0.0
+reference w/ 3of7 masked          (true level ~0.4): inferred=0.4
+BUG_nonref_unperturbed_misread = True

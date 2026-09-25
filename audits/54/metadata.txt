@@ -1,0 +1,5 @@
+paper_number: 54
+title: EVOREFUSE: Evolutionary Prompt Optimization for Evaluation and Mitigation of LLM Over-Refusal to Pseudo-Malicious Instructions
+authors: Xiaorui Wu, Fei Li, Xiaofeng Mao, Xin Zhang, Li Zheng, Yuxiang Peng, Chong Teng, Donghong Ji, Zhuang Li
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/027613d38d7a8bc9e42ee862fcced7ea-Abstract-Conference.html
+category: empirical

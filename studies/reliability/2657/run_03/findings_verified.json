@@ -1,0 +1,235 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T10:22:35.195533+00:00",
+  "findings": [
+    {
+      "id": "/epoch-selection-csm-code-missing",
+      "category": "missing",
+      "topic": "hyperparameter tuning / reproducibility",
+      "title": "Unsupervised CSM epoch-selection procedure absent; only hardcoded per-dataset epochs remain",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "FMAD/functions.py",
+      "line_start": 73,
+      "line_end": 78,
+      "quote": "def determine_FMAD_hyperparameters(dataset_name_raw):\n    dataset_name = dataset_name_raw.lower()\n    if \"census\" in dataset_name:\n        epoch_size = 5\n        batch_size = 1024\n        learning_rate = 0.005\n",
+      "claim": "The number of training epochs — described in the paper as TCCM's only data-dependent hyperparameter, selected per dataset by the unsupervised Improved Contrast Score Margin (CSM) criterion of Li et al. (2025b) — is supplied to TCCM purely as a hardcoded per-dataset lookup table; the entire selection procedure is absent from the repo.",
+      "concern": "The headline benchmark numbers depend on these epoch values, yet the code that produced them cannot be reproduced or audited, and one cannot verify whether the (unspecified) data used by the CSM criterion touched the test set.",
+      "resolution": "Authors: please release the CSM-based epoch-selection script, and state explicitly which data split (train-only vs the test set) the CSM criterion T(f) was evaluated on for each candidate epoch.",
+      "cross_refs": [
+        "epoch-values-chosen-ad-hoc",
+        "§B.3",
+        "§B.6",
+        "Table 5"
+      ],
+      "check_script": "_audit_code/check_missing_experiments.py",
+      "paper_ref": "Appendix B.3 (lines 2660-2667) and B.6 'Unsupervised Epoch Selection Strategy' (lines 2760-2788); Table 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "epoch-selection-csm-code-missing",
+      "audit": "",
+      "audit_md_line": 50,
+      "verdict": "keep",
+      "reason": "Quote confirmed at FMAD/functions.py lines 73-78; no CSM selection script exists anywhere in the repo.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/explainability-validation-code-missing",
+      "category": "missing",
+      "topic": "result traceability / explainability",
+      "title": "Table 3 explainability validation (ExactMatch, Jaccard) has no implementing code",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "\"Exact Match: The proportion of anomalies for which the predicted top-k features exactly\ncoincide with the ground-truth anomalous dimensions ... Jaccard Index: The average\nintersection-over-union (IoU) between predicted and true anomalous dimensions\"\n",
+      "claim": "The paper reports a quantitative explainability experiment (Table 3: near-perfect ExactMatch and Jaccard across d in {5,10,15,20,25}) validating TCCM's feature-level attribution, but no script in the repo computes top-k feature attribution, ExactMatch, or Jaccard.",
+      "concern": "Explainability is one of the three headline claims in the title/abstract; the only quantitative evidence for it (Table 3) is not reproducible from the released code.",
+      "resolution": "Authors: please release the synthetic-GMM feature-attribution experiment that computes the per-feature residual scores, top-k selection, ExactMatch, and Jaccard reported in Table 3.",
+      "cross_refs": [
+        "§D.4.2",
+        "Table 3"
+      ],
+      "check_script": "_audit_code/check_missing_experiments.py",
+      "paper_ref": "Appendix D.4.2 (lines 4719-4793); Table 3",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "explainability-validation-code-missing",
+      "audit": "",
+      "audit_md_line": 80,
+      "line_start": null,
+      "line_end": null,
+      "verdict": "keep",
+      "reason": "Paper quote confirmed at paper_text.txt line 4743-4746; repo-wide grep finds no ExactMatch, jaccard, or top-k attribution code.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/statistical-tests-code-missing",
+      "category": "missing",
+      "topic": "statistical integrity",
+      "title": "Friedman + Nemenyi critical-difference tests (Appendix D.5) not implemented in repo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "\"we apply the Friedman test ... to determine whether there is any statistically significant\ndifference in performance rankings among all methods. If the null hypothesis is rejected, we\nproceed with the Nemenyi post hoc test ... Two methods are considered significantly\ndifferent if their average ranks differ by at least the critical difference (CD).\"\n",
+      "claim": "The paper conducts Friedman + Nemenyi critical-difference significance tests over the 45-detector / 47-dataset rankings (Appendix D.5), but a whole-repo scan finds no code for friedman, nemenyi, or critical-difference.",
+      "concern": "The reported significance of TCCM's ranking advantage cannot be reproduced or checked from the released code.",
+      "resolution": "Authors: please release the script that runs the Friedman test and Nemenyi/CD post-hoc analysis on the per-dataset mean ranks.",
+      "cross_refs": [
+        "§D.5"
+      ],
+      "check_script": "_audit_code/check_missing_experiments.py",
+      "paper_ref": "Appendix D.5 'Statistical Tests' (lines 4794-4808)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "statistical-tests-code-missing",
+      "audit": "",
+      "audit_md_line": 105,
+      "line_start": null,
+      "line_end": null,
+      "verdict": "keep",
+      "reason": "Paper quote confirmed at paper_text.txt lines 4802-4806; repo-wide grep finds no friedman, nemenyi, or critical-difference code.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/readme-pdf-output-not-produced",
+      "category": "bug",
+      "topic": "reproduction instructions",
+      "title": "README claims AggregateResults.py emits Rank_ROC.pdf / Rank_PR.pdf, but it only writes CSVs",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "AggregateResults.py",
+      "line_start": 269,
+      "line_end": 273,
+      "quote": "df_aggregated.to_csv(os.path.join(f\"{base_metric_path}/{split}\", f\"Results_{split}.csv\"))\norder_roc = df_aggregated.groupby(\"Detector\")[\"Rank_ROC\"].mean().sort_values()\norder_roc.to_csv(os.path.join(f\"{base_metric_path}/{split}\", f\"Results_{split}_rank.csv\"))\norder_pr = df_aggregated.groupby(\"Detector\")[\"Rank_PR\"].mean().sort_values()\norder_pr.to_csv(os.path.join(f\"{base_metric_path}/{split}\", f\"Results_{split}_rank_PR.csv\"))\n",
+      "claim": "README (Reproduction Roadmap line 98; 'Result Aggregation' lines 199-204) says `python AggregateResults.py --semi_only` produces `Rank_ROC.pdf` and `Rank_PR.pdf` (the Figure 2 box plots), but the script contains no matplotlib/seaborn import or savefig call and only writes CSV files.",
+      "concern": "Following the README does not reproduce the Figure 2 PDFs; the box-plot rendering code for the main figure is not in the repo (the underlying rank values, however, are computed and saved to CSV).",
+      "resolution": "Authors: include the box-plot script that turns the rank CSVs into Rank_ROC.pdf / Rank_PR.pdf, or correct the README to state only CSVs are produced.",
+      "cross_refs": [
+        "Figure 2"
+      ],
+      "paper_ref": "Figure 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "readme-pdf-output-not-produced",
+      "audit": "",
+      "audit_md_line": 133,
+      "verdict": "keep",
+      "reason": "Quote confirmed at AggregateResults.py lines 269-273; grep confirms no matplotlib import or savefig call in the script.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/epoch-values-chosen-ad-hoc",
+      "category": "difference",
+      "topic": "hyperparameter tuning",
+      "title": "Code comments indicate manual epoch choice, contradicting the 'principled CSM-based selection' claim",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "FMAD/functions.py",
+      "line_start": 127,
+      "line_end": 134,
+      "quote": "elif \"skin\" in dataset_name:\n    epoch_size = 110  # Chosen first from \"100 or 1\"\n    batch_size = 1024\n    learning_rate = 0.005\nelif \"celeba\" in dataset_name:\n    epoch_size = 2  # Chosen first from \"100 or 1\"\n    batch_size = 1024\n    learning_rate = 0.005\n",
+      "claim": "For the `skin` and `celeba` datasets the hardcoded epoch values carry the comment 'Chosen first from \"100 or 1\"', indicating the epoch was picked manually from a couple of candidate values.",
+      "concern": "The paper states all epoch values come from a principled unsupervised CSM criterion (Li et al. 2025b); these comments suggest at least some values were chosen ad hoc, a description↔code mismatch about how the headline hyperparameter was set.",
+      "resolution": "Authors: clarify whether every Table 5 epoch was selected by the CSM criterion, or whether some were chosen manually (and if so, on what basis).",
+      "cross_refs": [
+        "epoch-selection-csm-code-missing",
+        "Table 5",
+        "§B.6"
+      ],
+      "check_script": "_audit_code/check_first_match.py",
+      "paper_ref": "Appendix B.6 'Hardcoding for Simplicity' (lines 2784-2788); Table 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "epoch-values-chosen-ad-hoc",
+      "audit": "",
+      "audit_md_line": 163,
+      "verdict": "keep",
+      "reason": "Quote with comments confirmed at FMAD/functions.py lines 127-134 exactly as cited.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/requirements-torch-version-mismatch",
+      "category": "difference",
+      "topic": "dependencies / environment",
+      "title": "requirements.txt pins torch==1.13.1 but the paper states PyTorch 2.0",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "requirements.txt",
+      "line_start": 7,
+      "line_end": 7,
+      "quote": "torch==1.13.1\n",
+      "claim": "The pinned dependency is torch==1.13.1, whereas the paper's environment description states the implementation is based on PyTorch 2.0.",
+      "concern": "A reviewer rebuilding the environment from requirements.txt gets a different major PyTorch version than the one the paper says was used; results could differ subtly.",
+      "resolution": "Authors: align requirements.txt with the PyTorch version actually used (state whether 1.13.1 or 2.0 produced the reported numbers).",
+      "cross_refs": [
+        "§B.3"
+      ],
+      "paper_ref": "Appendix B.3 'Hardware and Software' (line 2686: 'Our implementation is based on Python 3.9.21 with PyTorch 2.0')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "requirements-torch-version-mismatch",
+      "audit": "",
+      "audit_md_line": 195,
+      "verdict": "keep",
+      "reason": "requirements.txt line 7 confirmed as torch==1.13.1; paper_text.txt line 2686 confirms 'PyTorch 2.0' stated in paper.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/contam-rescale-on-prescaled-data",
+      "category": "methodology",
+      "topic": "preprocessing / data splitting (contamination study)",
+      "title": "Contamination study re-splits already-scaled data without re-fitting the scaler",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "question",
+      "file": "ContaminationStudies.py",
+      "line_start": 160,
+      "line_end": 172,
+      "quote": "X_train, y_train, X_test, y_test = load_adbench_npz(dataset_name, random_state=seed) # By default, we use 0\n\nX_all = np.vstack([X_train, X_test])\ny_all = np.concatenate([y_train, y_test])\n\nX_normal = X_all[y_all == 0]\nX_abnormal = X_all[y_all == 1]\n\nX_train_normal, X_test_normal = train_test_split(X_normal, test_size=0.5, random_state=42, stratify=None)\nX_train_abnormal_full, X_test_abnormal = train_test_split(X_abnormal, test_size=0.5, random_state=42, stratify=None)\n\nX_test = np.vstack([X_test_normal, X_test_abnormal])\ny_test = np.concatenate([np.zeros(len(X_test_normal)), np.ones(len(X_test_abnormal))])\n",
+      "claim": "The contamination study loads data via load_adbench_npz (which StandardScaler-fits on the original train normals and transforms the rest), then re-stacks the already-scaled train+test arrays into X_all and performs a brand-new 50/50 split without re-fitting the scaler on the new training subset.",
+      "concern": "The features in the new train/test split were scaled with statistics computed from the original train-normal subset (a different partition), so the contamination-study test points are normalized using statistics partly derived from points that are now in the test set — a mild preprocessing-before-split irregularity (no label leakage).",
+      "resolution": "Authors: confirm whether the scaler should be re-fitted on each contamination-study training subset; quantify whether re-fitting changes the Figure 15 trends.",
+      "cross_refs": [
+        "§D.3"
+      ],
+      "paper_ref": "Appendix D.3 contamination ablation (Figure 15)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "contam-rescale-on-prescaled-data",
+      "audit": "",
+      "audit_md_line": 221,
+      "verdict": "keep",
+      "reason": "Quote confirmed at ContaminationStudies.py lines 160-172; utils.py confirms load_adbench_npz applies StandardScaler fit on original train split before the re-stack, as claimed.",
+      "changed": "nothing"
+    }
+  ]
+}

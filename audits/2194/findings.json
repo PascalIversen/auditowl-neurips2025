@@ -1,0 +1,263 @@
+{
+  "schema_version": "1",
+  "audit": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models",
+  "audit_md": "audits/2194_Unlocking_Dataset_Distillation_with_Diffusion_Models/audit.md",
+  "generated_at": "2026-05-31T12:12:54.609141+00:00",
+  "findings": [
+    {
+      "id": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models/pruning-json-missing",
+      "category": "missing",
+      "topic": "result traceability / data preparation",
+      "title": "ImageNet LD3M data builder hard-depends on per-class pruning JSONs that are absent",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "src/glad_utils.py",
+      "line_start": 33,
+      "line_end": 39,
+      "quote": "json_file = os.path.join(json_path, f'class_{c}_top_{percent}_{order}.json')\ntry:\n    with open(json_file, 'r') as f:\n        json_files[c] = set(json.load(f))  # Load the image paths\nexcept FileNotFoundError:\n    print(f\"Warning: JSON file for class {c} not found.\")\n    json_files[c] = set()  # Empty set if file not found\n",
+      "claim": "Every ImageNet LD3M entrypoint calls build_dataset(...) which, unless --percent=100, keeps only images whose path appears in `class_{c}_top_{percent}_{order}.json` loaded from json_path (the filter at line 51 is `if percent == 100 or img_path in json_files[class_label]`); on FileNotFoundError the per-class set is empty, so the real training set becomes empty for that class.",
+      "concern": "All README commands pass --percent=60/20 and json_path defaults to a private cluster path `/netscratch/bmoser/...`; no such JSON ships in the repo (0 found), so the documented runs cannot reproduce the paper's full-dataset LD3M numbers and silently train on an empty/degenerate real set.",
+      "resolution": "Authors: ship the pruning JSON files or document running with --percent=100 (the full-dataset setting the LD3M paper actually uses); confirm which percent produced each paper table.",
+      "cross_refs": [
+        "repo-is-pruning-paper",
+        "selective-best-acc"
+      ],
+      "check_script": "_audit_code/check_traceability.py",
+      "paper_ref": "§5.1 Datasets & Evaluation; Tables 3-5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "pruning-json-missing",
+      "audit": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models",
+      "audit_md_line": 52
+    },
+    {
+      "id": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models/trace-table1-gradnorm-missing",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No code computes Table 1 gradient norms or Fig. 6 SNR (the vanishing-gradient evidence)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "\"Our analysis confirms that in standard diffusion models, gradient norms for Z decrease nearly tenfold as T increases from 10 to 90 (see Table 1).\"\n",
+      "claim": "Table 1 reports ‖∂L/∂Z‖×10^4 for T=10..90 and Fig. 6 reports SNR of gradient norms with vs without the modification; a repo grep finds no gradient-norm or SNR computation (no `.norm()` of dL/dZ, no `SNR`).",
+      "concern": "The empirical motivation for the whole method (vanishing gradients, and that the residual fixes them) has no producing script, so these numbers cannot be reproduced or checked.",
+      "resolution": "Authors: provide the script that computes the per-T gradient norms (Table 1) and the SNR analysis (Fig. 6).",
+      "cross_refs": [
+        "trace-timing-missing"
+      ],
+      "check_script": "_audit_code/check_traceability.py",
+      "paper_ref": "Table 1; Fig. 6 (Supp.)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "trace-table1-gradnorm-missing",
+      "audit": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models",
+      "audit_md_line": 83,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models/trace-timing-missing",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No producer for Fig. 4 time/accuracy sweep or the peak-memory/runtime numbers",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "\"Using T = 20, LD3M requires slightly less peak GPU memory on an A100-40GB compared to GLaD (29.4GB vs 31.2GB) and completes the distillation process faster (574 min vs 693 min).\"\n",
+      "claim": "ldm_time_measurement (glad_utils.py:1072) times a single forward pass, but no script produces the Fig. 4 accuracy-vs-T sweep, the 574/693-minute distillation times, or the 29.4/31.2 GB peak-memory figures (no max_memory_allocated anywhere in src).",
+      "concern": "The efficiency claims (memory, runtime, optimal T trade-off) cannot be reproduced from the repo.",
+      "resolution": "Authors: provide the benchmarking script that measured peak memory and end-to-end distillation time for LD3M vs GLaD across T.",
+      "cross_refs": [
+        "trace-table1-gradnorm-missing"
+      ],
+      "check_script": "_audit_code/check_traceability.py",
+      "paper_ref": "§5.2; Fig. 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "trace-timing-missing",
+      "audit": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models",
+      "audit_md_line": 106,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models/cifar-ld3m-missing",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No LD3M entrypoint/LDM for the CIFAR-10 results in Table 2",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "src/glad_utils.py",
+      "line_start": 775,
+      "line_end": 784,
+      "quote": "def load_ldm(res, args=None):\n    if args.rand_g:\n        config = OmegaConf.load(\"./src/latentdiff/configs/latent-diffusion/ffhq-ldm-vq-4.yaml\")\n        G = load_model_from_config(config, None)\n    elif args.ffhq:\n        config = OmegaConf.load(\"./src/latentdiff/configs/latent-diffusion/ffhq-ldm-vq-4.yaml\")\n        G = load_model_from_config(config, \"./src/latentdiff/models/ldm/ffhq256/model.ckpt\")\n    else:\n        config = OmegaConf.load(\"./src/latentdiff/configs/latent-diffusion/cin256-v2.yaml\")\n        G = load_model_from_config(config, \"./src/latentdiff/models/ldm/cin256-v2/model.ckpt\")\n",
+      "claim": "load_ldm only loads the ImageNet (cin256) or FFHQ LDM; there is no CIFAR-10 LDM load path, and the README gives no CIFAR LD3M command, yet Table 2 reports LD3M CIFAR-10 results (IPC=1 and IPC=50=73.2).",
+      "concern": "The CIFAR-10 LD3M numbers in Table 2 have no clearly runnable producing path in the repo.",
+      "resolution": "Authors: provide the exact command and LDM checkpoint used to distill CIFAR-10 with LD3M (Table 2a/2b).",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_traceability.py",
+      "paper_ref": "Table 2 (a) and (b)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "cifar-ld3m-missing",
+      "audit": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models",
+      "audit_md_line": 129
+    },
+    {
+      "id": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models/ablation-diffusion-toggle-missing",
+      "category": "missing",
+      "topic": "ablations",
+      "title": "No flag/config to disable the Eq. 7 residual or the diffusion process for Tables 6-7",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "src/latentdiff/ldm/models/diffusion/ddim.py",
+      "line_start": 196,
+      "line_end": 200,
+      "quote": "# current prediction for x_0\npred_x0 = (x - sqrt_one_minus_at * e_t) / a_t.sqrt()\nif quantize_denoised:\n    pred_x0, _, *_ = self.model.first_stage_model.quantize(pred_x0)\npred_x0 = (1. - index/T) * pred_x0 + (index/T) * x_T\n",
+      "claim": "The residual mix at line 200 is always applied; there is no CLI flag or config that turns it off ('w/o diffusion' / 'learnable c only' / '+Z' variants in Tables 6-7), nor a separate AE-only entrypoint, so the ablation configurations cannot be reproduced from the released code.",
+      "concern": "Tables 6 and 7 (the ablations that establish *why* LD3M works — the +1.2 pp diffusion gain and the +Eq.7 jump from 22.3% to 28.1%) have no toggle in the code to reproduce the ablated conditions.",
+      "resolution": "Authors: expose the flags used to produce the w/o-diffusion, c-only, and +Z (no Eq.7) ablation rows, or point to the branch/script that does.",
+      "cross_refs": [
+        "eq7-residual-on-predx0"
+      ],
+      "check_script": "_audit_code/check_traceability.py",
+      "paper_ref": "Tables 6 and 7",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ablation-diffusion-toggle-missing",
+      "audit": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models",
+      "audit_md_line": 163
+    },
+    {
+      "id": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models/deps-unpinned",
+      "category": "missing",
+      "topic": "reproducibility / dependencies",
+      "title": "Dependencies unpinned; key LDM stack versions only in install.sh, paper says torch 1.10.1",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "requirements.txt",
+      "line_start": 1,
+      "line_end": 13,
+      "quote": "torch\ntorchvision\ntqdm\nwandb\nnumpy\nkornia\nema-pytorch\neinops\ndill\nscipy\ntimm < 0.9\nftfy\nregex\n",
+      "claim": "requirements.txt lists no versions except `timm < 0.9`; install.sh pins only pytorch-lightning==1.6.5 and omegaconf>=2.0.0, and the paper (Supp. F) states torch 1.10.1 / torchvision 0.11.2, which are not pinned anywhere.",
+      "concern": "The environment cannot be deterministically rebuilt; the LDM code (taming-transformers, ldm) is version-sensitive, so unpinned torch/lightning versions can break or silently alter behaviour.",
+      "resolution": "Authors: pin torch/torchvision and the LDM dependency versions actually used.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_traceability.py",
+      "paper_ref": "Supplementary §F Hardware and Software",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "deps-unpinned",
+      "audit": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models",
+      "audit_md_line": 192
+    },
+    {
+      "id": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models/repo-is-pruning-paper",
+      "category": "difference",
+      "topic": "repository provenance",
+      "title": "Released repo and README are for a different (pruning) paper; LD3M is treated as a dependency",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "readme.md",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "# Distill the Best, Ignore the Rest: Improving Dataset Distillation with Loss-Value-Based Pruning\n",
+      "claim": "The footnote repo's README, title, and BibTeX describe the IJCNN-2025 core-set *pruning* study and state the work 'is based on LD3M and GLaD'; the README's reproduction commands all carry pruning flags (--percent, --order) and a get_losses_imagenet.py loss-ranking script the LD3M paper never describes.",
+      "concern": "The NeurIPS LD3M paper points readers to a repo whose documented protocol (loss-pruned core-sets) differs from the paper's protocol (standard full-dataset GLaD setup); there is no LD3M-specific README, results table, or exact reproduce commands, so a reader cannot tell which settings reproduce the LD3M tables.",
+      "resolution": "Authors: provide an LD3M-specific README (or branch) with the exact full-dataset commands and a results table mapping commands to Tables 2-8.",
+      "cross_refs": [
+        "pruning-json-missing"
+      ],
+      "paper_ref": "Abstract footnote (code URL); §5.1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "repo-is-pruning-paper",
+      "audit": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models",
+      "audit_md_line": 239
+    },
+    {
+      "id": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models/eq7-residual-on-predx0",
+      "category": "difference",
+      "topic": "core method implementation",
+      "title": "Eq. 7 residual is applied to predicted x0 with a VQ-quantized z_T, not to the mean μθ as written",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "src/latentdiff/ldm/models/diffusion/ddim.py",
+      "line_start": 145,
+      "line_end": 200,
+      "quote": "outs = self.p_sample_ddim(img, self.model.first_stage_model.quantize(x_T)[0], total_steps-1, cond, ts, index=index, use_original_steps=ddim_use_original_steps,\n",
+      "claim": "Eq. 7 in the paper weights the predicted *mean* μθ(c,z_t,γt) against z_T; the code instead linearly mixes the predicted clean latent `pred_x0` with `x_T` (ddim.py:200) and the residual `x_T` is the VQ-*quantized* encoded latent (`first_stage_model.quantize(x_T)[0]`, ddim.py:148), not the noised z_T the equation/Algorithm 1 names. The decay weight index/T runs 1->0 as the paper's t/T does, so the decay direction matches.",
+      "concern": "The implemented residual target (pred_x0, quantized) differs from the equation's target (mean μθ, z_T); both are plausible variants, so this is a faithfulness gap rather than an invalid procedure, but it means the released code does not literally implement Eq. 7.",
+      "resolution": "Authors: confirm whether the paper equation or the pred_x0/quantized form was used for the reported numbers, and reconcile Eq. 7 / Algorithm 1 with the code.",
+      "cross_refs": [
+        "ablation-diffusion-toggle-missing"
+      ],
+      "paper_ref": "Eq. 7; Algorithm 1; §4.1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "eq7-residual-on-predx0",
+      "audit": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models",
+      "audit_md_line": 263
+    },
+    {
+      "id": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models/selective-best-acc",
+      "category": "methodology",
+      "topic": "hyperparameter tuning / model selection",
+      "title": "Reported accuracy is the max test accuracy over distillation checkpoints (selection on test set)",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "src/glad_utils.py",
+      "line_start": 549,
+      "line_end": 556,
+      "quote": "acc_test_mean = np.mean(np.max(accs_test, axis=1))\nacc_test_std = np.std(np.max(accs_test, axis=1))\nbest_dict_str = \"{}\".format(model_eval)\nif acc_test_mean > best_acc[best_dict_str]:\n    best_acc[best_dict_str] = acc_test_mean\n    best_std[best_dict_str] = acc_test_std\n    save_this_it = True\n",
+      "claim": "eval_loop_ldm_encode runs at multiple distillation iterations and keeps `best_acc` = the maximum mean test accuracy seen across those evaluation checkpoints; the headline/best metric is therefore the best distillation iteration chosen by the test-set accuracy itself (no held-out validation split exists in get_dataset).",
+      "concern": "Selecting the reported number as the best-over-iterations on the test set inflates accuracy and is test-set model selection; it is applied symmetrically to GLaD here, but absolute numbers and the 'up to 4.8 pp' gains are optimistic without a validation-selected checkpoint.",
+      "resolution": "Authors: report accuracy at a fixed iteration (or a validation-selected checkpoint) rather than the max-over-iterations test accuracy, or confirm which `accs`/`best_acc` field populated each table.",
+      "cross_refs": [
+        "pruning-json-missing"
+      ],
+      "paper_ref": "§5.1 (mean ± std over 5 runs); Tables 3-5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "selective-best-acc",
+      "audit": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models",
+      "audit_md_line": 289
+    }
+  ]
+}

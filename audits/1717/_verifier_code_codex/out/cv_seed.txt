@@ -1,0 +1,11 @@
+KFold/fold-partition primitive present anywhere: False
+90/10 split line present: True
+per-run np.random.shuffle(idxs) (no seed) present: True
+seed-related lines:
+    main.py:30: (commented) # np.random.seed(0)
+    main.py:31: (commented) # torch.manual_seed(0)
+    datasets/nsd.py:225: (commented) # rand_seed = 5 #@param
+    datasets/nsd.py:226: (commented) # np.random.seed(rand_seed)
+=> number of ACTIVE seed statements: 0
+eval notebook sets self.runs = np.arange(1,11): True
+eval notebook averages predictions across runs (np.mean(lh_pred...)): True

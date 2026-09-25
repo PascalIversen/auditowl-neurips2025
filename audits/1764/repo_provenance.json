@@ -1,0 +1,22 @@
+{
+  "paper_id": "1764_AlphaZero_Neural_Scaling_and_Zipf_s_Law_a_Tale_of_Board_Game",
+  "title": "AlphaZero Neural Scaling and Zipf's Law: a Tale of Board Games and Power Laws",
+  "repos": [
+    {
+      "name": "OrenNeumann__alphazero_zipfs_law",
+      "role": "core",
+      "evidence": "Paper states official code URL 'github.com/OrenNeumann/alphazero_zipfs_law' (paper_text.txt L104); repo owner OrenNeumann = first author Oren Neumann; README titled exactly with the paper title and 'We provide here all resources needed to reproduce the paper's results.'; src/ implements the paper's named methods: state_counter.py (board-state Zipf counting, Fig 1), zipf_curves.py _fit_power_law (alpha exponent, Eq.1), value_loss.py/value_prediction.py (loss-vs-rank, Figs 4/7), temperature.py (Fig 3B), elo_curves.py (inverse scaling, Fig 5A); generate_all_plots.py regenerates all paper figures."
+    },
+    {
+      "name": "AlphaZeroZipf__AlphaZero-Zipf-s-Law",
+      "role": "mirror",
+      "evidence": "Byte-identical README to the author repo (same paper title, same instructions), near-identical src/ tree (differs only by one extra file solver_calc.py present in the author repo), identical plots/ and poetry config; anonymous org name 'AlphaZeroZipf' is an anonymized-submission copy. Audit.md L27-28 calls it 'an older, strictly-subset anonymised copy' and finding 'repo-not-tagged-to-submission' notes 'a second anonymised copy (AlphaZeroZipf, 2025-05-19) is a strict subset'."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "contaminated_extra_repos",
+  "confidence": "high",
+  "rationale": "The author's own core implementation is present and correctly identified: OrenNeumann/alphazero_zipfs_law is the exact URL the paper cites (L104), the owner is first author Oren Neumann, and the src/ modules implement every headline result (Zipf state counting, power-law fitting, value-loss-vs-rank, temperature/Elo inverse-scaling). A second repo (AlphaZeroZipf) was also cloned, but it is an anonymized mirror (byte-identical README, strict-subset src/), not independent code. The audit correctly scoped all file:line findings to the author repo and explicitly states 'This audit targets the OrenNeumann repo,' so no finding was misattributed to the mirror. The verified 'missing' findings are genuine data-release/documentation gaps (undocumented ../matches/ dir, missing paths.yaml, model weights 'on request') against the real core code, not false 'no code' claims.",
+  "audit_impact": "No correction to severity/verdict needed: source-present is justified by the author core repo, and the audit's findings are validly written against it. The only contamination is the redundant anonymized mirror clone (AlphaZeroZipf), which does not affect any finding. The 'no code from scratch' style findings (load-data-false-needs-models-and-paths, matches-dir-undocumented, missing-paths-yaml) remain valid as reproducibility-gap findings against the genuine core; they are not 'no code exists' claims.",
+  "recommended_action": "Keep paper as source-present (correct core identified). Mark AlphaZeroZipf__AlphaZero-Zipf-s-Law as a redundant anonymized mirror and drop it from the canonical clone set to avoid double-counting; retain OrenNeumann__alphazero_zipfs_law as the single core repo. No finding needs reattribution."
+}

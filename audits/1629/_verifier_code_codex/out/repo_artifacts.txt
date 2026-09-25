@@ -1,0 +1,22 @@
+CSV files in repo: 0 -> []
+Model checkpoints (.pt/.ckpt): 0 -> []
+Files under data/: 0 -> []
+inference_outputs files: 0
+wandb log dirs: []
+=> Simulator (simulator.py) requires --dataset-path CSV data of captured LLM outputs; baselines/tables require W&B run logs. None present in repo.
+
+Model categories per config/llama3/*.yaml:
+  arc_challenge.yaml: ['xsmall', 'small', 'medium', 'large']
+  arc_easy.yaml: ['xsmall', 'small', 'medium', 'large']
+  boolq.yaml: ['xsmall', 'small', 'medium', 'large']
+  logiqa.yaml: ['xsmall', 'small', 'medium', 'large']
+  piqa.yaml: ['xsmall', 'small', 'medium', 'large']
+  sciq.yaml: ['xsmall', 'small', 'medium', 'large']
+  social_iqa.yaml: ['xsmall', 'small', 'medium', 'large']
+  winogrande.yaml: ['xsmall', 'small', 'medium', 'large']
+Paper Table 2 zoo: L1B / L8B / L70B (3 models). Configs add a 3B 'small' model => 4 models.
+
+config/online/ exists: False
+config/qwen2/online/ exists: False
+configs with top-level 'algorithm:' key: []
+run_baselines.ipynb loads CONFIG['algorithm'] and config/online/<bench>.yaml -- neither exists in the repo.

@@ -1,0 +1,22 @@
+{
+  "Tab.1/2  UniAD variant": [],
+  "Tab.1    GenAD variant": [],
+  "Tab.1    LAW variant": [],
+  "Tab.1    VAD-Tiny variant": [
+    "/home/author/Projects/neurips_audit/audits/1339_Embodied_Cognition_Augmented_End2End_Autonomous_Driving/code/AIR-DISCOVER__E-cubed-AD__E-VAD/requirements.txt:181:tinycss2=1.2.1=pypi_0"
+  ],
+  "Tab.2/A.6 CARLA closed loop": [
+    "/home/author/Projects/neurips_audit/audits/1339_Embodied_Cognition_Augmented_End2End_Autonomous_Driving/code/AIR-DISCOVER__E-cubed-AD__E-VAD/requirements.txt:21:carla=0.9.12=pypi_0"
+  ],
+  "Tab.A.7  Singapore/Boston split": [
+    "/home/author/Projects/neurips_audit/audits/1339_Embodied_Cognition_Augmented_End2End_Autonomous_Driving/code/AIR-DISCOVER__E-cubed-AD__E-VAD/tools/data_converter/vad_nuscenes_converter.py:497:                # flip x axis if in left-hand traffic (singapore)",
+    "/home/author/Projects/neurips_audit/audits/1339_Embodied_Cognition_Augmented_End2End_Autonomous_Driving/code/AIR-DISCOVER__E-cubed-AD__E-VAD/tools/data_converter/vad_nuscenes_converter.py:498:                flip_flag = True if map_location.startswith('singapore') else False",
+    "/home/author/Projects/neurips_audit/audits/1339_Embodied_Cognition_Augmented_End2End_Autonomous_Driving/code/AIR-DISCOVER__E-cubed-AD__E-VAD/projects/mmdet3d_plugin/datasets/nuscenes_vad_dataset.py:501:        self.MAPS = ['boston-seaport', 'singapore-hollandvillage',",
+    "/home/author/Projects/neurips_audit/audits/1339_Embodied_Cognition_Augmented_End2End_Autonomous_Driving/code/AIR-DISCOVER__E-cubed-AD__E-VAD/projects/mmdet3d_plugin/datasets/nuscenes_vad_dataset.py:502:                     'singapore-onenorth', 'singapore-queenstown']"
+  ],
+  "Tab.1    UniAD-style L2 (endpoint)": [],
+  "Tab.3    expert/novice EEG ablation": [],
+  "Tab.4/A.5 framework-1 AttentionGate": [],
+  "Tab.4/A.3 framework-2 ego-query xattn": [],
+  "Tab.A.2  doubled L2 loss run": []
+}

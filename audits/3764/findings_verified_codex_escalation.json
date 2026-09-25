@@ -1,0 +1,31 @@
+{
+  "findings": [
+    {
+      "id": "3764_DNAEdit_Direct_Noise_Alignment_for_Text_Guided_Rectified_Flo/no-metric-computation-code",
+      "verdict": "keep",
+      "reason": "The cited driver only saves generated images, and independent source searches found no implementation of the reported image-editing metrics or ranking despite the cited trace output being a non-executable, unrelated artifact.",
+      "changed": "reverted the first-pass reject to keep because the malformed check_script does not negate the independently verified repository-wide absence"
+    },
+    {
+      "id": "3764_DNAEdit_Direct_Noise_Alignment_for_Text_Guided_Rectified_Flo/no-dependency-specification",
+      "verdict": "keep",
+      "reason": "The install text is present at README lines 57-59 rather than 49-51, no dependency manifest exists, and the source imports multiple additional unpinned packages.",
+      "changed": "reverted the first-pass reject to keep after locating the quoted text at its current line numbers"
+    },
+    {
+      "id": "3764_DNAEdit_Direct_Noise_Alignment_for_Text_Guided_Rectified_Flo/app-undefined-name-and-missing-import",
+      "verdict": "lowered",
+      "reason": "The SD3 branch uses an unimported StableDiffusion3Pipeline and hardcoded checkpoint paths, but model_choice is a defined module global, the UI exposes only FLUX, and load failures are caught rather than raised.",
+      "changed": "changed from first-pass reject to lowered and reduced confidence from high to medium because the claimed model_choice NameError is false",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding"
+    },
+    {
+      "id": "3764_DNAEdit_Direct_Noise_Alignment_for_Text_Guided_Rectified_Flo/readme-mvg-recommendation-vs-paper",
+      "verdict": "keep",
+      "reason": "The README recommendation appears at lines 132-136 rather than 119-123, while the paper fixes eta at 0.8 and both benchmark configs set mvg to 0.8.",
+      "changed": "reverted the first-pass reject to keep after locating the quoted guidance at its current line numbers"
+    }
+  ]
+}

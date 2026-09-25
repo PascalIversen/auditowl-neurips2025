@@ -1,0 +1,10 @@
+{
+  "findings": [
+    {
+      "id": "760_Mesh_Interpolation_Graph_Network_for_Dynamic_and_Spatially_I/hf-dataset-only-one-variable",
+      "verdict": "reject",
+      "reason": "The Hugging Face history shows that embeddings and PyG processed archives for all six variables were uploaded on November 7, 2025, before the stated May 30, 2026 retrieval date, so the claim that only DEWP was available is false.",
+      "changed": "nothing"
+    }
+  ]
+}

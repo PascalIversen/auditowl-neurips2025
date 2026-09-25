@@ -1,0 +1,5 @@
+paper_number: 828
+title: Large language models can learn and generalize steganographic chain-of-thought under process supervision
+authors: ROBERT MC CARTHY, Joey SKAF, Luis Ibanez-Lissen, Vasil Georgiev, Connor Watts, Hannes Whittingham, Lorena Gonzalez-Manzano, Cameron Tice, Edward Young, Puria Radmard, David Lindner
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/28131b22fafebba500eb7bb02e3d5b59-Abstract-Conference.html
+category: empirical

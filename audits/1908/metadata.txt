@@ -1,0 +1,5 @@
+paper_number: 1908
+title: GSRF: Complex-Valued 3D Gaussian Splatting for Efficient Radio-Frequency Data Synthesis
+authors: Kang Yang, Gaofeng Dong, Sijie Ji, Wan Du, Mani Srivastava
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/5b5618e7d061748267d74478b7c5b1ab-Abstract-Conference.html
+category: empirical

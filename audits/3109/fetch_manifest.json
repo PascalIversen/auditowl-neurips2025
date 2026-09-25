@@ -1,0 +1,12 @@
+{
+  "tencent-ailab__songgeneration": {
+    "repo": "https://github.com/tencent-ailab/songgeneration",
+    "clone_status": "cached",
+    "size_mb": 8.8,
+    "lfs_pointer_stubs": 1,
+    "lfs_examples": [
+      "tools/new_auto_prompt.pt"
+    ],
+    "empty_submodules": []
+  }
+}

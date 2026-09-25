@@ -1,0 +1,9 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/tencent-ailab/songgeneration	[author-cue]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/ASLP-lab/DiffRhythm	[no-author-signal]
+https://github.com/Stability-AI/stable-audio-tools	[known-org:stability-ai]
+https://github.com/ace-step/ACE-Step	[baseline-cue]
+https://github.com/haoheliu/audioldm_eval	[no-author-signal]
+https://github.com/multimodal-art-projection/YuE	[no-author-signal]

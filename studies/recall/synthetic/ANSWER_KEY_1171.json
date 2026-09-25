@@ -1,0 +1,88 @@
+{
+  "paper": "1171",
+  "repo": "Legenddddd__MEL",
+  "design": "major_recall_study DESIGN.md",
+  "seeds": [
+    {
+      "id": "S01",
+      "slot": "MAJOR-MISS",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "Legenddddd__MEL/models/mel/Network.py",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the only MEL architecture behind the Stanford Dogs ablation",
+      "description": "Delete the repository's sole implementation of MYNET, including the meta-category vector, attention-mask branch, low/high feature transformations, dual prototype classifiers, and incremental prototype update. Table 2's M1-M5 component ablations and the reported MEL results then have no executable model implementation anywhere in the repository.",
+      "expected_reasoning": "The paper says Table 2 isolates fine-grained extraction, the meta-category vector, its incremental optimization, feature-space transformation, and relationship regularization. A careful reader maps all of those mechanisms to models/mel/Network.py: MYNET constructs the attention and transformation modules, encode executes them, and update_fc maintains both prototype branches. The patch deletes that only file; no alternative MYNET or equivalent MEL implementation exists. Since nothing runnable stands in for the reported variants, this is an absent experiment pipeline rather than a faulty substitute.",
+      "paper_anchor": "To demonstrate the effectiveness of each component in our method, we conduct ablation experiments in Table 2.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    {
+      "id": "S03",
+      "slot": "MAJOR-DIFF",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "Legenddddd__MEL/models/resnet12_encoder.py",
+          "line": 88,
+          "action": "replace"
+        },
+        {
+          "file": "Legenddddd__MEL/models/resnet12_encoder.py",
+          "line": 149,
+          "action": "replace"
+        }
+      ],
+      "title": "Use a plain twelve-layer convolutional backbone instead of ResNet-12",
+      "description": "Remove every residual addition from ResNet12Block while retaining the three learned convolutions, normalizations, nonlinearities, pooling, and regularization in each stage. The resulting backbone is a genuine trainable twelve-convolution feed-forward CNN with the expected feature shapes and gradients, but it is not the ResNet-12 architecture claimed in the paper.",
+      "expected_reasoning": "The paper explicitly states that the experiments employ ResNet-12. In the original block, the convolutional path is added to either the identity or learned projection before the final activation. The patched forward method still performs all three convolutions and backpropagates through a coherent deep CNN, but never uses self.downsample and never adds residual to out. Four such stages therefore implement a plain Conv-12-style network rather than a residual network, making this a fully functional alternative method rather than a no-op or missing backbone.",
+      "paper_anchor": "Following [18], we employ ResNet-12 as the backbone.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    {
+      "id": "S06",
+      "slot": "MAJOR-METH",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "Legenddddd__MEL/dataloader/StanfordDog/StanfordDog.py",
+          "line": 98,
+          "action": "replace"
+        }
+      ],
+      "title": "Use held-out Stanford Dogs images as every incremental support set",
+      "description": "Replace each session manifest's five training examples per novel class with five images read directly from test.csv, while preserving the correct class targets and 5-way 5-shot shape. Every incremental prototype and mutual-regularization update therefore consumes examples that remain in the cumulative test set used for the reported session accuracies.",
+      "expected_reasoning": "The paper says each Stanford Dogs incremental class contains five training samples and separately defines inference on the test set. The patched SelectfromTxt reads the requested class IDs from the normal session manifest but sources five filenames per class from data/StanfordDog/split/test.csv. It recovers the original numeric targets from the manifest's genuine training paths, so the pipeline still runs as 5-way 5-shot. The unmodified test dataset independently reads that same test.csv and includes those images, proving exact overlap between every novel-class support set and evaluation data.",
+      "paper_anchor": "Each incremental class contains 5 samples, forming a 5-way 5-shot FSCIL setting.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    {
+      "id": "S07",
+      "slot": "MAJOR-BUG",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "Legenddddd__MEL/utils.py",
+          "line": 212,
+          "action": "replace"
+        }
+      ],
+      "title": "Silently leave the ResNet-12 feature extractor untrained",
+      "description": "Exclude every encoder parameter from the base-session optimizer while continuing to train the attention, mask, transformation, and classifier parameters. The program runs and losses backpropagate, but all reported features originate from a randomly initialized ResNet-12 whose weights never receive an update.",
+      "expected_reasoning": "The paper's MEL relies on base-session optimization to learn fine-grained and semantic feature extraction before incremental refinement. A reader can enumerate model.named_parameters and see that the patched filter drops every module.encoder parameter from both optimizer groups; no later optimizer is constructed for those weights, and incremental sessions put the model in eval mode. The remaining heads still update, so this is a runnable but deeply broken training mechanism rather than missing code. Recovering the claimed result requires restoring and retraining the central backbone, not fixing a typo.",
+      "paper_anchor": "During the base training phase, the overall loss function guided by sub-categories for feature extraction and feature space transformation is defined as,",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    }
+  ]
+}

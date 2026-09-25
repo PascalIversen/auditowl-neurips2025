@@ -1,0 +1,22 @@
+{
+  "paper_id": "2188_Detoxifying_Large_Language_Models_via_Autoregressive_Reward_",
+  "title": "Detoxifying Large Language Models via Autoregressive Reward Guided Representation Editing",
+  "repos": [
+    {
+      "name": "xiaoyisong/ARGRE",
+      "role": "core",
+      "evidence": "README titled 'Code of ARGRE'; repo owner 'xiaoyisong' = lead author Yisong Xiao (Beihang). Layout mirrors the paper's method exactly: reward_model/ (My{Llama,GPT2,Mistral,OPT}ForCausalLM autoregressive reward models), evaluation/collect_hidden (PCA non-toxic direction), evaluation/train_hidden (train reward model), evaluation/baselines/run_argre.py (two-step steer+gradient editing). run_argre.py argparse description='ARGRE'; configs cover the 8 LLMs from the paper (gpt2/opt-6.7b/mistral/llama-7b/13b/30b/sft)."
+    },
+    {
+      "name": "unitaryai/detoxify",
+      "role": "dependency",
+      "evidence": "README '🙊 Detoxify - Toxic Comment Classification', built by Laura Hanu at Unitary (citation year 2020, Jigsaw Kaggle challenges) - not by the paper's authors and not the ARGRE method. Used purely as the toxicity-scoring evaluator: pinned as 'detoxify==0.5.2' in ARGRE/req.txt and called via Detoxify('original', ...) in evaluation/utils/evaluate_model.py."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "contaminated_extra_repos",
+  "confidence": "high",
+  "rationale": "The author core IS present: xiaoyisong/ARGRE (owner = lead author Yisong Xiao, README 'Code of ARGRE') implements the paper's named method end-to-end (PCA non-toxic direction, autoregressive reward model, two-step steer+gradient editing) across the paper's 8 LLMs. A second repo, unitaryai/detoxify, is a third-party toxicity classifier (Unitary/Laura Hanu, 2020) used only as the evaluation scorer and pinned dependency, not this paper's method - so it is an extra non-core repo cloned alongside the core.",
+  "audit_impact": "No misattribution. All six findings in findings_verified.json are written against the core ARGRE repo and are legitimate reproducibility/bug concerns (missing pairwise training data split_0/1.jsonl, missing trained reward checkpoints/exp outputs, missing Section 5 stereotype/jailbreak code, deps absent from req.txt, 10-token eval). None claim 'no code exists'. The 'detoxify-checkpoint-placeholder-path' finding correctly treats detoxify as the external scorer (placeholder path 'todo/toxic_original-c1212f89.ckpt'), so the extra repo did not corrupt any verdict.",
+  "recommended_action": "Keep the paper as source-present (core = xiaoyisong/ARGRE). Tag unitaryai/detoxify as a third-party evaluation dependency, not author code, so it is not counted as a separate author release. Existing findings stand."
+}

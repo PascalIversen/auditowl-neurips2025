@@ -1,0 +1,9 @@
+check,value
+isaac_RFAgent_reward_funcs,14
+bidex_RFAgent_reward_funcs,10
+normalization_score_script_hits,[]
+figure_savefig_hits,"[('RF_Agent/baseline_revolve.py', 'savefig'), ('RF_Agent/baseline_eureka.py', 'savefig')]"
+stored_result_logs,[]
+test_py_uses_max_consecutive_successes,True
+config_train_seed_line,['train_seed: 0']
+rfagent_eval_uses_seed_range_0_to_num_eval,True

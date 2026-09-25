@@ -1,0 +1,12 @@
+{
+  "paper_folder": "4838_Visual_Jenga_Discovering_Object_Dependencies_via_Counterfact",
+  "code_dir_exists": false,
+  "author_code_files_found": [],
+  "all_top_level_files": [
+    "_audit_code",
+    "code_links.txt",
+    "metadata.txt",
+    "paper.pdf",
+    "paper_text.txt"
+  ]
+}

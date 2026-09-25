@@ -1,0 +1,17 @@
+Verifier run of check_completeness.py (from paper repo root):
+
+False  README.md present
+False  Imagenette/cosine-sim code (Fig 1)
+False  two-moons histogram code (Fig 1a)
+False  nearest-neighbor distance experiment driver (Fig 2 right)
+False  hybrid-model tau-switch driver (Fig 3)
+False  LPIPS dependency/usage (Fig 3 metric)
+False  CelebA training script in repo
+False  MNIST/FMNIST experiment code (App. C)
+ True  live ipdb.set_trace() (uncommented)
+
+Live ipdb breakpoints:
+   ('src/utils/mean_cfm.py', 105, '    import ipdb; ipdb.set_trace()')
+
+Note: script must be run from the paper repo root (generativemodels__closedformfm/) for REPO to resolve correctly.
+Running from _verifier_code/ resolves REPO to the audit folder and returns false positives by searching related repos.

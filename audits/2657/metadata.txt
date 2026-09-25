@@ -1,0 +1,5 @@
+paper_number: 2657
+title: Scalable, Explainable and Provably Robust Anomaly Detection with One-Step Flow Matching
+authors: Zhong Li, Qi Huang, Yuxuan Zhu, Lincen Yang, Mohammad Mohammadi Amiri, Niki van Stein, Matthijs van Leeuwen
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/7f2223201858b6ff4cc1832d8856459b-Abstract-Conference.html
+category: empirical

@@ -1,0 +1,5 @@
+paper_number: 356
+title: Breaking AR’s Sampling Bottleneck: Provable Acceleration via Diffusion Language Models
+authors: Gen Li, Changxiao Cai
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/111298628bfb153ee1f84b10fec3a8b9-Abstract-Conference.html
+category: empirical

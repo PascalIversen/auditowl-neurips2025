@@ -1,0 +1,17 @@
+{
+  "paper_id": "4468_Execution_Guided_Line_by_Line_Code_Generation",
+  "title": "Execution Guided Line-by-Line Code Generation",
+  "repos": [
+    {
+      "name": "boazlavon__eg_cfg",
+      "role": "core",
+      "evidence": "Repo owner 'boazlavon' = first author Boaz Lavon (boazlavon@mail.tau.ac.il). README states 'Our paper got accepted to NeurIPS 2025' and 'Our code is available at: https://github.com/boazlavon/eg_cfg' — exact URL also cited in paper abstract. Package directory is named 'eg_cfg/', implementing 'Execution-Guided Classifier-Free Guidance (EG-CFG)' — the paper's headline method. Core modules eg_cfg/eg_cfg.py, eg_cfg/probs_utils.py, eg_cfg/eg_cfg_session_manager.py implement the CFG interpolation (Eq.13), beam-search candidate generation, execution-trace injection, and multi-agent grid sweep described in Sections 3–4. Modified HuggingFace transformers fork (submodules/transformers/) and trepan-xpy debugger fork (submodules/trepan-xpy/) are the exact custom extensions described in the paper. Performance figures for MBPP 96.6%, HumanEval 99.4%, DS-1000 69.9%, CodeContests 60.6% match the paper's headline Table 1-4 numbers."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "A single repo was cloned (boazlavon__eg_cfg), tagged [author-cue] by the clone step. It is unambiguously the paper's own implementation: the repo owner is the paper's first author (Boaz Lavon), the repo URL is explicitly cited in the paper abstract, the package is named 'eg_cfg' matching the paper's method name EG-CFG, and all core algorithmic components described in the paper are present (CFG decoding loop, trace-dumper, modified transformers/trepan-xpy forks, multi-agent grid). The audit's findings were all written against this core repo and concern legitimate issues (missing aggregation scripts, methodology concerns about test-based selection) — none are 'missing code' claims against the wrong repo. The audit correctly classified this paper as source-present.",
+  "audit_impact": "None. All seven findings in findings_verified.json are correctly anchored to files in the core repo (boazlavon__eg_cfg). No finding was written against a wrong repo, and no 'no code released' false alarm was raised. The audit's verdict (source-present, findings about missing aggregation scripts and methodology) stands unchanged.",
+  "recommended_action": "No action required. The single cloned repo is the correct core implementation. The audit findings are valid and appropriately targeted."
+}

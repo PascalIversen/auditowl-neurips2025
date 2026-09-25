@@ -1,0 +1,5 @@
+paper_number: 376
+title: Sparse Diffusion Autoencoder for Test-time Adapting Prediction of Complex Systems
+authors: Jingwen Cheng, Ruikun Li, Huandong Wang, Yong Li
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/124343e4e4097fe8746dc54fb9fb8000-Abstract-Conference.html
+category: empirical

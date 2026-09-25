@@ -1,0 +1,23 @@
+{
+  "paper_id": "263_On_the_Closed_Form_of_Flow_Matching_Generalization_Does_Not_",
+  "title": "On the Closed-Form of Flow Matching: Generalization Does Not Arise from Target Stochasticity",
+  "repos": [
+    {
+      "name": "annegnx__PnP-Flow",
+      "role": "different_paper",
+      "evidence": "README states 'code for our ICLR 2025 PnP-Flow paper (arxiv 2410.02423), a method combining PnP methods with Flow Matching pretrained models for solving image restoration problems'. Owner 'annegnx' is Anne Gagneux (paper co-author) but the repo implements a different ICLR 2025 paper, not this NeurIPS 2025 closed-form flow matching paper."
+    },
+    {
+      "name": "atong01__conditional-flow-matching",
+      "role": "dependency",
+      "evidence": "README states 'TorchCFM: a Conditional Flow Matching library' implementing OT-CFM (arXiv 2302.00482) and SF2M (arXiv 2307.03672) by Alexander Tong et al. Owner 'atong01' (Alexander Tong) is not among this paper's authors (Bertrand, Gagneux, Massias, Emonet). The paper cites torchcfm as a dependency (pyproject.toml lists 'torchcfm>=1.0.7')."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "contaminated_extra_repos",
+  "manual_override_note": "MANUAL REVIEW (overrides the agent's automatic 'misclassified_missing_code' label): the paper DID release its core code at github.com/generativemodels/closedformfm, and audit.md + the verifier confirm the audit ran against that real repo (verifying mean_cfm.py:136-188 faithful to Eq. 8, train_cifar10.py, conf/train_cifar10.yaml). The core is therefore RELEASED and was AUDITED, so for source-present accounting core_present='yes'. The defect is snapshot integrity: the real closedformfm dir is absent from the local code/ snapshot and fetch_manifest.json, while two spurious non-core repos (PnP-Flow=different_paper, conditional-flow-matching=dependency) are present. Reclassified as contaminated_extra_repos. Recommended action: re-clone closedformfm into code/; the existing findings are valid and retained.",
+  "confidence": "high",
+  "rationale": "The paper's own stated code URL (https://github.com/generativemodels/closedformfm) is listed in code_links.txt as '[no-author-signal]' and was NOT cloned — it is absent from both fetch_manifest.json and the code/ directory. The two cloned repos are: (1) annegnx__PnP-Flow — a different ICLR 2025 paper by co-author Anne Gagneux on image restoration; (2) atong01__conditional-flow-matching — the TorchCFM library, a dependency. Neither implements this paper's core contribution (EFM / closed-form flow matching for generalization). The audit.md itself correctly identifies the paper's code as 'code/generativemodels__closedformfm/' and the verifier output explicitly notes it ran against that repo root — yet fetch_manifest.json shows this repo was never cloned into the code/ directory. The audit findings (citing src/utils/mean_cfm.py, src/train_cifar10.py, NOTES.md) describe the correct paper code but that code is not present in the current code/ folder. The paper is therefore misclassified as source-present: no core author implementation is in the cloned set.",
+  "audit_impact": "The audit was written against the correct paper repo (generativemodels/closedformfm), which the auditor apparently accessed outside the normal clone pipeline, so the findings themselves (missing-figure-experiment-code, missing-celeba-training, missing-lpips-dependency, rescaled-loss-overwritten, live-ipdb-breakpoint) are likely substantively correct. However, the two cloned repos (annegnx__PnP-Flow and atong01__conditional-flow-matching) are non-core and should not be counted as the paper's source release. The coverage/status accounting should mark this paper as missing-core-code in the cloned set.",
+  "recommended_action": "Clone https://github.com/generativemodels/closedformfm and add it to the code/ directory and fetch_manifest.json. Remove or reclassify annegnx__PnP-Flow (different_paper) and atong01__conditional-flow-matching (dependency) from the primary code inventory. The substantive audit findings written against generativemodels/closedformfm appear valid and should be retained."
+}

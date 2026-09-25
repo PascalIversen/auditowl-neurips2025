@@ -1,0 +1,13 @@
+# AUTHOR / PRIMARY repositories (cloned):
+# 1. GitHub open-source release — the SDForger *generation* databuilder only.
+https://github.com/IBM/fms-dgt/tree/main/fms_dgt/public/databuilders/time_series	[author]
+#    -> on disk: code/IBM__fms-dgt/  (large general fms-dgt framework; SDForger lives under fms_dgt/public/databuilders/time_series/)
+# 2. NeurIPS 2025 Supplemental ZIP — the FULL reproduction package: similarity
+#    metrics (MDD/ACD/SD/KD/ED/DTW/SHAP-RE), TTM utility eval (RMSE/MASE/WQL),
+#    generation, configs, and the experiment datasets. Cited by the paper's
+#    repro checklist ("code as supplemental material at submission time").
+https://papers.nips.cc/paper_files/paper/2025/file/70fb27f33beefef137e09bbd875c28ad-Supplemental-Conference.zip	[author]
+#    -> on disk: code/SDForger__neurips_supplemental/  (sources/, utils/evaluation/, utils/augmentation/, data/)
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/zhouhaoyi/ETDataset	[no-author-signal]

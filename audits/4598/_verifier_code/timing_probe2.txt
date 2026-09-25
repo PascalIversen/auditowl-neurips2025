@@ -1,0 +1,79 @@
+### qep_awq.py grep time/tick:
+
+### llama.py context lines 60-135 (raw):
+60:             cache['layer_kwargs'].update(kwargs)
+61:             raise ValueError
+62:     
+63:     layers[0] = Catcher(layers[0])
+64:     for batch in dataloader:
+65:         try:
+66:             model(batch[0].to(dev))
+67:         except ValueError:
+68:             pass
+69:     layers[0] = layers[0].module
+70:     layers[0] = layers[0].cpu()
+71:     model.model.embed_tokens = model.model.embed_tokens.cpu()
+72:     model.model.rotary_emb = model.model.rotary_emb.cpu()
+73:     torch.cuda.empty_cache()
+74: 
+75:     layer_kwargs = cache['layer_kwargs']
+76:     inps_true = inps.clone()
+77: 
+78:     sequential = [
+79:         ['self_attn.k_proj', 'self_attn.v_proj', 'self_attn.q_proj'],
+80:         ['self_attn.o_proj'],
+81:         ['mlp.up_proj', 'mlp.gate_proj'],
+82:         ['mlp.down_proj']
+83:     ]
+84: 
+85:     for i in tqdm.tqdm(range(len(layers)), desc=f'Running {args.method}'):
+86:         layer = layers[i].to(dev)
+87:         layer_true = copy.deepcopy(layers[i]).to(dev)
+88:         full = find_layers(layer)
+89:         full_true = find_layers(layer_true)
+90:        
+91:         for names in sequential:
+92:             subset = {n: full[n] for n in names}
+93:             subset_true = {n: full_true[n] for n in names}
+94:             hook_data = {}
+95:             hook_data_true = {}
+96: 
+97:             def make_quant_hook(name):
+98:                 def hook(module, inp, out):
+99:                     hook_data[name] = inp[0].detach().clone()
+100:                 return hook
+101: 
+102:             def make_true_hook(name):
+103:                 def hook(module, inp, out):
+104:                     hook_data_true[name] = inp[0].detach().clone()
+105:                 return hook
+106: 
+107:             handles = []
+108:             for name, module in subset.items():
+109:                 handles.append(module.register_forward_hook(make_quant_hook(name)))
+110:             for name, module in subset_true.items():
+111:                 handles.append(module.register_forward_hook(make_true_hook(name)))
+112: 
+113:             helper = Helper(subset[names[0]])
+114:             # down_proj does not perform correction.
+115:             if args.method == 'gptq' or args.method == 'quip' or names[0] != 'mlp.down_proj':
+116:                 for j in range(args.nsamples):
+117:                     _ = layer(inps[j].unsqueeze(0), **layer_kwargs)
+118:                     if not args.qep or names[0] == 'mlp.down_proj':
+119:                         helper.add_batch(hook_data[name])
+120:                     else:
+121:                         _ = layer_true(inps_true[j].unsqueeze(0), **layer_kwargs)
+122:                         helper.add_batch_qep(hook_data[name], hook_data_true[name])
+123:             for h in handles:
+124:                 h.remove()
+125: 
+126:             # quantization
+127:             for name, module in subset.items():
+128:                 if args.qep and name != 'mlp.down_proj':
+129:                     helper.run_weight_correct(
+130:                         module, percdamp=args.percdampqep, perccorr=args.perccorr
+131:                     )
+132:                 if args.method == 'rtn':
+133:                     module.weight.data = pseudo_quantize_tensor(
+134:                         module.weight.data, n_bit=args.wbits, q_group_size=args.groupsize
+135:                     )

@@ -1,0 +1,33 @@
+Reduction_DMDP_parallel.py:
+    imports chi_square class at lines      : [9]
+    INSTANTIATES DR_RL_empirical_kl()      : [25]
+    INSTANTIATES DR_RL_empirical_chi_square: NONE
+
+Anchored_AMDP_parallel.py:
+    imports chi_square class at lines      : [9]
+    INSTANTIATES DR_RL_empirical_kl()      : [26]
+    INSTANTIATES DR_RL_empirical_chi_square: NONE
+
+add_large_scale_dmdp.py:
+    imports chi_square class at lines      : [8]
+    INSTANTIATES DR_RL_empirical_kl()      : [21]
+    INSTANTIATES DR_RL_empirical_chi_square: NONE
+
+add_large_scale_anchored.py:
+    imports chi_square class at lines      : [8]
+    INSTANTIATES DR_RL_empirical_kl()      : [21, 41]
+    INSTANTIATES DR_RL_empirical_chi_square: NONE
+
+add_baseline.py:
+    imports chi_square class at lines      : [8]
+    INSTANTIATES DR_RL_empirical_kl()      : []
+    INSTANTIATES DR_RL_empirical_chi_square: NONE
+
+dr_q_learning_experiment.py:
+    imports chi_square class at lines      : [8]
+    INSTANTIATES DR_RL_empirical_kl()      : []
+    INSTANTIATES DR_RL_empirical_chi_square: NONE
+
+ANY driver instantiates the chi-square class? False
+Figure 2(b) [chi2, Alg 2] and 2(d) [chi2, Alg 3] each need the chi-square algorithm;
+the chi-square class is imported everywhere but never instantiated by any driver.

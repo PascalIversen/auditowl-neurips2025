@@ -1,0 +1,178 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-02T11:18:52.028635+00:00",
+  "findings": [
+    {
+      "id": "/no-analysis-or-plotting-code",
+      "category": "missing",
+      "topic": "result traceability / figures & tables",
+      "title": "No code computes or plots any reported figure or the derived tables (2, 5, Figs 2-13)",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "out/missing_analysis_scan.csv",
+      "csv_row": 2,
+      "quote": "2,ASR / success-rate aggregation into a table,0,NO\n",
+      "claim": "A deterministic scan of all 42 .py files finds 0 occurrences of plotting (matplotlib/savefig/plt/pie), 0 of any result/ASR aggregation, 0 of train-dataset-attribution or bigram-rank analysis, 0 of median-perplexity computation, and 0 notebooks; the pipeline ends at per-behavior `judge_output`/`filter_passed` in evaluate_completions.py.",
+      "concern": "None of the paper's figures (2a,2b,3-13) or its derived tables (Table 2 median-PPL numbers, Table 5 judge accuracy/FPR/FNR, and the filter-derivation AUC/FPR curves) can be reproduced, and the interpretability/train-dataset-attribution analysis that is a stated core contribution (Section 5.4, contribution bullet 4) has no code at all.",
+      "resolution": "Authors: please add the aggregation/analysis/plotting scripts (or notebooks) that turn the per-behavior CSVs into Tables 2-5 and Figures 2-13, including the train-dataset-attribution and bigram-rank code.",
+      "cross_refs": [
+        "filter-applied-to-behavior-not-jailbreak",
+        "ngram-model-construction-absent",
+        "human-eval-study-absent"
+      ],
+      "check_script": "_audit_code/check_missing_analysis_code.py",
+      "paper_ref": "Figures 2-13; Tables 2, 5; Section 5.4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-analysis-or-plotting-code",
+      "audit": "",
+      "audit_md_line": 51,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/ngram-model-construction-absent",
+      "category": "missing",
+      "topic": "N-gram model construction",
+      "title": "Bigram LM construction from Dolma (1T tokens) is absent; only a gdown download of prebuilt counts",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "download_unpack_ngrams.sh",
+      "line_start": 6,
+      "line_end": 8,
+      "quote": "pip install gdown\ngdown 1HOhjxkjwi-gLG2-gAZ2u5ZxNrpCt3RU7\ngdown 17Y2QJzDrsb5yUxLrY313ArAxTzM_s4dS\n",
+      "check_script": "_audit_code/check_missing_analysis_code.py",
+      "claim": "The N-gram counts (unigrams/bigrams parquet) are downloaded from two Google-Drive IDs; no repo code tokenizes the Dolma subset (MegaWika, Gutenberg, StackExchange, arXiv, Reddit, StarCoder, RefinedWeb), splits Dtrain/Dval, or counts N-grams (0 construction hits in the static scan).",
+      "concern": "Section 3.2's headline contribution ('we construct a lightweight bigram LM from the Dolma dataset based on 1T tokens') and the Dtrain/Dval split cannot be reproduced or verified; the downloaded parquets are even named `df_gutenberg_*` which is at odds with the seven-dataset subset the paper describes (though the hardcoded total ≈0.955T in ppl_filter.py:172 is consistent with ~1T tokens).",
+      "resolution": "Authors: please release the N-gram construction script (tokenization + counting + Dtrain/Dval split) and clarify the `gutenberg` filename vs the full Dolma subset used.",
+      "cross_refs": [
+        "no-analysis-or-plotting-code"
+      ],
+      "paper_ref": "Section 3.2 'Construction of the N-gram model'; Appendix C",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ngram-model-construction-absent",
+      "audit": "",
+      "audit_md_line": 75
+    },
+    {
+      "id": "/human-eval-study-absent",
+      "category": "missing",
+      "topic": "human evaluation / judge comparison",
+      "title": "2,000-label human-evaluation dataset and judge-comparison code (Table 5 / Appendix B) not in repo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "we manually labeled 2,000 responses\n",
+      "claim": "Appendix B / Table 5 report a human-evaluation study (2,000 responses labelled by two authors) comparing six judge models by Accuracy/FPR/FNR; the repo ships the judge *templates* (ppl_filter.py) but neither the 2,000 labels nor any script that computes the judge-vs-human agreement metrics.",
+      "concern": "The judge-selection claim ('Based on accuracy, for all our evaluations we use Llama2-13B (HarmBench)') and Table 5's numbers cannot be verified or reproduced from the repo.",
+      "resolution": "Authors: please release the 2,000 labelled responses and the script that computes each judge's Accuracy/FPR/FNR against the human labels.",
+      "cross_refs": [
+        "no-analysis-or-plotting-code"
+      ],
+      "paper_ref": "Appendix B, Table 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "human-eval-study-absent",
+      "audit": "",
+      "audit_md_line": 102,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/dependencies-unpinned",
+      "category": "missing",
+      "topic": "environment / dependencies",
+      "title": "Core dependencies unpinned (transformers, accelerate, numpy, vllm) and environment.yml near-empty",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "requirements.txt",
+      "line_start": 40,
+      "line_end": 47,
+      "quote": "tqdm\ntransformers\ntriton\ntyper\ntyping-extensions==4.12.2\ntyping-inspect==0.9.0\nurllib3\nvllm>=0.3.0\n",
+      "claim": "Most result-affecting libraries (transformers, accelerate, numpy, tokenizers, vllm) are unpinned; environment.yml lists only python=3.10 and cudatoolkit; the pipeline also depends on an undocumented WORK_DIR env var and gated HF weights + two gdown links.",
+      "concern": "The paper itself notes bfloat16 numerical instabilities can 'significantly reduce ASR' (Appendix G), so unpinned transformers/vllm versions make the exact reported numbers hard to reproduce; the gdown/HF dependencies are also link-rot / access-gated.",
+      "resolution": "Authors: please pin the versions of transformers, accelerate, numpy, tokenizers and vllm (a full pip freeze), and document WORK_DIR and the N-gram artefact provenance.",
+      "cross_refs": [],
+      "paper_ref": "Appendix G",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "dependencies-unpinned",
+      "audit": "",
+      "audit_md_line": 124
+    },
+    {
+      "id": "/filter-applied-to-behavior-not-jailbreak",
+      "category": "bug",
+      "topic": "perplexity filter / evaluation",
+      "title": "evaluate_completions.py applies the PPL filter to the clean instruction, not the jailbreak",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "evaluate_completions.py",
+      "line_start": 87,
+      "line_end": 89,
+      "quote": "filter_passed = local_filter.apply_filter(\n    user_message, 8, \"perplexity\", -38276.122748721245\n)\n",
+      "claim": "In the shipped Step-4 evaluation, `user_message` is `df[\"behavior\"]` (evaluate_completions.py:50), the clean HarmBench instruction that is also passed to the judge as the goal (line 82); the actual jailbreak is a separate column `best_msg`/`test_case` (set in aggregate_csv.py:85-90 and logged as `best_msg = insert_adv_string(orig_msg, adv)` in main_adaptive_attack.py:262).",
+      "concern": "Threat-model condition 1 constrains the *jailbreak* x_jailbreak (behavior ⊕ optimized suffix); applying the filter to the clean instruction, which is natural low-perplexity text, makes `filter_passed` nearly always True and does not test the object the threat model constrains — so the repo's only post-hoc filter check (used to reproduce Table 3's '+F' column) evaluates the wrong text.",
+      "resolution": "Authors: should the filter be applied to `df[\"best_msg\"]` (the jailbreak) rather than `df[\"behavior\"]`? If the published '+F' numbers were produced by filtering the jailbreak, please ship that computation, since the repo's version filters the instruction.",
+      "cross_refs": [
+        "no-analysis-or-plotting-code"
+      ],
+      "check_script": "_audit_code/check_filter_target_column.py",
+      "paper_ref": "Section 3.3 condition 1; Table 3 '+F' columns",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "filter-applied-to-behavior-not-jailbreak",
+      "audit": "",
+      "audit_md_line": 157
+    },
+    {
+      "id": "/perplexity-formula-deviates-from-eq3",
+      "category": "difference",
+      "topic": "perplexity definition",
+      "title": "Implemented window perplexity adds an initial-unigram term absent from paper Eq. 3",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "baselines/ppl_filter.py",
+      "line_start": 501,
+      "line_end": 505,
+      "quote": "if conditional_probs:\n    total_log_prob = np.sum(np.log(conditional_probs))\n    # Add the log probability of the first unigram to start the chain properly\n    total_log_prob += np.log(unigram_probs[0])\n    perplexity = np.exp(-total_log_prob / len(bigrams))\n",
+      "claim": "The code computes PPL = exp(-(log P(w1) + Σ_{i} log P(w_{i+1}|w_i)) / (W-1)); it adds the marginal log-prob of the first token (line 504) and divides by the number of bigrams W-1.",
+      "concern": "Paper Eq. 3 (for N=2) defines PPL_2 as the product of conditional probabilities from i=2..W raised to 1/(W-1), i.e. WITHOUT the initial log P(w1) term; the implemented metric therefore differs from the documented formula by a P(w1)^{-1/(W-1)} factor. Both are valid perplexity-like scores and the threshold 38,276 was calibrated with this code, so the impact is a faithfulness/documentation gap rather than an error.",
+      "resolution": "Authors: please align Eq. 3 with the implementation (either add the initial-unigram term to the equation or drop it from the code), so the documented metric matches the one used for the threshold.",
+      "cross_refs": [],
+      "paper_ref": "Equation (3), Section 3.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "perplexity-formula-deviates-from-eq3",
+      "audit": "",
+      "audit_md_line": 186
+    }
+  ]
+}

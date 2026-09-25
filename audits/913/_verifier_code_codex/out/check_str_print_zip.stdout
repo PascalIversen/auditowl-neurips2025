@@ -1,0 +1,2 @@
+zip pairs: [('train', 0.1, 0.01), ('val', 0.2, 0.02)]
+=> printed 'train' shows the val value; 'val' shows the test value; 'test' dropped

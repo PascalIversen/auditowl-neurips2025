@@ -1,0 +1,186 @@
+{
+  "paper": "1908",
+  "seeds": [
+    {
+      "sid": "S01",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "nesl__GSRF/main_csi.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "nesl__GSRF/inference_csi.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "nesl__GSRF/run_csi.sh",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the complete 5G CSI experiment pipeline",
+      "description": "Delete the CSI training entry point, standalone evaluator, and launcher. CSI support classes remain, but no repository code path can train checkpoints or produce the reported SNR comparison, so the entire 5G result becomes unreproducible rather than being replaced by a stub."
+    },
+    {
+      "sid": "S04",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "nesl__GSRF/gaussian_renderer/__init__.py",
+          "line": 76,
+          "action": "replace"
+        }
+      ],
+      "title": "Replace depth-sorted orthographic splatting with global RBF regression",
+      "description": "Replace the CUDA orthographic splatter and front-to-back complex compositing with a differentiable anisotropic radial-basis regressor over every ray and every Gaussian. The substitute uses each full covariance, radiance, attenuation, and center, has real gradients, and produces a complete spectrum, but it performs normalized global kernel regression with no projected intersection lists, depth ordering, or cumulative transmittance."
+    },
+    {
+      "sid": "S05",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "nesl__GSRF/scene/ble_dataset.py",
+          "line": 60,
+          "action": "replace"
+        },
+        {
+          "file": "nesl__GSRF/scene/ble_dataset.py",
+          "line": 94,
+          "action": "replace"
+        }
+      ],
+      "title": "Evaluate BLE RSSI on transmitter positions used for training",
+      "description": "Construct the BLE test indices from the beginning of the shuffled training partition and allow overlapping indices to be appended to both per-gateway lists. Every evaluated test transmitter is therefore also a training transmitter, turning the main RSSI evaluation into memorization performance while preserving the apparent train/test APIs and output metrics."
+    },
+    {
+      "sid": "S07",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "nesl__GSRF/utils/general_utils.py",
+          "line": 83,
+          "action": "replace"
+        }
+      ],
+      "title": "Cancel Gaussian rotations when constructing covariance matrices",
+      "description": "Reverse the order of the scale and rotation factors before the existing L L-transpose covariance construction. The resulting S R R-transpose S-transpose collapses to S squared, so every learned ellipsoid remains axis-aligned and rotation parameters cannot express scene geometry even though training, saving, and rendering continue."
+    }
+  ],
+  "baseline": [
+    {
+      "id": "1908/baselines-not-in-repo",
+      "category": "missing",
+      "file": "inference_rfid.py",
+      "line_start": 80,
+      "line_end": 99,
+      "title": "No baseline (NeRF2, WRF-GS, R2F2, FIRE) code; all comparison numbers untraceable"
+    },
+    {
+      "id": "1908/ablation-code-missing",
+      "category": "missing",
+      "file": "paper.pdf",
+      "line_start": null,
+      "line_end": null,
+      "title": "Table 1 ablation (SH-vs-FLE, phase-off, no-Fourier-loss) has no code path"
+    },
+    {
+      "id": "1908/localization-code-missing",
+      "category": "missing",
+      "file": "paper.pdf",
+      "line_start": null,
+      "line_end": null,
+      "title": "BLE KNN-fingerprinting localization (31.40% gain, Fig 10) absent from repo"
+    },
+    {
+      "id": "1908/density-experiment-missing",
+      "category": "missing",
+      "file": "paper.pdf",
+      "line_start": null,
+      "line_end": null,
+      "title": "Measurement-density / '9.8x less training data' study (Fig 6) not in repo"
+    },
+    {
+      "id": "1908/no-dependency-spec-file",
+      "category": "missing",
+      "file": "README.md",
+      "line_start": 11,
+      "line_end": 16,
+      "title": "No requirements.txt / environment.yml; deps only as unpinned README pip commands"
+    },
+    {
+      "id": "1908/fle-degree-config-vs-paper",
+      "category": "difference",
+      "file": "arguments/configs/rfid/exp1.yaml",
+      "line_start": 9,
+      "line_end": 9,
+      "title": "All configs use FLE degree 9 (100 coeffs); paper repeatedly claims L=3 (16 coeffs)"
+    },
+    {
+      "id": "1908/csi-normalization-pre-split",
+      "category": "methodology",
+      "file": "scene/csi_dataset.py",
+      "line_start": 48,
+      "line_end": 57,
+      "title": "CSI normalization statistics fitted on the full dataset before train/test split"
+    }
+  ],
+  "unassigned": [
+    {
+      "fid": "/rfid-sparse-density-protocol-missing",
+      "run": "run_01",
+      "category": "missing",
+      "loc": "train_rfid.py:82",
+      "title": "No subsampling harness for the sparse (220-instance) and density-sweep RFID runs",
+      "claim": "Training always draws from the full training set returned by `scene.getTrainSpectrums()`. There is no code (config flag, CLI arg, or sampler) that selects 220 training instances / a 0.8 measurements-per-ft3 subset (Fig. 3) or sweeps measurement density from 0.8 to 15.5 (Fig. 6).",
+      "concern": "The headline RFID metric comparison (Fig. 3, reported as 21.2% PSNR / 56.4% MSE gain over NeRF2) is measured at the sparse 0.8-density setting, but the released code provides no way to build that sparse training set, so those numbers cannot be reproduced from the config."
+    },
+    {
+      "fid": "/render-path-not-complex-ray-tracing",
+      "run": "run_01",
+      "category": "difference",
+      "loc": "gaussian_renderer/__init__.py:93",
+      "title": "Runnable RFID/BLE renderer is a softmax blend, not the paper's complex CUDA ray tracer",
+      "claim": "`render_rfid` imports `ComplexGaussianTracer` (line 3) but never calls it; instead it aggregates Gaussians with a per-ray softmax over all Gaussians (a normalized weighted average of complex radiance), with attenuation entering as a single real log-weight. This is neither the depth-sorted cumulative-transmittance product of Eq. 14 nor a call to the CUDA tracer. All four runnable entrypoints (`train_rfid.py`, `inference_rfid.py`, `main_ble.py`, `inference_ble.py`) use this function; the CUDA tracer is wired only into `render_csi` (which has no entrypoint \u2014 see csi-experiment-not-runnable).",
+      "concern": "The paper's third contribution \u2014 a complex-valued CUDA ray-tracing algorithm \u2014 is not exercised by any runnable experiment, so the reported RFID/BLE fidelity and latency numbers (Figs. 3-5, 9, 11-12; the '4.18 ms hybrid CUDA-based ray tracer') are produced by an unmentioned softmax renderer, and the paper's efficiency/interference mechanism does not describe the code that generated them."
+    },
+    {
+      "fid": "/transmittance-real-not-complex",
+      "run": "run_01",
+      "category": "difference",
+      "loc": "scene/gaussian_model.py:85",
+      "title": "Transmittance is a single real sigmoid scalar, not the claimed complex \u03c1 \u2208 C",
+      "claim": "Each Gaussian's transmittance/attenuation is a single scalar (`_attenuation` has shape [N,1], activated by `torch.sigmoid` at line 38), so it is a real number in [0,1] with no phase. The paper (Sec. 4.2 and Appendix A) defines transmittance as complex, \u03c1 = |\u03c1|\u00b7e^{j\u2220\u03c1} with a phase shift \u2220\u03c1 = \u2212\u03b2\u00b7\u0394t.",
+      "concern": "One of the two headline 'complex-valued attributes' (transmittance) is real in the implementation, so the phase-shift-through-medium physics described in Eq. 14 / Appendix A is not modeled; only the radiance carries phase."
+    },
+    {
+      "fid": "/ble-rssi-aggregation-mean-l2-vs-paper-sum-l1",
+      "run": "run_01",
+      "category": "difference",
+      "loc": "main_ble.py:142",
+      "title": "BLE trains on mean-amplitude with squared error; paper describes a ray-sum with L1",
+      "claim": "For BLE (single-antenna RSSI) the predicted signal is the mean over the rendered spherical grid and the loss is squared error on that mean. The paper's SINGLE ANTENNA case defines the synthesized signal as the sum over rays (\u015c = \u03a3_u \u03a3_v \u015c_{u,v}) and the real-valued loss as L1 (|\u015c \u2212 S|_1).",
+      "concern": "The single-antenna aggregation (mean vs sum) and loss (L2 vs L1) differ from the paper's stated formulation; both are individually reasonable, but the code does not match the described procedure."
+    },
+    {
+      "fid": "/table1-ablation-variants-missing",
+      "run": "run_02",
+      "category": "missing",
+      "loc": "scene/gaussian_model.py:70",
+      "title": "Table 1 SH-radiance and amplitude-only(phase-off) ablations have no runnable path",
+      "claim": "Table 1 (Sec 5.4) reports four ablation columns (SH-radiance, phase-removed, no-Fourier-loss, full=22.64 PSNR). The Fourier-loss column is reproducible (`lambda_dfourier=0`) and SSIM via `lambda_dssim=0`, but there is no spherical-harmonics radiance path anywhere (`eval_fle` is the only basis; grep for 'spherical/harmonic/SH' finds nothing) and no configuration disables phase: `num_channels` is hardwired to 2 (complex) with only an unused `num_channels_override` hook and no config that sets it, and the FLE eval/render assume 2 channels.",
+      "concern": "Two of the four Table 1 ablation results ('Radiance' = SH and 'Phase' = amplitude-only) cannot be reproduced because the SH-basis variant and the phase-off variant are not implemented as selectable code paths."
+    },
+    {
+      "fid": "/rfid-render-not-cuda-tracer",
+      "run": "run_02",
+      "category": "difference",
+      "loc": "gaussian_renderer/__init__.py:93",
+      "title": "Runnable RFID/BLE path renders via PyTorch softmax, never the described CUDA ray tracer",
+      "claim": "`render_rfid` (imported as the renderer by `train_rfid.py`, `inference_rfid.py`, `main_ble.py`, `inference_ble.py`) aggregates Gaussian contributions with a per-ray PyTorch softmax over Mahalanobis distances. It imports `ComplexGaussianTracer` (line 3) but never calls it. The CUDA `ComplexGaussianTracer` is invoked only inside `gaussian_renderer/render_csi.py:125-136`, which no entry point calls (orphaned).",
+      "concern": "The paper's third core contribution and Fig. 5 attribute RF synthesis and the 4.18 ms / 84x inference speedup to a complex-valued CUDA ray-tracing kernel, but every runnable RFID/BLE experiment uses a PyTorch softmax approximation instead \u2014 a different rendering algorithm from the one described, so the accuracy and especially the latency claims may not correspond to the released code path."
+    }
+  ]
+}

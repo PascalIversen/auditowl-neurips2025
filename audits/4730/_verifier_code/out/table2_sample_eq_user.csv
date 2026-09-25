@@ -1,0 +1,3 @@
+dataset,user,item,sample,sample_eq_user,samples_per_user
+Books,603668,367982,603668,True,1.0
+Electronics,192403,63001,192403,True,1.0

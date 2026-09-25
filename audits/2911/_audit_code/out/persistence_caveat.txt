@@ -1,0 +1,23 @@
+PERSISTENCE CAVEAT (read alongside finding 'run-model-undefined-out')
+
+torch_utils/persistence.py pickles the *source code* of each
+@persistence.persistent_class at save time (_module_to_src) and re-execs it at
+load time (_src_to_module / exec). ImportanceRenderer (renderer.py:330) and
+TriGridGenerator (triplane.py:52) are both persistent classes.
+
+Consequence:
+- The released checkpoint hyplanehead-ckpt.pkl carries the authors'
+  TRAINING-TIME source for these classes. If that training-time run_model had
+  the correct `out = decoder(...)` line, then `gen_samples.py` loaded from the
+  checkpoint can still run, because reconstruction uses the pickled source, not
+  the on-disk renderer.py.
+- However, the renderer.py CHECKED INTO THIS REPO is broken: run_model() at
+  lines 424-471 references and returns `out` without ever assigning it and
+  never calls `decoder(...)`. Therefore:
+    * Re-instantiating TriGridGenerator from repo source crashes.
+    * Retraining from repo source crashes (no training code is shipped anyway).
+    * The repo as "the code that produced the paper" does not run as written.
+
+This is why the finding is filed as a BUG (present-but-broken) at confidence
+high (the repo source is unambiguously broken) and severity medium (the
+documented inference path MAY still work via the pickled checkpoint source).

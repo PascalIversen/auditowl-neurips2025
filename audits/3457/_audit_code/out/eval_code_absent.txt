@@ -1,0 +1,10 @@
+Scanned 18 python files under 3457_Understanding_and_Rectifying_Safety_Perception_Distortion_in/code/Renovamen__ShiftDC
+ABSENT  | ASR / rejection scoring                    | matches=0
+ABSENT  | linear probing classifier                  | matches=0
+ABSENT  | cosine similarity (Fig 2 right)            | matches=0
+ABSENT  | ECSO baseline                              | matches=0
+PRESENT | AdaShield baseline                         | matches=1
+PRESENT | utility benchmarks                         | matches=4
+ABSENT  | binary safety classification prompt        | matches=0
+
+numeric-metric assignments (asr=/accuracy=/score=): 0

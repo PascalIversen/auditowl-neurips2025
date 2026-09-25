@@ -1,0 +1,5 @@
+paper_number: 1729
+title: On Evaluating Policies for Robust POMDPs
+authors: Merlijn Krale, Eline M. Bovy, Maris F. L. Galesloot, Thiago Simão, Nils Jansen
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/52c74b3df11d1c1802333d866e844dcf-Abstract-Conference.html
+category: empirical

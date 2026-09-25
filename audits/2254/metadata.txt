@@ -1,0 +1,5 @@
+paper_number: 2254
+title: Differentiable Structure Learning and Causal Discovery for General Binary Data
+authors: Chang Deng, Bryon Aragam
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/6c2745a8e20271c2e8c7067a2c3c7710-Abstract-Conference.html
+category: empirical

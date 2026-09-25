@@ -1,0 +1,130 @@
+{
+  "paper": "1908",
+  "seeds": [
+    {
+      "sid": "S01",
+      "slot": "MAJOR-MISS",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "nesl__GSRF/main_csi.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "nesl__GSRF/inference_csi.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "nesl__GSRF/run_csi.sh",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the complete 5G CSI experiment pipeline",
+      "description": "Delete the CSI training entry point, standalone evaluator, and launcher. CSI support classes remain, but no repository code path can train checkpoints or produce the reported SNR comparison, so the entire 5G result becomes unreproducible rather than being replaced by a stub.",
+      "paper_anchor": "GSRF achieves a mean SNR of 20.99 dB, outperforming R2F2 and FIRE. Additionally, GSRF achieves comparable CSI synthesis quality to NeRF2 while using 3\u00d7 less training data, highlighting its training efficiency."
+    },
+    {
+      "sid": "S04",
+      "slot": "MAJOR-DIFF",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "nesl__GSRF/gaussian_renderer/__init__.py",
+          "line": 76,
+          "action": "replace"
+        }
+      ],
+      "title": "Replace depth-sorted orthographic splatting with global RBF regression",
+      "description": "Replace the CUDA orthographic splatter and front-to-back complex compositing with a differentiable anisotropic radial-basis regressor over every ray and every Gaussian. The substitute uses each full covariance, radiance, attenuation, and center, has real gradients, and produces a complete spectrum, but it performs normalized global kernel regression with no projected intersection lists, depth ordering, or cumulative transmittance.",
+      "paper_anchor": "Next, each 3D Gaussian is projected onto the receiver\u2019s receiving region, using orthographic projection to efficiently identify ray-Gaussian intersections."
+    },
+    {
+      "sid": "S05",
+      "slot": "MAJOR-METH",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "nesl__GSRF/scene/ble_dataset.py",
+          "line": 60,
+          "action": "replace"
+        },
+        {
+          "file": "nesl__GSRF/scene/ble_dataset.py",
+          "line": 94,
+          "action": "replace"
+        }
+      ],
+      "title": "Evaluate BLE RSSI on transmitter positions used for training",
+      "description": "Construct the BLE test indices from the beginning of the shuffled training partition and allow overlapping indices to be appended to both per-gateway lists. Every evaluated test transmitter is therefore also a training transmitter, turning the main RSSI evaluation into memorization performance while preserving the apparent train/test APIs and output metrics.",
+      "paper_anchor": "Other empirical and DL methods, e.g., MRI [46], are excluded because they perform worse than NeRF2 on the same testing dataset [12]. Overall Performance. To evaluate the performance of GSRF in scenarios with sufficient data, both models (GSRF and NeRF2) are trained on the full training dataset."
+    },
+    {
+      "sid": "S07",
+      "slot": "MAJOR-BUG",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "nesl__GSRF/utils/general_utils.py",
+          "line": 83,
+          "action": "replace"
+        }
+      ],
+      "title": "Cancel Gaussian rotations when constructing covariance matrices",
+      "description": "Reverse the order of the scale and rotation factors before the existing L L-transpose covariance construction. The resulting S R R-transpose S-transpose collapses to S squared, so every learned ellipsoid remains axis-aligned and rotation parameters cannot express scene geometry even though training, saving, and rendering continue.",
+      "paper_anchor": "To address this, we adopt the solution proposed in [8], which represents \u03a3 = RSST RT , where R is a rotation matrix and S is a scaling matrix. Updates are applied independently to R and S, ensuring that \u03a3 remains positive semi-definite."
+    }
+  ],
+  "candidates": [
+    {
+      "fid": "/csi-experiment-driver-missing",
+      "run": "run_02",
+      "anchor_candidate": "seed:S01",
+      "status": "finding",
+      "category": "missing",
+      "file": "README.md",
+      "line_start": 125,
+      "title": "Entire 5G CSI experiment (Sec 5.2, Fig 7-8) has no runnable driver or SNR metric",
+      "claim": "README Section 5 documents CSI via `run_csi.sh`, `main_csi.py`, and `inference_csi.py`, but none of these files exist in the repo (`ls` and `grep` confirm only rfid/ble entrypoints). The CSI support modules `scene/csi_dataset.py` (load_csi_data), `scene/csi_model.py` (CSIEncoder/CSIAutoDecoder), and `gaussian_renderer/render_csi.py` are defined but never imported or called by any script (orphaned). No function computes the SNR metric of Eq. 17 (the only log10 in the repo is the PSNR helper `utils/loss_utils.py:68`).",
+      "concern": "The headline CSI result \u2014 mean SNR 20.99 dB, Fig. 7-8, 'comparable to NeRF2 with 3x less data' \u2014 cannot be reproduced or verified because there is no training entry point, no inference/evaluation script, and no SNR computation anywhere in the repo."
+    },
+    {
+      "fid": "/table1-ablation-variants-missing",
+      "run": "run_02",
+      "anchor_candidate": "unassigned",
+      "status": "finding",
+      "category": "missing",
+      "file": "scene/gaussian_model.py",
+      "line_start": 70,
+      "title": "Table 1 SH-radiance and amplitude-only(phase-off) ablations have no runnable path",
+      "claim": "Table 1 (Sec 5.4) reports four ablation columns (SH-radiance, phase-removed, no-Fourier-loss, full=22.64 PSNR). The Fourier-loss column is reproducible (`lambda_dfourier=0`) and SSIM via `lambda_dssim=0`, but there is no spherical-harmonics radiance path anywhere (`eval_fle` is the only basis; grep for 'spherical/harmonic/SH' finds nothing) and no configuration disables phase: `num_channels` is hardwired to 2 (complex) with only an unused `num_channels_override` hook and no config that sets it, and the FLE eval/render assume 2 channels.",
+      "concern": "Two of the four Table 1 ablation results ('Radiance' = SH and 'Phase' = amplitude-only) cannot be reproduced because the SH-basis variant and the phase-off variant are not implemented as selectable code paths."
+    },
+    {
+      "fid": "/ble-test-subset-of-train",
+      "run": "run_02",
+      "anchor_candidate": "seed:S05",
+      "status": "finding",
+      "category": "bug",
+      "file": "scene/ble_dataset.py",
+      "line_start": 65,
+      "title": "BLE loader makes the test set a strict subset of the train set (100% leakage)",
+      "claim": "In `load_ble_per_gateway` the test set is sliced as `all_indices[:num_test]` (the FIRST num_test shuffled indices) instead of the held-out tail `all_indices[num_train:]`. Since num_test = num_samples - num_train and ratio_train>0.5, num_test < num_train, so `all_indices[:num_test]` is entirely contained in `all_indices[:num_train]`. The per-gateway loop then appends a sample to train and test independently (lines 94-97, two separate `if`s), so every test sample is also a training sample. The sibling RFID (`dataset_readers.py:82`) and CSI (`csi_dataset.py:86`) loaders correctly use `all_indices[num_train:]`, proving the intended behavior is a disjoint split.",
+      "concern": "All BLE test samples were seen during training, so the reported BLE RSSI error (Fig. 9 / Table 3: GSRF 4.09 dBm, 32.79% improvement over NeRF2) and everything derived from it (localization) are measured on training data \u2014 the BLE evaluation is invalid (train/test leakage)."
+    },
+    {
+      "fid": "/rfid-render-not-cuda-tracer",
+      "run": "run_02",
+      "anchor_candidate": "unassigned",
+      "status": "finding",
+      "category": "difference",
+      "file": "gaussian_renderer/__init__.py",
+      "line_start": 93,
+      "title": "Runnable RFID/BLE path renders via PyTorch softmax, never the described CUDA ray tracer",
+      "claim": "`render_rfid` (imported as the renderer by `train_rfid.py`, `inference_rfid.py`, `main_ble.py`, `inference_ble.py`) aggregates Gaussian contributions with a per-ray PyTorch softmax over Mahalanobis distances. It imports `ComplexGaussianTracer` (line 3) but never calls it. The CUDA `ComplexGaussianTracer` is invoked only inside `gaussian_renderer/render_csi.py:125-136`, which no entry point calls (orphaned).",
+      "concern": "The paper's third core contribution and Fig. 5 attribute RF synthesis and the 4.18 ms / 84x inference speedup to a complex-valued CUDA ray-tracing kernel, but every runnable RFID/BLE experiment uses a PyTorch softmax approximation instead \u2014 a different rendering algorithm from the one described, so the accuracy and especially the latency claims may not correspond to the released code path."
+    }
+  ]
+}

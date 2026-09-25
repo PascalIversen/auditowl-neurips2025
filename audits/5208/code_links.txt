@@ -1,0 +1,9 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/RishiHazra/Revolve	[author-cue]
+https://github.com/deng-ai-lab/RF-Agent	[author-cue]
+https://github.com/isaac-sim/IsaacGymEnvs	[author-cue]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/Denys88/rl_games	[no-author-signal]
+https://github.com/PKU-MARL/DexterousHands	[no-author-signal]
+https://github.com/eureka-research/Eureka	[baseline-cue]

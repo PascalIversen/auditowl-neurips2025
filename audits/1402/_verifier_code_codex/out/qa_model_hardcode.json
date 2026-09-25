@@ -1,0 +1,10 @@
+{
+  "llm_hardcoded_model": "gpt-4o",
+  "core_model_default": "gpt-3.5-turbo",
+  "core_model_line_numbers": [
+    32,
+    296,
+    301
+  ],
+  "core_model_used_in_llm_call": false
+}

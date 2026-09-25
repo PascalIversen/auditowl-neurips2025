@@ -1,0 +1,5 @@
+paper_number: 4730
+title: MTRec: Learning to Align with User Preferences via Mental Reward Models
+authors: Mengchen Zhao, Yifan Gao, Yaqing Hou, Xiangyang Li, Pengjie Gu, Zhenhua Dong, Ruiming Tang, Yi Cai
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/e530ae20f6433b2a24672fd443d3bd14-Abstract-Conference.html
+category: empirical

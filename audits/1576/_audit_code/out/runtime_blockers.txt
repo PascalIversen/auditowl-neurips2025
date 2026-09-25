@@ -1,0 +1,9 @@
+installed numpy version: 1.26.4  (requirements.txt pins 2.2.6)
+hasattr(np.random, 'random_integers'): True
+np.random.random_integers(low=0,high=2) -> OK
+
+get_base_path() walks parents until basename == 'NeurIPS_Average_Reward_POMDP'
+cloned repo dir basename = 'alesnow97__Spectral_Learning_POMDP'
+ancestor basenames from repo to root: ['alesnow97__Spectral_Learning_POMDP', 'code', '1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs', 'audits', 'neurips_audit', 'Projects', 'anon', 'Users', '/']
+target 'NeurIPS_Average_Reward_POMDP' found among ancestors: False
+=> get_base_path() reaches filesystem root without matching; os.path.dirname('/')=='/' so the while loop never terminates (hang/infinite loop). Plot scripts call utils.get_base_path() and cannot run from the clone as-is.

@@ -1,0 +1,17 @@
+{
+  "paper_id": "3101_When_Does_Closeness_in_Distribution_Imply_Representational_S",
+  "title": "When Does Closeness in Distribution Imply Representational Similarity? An Identifiability Perspective",
+  "repos": [
+    {
+      "name": "bemigini__close-dist-rep-sim",
+      "role": "core",
+      "evidence": "README states: 'Code for experiments and plots for the article: \"When Does Closeness in Distribution Imply Representational Similarity? An Identifiability Perspective\" by Beatrix M. G. Nielsen, Emanuele Marconato, Andrea Dittadi and Luigi Gresele, accepted for NeurIPS 2025.' Repo owner 'bemigini' = Beatrix M. G. Nielsen (first author, matches paper). Implements the paper's bespoke d_prob/dλ_LLV distance measure (src/dissimilarity_measures/), CIFAR-10 ResNet experiments (experiments/prob_distances.py, measure_cca_for_cifar_models.py), synthetic SmallMLP width experiments (configs/, checkpoints/), Table 1 KL construction (experiments/kl_to_zero_dissimilar_reps.py), and all plots from the paper. Results verified end-to-end by the audit."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo (bemigini__close-dist-rep-sim) is unambiguously the paper's own implementation: the README names the exact paper title, venue (NeurIPS 2025), and all four authors, whose surnames match the paper's author list. The repo owner 'bemigini' is first author Beatrix M. G. Nielsen. The codebase implements the paper's novel dλ_LLV/d_prob distributional distance, the CIFAR-10 ResNet dissimilarity experiments, the synthetic width experiments, and Table 1. The audit independently reproduced Table 1, the Theorem 4.7 bound (0/250 violations), and verified Fig. 3-left numbers from shipped result files. All four audit findings (cifar-checkpoints-missing, cifar-mcca-no-entrypoint, dependencies-unpinned, table1-label-mismatch) were written against this correct core repo. No non-core repo was cloned.",
+  "audit_impact": "None. The cloned repo is correctly identified as the paper's core implementation, and all findings were written against the appropriate code. The most significant finding (cifar-checkpoints-missing, medium severity) is a legitimate reproducibility gap in the correct repo. No remediation needed on repo provenance grounds.",
+  "recommended_action": "No action required. Audit is correctly scoped to the author's own implementation."
+}

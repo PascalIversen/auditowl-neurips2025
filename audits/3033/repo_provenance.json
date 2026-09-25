@@ -1,0 +1,17 @@
+{
+  "paper_id": "3033_One_Step_is_Enough_Sparse_Autoencoders_for_Text_to_Image_Dif",
+  "title": "One-Step is Enough: Sparse Autoencoders for Text-to-Image Diffusion Models",
+  "repos": [
+    {
+      "name": "surkovv__sdxl-unbox",
+      "role": "core",
+      "evidence": "README.MD: 'This repository contains code to reproduce results from our paper on using sparse autoencoders (SAEs) to analyze and interpret the internal representations of text-to-image diffusion models, specifically SDXL Turbo.' Repo owner 'surkovv' matches first author Viacheslav Surkov. arXiv 2410.22366 is the earlier preprint of this NeurIPS paper (same authors, same contributions). Repo contains SAE/ (TopK SAE impl), SDLens/ (hooked SDXL pipeline), scripts/train_sae.py, scripts/collect_latents_dataset.py, 4 pretrained checkpoints (down.2.1/mid.0/up.0.0/up.0.1, k=10, nf=5120) — all matching paper's named contributions (SDLens, SAEPaint/app.py, checkpoints). Paper footnote 2 names 'https://sdxl-unbox.epfl.ch' as the hub linking to all repos, and this repo is surkovv/sdxl-unbox."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo surkovv/sdxl-unbox is unambiguously the paper's own code: repo owner matches the first author (Viacheslav Surkov), README cites arXiv 2410.22366 (prior preprint version of the NeurIPS submission by the same authors), and the paper's footnote 2 explicitly links to sdxl-unbox.epfl.ch as the official project page. The repo implements all three named contributions from the paper's Sec. 1.1: SDLens (SDLens/ hooked pipeline), SAEPaint (app.py/app.ipynb), and the SAE training+checkpoints. The audit correctly identified this as author code and proceeded to audit result traceability, finding that the core SDXL SAE machinery is present but quantitative eval drivers (Fig. 2/3/5/6, Table 1/5) and the entire FLUX track are absent. No misclassification occurred; all findings are written against the correct author repo.",
+  "audit_impact": "None — no misclassification. The audit correctly identified the cloned repo as author code and its findings (missing eval harness for RIEBench/FLUX/Fig2-3/Table1-5, two runtime bugs) are all validly scoped to this repo. The paper is source-present (partial: training + qualitative inference present; quantitative eval and FLUX absent), and the audit verdict is accurate.",
+  "recommended_action": "No provenance correction needed. The audit findings stand as written. If the audit scoring penalises missing eval code, those deductions are justified."
+}

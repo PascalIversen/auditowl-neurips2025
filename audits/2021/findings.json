@@ -1,0 +1,212 @@
+{
+  "schema_version": "1",
+  "audit": "2021_RESAnything_Attribute_Prompting_for_Arbitrary_Referring_Segm",
+  "audit_md": "audits/2021_RESAnything_Attribute_Prompting_for_Arbitrary_Referring_Segm/audit.md",
+  "generated_at": "2026-06-04T15:45:38.565619+00:00",
+  "findings": [
+    {
+      "id": "2021_RESAnything_Attribute_Prompting_for_Arbitrary_Referring_Segm/reimplementation-original-withheld",
+      "category": "missing",
+      "topic": "repository provenance / result traceability",
+      "title": "Released repo is a re-implementation; original result-producing code withheld under protected license",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/suikei-wang__RESAnything/README.md",
+      "line_start": 13,
+      "line_end": 13,
+      "quote": "<i>This repository contains a re-implementation of the codebase. The initial version is subject to a protected license that restricts redistribution. The prompts provided in this repository may not be the original version, and optimal performance may require further iterative refinement and tuning.</i>\n",
+      "claim": "The README explicitly states the public repo is a re-implementation, that the original codebase is withheld under a protected license, and that the released prompts may differ from the originals and may need further tuning to reach the reported performance.",
+      "concern": "The released artifact is not the artifact that generated the paper's reported numbers; for an LLM-prompting method the prompts ARE the method, so withholding/altering them breaks the traceability from reported results to runnable code and the README itself disclaims that the reported performance is reproducible.",
+      "resolution": "Authors: release the exact prompts and code (or a versioned snapshot) used to produce Tables 1–5, or state explicitly which reported numbers are reproducible from this repo and which are not.",
+      "cross_refs": [
+        "no-eval-or-benchmark-harness",
+        "checklist-q5-misanswered"
+      ],
+      "check_script": "_audit_code/check_repo_inventory.py",
+      "paper_ref": "README.md (released repo), and paper §4 Experiment",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "reimplementation-original-withheld",
+      "audit": "2021_RESAnything_Attribute_Prompting_for_Arbitrary_Referring_Segm",
+      "audit_md_line": 70
+    },
+    {
+      "id": "2021_RESAnything_Attribute_Prompting_for_Arbitrary_Referring_Segm/no-eval-or-benchmark-harness",
+      "category": "missing",
+      "topic": "result traceability / expected code completeness",
+      "title": "No evaluation/benchmark harness: no code computes any reported IoU number",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/suikei-wang__RESAnything/README.md",
+      "line_start": 118,
+      "line_end": 131,
+      "quote": "RESAnything/\n├── config.py              # Configuration loader\n├── config.yaml           # Main configuration file\n├── demo.py               # Single image processing\n├── demo_batch.py         # Batch processing\n├── generation.py         # Text generation utilities\n├── prompts.py           # Prompt management\n├── prompts.yaml         # Prompt templates\n├── sam_utils.py         # SAM processing utilities\n├── similarity.py        # Similarity computation\n├── requirements.txt     # Python dependencies\n├── sam_vit_h_4b8939.pth # SAM model checkpoint\n└── Qwen2.5-VL-7B-Instruct/ # Qwen model directory\n",
+      "claim": "The repo's own File Structure listing enumerates only configuration, single-image/batch demo, generation, similarity, and SAM-utility files — no evaluation/benchmark module, no dataset loader (RefCOCO/ReasonSeg/COCO-Tasks/ABO-ARES), no ground-truth handling, and no gIoU/cIoU/mIoU computation. The deterministic grep (check_repo_inventory.py) confirms the only 'iou' hits across all 8 .py files are SAM's pred_iou_thresh/stability hyperparameters; nothing reproduces any number in Tables 1–5.",
+      "concern": "Every quantitative claim in the paper (all benchmark tables and headline numbers) is untraceable to runnable code, so none of the reported results can be reproduced from this repo.",
+      "resolution": "Authors: release the evaluation scripts (dataset loaders, gIoU/cIoU/mIoU computation, per-benchmark drivers) that produced Tables 1–5, with exact commands.",
+      "cross_refs": [
+        "reimplementation-original-withheld",
+        "abo-ares-dataset-missing"
+      ],
+      "check_script": "_audit_code/check_repo_inventory.py",
+      "paper_ref": "Tables 1–5; §4 Experiment",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-eval-or-benchmark-harness",
+      "audit": "2021_RESAnything_Attribute_Prompting_for_Arbitrary_Referring_Segm",
+      "audit_md_line": 95
+    },
+    {
+      "id": "2021_RESAnything_Attribute_Prompting_for_Arbitrary_Referring_Segm/abo-ares-dataset-missing",
+      "category": "missing",
+      "topic": "dataset availability",
+      "title": "ABO-Image-ARES benchmark (core contribution) is not released",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/suikei-wang__RESAnything/README.md",
+      "line_start": 133,
+      "line_end": 134,
+      "quote": "## 📊 ABO-ARES Dataset\nWe will try to release ABO-ARES dataset ASAP.\n",
+      "claim": "The README states the ABO-Image-ARES dataset is not yet released ('try to release ... ASAP'); no dataset files, build script, or accession for it exist in the repo.",
+      "concern": "ABO-Image-ARES (~3K curated RES instances) is listed as a core contribution and underpins Table 2 (right) and several supplementary tables; without it those results cannot be reproduced and the dataset contribution cannot be inspected.",
+      "resolution": "Authors: release ABO-Image-ARES (the 2,482 images / 2,989 expression-segment pairs) with annotations and the extraction/annotation pipeline, or provide a resolvable accession.",
+      "cross_refs": [
+        "no-eval-or-benchmark-harness"
+      ],
+      "check_script": "_audit_code/check_repo_inventory.py",
+      "paper_ref": "§4 ABO-Image-ARES benchmark; contributions list (intro); Table 2 right",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "abo-ares-dataset-missing",
+      "audit": "2021_RESAnything_Attribute_Prompting_for_Arbitrary_Referring_Segm",
+      "audit_md_line": 132
+    },
+    {
+      "id": "2021_RESAnything_Attribute_Prompting_for_Arbitrary_Referring_Segm/backbone-mismatch-qwen-vs-pixtral",
+      "category": "difference",
+      "topic": "evaluation consistency (model backbone)",
+      "title": "Code default MLLM is Qwen2.5-VL-7B; paper's default is Pixtral-12B",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/suikei-wang__RESAnything/config.yaml",
+      "line_start": 1,
+      "line_end": 4,
+      "quote": "model:\n  name: \"Qwen/Qwen2.5-VL-7B-Instruct\"\n  dtype: \"bfloat16\"\n  attn_implementation: \"flash_attention_2\"\n",
+      "claim": "The released pipeline hardcodes Qwen2.5-VL-7B-Instruct as the MLLM backbone (config.yaml; demo.py:52 / demo_batch.py:129 instantiate Qwen2_5_VLForConditionalGeneration), whereas the paper states 'We use Pixtral 12B as the MLLM' as the default and reports Pixtral-12B in Table 5; the listed Qwen ablation is 'Qwen2-VL' (not Qwen2.5-VL).",
+      "concern": "The released code runs a different (and different-generation) model from the one that produced the headline numbers, so even with prompts fixed the repo cannot reproduce the reported Pixtral-12B results; the substituted model is not even the Qwen2-VL ablation row.",
+      "resolution": "Authors: confirm whether the reported numbers used Pixtral-12B (as stated) and provide a config/loader for it, and clarify the Qwen2-VL vs Qwen2.5-VL discrepancy.",
+      "cross_refs": [
+        "reimplementation-original-withheld"
+      ],
+      "check_script": "_audit_code/check_backbone_and_prompts.py",
+      "paper_ref": "paper §4 (line 621) 'We use Pixtral 12B'; Table 5 (right)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "backbone-mismatch-qwen-vs-pixtral",
+      "audit": "2021_RESAnything_Attribute_Prompting_for_Arbitrary_Referring_Segm",
+      "audit_md_line": 169
+    },
+    {
+      "id": "2021_RESAnything_Attribute_Prompting_for_Arbitrary_Referring_Segm/bbox-visual-prompt-not-implemented",
+      "category": "difference",
+      "topic": "evaluation consistency (visual prompts)",
+      "title": "Paper's chosen bbox+mask-cropped prompt config: bbox prompt absent from code",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/suikei-wang__RESAnything/generation.py",
+      "line_start": 53,
+      "line_end": 55,
+      "quote": "mask_dir = os.path.join(output_path, os.path.splitext(os.path.basename(image_path))[0] + '-SAM', 'cropped')\nmask_images = [f for f in os.listdir(mask_dir) if f.endswith('.jpg') or f.endswith('.png')]\nmask_images_path = [os.path.join(mask_dir, mask_image) for mask_image in mask_images]\n",
+      "claim": "Candidate-text generation and the text-to-image comparison (similarity.py:65) consume only the 'cropped' mask images; sam_utils.py saves only cropped/overlay/binary-txt outputs, and no source file generates a bounding-box visual prompt. The only 'bounding box' string in the repo is a prohibition inside the candidate prompt (prompts.yaml:28).",
+      "concern": "The paper states its chosen/default configuration uses two visual prompts — bounding box (V^b) and mask cropped (V^m) — and Table 5 reports that mask+bbox is the best config (72.2 gIoU); the released method implements only the mask-cropped half, so it does not match the configuration that produced the reported best numbers.",
+      "resolution": "Authors: release the bounding-box visual-prompt generation and the multi-prompt candidate/comparison logic, or clarify that the reported numbers used mask-cropped only.",
+      "cross_refs": [
+        "reimplementation-original-withheld"
+      ],
+      "check_script": "_audit_code/check_backbone_and_prompts.py",
+      "paper_ref": "paper §3.1 (lines 366-367); Table 5 (left), line 855",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "bbox-visual-prompt-not-implemented",
+      "audit": "2021_RESAnything_Attribute_Prompting_for_Arbitrary_Referring_Segm",
+      "audit_md_line": 197
+    },
+    {
+      "id": "2021_RESAnything_Attribute_Prompting_for_Arbitrary_Referring_Segm/clip-threshold-not-in-selection",
+      "category": "difference",
+      "topic": "evaluation consistency (selection logic)",
+      "title": "Paper's CLIP combined-score threshold (=1) absent from selection fallback",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "code/suikei-wang__RESAnything/similarity.py",
+      "line_start": 217,
+      "line_end": 222,
+      "quote": "max_clip_score = max(info.get('avg_clip', -float('inf'))\n                     for info in json_data.values())\nclip_best = [mask_id for mask_id, info in json_data.items()\n             if info.get('avg_clip', -float('inf')) == max_clip_score]\nif clip_best:\n    return clip_best\nreturn []\n",
+      "claim": "When no candidate gets a positive MLLM yes/no, selection() returns the mask with the highest avg_clip unconditionally, with no threshold check; the paper (lines 556-557) says it checks whether the combined CLIP score exceeds a threshold 'set to 1 for all experiments' and otherwise returns the reference-text explanation (i.e. no mask).",
+      "concern": "The released selection always emits a mask, whereas the paper's procedure can abstain (return T_ref) when no candidate clears the CLIP threshold, which would change the 'target invisible/irrelevant' cases that the paper specifically handles.",
+      "resolution": "Authors: confirm the combined-CLIP threshold and abstention behaviour used for the reported numbers, and reconcile with the released selection().",
+      "cross_refs": [
+        "reimplementation-original-withheld"
+      ],
+      "paper_ref": "paper §3.2 (lines 554-559); Algorithm 1 lines 17-23",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "clip-threshold-not-in-selection",
+      "audit": "2021_RESAnything_Attribute_Prompting_for_Arbitrary_Referring_Segm",
+      "audit_md_line": 224
+    },
+    {
+      "id": "2021_RESAnything_Attribute_Prompting_for_Arbitrary_Referring_Segm/checklist-q5-misanswered",
+      "category": "methodology",
+      "topic": "reporting / reproducibility checklist",
+      "title": "NeurIPS checklist Q5 (open code/data) answered [NA] though paper runs experiments",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "5. Open access to data and code\nAnswer: [NA]\nJustification: Code and data are not included in the submission.\nGuidelines:\n• The answer NA means that paper does not include experiments requiring code.\n",
+      "claim": "The reproducibility checklist answers Q5 (open access to data and code) as [NA], whose official definition printed directly beneath it is 'the answer NA means that paper does not include experiments requiring code' — but RESAnything is an empirical paper whose claims rest entirely on code-driven experiments (Tables 1–5).",
+      "concern": "The [NA] answer mischaracterises the submission's reproducibility status: the correct answer is 'No' (code/data withheld), and [NA] obscures from reviewers that no code or data was provided for an experiment-heavy paper.",
+      "resolution": "Authors: correct the checklist to 'No' (or release the code/data), since the paper plainly includes experiments requiring code.",
+      "cross_refs": [
+        "reimplementation-original-withheld",
+        "no-eval-or-benchmark-harness"
+      ],
+      "paper_ref": "NeurIPS Paper Checklist, item 5 (Open access to data and code)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "checklist-q5-misanswered",
+      "audit": "2021_RESAnything_Attribute_Prompting_for_Arbitrary_Referring_Segm",
+      "audit_md_line": 256,
+      "line_start": null,
+      "line_end": null
+    }
+  ]
+}

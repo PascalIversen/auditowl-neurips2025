@@ -1,0 +1,19 @@
+{
+  "folder": "5243_Causal_Explanation_Guided_Learning_for_Organ_Allocation",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 18831,
+    "output": 14676,
+    "cache_write": 190157,
+    "cache_read": 5023883
+  },
+  "total_tokens": 5247547,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 12.48
+}

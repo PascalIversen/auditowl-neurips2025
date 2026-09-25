@@ -1,0 +1,134 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T06:05:05.897295+00:00",
+  "findings": [
+    {
+      "id": "/baselines-not-in-repo",
+      "category": "missing",
+      "topic": "baselines / result traceability",
+      "title": "No baseline-model code; SOTA comparison tables not reproducible from repo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "experiments/exp_basic.py",
+      "line_start": 13,
+      "line_end": 25,
+      "quote": "self.model_dict = {\n    'OLinear': OLinear,\n    'OLinear_C': OLinear_C,\n    'OLinear_attn_var': OLinear_attn_var,\n    'OLinear_ablation_var_temp': OLinear_ablation_var_temp,\n    'OLinear_ablation_lin_design': OLinear_ablation_lin_design,\n    'OLinear_no_Q_neither': OLinear_no_Q_neither,\n    'OLinear_FFT': OLinear_FFT,\n    'OLinear_wavelet': OLinear_wavelet,\n    'OLinear_wavelet2': OLinear_wavelet2,\n    'OLinear_Legendre': OLinear_Legendre,\n    'OLinear_Laguerre': OLinear_Laguerre,\n    'OLinear_cheby': OLinear_cheby,\n",
+      "claim": "The only registered/implemented models are OLinear and its own variants; none of the 11 baselines (TimeMixer, FilterNet, FITS, DLinear, TimeMixer++, Leddam, CARD, Fredformer, iTransformer, PatchTST, TimesNet) nor the Table-5 plug-in hosts (iTransformer/PatchTST/RLinear) have code in model/.",
+      "concern": "The paper's central claim is SOTA over these baselines (Tables 2,3,5; '1st Count' rows); without baseline code or a stated provenance, the comparison and the headline 'consistently achieves state-of-the-art' cannot be regenerated or verified from this repo.",
+      "resolution": "Authors: ship the baseline configs/code (or scripts that call the cited repos), or state explicitly that baseline numbers are quoted from prior papers and give the source per row, confirming identical splits/lookback/metrics.",
+      "cross_refs": [
+        "§5.1",
+        "longterm-data-not-shipped"
+      ],
+      "check_script": "_audit_code/check_baselines_and_data.py",
+      "paper_ref": "Tables 2, 3, 5 (baseline columns and '1st Count')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "baselines-not-in-repo",
+      "audit": "",
+      "audit_md_line": 47,
+      "verdict": "keep",
+      "reason": "Confirmed: exp_basic.py lines 13-25 match the quote exactly, and model/ contains only OLinear variants with no baseline implementations.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/longterm-data-not-shipped",
+      "category": "missing",
+      "topic": "data availability",
+      "title": "Seven long-term benchmarks (ECL/Traffic/ETT/Solar/Exchange/PEMS/METR-LA) not bundled",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 48,
+      "line_end": 49,
+      "quote": "2. Some datasets can be obtained from [Google Drive](https://drive.google.com/file/d/1l51QsKvQPcqILT3DwfjCgx8Dsg2rpjot/view?usp=drive_link) or [Tsinghua Cloud](https://cloud.tsinghua.edu.cn/f/2ea5ca3d621e4e5ba36a/).  The others can be obtained from the links in Appendix B. \nSome datasets are already in the folder ```./dataset```. \n",
+      "claim": "Only weather plus the short-term CSVs ship in dataset/ (verified by _audit_code/check_baselines_and_data.py: shipped data = weather, cars, covid, DowJones, ILI, nasdaq, power, SP500, unemployment, website, wiki_mini); the headline long-term datasets in Table 2 are obtained only via external Google Drive / Tsinghua Cloud / Appendix-B links.",
+      "concern": "Table 2 (the long-term SOTA table) cannot be reproduced from the repo alone; reproduction depends on third-party download links that an auditor cannot verify offline and that may rot.",
+      "resolution": "Authors: confirm the Google Drive / Tsinghua Cloud links remain live and contain ECL, Traffic, ETTh1/2, ETTm1/2, Solar, Exchange, PEMS03/04/07/08, METR-LA in the expected CSV/NPZ format; ideally pin a DOI/Zenodo mirror.",
+      "cross_refs": [
+        "§5"
+      ],
+      "check_script": "_audit_code/check_baselines_and_data.py",
+      "paper_ref": "Table 2; Appendix B (dataset links)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "longterm-data-not-shipped",
+      "audit": "",
+      "audit_md_line": 84,
+      "verdict": "keep",
+      "reason": "Confirmed: README.md lines 48-49 match the quote exactly, and the long-term benchmarks are only accessible via external links.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/pywt-wrong-pypi-name",
+      "category": "missing",
+      "topic": "dependencies / environment",
+      "title": "requirements.txt lists 'pywt' (no such PyPI package; correct name is PyWavelets), and versions are unpinned",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "requirements.txt",
+      "line_start": 13,
+      "line_end": 13,
+      "quote": "pywt\n",
+      "claim": "The wavelet-basis ablation imports `import pywt` (model/orthoLinear_basis/OLinear_wavelet.py:10, OLinear_wavelet2.py:10), but the PyPI distribution is `PyWavelets` (import name pywt); `pip install -r requirements.txt` fails on the line `pywt`. All entries are also unversioned, so the environment is not pin-reproducible.",
+      "concern": "`pip install -r requirements.txt` errors out on `pywt`, and even after fixing the name the lack of version pins (incl. torch/numpy) makes exact reproduction unreliable.",
+      "resolution": "Replace `pywt` with `PyWavelets` and pin versions (especially torch, numpy, scikit-learn, fvcore) used to produce the paper's numbers.",
+      "cross_refs": [
+        "wavelet-ablation"
+      ],
+      "check_script": "_audit_code/check_baselines_and_data.py",
+      "paper_ref": "Table 4 (Wavelet1/Wavelet2 rows)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "pywt-wrong-pypi-name",
+      "audit": "",
+      "audit_md_line": 110,
+      "verdict": "keep",
+      "reason": "Confirmed: requirements.txt line 13 is exactly 'pywt' (wrong PyPI name; correct is PyWavelets), and all 13 entries are unversioned.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/undefined-exp-classes",
+      "category": "bug",
+      "topic": "driver / entrypoint",
+      "title": "run.py references Exp_Short_Term_Forecast / Exp_Long_Term_Forecast_Partial / Exp_Imputation which are never imported",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "run.py",
+      "line_start": 441,
+      "line_end": 449,
+      "quote": "Exp = Exp_Forecast\nif args.task_name == 'short_term_forecast':\n    Exp = Exp_Short_Term_Forecast\n    args.m4_folder = os.path.join('./m4_results', args.model + '_' + args.m4_result_path_str)\n    #  + '_' + datetime.now().strftime('%y%m%d_%H%M%S')\nelif args.exp_name == 'partial_train':  # See Figure 8 of our paper, for the detail\n    Exp = Exp_Long_Term_Forecast_Partial\nelif args.task_name == 'imputation':\n    Exp = Exp_Imputation\n",
+      "claim": "Only `Exp_Forecast` is imported (run.py:8); `Exp_Short_Term_Forecast`, `Exp_Long_Term_Forecast_Partial`, and `Exp_Imputation` are undefined names, so any of these branches raises NameError. None of the shipped scripts set `task_name`/`exp_name` (verified: no `task_name`/`exp_name` token in scripts/), so all reproduction scripts hit the default `forecasting` path and avoid the crash.",
+      "concern": "A user following Appendix-described settings (e.g. the partial-training experiment of 'Figure 8', or imputation) would hit a NameError; the partial-train / imputation experiments are effectively unrunnable through this entrypoint as shipped.",
+      "resolution": "Import the referenced Exp_* classes (or remove the dead branches). Confirm whether the Figure-8 partial-training and any imputation results were produced with a different, unshipped driver.",
+      "cross_refs": [],
+      "paper_ref": "run.py entrypoint; Figure 8 (partial training)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "undefined-exp-classes",
+      "audit": "",
+      "audit_md_line": 137,
+      "verdict": "keep",
+      "reason": "Confirmed: run.py lines 441-449 match the quote exactly; only Exp_Forecast is imported at line 8, leaving the three referenced names undefined.",
+      "changed": "nothing"
+    }
+  ]
+}

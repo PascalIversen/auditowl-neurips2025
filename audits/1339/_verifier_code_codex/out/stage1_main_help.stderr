@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/author/Projects/neurips_audit/audits/1339_Embodied_Cognition_Augmented_End2End_Autonomous_Driving/code/AIR-DISCOVER__E-cubed-AD__E-VAD/projects/eeg_vedio/src/main.py", line 4, in <module>
+    from training.train import train_model
+ModuleNotFoundError: No module named 'training'

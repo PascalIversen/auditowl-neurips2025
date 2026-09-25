@@ -1,0 +1,206 @@
+{
+  "schema_version": "1",
+  "audit": "263_On_the_Closed_Form_of_Flow_Matching_Generalization_Does_Not_",
+  "audit_md": "audits/263_On_the_Closed_Form_of_Flow_Matching_Generalization_Does_Not_/audit.md",
+  "generated_at": "2026-05-31T11:48:23.735971+00:00",
+  "findings": [
+    {
+      "id": "263_On_the_Closed_Form_of_Flow_Matching_Generalization_Does_Not_/missing-figure-experiment-code",
+      "category": "missing",
+      "topic": "result traceability / repository provenance",
+      "title": "No code produces Figures 1, 2, 3 or the App. C tables",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "NOTES.md",
+      "line_start": 127,
+      "line_end": 129,
+      "quote": "- [ ] import a figure code, maybe the histogram one, for 2d toy data\n- [ ] import the rest\n- [ ] add license\n",
+      "claim": "The repo ships only a toy-2D trainer, a CIFAR-10 CFM/OTCFM/EFM trainer, and an offline FID-logging script; it contains no driver that computes the cosine-similarity histograms (Fig. 1a), the Imagenette dimension sweep (Fig. 1c), the velocity-error / test-FID / nearest-neighbour curves over dataset sizes (Fig. 2), the hybrid û*→uθ LPIPS-vs-τ experiment (Fig. 3), or the MNIST/FMNIST FID tables (App. C).",
+      "concern": "Most of the paper's empirical evidence (3 of 4 main figures plus the appendix tables) has no producing code in the repo, so those results cannot be reproduced or independently checked; the authors' own NOTES.md confirms the figure code was never imported.",
+      "resolution": "Authors: please add the scripts that generate Figures 1–3 and the App. C tables (or point to where they live), including the per-time velocity-error logging and the LPIPS-based hybrid-sampler driver.",
+      "cross_refs": [
+        "missing-lpips-dependency",
+        "missing-celeba-training",
+        "missing-readme"
+      ],
+      "check_script": "_verifier_code/check_completeness.py",
+      "paper_ref": "Figures 1, 2, 3; Appendix C Tables 1-2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-figure-experiment-code",
+      "audit": "263_On_the_Closed_Form_of_Flow_Matching_Generalization_Does_Not_",
+      "audit_md_line": 71
+    },
+    {
+      "id": "263_On_the_Closed_Form_of_Flow_Matching_Generalization_Does_Not_/missing-celeba-training",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "CelebA training (Figs. 3-4) is not in the repo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "src/utils/compute_fid.py",
+      "line_start": 60,
+      "line_end": 69,
+      "quote": "elif cfg.dataset.lower() == \"celeba\":\n    train_feat = ft_extractor.get_features(\n        CelebA(split='train', root=\"../data\", download=True,     transform=transforms.Compose(\n            [transforms.CenterCrop(178),\n             transforms.Resize([64, 64]),])), name=\"celeba64_train\")\n    test_feat = ft_extractor.get_features(\n        CelebA(split='test', root=\"../data\", download=True, transform=transforms.Compose(\n            [transforms.CenterCrop(178),\n             transforms.Resize([64, 64]),])), name=\"celeba64_test\")\n",
+      "claim": "CelebA appears only inside the FID feature-extraction branch of compute_fid.py; no training script for CelebA exists in the repo (the only trainer, src/train_cifar10.py, is CIFAR-10 specific).",
+      "concern": "Figures 3 (right) and 4 (bottom) report CelebA-64 results, but the model that produces those samples is trained off-repo via the pnpflow library (Appendix D.5), so the CelebA half of the headline experiments is not reproducible from this code.",
+      "resolution": "Authors: please add (or link) the exact CelebA training entrypoint and config used for Figs. 3-4, since the paper states it relies on an external library's training script.",
+      "cross_refs": [
+        "missing-figure-experiment-code"
+      ],
+      "paper_ref": "Appendix D.5; Figures 3 and 4 (CelebA)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-celeba-training",
+      "audit": "263_On_the_Closed_Form_of_Flow_Matching_Generalization_Does_Not_",
+      "audit_md_line": 98
+    },
+    {
+      "id": "263_On_the_Closed_Form_of_Flow_Matching_Generalization_Does_Not_/missing-lpips-dependency",
+      "category": "missing",
+      "topic": "dependencies / result traceability",
+      "title": "LPIPS metric (Fig. 3) is neither implemented nor declared as a dependency",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "pyproject.toml",
+      "line_start": 7,
+      "line_end": 19,
+      "quote": "dependencies = [\n    \"clean-fid>=0.1.35\",\n    \"fld\",\n    \"hydra-core>=1.3.2\",\n    \"hydra-submitit-launcher>=1.2.0\",\n    \"matplotlib>=3.10.7\",\n    \"mlflow>=3.5.1\",\n    \"pandas>=2.3.3\",\n    \"pot>=0.9.6.post1\",\n    \"setuptools>=80.9.0\",\n    \"torchcfm>=1.0.7\",\n    \"torchdyn>=1.0.6\",\n]\n",
+      "claim": "Figure 3 measures generalization with the LPIPS metric (dist(x,D)=min_i LPIPS(x,x_i)), but no source file references lpips and the dependency list contains no lpips package.",
+      "concern": "The metric used for the entire Section 3.3 / Figure 3 conclusion ('generalization occurs early') has no producing code or declared dependency, so that experiment cannot be reproduced as described.",
+      "resolution": "Authors: add the LPIPS computation and its package to the dependency spec, or point to the script implementing dist(x,D).",
+      "cross_refs": [
+        "missing-figure-experiment-code"
+      ],
+      "check_script": "_verifier_code/check_completeness.py",
+      "paper_ref": "Section 3.3; Figure 3",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-lpips-dependency",
+      "audit": "263_On_the_Closed_Form_of_Flow_Matching_Generalization_Does_Not_",
+      "audit_md_line": 130
+    },
+    {
+      "id": "263_On_the_Closed_Form_of_Flow_Matching_Generalization_Does_Not_/missing-readme",
+      "category": "missing",
+      "topic": "expected code completeness",
+      "title": "README.md referenced by pyproject.toml does not exist",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "pyproject.toml",
+      "line_start": 5,
+      "line_end": 5,
+      "quote": "readme = \"README.md\"\n",
+      "claim": "pyproject.toml declares readme = \"README.md\", but no README.md exists at the repo root (confirmed by _verifier_code/check_completeness.py).",
+      "concern": "There is no results table or 'exact commands to reproduce' documentation; the only run instructions live in NOTES.md, an internal scratchpad with cluster-specific SSH/SLURM steps and unchecked TODOs, so a complete-submission README is absent.",
+      "resolution": "Authors: add a README with the results table and the exact commands (per figure) to reproduce the paper's numbers.",
+      "cross_refs": [
+        "missing-figure-experiment-code"
+      ],
+      "check_script": "_verifier_code/check_completeness.py",
+      "paper_ref": "NeurIPS checklist Q5 (open access to code)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-readme",
+      "audit": "263_On_the_Closed_Form_of_Flow_Matching_Generalization_Does_Not_",
+      "audit_md_line": 167
+    },
+    {
+      "id": "263_On_the_Closed_Form_of_Flow_Matching_Generalization_Does_Not_/rescaled-loss-overwritten",
+      "category": "bug",
+      "topic": "loss computation",
+      "title": "Rescaled-loss branch is immediately overwritten by the unrescaled loss",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "src/train_cifar10.py",
+      "line_start": 204,
+      "line_end": 207,
+      "quote": "if rescaled:\n    t_ = pad_t_like_x(t, x0)\n    loss = torch.mean(((vt - ut) * (1 - t_)) ** 2)\nloss = torch.mean((vt - ut) ** 2)\n",
+      "claim": "When cfg.loss.rescaled is True, the rescaled loss assigned at line 206 is unconditionally overwritten by the plain MSE at line 207 (line 207 is not in an else branch), so the rescaling never takes effect.",
+      "concern": "Any CIFAR-10 run configured with rescaled=True would silently train on the unrescaled loss instead, contradicting the code's evident intent; the shipped configs use rescaled=False so the default reported runs are unaffected, hence low severity.",
+      "resolution": "Authors: guard line 207 with `else:` (or remove it) so the rescaled branch is honoured; confirm no reported CIFAR-10 result used rescaled=True.",
+      "cross_refs": [],
+      "paper_ref": "train_cifar10.yaml loss.rescaled",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "rescaled-loss-overwritten",
+      "audit": "263_On_the_Closed_Form_of_Flow_Matching_Generalization_Does_Not_",
+      "audit_md_line": 194
+    },
+    {
+      "id": "263_On_the_Closed_Form_of_Flow_Matching_Generalization_Does_Not_/live-ipdb-breakpoint",
+      "category": "bug",
+      "topic": "runtime / dead code",
+      "title": "Live ipdb.set_trace() left in non-batched velocity-field helper",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "src/utils/mean_cfm.py",
+      "line_start": 105,
+      "line_end": 106,
+      "quote": "import ipdb; ipdb.set_trace()\nreturn utot\n",
+      "claim": "get_full_velocity_field_ (the non-batched code path, reached when get_full_velocity_field is called with batch=False) contains an uncommented import ipdb; ipdb.set_trace() that would drop into a debugger / crash if ipdb is absent.",
+      "concern": "This path is not on the default training route (callers use batch=True, and solve_ode_t — the only caller passing batch defaults — is itself never invoked in the repo), so it is latent dead/non-default code; it would break any future use of the non-batched estimator.",
+      "resolution": "Authors: remove the stray ipdb breakpoint (and the similar commented ones) before release.",
+      "cross_refs": [],
+      "check_script": "_verifier_code/check_completeness.py",
+      "paper_ref": "n/a",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "live-ipdb-breakpoint",
+      "audit": "263_On_the_Closed_Form_of_Flow_Matching_Generalization_Does_Not_",
+      "audit_md_line": 221
+    },
+    {
+      "id": "263_On_the_Closed_Form_of_Flow_Matching_Generalization_Does_Not_/online-fid-train-only-inception",
+      "category": "difference",
+      "topic": "evaluation consistency",
+      "title": "In-training FID logs Inception train-FID-5k only; paper headlines DINOv2 test FID",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "src/train_cifar10.py",
+      "line_start": 98,
+      "line_end": 100,
+      "quote": "ft_extractor = InceptionFeatureExtractor(save_path=\"features\")\ntrain_feat = ft_extractor.get_features(\n    CIFAR10(train=True, root=root, download=True), name=\"cifar10_train\")\n",
+      "claim": "The training loop computes FID online only against CIFAR-10 train features with the Inception extractor (FID-5k, train_cifar10.py:238-250); the paper's main metric is DINOv2 test FID-10k (Fig. 2 middle, Fig. 4).",
+      "concern": "The reported test-set / DINOv2 numbers are not produced by the training loop but by the separate offline log_fid script (compute_fid.py), which both train and test features support; this is a benign division of labour rather than a contradiction, so it is flagged low/medium as a faithfulness note, not an error.",
+      "resolution": "Authors: confirm Fig. 2/4 test-FID values come from compute_fid.py::log_fid on saved checkpoints, and document which embedding/sample-count produced each panel.",
+      "cross_refs": [
+        "missing-figure-experiment-code"
+      ],
+      "paper_ref": "Metrics paragraph (Sec. 4.2); Fig. 2 middle, Fig. 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "online-fid-train-only-inception",
+      "audit": "263_On_the_Closed_Form_of_Flow_Matching_Generalization_Does_Not_",
+      "audit_md_line": 249
+    }
+  ]
+}

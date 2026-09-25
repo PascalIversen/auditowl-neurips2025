@@ -1,0 +1,19 @@
+{
+  "folder": "1629_MESS_Dynamically_Learned_Inference_Time_LLM_Routing_in_Model",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 10976,
+    "output": 8922,
+    "cache_write": 387027,
+    "cache_read": 8599311
+  },
+  "total_tokens": 9006236,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 20.99
+}

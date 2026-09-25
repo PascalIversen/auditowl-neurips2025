@@ -1,0 +1,14 @@
+Matplotlib created a temporary cache directory at /var/folders/62/nxnmxsmj1q15tr6b3ywgks88r_qppl/T/matplotlib-0590hjfk because the default path (/home/author/.matplotlib) is not a writable directory; it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Matplotlib is building the font cache; this may take a moment.
+policy[s]            = [0.2 0.3 0.5]
+code single-sample   = [0.17766403 0.37817589 0.44416008]
+code batch(size=1)   = [0.18167818 0.42739216 0.39092965]
+paper full MD step   = [0.18167818 0.42739216 0.39092965]
+
+single == paper ? False
+batch  == paper ? True
+single == batch ? False
+actions in state s whose prob changed (single-sample) = 3 of 3

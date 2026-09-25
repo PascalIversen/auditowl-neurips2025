@@ -1,0 +1,5 @@
+paper_number: 654
+title: Unveiling Transformer Perception by Exploring Input Manifolds
+authors: Alessandro Benfenati, Alfio Ferrara, Alessio Marta, Davide Riva, Elisabetta Rocchetti
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/1f50f4c1ffe5058a285665aa88fd0d27-Abstract-Conference.html
+category: empirical

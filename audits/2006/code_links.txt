@@ -1,0 +1,6 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/technion-cs-nlp/vlm-circuits-analysis	[title-match]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/TransformerLensOrg/TransformerLens	[no-author-signal]
+https://github.com/black-forest-labs/flux	[known-org:black-forest-labs]

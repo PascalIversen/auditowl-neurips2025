@@ -1,0 +1,185 @@
+{
+  "paper": "2657",
+  "seeds": [
+    {
+      "sid": "S01",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "Remove the complete time-conditioning ablation pipeline",
+      "description": "Delete AblationStudies.py, the repository's only executable pipeline for the reported time-embedding comparison and fixed-inference-time sensitivity experiments (Figures 12 and 13). This creates an actual absence rather than leaving a runnable stand-in: no remaining file trains the three embedding variants across the eight datasets or sweeps the eleven inference-time values and produces those figures.",
+      "expected_reasoning": "The paper says Figure 12 compares Linear+Sin, Sinusoidal, and Sinusoidal+MLP embeddings over eight representative datasets and Figure 13 sweeps fixed inference time. A careful reader should search for those embedding names, dataset configurations, and figure outputs, find that all of them live in AblationStudies.py, then observe that the patch deletes that file. The residual core TCCM implementation can run the main method, but no code path anywhere in the repository can execute or reproduce the reported time-conditioning ablation suite.",
+      "paper_anchor": "Figure 12: Ablation Study on Time Embedding Methods. We compare three different time embedding strategies used in our flow-based anomaly detection model: Linear+Sin, Sinusoidal (default), and Sinusoidal+MLP, across eight representative datasets spanning four categories: Small (29_Pima, 18_Ionosphere), Medium (31_satimage-2, 44_Wilt), Large (22_magic.gamma , 23_mammography), and High-dimensional (25_musk, 17_InternetAds).",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "delete_file",
+            "file": "ZhongLIFR__TCCM-NIPS/AblationStudies.py"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S02",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "Remove the empirical PGD robustness study",
+      "description": "Delete RobustnessStudy.py, which uniquely implements the synthetic GMM construction, both PGD attack directions, the 30 perturbation budgets, five dimensionalities, repeated runs, and the plots reported as Figures 19 and 20. The shell launcher may still name the deleted script, but no code remains that performs or produces the experiment.",
+      "expected_reasoning": "The paper reports a concrete empirical robustness pipeline: synthetic disjoint GMMs, false-positive and false-negative PGD attacks, budgets from 0.1 to 3.0, five dimensions, and five random seeds. A careful reader should map these details to RobustnessStudy.py (sample_gmm_data, PGD_attack, EPS_RANGES, dimension argument, and plotting), then see that the patch removes the sole implementation. A broken launcher is not a substitute mechanism, so Figures 19 and 20 become unsupported by any code in the repository.",
+      "paper_anchor": "For the PGD-based attack setup, we evaluate 30 levels of perturbation budgets, \u03f5 \u2208{0.1, 0.2, 0.3 . . . , 2.8, 2.9, 3.0}, under the L\u221enorm. Each attack is performed with a step size of 0.01 and a maximum of \u2308200\u00b7\u03f5\u2309iterations.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "delete_file",
+            "file": "ZhongLIFR__TCCM-NIPS/RobustnessStudy.py"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S03",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "Run a bottleneck autoencoder under the NormalizingFlow label",
+      "description": "Replace the planar-flow density model with a fully trainable bottleneck autoencoder. The substitute has a real encoder-decoder computation, learns through reconstruction-loss gradients, and scores squared reconstruction error, while preserving the NormalizingFlow class API used by the main benchmark. It is therefore a coherent but fundamentally different anomaly detector, not an identity or no-op.",
+      "expected_reasoning": "The paper states that its NormalizingFlow baseline is a planar-flow detector. A careful reader should inspect baselines/normalizingFlow.py and verify whether fit optimizes change-of-variables likelihood and decision_function uses the base density plus log-Jacobian. After the patch, PlanarFlow is unused: NormalizingFlowModel is an encoder-decoder, fit minimizes MSE reconstruction, and decision_function returns reconstruction error. The benchmark would still run and backpropagate real gradients, but the reported NormalizingFlow comparison would actually measure an autoencoder, undermining the claimed 44-baseline evaluation.",
+      "paper_anchor": "The implementation of planar flows (Rezende and Mohamed, 2015), a normalizing-flows-based detector, is also taken from (Livernoche et al., 2023).",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ZhongLIFR__TCCM-NIPS/baselines/normalizingFlow.py",
+            "old_string": "class NormalizingFlowModel(nn.Module):\n    def __init__(self, dim, K):\n        super(NormalizingFlowModel, self).__init__()\n        self.transforms = nn.Sequential(*[PlanarFlow(dim) for _ in range(K)])\n\n    def forward(self, z):\n        log_det_jacobians = []\n        for transform in self.transforms:\n            log_det_jacobian = transform.log_abs_det_jacobian(z)\n            z = transform(z)\n            log_det_jacobians.append(log_det_jacobian)\n        return z, torch.stack(log_det_jacobians, dim=1).sum(1)\n\nclass NormalizingFlow:\n    def __init__(self, \n                #  seed = 0, model_name = \"Flow\", \n                 K = 10, device = torch.device(\"cpu\")):        \n        self.K = K\n        \n        if device is None:       \n            self.device = torch.device(\"cuda:0\" if torch.cuda.is_available() else \"cpu\")\n        else:\n            self.device = device\n        \n        self.flow = None\n\n    def fit(self, X_train, y_train = None, epochs = 200, batch_size = 64, lr=2e-3):\n        if self.flow is None:\n            self.flow = NormalizingFlowModel(X_train.shape[-1], self.K).to(self.device)\n        optimizer = optim.Adam(self.flow.parameters(), lr=lr, weight_decay=1e-4)\n        train_loader = DataLoader(torch.from_numpy(X_train).float().to(self.device),\n                                          batch_size=batch_size, shuffle=True, drop_last=False)\n\n        torch.nn.utils.clip_grad_norm_(self.flow.parameters(), max_norm=1.0)\n\n        for epoch in range(epochs):\n            train_loss = []\n            for x in train_loader:\n                z, log_det_jacobian = self.flow(x)\n                base_log_prob = torch.distributions.Normal(0, 1).log_prob(z).sum(dim=1)\n                log_prob = base_log_prob + log_det_jacobian\n                loss = -log_prob.mean()\n\n                optimizer.zero_grad()\n                loss.backward()\n                optimizer.step()\n                train_loss.append(loss.item())\n            if epoch % 5 == 0:\n                print(\"Epochs \" + str(epoch) + \"\\tTrain loss:\" + str(np.array(train_loss).mean()))\n        return self\n        \n\n    # def predict_score(self, X):\n    #     X = torch.tensor(X, dtype=torch.float32).to(self.device)\n        \n    #     with torch.no_grad():\n    #         z, log_det_jacobian = self.flow(X)\n    #         base_log_prob = torch.distributions.Normal(0, 1).log_prob(z).sum(dim=1)\n    #         log_prob = base_log_prob + log_det_jacobian\n    #     return -log_prob.cpu().numpy().mean(1)\n\n    def decision_function(self, X):\n        X = torch.tensor(X, dtype=torch.float32).to(self.device)\n        \n        with torch.no_grad():\n            z, log_det_jacobian = self.flow(X)\n            base_log_prob = torch.distributions.Normal(0, 1).log_prob(z).sum(dim=1)\n            log_prob = base_log_prob + log_det_jacobian\n        return -log_prob.cpu().numpy().mean(1)",
+            "new_string": "class NormalizingFlowModel(nn.Module):\n    def __init__(self, dim, K):\n        super(NormalizingFlowModel, self).__init__()\n        hidden_dim = max(2, min(64, dim))\n        bottleneck_dim = max(1, hidden_dim // 2)\n        self.encoder = nn.Sequential(\n            nn.Linear(dim, hidden_dim),\n            nn.ReLU(),\n            nn.Linear(hidden_dim, bottleneck_dim)\n        )\n        self.decoder = nn.Sequential(\n            nn.Linear(bottleneck_dim, hidden_dim),\n            nn.ReLU(),\n            nn.Linear(hidden_dim, dim)\n        )\n\n    def forward(self, z):\n        return self.decoder(self.encoder(z))\n\nclass NormalizingFlow:\n    def __init__(self,\n                 K = 10, device = torch.device(\"cpu\")):\n        self.K = K\n\n        if device is None:\n            self.device = torch.device(\"cuda:0\" if torch.cuda.is_available() else \"cpu\")\n        else:\n            self.device = device\n\n        self.flow = None\n\n    def fit(self, X_train, y_train = None, epochs = 200, batch_size = 64, lr=2e-3):\n        if self.flow is None:\n            self.flow = NormalizingFlowModel(X_train.shape[-1], self.K).to(self.device)\n        optimizer = optim.Adam(self.flow.parameters(), lr=lr, weight_decay=1e-4)\n        train_loader = DataLoader(torch.from_numpy(X_train).float().to(self.device),\n                                  batch_size=batch_size, shuffle=True, drop_last=False)\n\n        for epoch in range(epochs):\n            train_loss = []\n            for x in train_loader:\n                reconstruction = self.flow(x)\n                loss = torch.mean((reconstruction - x) ** 2)\n\n                optimizer.zero_grad()\n                loss.backward()\n                torch.nn.utils.clip_grad_norm_(self.flow.parameters(), max_norm=1.0)\n                optimizer.step()\n                train_loss.append(loss.item())\n            if epoch % 5 == 0:\n                print(\"Epochs \" + str(epoch) + \"\\tTrain loss:\" + str(np.array(train_loss).mean()))\n        return self\n\n    def decision_function(self, X):\n        X = torch.tensor(X, dtype=torch.float32).to(self.device)\n\n        with torch.no_grad():\n            reconstruction = self.flow(X)\n            score = torch.mean((reconstruction - X) ** 2, dim=1)\n        return score.cpu().numpy()"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S04",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "Evaluate DAGMM as a reconstruction-only autoencoder",
+      "description": "Convert the DAGMM baseline into a conventional reconstruction detector while retaining its public API and trainable encoder-decoder. Training drops the sample-energy and covariance terms, and inference scores per-sample reconstruction error instead of GMM energy. The replacement remains functional with real gradients, but it is a different method from the jointly optimized density estimator described in the paper.",
+      "expected_reasoning": "The paper says DAGMM jointly trains an autoencoder and GMM estimation network with reconstruction, energy, and covariance losses, then scores test points by GMM energy. A careful reader should trace ComputeLoss.forward and DAGMM.decision_function. The patch makes the objective pure reconstruction MSE and bypasses estimation-network parameters at inference in favor of reconstruction error. Thus the main comparison labels a working autoencoder as DAGMM, so the reported ranking against this baseline cannot support the paper's conclusion.",
+      "paper_anchor": "To avoid traditional two-step training, DAGMM jointly optimizes the autoencoder and the GMM via a shared objective that includes reconstruction loss, sample energy, and a regularization term to prevent degenerate covariance matrices. During inference, an anomaly score is computed as the energy of a test sample under the learned GMM, with higher energy indicating greater anomaly likelihood.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ZhongLIFR__TCCM-NIPS/baselines/dagmm.py",
+            "old_string": "    def forward(self, x, x_hat, z, gamma):\n        \"\"\"Computing the loss function for DAGMM.\"\"\"\n        reconst_loss = torch.mean((x-x_hat).pow(2))\n\n        sample_energy, cov_diag = self.compute_energy(z, gamma)\n\n        loss = reconst_loss + self.lambda_energy * sample_energy + self.lambda_cov * cov_diag\n        return Variable(loss, requires_grad=True)",
+            "new_string": "    def forward(self, x, x_hat, z, gamma):\n        reconst_loss = torch.mean((x - x_hat).pow(2))\n        return reconst_loss"
+          },
+          {
+            "action": "replace",
+            "file": "ZhongLIFR__TCCM-NIPS/baselines/dagmm.py",
+            "old_string": "    def decision_function(self, X_test):\n        batch_size = self.args.batch_size\n        n_gmm = self.args.n_gmm\n\n        \"\"\"Testing the DAGMM model\"\"\"\n\n        dataloader_train = DataLoader(torch.from_numpy(self.X_train).float(),\n                                    batch_size=batch_size, shuffle=False, drop_last=True)\n        dataloader_test = DataLoader(torch.from_numpy(X_test).float(),\n                                    batch_size=batch_size, shuffle=False, drop_last=False)\n\n        self.model = self.model_trainer.model\n        # evaluation mode\n        self.model.eval()\n        print('Testing...')\n        compute = ComputeLoss(self.model, None, None, n_gmm, device=self.device)\n\n        with torch.no_grad():\n            N_samples = 0\n            gamma_sum = 0\n            mu_sum = 0\n            cov_sum = 0\n\n            # Obtaining the parameters gamma, mu and cov using the trainin (clean) data.\n            for x in dataloader_train:\n                x = x.float().to(self.device)\n\n                _, _, z, gamma = self.model(x)\n                phi_batch, mu_batch, cov_batch = compute.compute_params(z, gamma)\n\n                batch_gamma_sum = torch.sum(gamma, dim=0)\n                gamma_sum += batch_gamma_sum\n                mu_sum += mu_batch * batch_gamma_sum.unsqueeze(-1)\n                cov_sum += cov_batch * batch_gamma_sum.unsqueeze(-1).unsqueeze(-1)\n\n                N_samples += x.size(0)\n\n            train_phi = gamma_sum / N_samples\n            train_mu = mu_sum / gamma_sum.unsqueeze(-1)\n            train_cov = cov_sum / gamma_sum.unsqueeze(-1).unsqueeze(-1)\n\n            # Obtaining Labels and energy scores for test data\n            energy_test = []\n            for x in dataloader_test:\n                x = x.float().to(self.device)\n\n                _, _, z, gamma = self.model(x)\n                sample_energy, cov_diag = compute.compute_energy(z, gamma, train_phi,\n                                                                train_mu, train_cov,\n                                                                sample_mean=False)\n\n                energy_test.append(sample_energy.detach().cpu())\n\n            energy_test = torch.cat(energy_test).numpy() # the output score\n            # # predicting\n        # score = eval(self.model.model, data, self.device, self.args.n_gmm, self.args.batch_size)\n        return energy_test",
+            "new_string": "    def decision_function(self, X_test):\n        dataloader_test = DataLoader(\n            torch.from_numpy(X_test).float(),\n            batch_size=self.args.batch_size, shuffle=False, drop_last=False\n        )\n\n        self.model = self.model_trainer.model\n        self.model.eval()\n        reconstruction_scores = []\n\n        with torch.no_grad():\n            for x in dataloader_test:\n                x = x.float().to(self.device)\n                _, x_hat, _, _ = self.model(x)\n                score = torch.mean((x - x_hat).pow(2), dim=1)\n                reconstruction_scores.append(score.cpu())\n\n        return torch.cat(reconstruction_scores).numpy()"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S05",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Reuse every normal training sample in the test set",
+      "description": "Change the shared ADBench loader so the full normal pool becomes both X_train and X_test_normal. All main inductive models are then trained on every normal observation they are evaluated on, while anomalies remain test-only. The arrays still have valid shapes and the benchmark runs, but the main train/test protocol contains direct sample overlap.",
+      "expected_reasoning": "The paper requires a stratified 50/50 split of normal data, with the held-out half used for testing. A careful reader should trace FullExperiments.py to utils.load_adbench_npz and compare the constructed arrays. After the patch, X_train and X_test_normal are separate copies of the same X_normal array rather than disjoint partitions. StandardScaler is then fitted on those training samples and transforms their duplicates in the test set. This is direct main-pipeline leakage that can inflate detection metrics and invalidate the 47-dataset rankings.",
+      "paper_anchor": "Specifically, we apply a stratified split to the normal data, using 50% for training and holding out the rest for testing. The test set includes both normal and anomalous samples.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ZhongLIFR__TCCM-NIPS/utils.py",
+            "old_string": "    # Train using only normal samples\n    X_normal, X_anomalous = X[y == 0], X[y == 1]\n    y_normal, y_anomalous = y[y == 0], y[y == 1]\n\n    X_train, X_test_normal, y_train, y_test_normal = train_test_split(\n        X_normal, y_normal, test_size=test_size, random_state=random_state, stratify=y_normal\n    )\n\n    # Test set contains both normal and abnormal data\n    X_test = np.vstack((X_test_normal, X_anomalous))\n    y_test = np.concatenate((y_test_normal, y_anomalous))",
+            "new_string": "    # Train using only normal samples\n    X_normal, X_anomalous = X[y == 0], X[y == 1]\n    y_normal, y_anomalous = y[y == 0], y[y == 1]\n\n    X_train = X_normal.copy()\n    y_train = y_normal.copy()\n    X_test_normal = X_normal.copy()\n    y_test_normal = y_normal.copy()\n\n    # Test set contains both normal and abnormal data\n    X_test = np.vstack((X_test_normal, X_anomalous))\n    y_test = np.concatenate((y_test_normal, y_anomalous))"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S06",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Select each reported detector checkpoint by test AUROC",
+      "description": "Alter the main aggregation pipeline to choose, for every dataset-detector pair, the random-seed run with the highest test AUROC before computing the reported metrics and ranks. This is test-set model selection across five trained checkpoints, not averaging independent runs as claimed, and it propagates the selected test performance into the headline comparison.",
+      "expected_reasoning": "The paper states that it reports means and standard deviations over five independent seeds and ranks detectors using those mean test metrics. A careful reader should inspect AggregateResults.py after raw test AUC/PR values are loaded. The patch groups by Dataset and Detector, calls idxmax on the test AUC column, and aggregates only the selected row. Therefore test labels determine which trained seed/checkpoint is reported, leaking evaluation information into model selection and upwardly biasing the main ranking distribution.",
+      "paper_anchor": "All experiments are repeated over 5 independent runs with different random seeds, and we report the mean and standard deviation of each metric for every (dataset, anomaly detector) pair.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ZhongLIFR__TCCM-NIPS/AggregateResults.py",
+            "old_string": "    if df_list:\n        df_combined = pd.concat(df_list, ignore_index=True)\n\n        # Compute mean/std of metrics for each Detector x Dataset combo\n        df_aggregated = df_combined.groupby([\"Dataset\", \"Detector\"]).agg(\n            Mean_PR=(\"PR\", \"mean\"),\n            Mean_AUC=(\"AUC\", \"mean\"),\n            Std_PR=(\"PR\", \"std\"),\n            Std_AUC=(\"AUC\", \"std\"),\n            Mean_ExecTime=(\"~ExecTimeSeconds\", \"mean\"),\n            Std_ExecTime=(\"~ExecTimeSeconds\", \"std\"),\n            Mean_TrainTime=(\"~TrainTimeSeconds\", \"mean\"),\n            Std_TrainTime=(\"~TrainTimeSeconds\", \"std\"),\n            Mean_TestTime=(\"~TestTimeSeconds\", \"mean\"),\n            Std_TestTime=(\"~TestTimeSeconds\", \"std\"),\n        ).reset_index()",
+            "new_string": "    if df_list:\n        df_combined = pd.concat(df_list, ignore_index=True)\n        selected_idx = df_combined.groupby([\"Dataset\", \"Detector\"])[\"AUC\"].idxmax()\n        df_selected = df_combined.loc[selected_idx]\n\n        # Compute mean/std of metrics for each Detector x Dataset combo\n        df_aggregated = df_selected.groupby([\"Dataset\", \"Detector\"]).agg(\n            Mean_PR=(\"PR\", \"mean\"),\n            Mean_AUC=(\"AUC\", \"mean\"),\n            Std_PR=(\"PR\", \"std\"),\n            Std_AUC=(\"AUC\", \"std\"),\n            Mean_ExecTime=(\"~ExecTimeSeconds\", \"mean\"),\n            Std_ExecTime=(\"~ExecTimeSeconds\", \"std\"),\n            Mean_TrainTime=(\"~TrainTimeSeconds\", \"mean\"),\n            Std_TrainTime=(\"~TrainTimeSeconds\", \"std\"),\n            Mean_TestTime=(\"~TestTimeSeconds\", \"mean\"),\n            Std_TestTime=(\"~TestTimeSeconds\", \"std\"),\n        ).reset_index()"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S07",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "Bypass MCM's learned masks during reconstruction",
+      "description": "Make the MCM mask generator return repeated, completely unmasked inputs to its encoder-decoder while still computing mask logits for the diversity loss. Training and inference remain runnable and update the reconstruction network, but the central masked-cell mechanism is a no-op, allowing the model to reconstruct every feature from itself rather than from complementary unmasked features.",
+      "expected_reasoning": "The paper says MCM dynamically generates multiple soft masks, reconstructs masked features from unmasked portions, and averages reconstruction errors across masked versions. A careful reader should inspect Generator.forward and follow x_T into MCMModel.forward. After the patch, x_T is initialized as repeated copies of x and never multiplied by sigmoid(mask); mask networks influence only the diversity regularizer. Thus all advertised masked versions are identical full inputs. The code still trains, but its anomaly score no longer tests violated cross-feature correlations, making the MCM baseline result methodologically invalid.",
+      "paper_anchor": "MCM learns to reconstruct randomly masked subsets of input features using only the unmasked portions. The core hypothesis is that normal instances exhibit strong internal feature correlations, which the model can learn to reconstruct effectively\u2014while anomalies violate such correlations, leading to higher reconstruction error.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ZhongLIFR__TCCM-NIPS/baselines/mcm.py",
+            "old_string": "    def forward(self, x):\n        x = x.type(torch.FloatTensor).to(self.device)\n        x_T = torch.empty(x.shape[0], self.mask_num, x.shape[-1]).to(x)\n        masks = []\n        for i in range(self.mask_num):\n            mask = self.masks[i](x)\n            masks.append(mask.unsqueeze(1))\n            mask = torch.sigmoid(mask)\n            x_T[:, i] = mask * x\n        masks = torch.cat(masks, axis=1)\n        return x_T, masks",
+            "new_string": "    def forward(self, x):\n        x = x.type(torch.FloatTensor).to(self.device)\n        x_T = x.unsqueeze(1).repeat(1, self.mask_num, 1)\n        masks = []\n        for i in range(self.mask_num):\n            mask = self.masks[i](x)\n            masks.append(mask.unsqueeze(1))\n        masks = torch.cat(masks, axis=1)\n        return x_T, masks"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S08",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "Keep DROCC in positive-only warmup for its entire training run",
+      "description": "Configure DROCC so only_ce_epochs equals the total number of epochs. The optimizer still performs real updates for 200 epochs, but one_class_adv_loss is never called; the classifier sees only positive normal targets and never learns from the projected synthetic negatives that define DROCC. This is a runnable mechanism-skipping bug, not a missing implementation.",
+      "expected_reasoning": "The paper describes DROCC as generating synthetic anomalous points around the normal manifold and optimizing a gradient descent-ascent saddle-point objective to distinguish them. A careful reader should trace DROCC.fit into DROCCTrainer.train, where adversarial loss is gated by epoch >= only_ce_epochs. The patch passes 200 for both total_epochs and only_ce_epochs, so that condition is false for epochs 0 through 199. Only positive-label BCE is optimized, driving a nearly constant normal classifier and invalidating this baseline's contribution to the main 44-method comparison.",
+      "paper_anchor": "Particularly, they convert the anomaly detection problem from an unsupervised learning setting to supervised setting as follows: they first generate synthetic anomalous instances (based on the above assumption) to add into the training set, and then train a supervised classifier to distinguish the embeddings of synthetical anomalous instances and those of typical normal instances.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ZhongLIFR__TCCM-NIPS/baselines/drocc.py",
+            "old_string": "        self.trainer = DROCCTrainer(self.model, optimizer, self.lamda, self.radius, self.gamma, self.device)\n        \n        self.trainer.train(train_loader, self.lr, adjust_learning_rate, 200)\n        \n        return self",
+            "new_string": "        self.trainer = DROCCTrainer(self.model, optimizer, self.lamda, self.radius, self.gamma, self.device)\n\n        total_epochs = 200\n        only_ce_epochs = total_epochs\n        self.trainer.train(\n            train_loader, self.lr, adjust_learning_rate, total_epochs,\n            only_ce_epochs=only_ce_epochs\n        )\n\n        return self"
+          }
+        ]
+      },
+      "approved": false
+    }
+  ],
+  "_validation_errors": [],
+  "_repo": "ZhongLIFR__TCCM-NIPS"
+}

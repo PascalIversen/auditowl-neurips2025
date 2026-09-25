@@ -1,0 +1,6 @@
+Mismatches between repo graph_statistic.csv and paper Table 2:
+  ('ogb-mag240m', 244160499, 244160499, True, 1727235912, 1728364232, False)
+  ('ogbn-papers100M', 111059433, 111059433, True, 1614061934, 1615685450, False)
+
+Total mismatches: 2
+Output written to /home/author/Projects/neurips_audit/audits/3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput/_verifier_code_codex/out/dataset_stats.csv

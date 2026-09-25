@@ -1,0 +1,26 @@
+{
+  "RishiHazra__Revolve": {
+    "repo": "https://github.com/RishiHazra/Revolve",
+    "clone_status": "cached",
+    "size_mb": 3.9,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  },
+  "deng-ai-lab__RF-Agent": {
+    "repo": "https://github.com/deng-ai-lab/RF-Agent",
+    "clone_status": "cached",
+    "size_mb": 376.3,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  },
+  "isaac-sim__IsaacGymEnvs": {
+    "repo": "https://github.com/isaac-sim/IsaacGymEnvs",
+    "clone_status": "cached",
+    "size_mb": 216.5,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

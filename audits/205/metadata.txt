@@ -1,0 +1,5 @@
+paper_number: 205
+title: Improving Perturbation-based Explanations by Understanding the Role of Uncertainty Calibration
+authors: Thomas Decker, Volker Tresp, Florian Buettner
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/09d320a5b92d74bbde3d0c4f52e680a9-Abstract-Conference.html
+category: empirical

@@ -1,0 +1,5 @@
+paper_number: 4523
+title: Few-Shot Knowledge Distillation of LLMs With Counterfactual Explanations
+authors: Faisal Hamman, Pasan Dissanayake, Yanjun Fu, Sanghamitra Dutta
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/dbb5b038bb6f396ede1da85307a13890-Abstract-Conference.html
+category: empirical

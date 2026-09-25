@@ -1,0 +1,5 @@
+finding,evidence_line
+relative-diff-filtering-32pct,relative_diff = (bp_best_acc - clean_v) / (clean_l - clean_v)
+relative-diff-filtering-32pct,if 0 < relative_diff <= 1.0:
+relative-diff-filtering-32pct,relative_diffs.append(relative_diff)
+relative-diff-filtering-32pct,"print(""Average relative diff: "", np.mean(relative_diffs))"

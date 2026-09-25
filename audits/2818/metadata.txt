@@ -1,0 +1,5 @@
+paper_number: 2818
+title: Scaling Up Parameter Generation: A Recurrent Diffusion Approach
+authors: Kai Wang, Dongwen Tang, Wangbo Zhao, Konstantin Schürholt, Zhangyang &quot;Atlas&quot; Wang, Yang You
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/85de6d4171114a24a083b5cdbc49091f-Abstract-Conference.html
+category: empirical

@@ -1,0 +1,19 @@
+{
+  "folder": "913_Equivariance_Everywhere_All_At_Once_A_Recipe_for_Graph_Found",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 8617,
+    "output": 17614,
+    "cache_write": 224500,
+    "cache_read": 2757666
+  },
+  "total_tokens": 3008397,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 9.8
+}

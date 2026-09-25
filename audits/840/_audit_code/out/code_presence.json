@@ -1,0 +1,15 @@
+{
+  "audit_folder": "/Users/anon/Projects/neurips_audit/audits/840_Enhancing_LLM_Watermark_Resilience_Against_Both_Scrubbing_an",
+  "top_level_entries": [
+    ".DS_Store",
+    "_audit_code",
+    "code_links.txt",
+    "metadata.txt",
+    "paper.pdf",
+    "paper_text.txt"
+  ],
+  "code_dir_present": false,
+  "code_markers_found": [],
+  "n_code_markers": 0,
+  "verdict": "NO_AUTHOR_CODE"
+}

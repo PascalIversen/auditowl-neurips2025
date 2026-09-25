@@ -1,0 +1,203 @@
+{
+  "schema_version": "1",
+  "audit": "run_02",
+  "audit_md": "/home/author/Projects/neurips_audit/for_rebuttal/recall_experiment/major_recall_study/runs/1717/run_02/audit.md",
+  "generated_at": "2026-08-03T00:28:30.617275+00:00",
+  "findings": [
+    {
+      "id": "run_02/resnet-module-missing",
+      "category": "missing",
+      "topic": "repository completeness / imports",
+      "title": "backbone.py imports models.resnet, which does not exist in the repo",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "models/backbone.py",
+      "line_start": 18,
+      "line_end": 20,
+      "quote": "from models.resnet import resnet_model\nfrom models.dino import dino_model, dino_model_with_hooks\nfrom models.clip import clip_model\n",
+      "claim": "backbone.py unconditionally imports `resnet_model` from `models.resnet` at module top; `models/resnet.py` is absent (the only unresolved intra-repo import, confirmed by `_audit_code/check_seeds.py`), and `resnet_model` is used at models/backbone.py:59 for the ResNet50 backbone.",
+      "concern": "Because the import is unconditional and `models.backbone` is imported by `models.brain_encoder` (imported by main.py), running any experiment with any backbone raises ModuleNotFoundError before training starts; additionally the ResNet50 results (Table 3) cannot be produced at all.",
+      "resolution": "Add the missing `models/resnet.py` (defining `resnet_model`), or make the import conditional on `'resnet' in backbone_arch`; confirm which file produced the Table 3 numbers.",
+      "cross_refs": [
+        "optimizer-zerograd-discards-grads"
+      ],
+      "check_script": "_audit_code/check_seeds.py",
+      "paper_ref": "Table 3 (ResNet50 backbone)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "resnet-module-missing",
+      "audit": "run_02",
+      "audit_md_line": 51
+    },
+    {
+      "id": "run_02/bert-backbone-missing",
+      "category": "missing",
+      "topic": "result traceability / text modality",
+      "title": "Table 6 BERT text-modality experiment has no backbone implementation",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "main.py",
+      "line_start": 76,
+      "line_end": 78,
+      "quote": "'resnet18', 'resnet50',\n'dinov2_cls', 'dinov2_q_cls',\n'clip', 'clip_cls'],\n",
+      "claim": "The `--backbone_arch` choices (main.py:75-79) are only DINOv2/ResNet/CLIP variants; there is no `bert` option, and no BERT feature-extraction path exists anywhere in the `.py` files or notebook code cells (grep for `bert` over code cells returns nothing). Only BLIP caption *generation* exists (test_wrapper.ipynb CELL 24-25).",
+      "concern": "Section 4.4 and Table 6 report a headline 'text modality' result using BERT features as the decoder backbone, but no code in the repo can extract BERT features or run the decoder on them, so Table 6 is not reproducible.",
+      "resolution": "Provide the BERT backbone / feature-extraction code and the driver that produced Table 6, or state that this experiment was run off-repo.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_seeds.py",
+      "paper_ref": "Table 6, Section 4.4 (Text modality)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "bert-backbone-missing",
+      "audit": "run_02",
+      "audit_md_line": 78
+    },
+    {
+      "id": "run_02/train-size-ablation-missing",
+      "category": "missing",
+      "topic": "result traceability / training-set size",
+      "title": "Table 2 training-set-size ablation (550-8800) has no subsetting code",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "datasets/nsd.py",
+      "line_start": 228,
+      "line_end": 229,
+      "quote": "# Calculate how many stimulus images correspond to 90% of the training data\nnum_train = int(np.round(len(train_img_list) / 100 * 90))\n",
+      "claim": "The training partition is always 90% of the full training set; there is no CLI argument or code path that restricts training to 550/1100/2200/4400/8800 images (grep for those sizes / `train_size` / `n_train` over the repo returns nothing).",
+      "concern": "Table 2 reports accuracy as a function of training-set size, but no code produces the reduced-size training sets, so the ablation cannot be reproduced from the repo.",
+      "resolution": "Provide the script/argument that subsets the training set to the reported sizes and produces Table 2.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_seeds.py",
+      "paper_ref": "Table 2 (Encoding accuracy for different training set sizes)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "train-size-ablation-missing",
+      "audit": "run_02",
+      "audit_md_line": 105
+    },
+    {
+      "id": "run_02/optimizer-zerograd-discards-grads",
+      "category": "bug",
+      "topic": "training loop / optimizer",
+      "title": "optimizer.zero_grad() runs after backward() and before step(), erasing gradients",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "engine.py",
+      "line_start": 53,
+      "line_end": 57,
+      "quote": "losses.backward()\nif max_norm > 0:\n    torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm)\noptimizer.zero_grad()\noptimizer.step()\n",
+      "claim": "Within `train_one_epoch`, gradients are computed by `losses.backward()`, then `optimizer.zero_grad()` is called immediately before `optimizer.step()`. `zero_grad()` clears every parameter's `.grad` (default `set_to_none=True`), so `optimizer.step()` (AdamW) skips all parameters.",
+      "concern": "No parameter is ever updated from the data gradient (only decoupled weight-decay would act), so the trainable ROI queries / decoder / readouts stay at initialisation; the encoding accuracies in every table cannot arise from this training loop as written.",
+      "resolution": "Move `optimizer.zero_grad()` to before `losses.backward()` (standard order: zero_grad → backward → clip → step).",
+      "cross_refs": [
+        "decoder-token-mixer-not-attention"
+      ],
+      "check_script": "_audit_code/check_seeds.py",
+      "paper_ref": "Tables 1-6 (all encoding-accuracy numbers)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "optimizer-zerograd-discards-grads",
+      "audit": "run_02",
+      "audit_md_line": 133
+    },
+    {
+      "id": "run_02/tenfold-cv-random-resampling",
+      "category": "difference",
+      "topic": "cross-validation / evaluation protocol",
+      "title": "'10-fold cross validation' is really 10 unseeded random 90/10 resamples",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "datasets/nsd.py",
+      "line_start": 231,
+      "line_end": 234,
+      "quote": "idxs = np.arange(len(train_img_list))\n\nif args.run < 20:\n    np.random.shuffle(idxs)\n",
+      "claim": "Each run independently shuffles the training indices (no seed is set — the np.random.seed calls at nsd.py:226 and main.py:30-31 are commented out) and takes the first 90% as train / last 10% as validation; the reported '10-fold' numbers come from averaging the fixed-test-set predictions of runs 1-10 (visualize_results.ipynb `evaluate_model`).",
+      "concern": "The paper (§4) calls this '10-fold cross validation', but the folds are not a partition (validation subsets overlap across runs) and 'averaging predictions across folds' is really an ensemble over 10 randomly-split, randomly-initialised models; the held-out test set is fixed and correctly separate, so results are not invalidated, only mislabelled.",
+      "resolution": "Describe the protocol as repeated random subsampling + test-prediction ensembling, or implement a true K-fold partition; also set seeds for reproducibility.",
+      "cross_refs": [],
+      "paper_ref": "Section 4 ('we did 10-fold cross validation ... averaged the model predictions across all folds')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "tenfold-cv-random-resampling",
+      "audit": "run_02",
+      "audit_md_line": 164
+    },
+    {
+      "id": "run_02/decoder-token-mixer-not-attention",
+      "category": "methodology",
+      "topic": "model architecture / core mechanism / interpretability",
+      "title": "Decoder uses a Conv1d + global-mean token mixer, not the paper's cross-attention",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "models/transformer.py",
+      "line_start": 316,
+      "line_end": 320,
+      "quote": "def mix_tokens(self, tgt, memory, pos, query_pos):\n    memory = self.with_pos_embed(memory, pos).permute(1, 2, 0)\n    memory = self.token_mixer(memory).mean(dim=-1)\n    queries = self.query_proj(self.with_pos_embed(tgt, query_pos))\n    return queries + memory.unsqueeze(0)\n",
+      "claim": "The active decoder path (`TransformerDecoderLayer.forward_pre`/`forward_post`, used because `pre_norm=1`) calls `mix_tokens`, which applies a `Conv1d` `token_mixer` (defined models/transformer.py:292-296) over the image tokens and then `.mean(dim=-1)` — collapsing all tokens into ONE global vector that is added identically to every ROI query. The layer defines no `multihead_attn`/`self_attn` (confirmed in `_audit_code/check_seeds.txt`), i.e. there is no scaled-dot-product cross-attention and no per-token attention scores.",
+      "concern": "The paper's central claim is that each ROI query dynamically cross-attends to and routes the image tokens relevant to that ROI (§3.2, Fig 1B), and that the resulting attention scores make the model interpretable (abstract; §4.3; Fig 5; Tables 7-10). The implemented decoder gives every ROI the same globally-pooled image vector, so there is no content-based per-ROI routing, and there are no attention maps at all — indeed `models/activations.py:30` tries to hook the non-existent `decoder.layers[-i].multihead_attn`, so the attention-map / category-selectivity results (Fig 5, Tables 7-10) cannot be produced. The implemented procedure cannot support the paper's mechanistic or interpretability conclusions.",
+      "resolution": "Confirm whether the reported models used cross-attention (`nn.MultiheadAttention`, as in the commented-out code and as `activations.py` expects) rather than this Conv1d+mean token mixer; if so, restore it — otherwise the routing and interpretability claims are unsupported by the released model.",
+      "cross_refs": [
+        "models/transformer.py:292-296",
+        "models/activations.py:30",
+        "optimizer-zerograd-discards-grads"
+      ],
+      "check_script": "_audit_code/check_seeds.py",
+      "paper_ref": "Abstract; §3.2 & Fig 1B; §4.3 & Fig 5; Tables 7-10",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "decoder-token-mixer-not-attention",
+      "audit": "run_02",
+      "audit_md_line": 193
+    },
+    {
+      "id": "run_02/regression-fit-includes-testset",
+      "category": "methodology",
+      "topic": "data leakage / baselines",
+      "title": "learn_reg eval branch fits the linear regression on train+test concatenated",
+      "severity": "medium",
+      "confidence": "low",
+      "status": "question",
+      "file": "_audit_code/out/visualize_results_cells.txt",
+      "line_start": 374,
+      "line_end": 380,
+      "quote": "features_fit = np.concatenate([features_train, features_test], axis=0)\nlh_fmri_fit = np.concatenate([lh_fmri_train, lh_fmri_test], axis=0)\nrh_fmri_fit = np.concatenate([rh_fmri_train, rh_fmri_test], axis=0)\nreg_lh = LinearRegression().fit(features_fit, lh_fmri_fit)\nreg_rh = LinearRegression().fit(features_fit, rh_fmri_fit)\nlh_fmri_val_pred = reg_lh.predict(features_val)\nlh_fmri_test_pred = reg_lh.predict(features_test)\n",
+      "claim": "In `visualize_results.ipynb` `evaluate_model` (`split=='test'`, `learn_reg` truthy; extracted verbatim to `_audit_code/out/visualize_results_cells.txt:374-380`), a `LinearRegression` baseline is fit on `concat(train, test)` features/fMRI and then evaluated by predicting the same `test` — i.e. the test targets are in the training set.",
+      "concern": "Fitting a regression on data that includes the test set and then reporting test accuracy is direct test-set leakage; however this branch is gated by `learn_reg`, and every notebook call uses `learn_reg=0` (so the reported numbers appear to load precomputed `*_pred_test.npy` instead) — I could not confirm it produced any reported value.",
+      "resolution": "Confirm that no reported baseline (Ridge/PCA/CLS regression in Tables 1/5) was produced with `learn_reg=1`; if any were, refit on training data only and re-report.",
+      "cross_refs": [],
+      "paper_ref": "Tables 1 & 5 regression baselines (Ridge / PCA / CLS + regression)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "regression-fit-includes-testset",
+      "audit": "run_02",
+      "audit_md_line": 222
+    }
+  ]
+}

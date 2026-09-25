@@ -1,0 +1,5 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/MrZihan/Dynam3D	[author-cue]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/InternLM/xtuner	[baseline-cue]

@@ -1,0 +1,131 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-01T15:54:51.031647+00:00",
+  "findings": [
+    {
+      "id": "/fig1-fig3-no-generating-code",
+      "category": "missing",
+      "topic": "result traceability / figures",
+      "title": "Figures 1 and 3 have no generating script in the repository",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 14,
+      "line_end": 14,
+      "quote": "Results for each application can be reproduced by running the files reproduce_[X].m, where [X] = Gauss, Liu, KEF, EGM.\n",
+      "claim": "The repo provides reproduce_*.m for the four applications (Figs 2,4,5,6) plus the Ising example (Fig. D.5) and aux_reproduce_results_Gauss.m for appendix figures, but nothing computes Figure 1 (KSD\u00b2 insensitivity to mixture proportion, Eq. 11) or Figure 3 (the posterior influence function). A repo-wide grep for 'influence', 'PIF', or the mixture found no such code.",
+      "concern": "Two numbered figures in the main text cannot be regenerated from the repository, so their values are not independently checkable.",
+      "resolution": "Authors: please add (or point to) the scripts that produce Figure 1 and Figure 3, or state that these figures are illustrative and out of reproduction scope.",
+      "cross_refs": [],
+      "paper_ref": "Figure 1 (Eq. 11); Figure 3 (posterior influence function, Eq. 12)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "fig1-fig3-no-generating-code",
+      "audit": "",
+      "audit_md_line": 47,
+      "verdict": "keep",
+      "reason": "README.md:14 quote matches verbatim; repo-wide grep for 'influence','PIF','mixture' across the whole repo (all .m/.py files) found zero hits, confirming no script generates Fig.1 (Eq.11 mixture insensitivity) or Fig.3 (posterior influence function), both confirmed present and captioned in paper_text.txt.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/liu-precond-derivative-wrong-denominator",
+      "category": "bug",
+      "topic": "preconditioner gradient (robust KSD-Bayes)",
+      "title": "M_Liu robust preconditioner derivative uses the wrong denominator in rows 3-5",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "applications/Liu/M_Liu.m",
+      "line_start": 36,
+      "line_end": 40,
+      "quote": "out.mx = [- x' * (1 + x(1)^2 + x(2)^2 + x(3)^2 + x(4)^2 + x(5)^2)^(-3/2); ...\n          - [x(1), x(2), 0, 0, 0] * (1 + x(1)^2 + x(2)^2)^(-3/2); ...\n          - [x(1), 0, x(3), 0, 0] * (1 + x(1)^2 + x(2)^2)^(-3/2); ...\n          - [x(1), 0, 0, x(4), 0] * (1 + x(1)^2 + x(2)^2)^(-3/2); ...\n          - [x(1), 0, 0, 0, x(5)] * (1 + x(1)^2 + x(2)^2)^(-3/2)];\n",
+      "claim": "out.mx is meant to be the Jacobian d(m_i)/d(x_j) of the weighting vector out.m defined two lines above (out.m(3)=(1+x1^2+x3^2)^-1/2, out.m(4)=(1+x1^2+x4^2)^-1/2, out.m(5)=(1+x1^2+x5^2)^-1/2). Rows 3,4,5 of out.mx instead all use the denominator (1+x1^2+x2^2)^-3/2, i.e. the x2 term where x3/x4/x5 are required. KSD_Bayes.m (scalar branch, via divx_M) consumes diag(out.mx), so entries mx(3,3), mx(4,4), mx(5,5) are wrong.",
+      "concern": "The divergence term of \u03bdn (out.vn) for the robust Liu posterior is computed from a preconditioner derivative that is inconsistent with the preconditioner itself, so the robust generalised-posterior mean shown in Figure 4 (right column) is numerically incorrect.",
+      "resolution": "Replace (1+x1^2+x2^2)^(-3/2) in rows 3-5 with (1+x1^2+x3^2), (1+x1^2+x4^2), (1+x1^2+x5^2) respectively. See _audit_code/check_M_Liu_gradient.py: diag(coded mx) disagrees with the finite-difference Jacobian of out.m by up to ~1.9 on rows 3-5 while rows 1-2 and the corrected version agree to ~1e-10.",
+      "cross_refs": [
+        "liu-baseline-cubature-wrong-scaling"
+      ],
+      "check_script": "_audit_code/check_M_Liu_gradient.py",
+      "paper_ref": "\u00a76.2 robust weighting function M(x); Figure 4 right column",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "liu-precond-derivative-wrong-denominator",
+      "audit": "",
+      "audit_md_line": 73,
+      "verdict": "keep",
+      "reason": "M_Liu.m:36-40 quote matches verbatim; ran check_M_Liu_gradient.py, which confirms rows 3-5 of out.mx use the (1+x1^2+x2^2)^(-3/2) denominator instead of the matching (1+x1^2+x_i^2) term, with max |diag(coded)-FD| = 1.934 vs ~9e-11 for the corrected version, matching the finding's claimed magnitude; KSD_Bayes.m:87 confirms divx_M consumes diag(M(x).mx).",
+      "changed": "nothing"
+    },
+    {
+      "id": "/liu-baseline-cubature-wrong-scaling",
+      "category": "bug",
+      "topic": "Gauss-Hermite cubature (standard-Bayes baseline)",
+      "title": "Liu standard-Bayes normaliser mis-scales the Gauss-Hermite rule; C(0,0)=0.47, not 1",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "applications/Liu/reproduce_results_Liu.m",
+      "line_start": 30,
+      "line_end": 35,
+      "quote": "nodes_2D = [repelem(nodes_1D,order,1), repmat(nodes_1D,order,1)]; % tensor product\nnodes_2D = nodes_2D * Sig_45_chol; % correlation structure\nweights_2D = (2*pi)^(-1) * repelem(weights_1D,order,1) .* repmat(weights_1D,order,1); % normalised for integrals wrt N(0,I_2)\nr_mod = @(t1,t2,W) exp(t1*tanh(W(:,1)) + t2*tanh(W(:,2)));\nlog_r = @(t1,t2,X) t1*tanh(X(4,:)) + t2*tanh(X(5,:));\nC = @(t1,t2) (det(Sig_45_chol))^(-1) * weights_2D' * r_mod(t1,t2,nodes_2D);\n",
+      "claim": "C(t1,t2) is meant to approximate the intractable normaliser C\u03b8 = E_{(x4,x5)~N(0,Sig_45)}[exp(t1*tanh(x4)+t2*tanh(x5))] (paper \u00a76.2 footnote 6). The Gauss-Hermite nodes (roots for the exp(-x^2) weight) are mapped by `nodes_2D * Sig_45_chol` WITHOUT the sqrt(2) scaling the Gaussian change-of-variables requires, the weight constant is (2*pi)^-1 instead of pi^-1, and an extra det(Sig_45_chol)^-1 factor is applied.",
+      "concern": "The cubature does not integrate to 1 for the constant function (a hard requirement for a probability-measure expectation): _audit_code/check_liu_cubature.py replicates the code exactly and gets C(0,0)=0.4655 versus the textbook GH rule and Monte-Carlo which both give 1.0000; the error is (t1,t2)-dependent (ratio drifts 0.47\u21920.37), so the -n*log C(t1,t2) term distorts the SHAPE of the standard-Bayes posterior shown in Figure 4 (left column), not merely its scale.",
+      "resolution": "Use x = sqrt(2)*L*z with weights pi^-1 * w_i * w_j and no det factor (or an equivalent correctly-normalised 2D Gaussian GH rule). Check that C(0,0)=1. See _audit_code/check_liu_cubature.py.",
+      "cross_refs": [
+        "liu-precond-derivative-wrong-denominator"
+      ],
+      "check_script": "_audit_code/check_liu_cubature.py",
+      "paper_ref": "\u00a76.2 footnote 6 (Gauss-Hermite cubature of order 10); Figure 4 left column",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "liu-baseline-cubature-wrong-scaling",
+      "audit": "",
+      "audit_md_line": 102,
+      "verdict": "keep",
+      "reason": "reproduce_results_Liu.m:30-35 quote matches verbatim; ran check_liu_cubature.py, which reproduces the code exactly and gets C_code(0,0)=0.465475 vs C_textbook(0,0)=C_MC(0,0)=1.000000, exactly matching the finding's cited 0.4655, and the code/textbook ratio drifts from 0.47 to 0.37 across the tested (t1,t2) as claimed.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/gauss-beta-missing-min-cap",
+      "category": "difference",
+      "topic": "beta / weight selection",
+      "title": "Gauss Figure-2 bottom row uses uncapped out.w, omitting the min(1,\u00b7) of Eq. (15)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "applications/Gauss/reproduce_results_Gauss.m",
+      "line_start": 117,
+      "line_end": 119,
+      "quote": "out = run_Gauss(X,scalar,robust);\nAn = A0 + out.w * out.An; % posterior precision\nvn = v0 + out.w * out.vn;\n",
+      "claim": "Eq. (15) and \u00a76 ('the default settings of Section 5 were used' for all experiments) prescribe \u03b2 = min(1, \u03b2n), where \u03b2n = out.w. The second loop of this script (displacement experiment, Figure 2 bottom row; lines 118 and 126 for the non-robust and robust posteriors) multiplies out.An/out.vn by the raw out.w, omitting the min(1,\u00b7) cap. The first loop (lines 37-38, 46-47) and every other reproduce_results_*.m apply min(1,out.w) \u2014 see _audit_code/check_beta_min_consistency.py, which finds these two sites are the only uncapped ones of ten.",
+      "concern": "The bottom-row panels of Figure 2 are computed with a different \u03b2 rule than the top-row panels and than the paper's stated default, so if \u03b2n>1 for that data they are over-shrunk relative to the method as described.",
+      "resolution": "Wrap out.w in min(1,\u00b7) in the second loop for consistency with Eq. (15) and the rest of the codebase; or confirm the cap does not bind for this data (\u03b2n<=1, in which case the panels are unaffected).",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_beta_min_consistency.py",
+      "paper_ref": "Eq. (15); \u00a76 opening; \u00a76.1 / Figure 2 bottom row",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "gauss-beta-missing-min-cap",
+      "audit": "",
+      "audit_md_line": 134,
+      "verdict": "keep",
+      "reason": "reproduce_results_Gauss.m:117-119 quote matches verbatim; ran check_beta_min_consistency.py, which confirms these are the only 2 of 10 A0+weight*out.An sites across all four reproduce_results_*.m files that omit min(1,out.w); paper_text.txt confirms Eq.(15) beta=min(1,betan) and the exact phrase 'For all experiments, the default settings of Section 5 were used.'",
+      "changed": "nothing"
+    }
+  ]
+}

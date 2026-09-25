@@ -1,0 +1,15 @@
+requirements.txt lists: ['accelerate', 'datasets', 'matplotlib']
+
+MISSING | import PIL                -> pip 'pillow'
+LISTED  | import datasets           -> pip 'datasets'
+MISSING | import dotenv             -> pip 'python-dotenv'
+MISSING | import huggingface_hub    -> pip 'huggingface-hub'
+MISSING | import numpy              -> pip 'numpy'
+MISSING | import openai             -> pip 'openai'
+MISSING | import pandas             -> pip 'pandas'
+MISSING | import torch              -> pip 'torch'
+MISSING | import tqdm               -> pip 'tqdm'
+MISSING | import transformers       -> pip 'transformers'
+MISSING | import vllm               -> pip 'vllm'
+
+MISSING third-party deps (imported but not in requirements.txt): ['PIL', 'dotenv', 'huggingface_hub', 'numpy', 'openai', 'pandas', 'torch', 'tqdm', 'transformers', 'vllm']

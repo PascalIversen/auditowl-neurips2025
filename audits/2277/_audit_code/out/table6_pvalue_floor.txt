@@ -1,0 +1,8 @@
+Mann-Whitney U, n=m=10: C(20,10)=184756
+  min one-sided p = 5.413e-06
+  min two-sided p = 1.083e-05
+  rounds to 0.0 at 1 decimal? True
+  EXACTLY zero achievable? False
+
+S1 Welch t-test estimate: t=152.23, df=17.7 (huge separation)
+  -> p astronomically small; printing as 0.0 is plausible, NOT impossible.

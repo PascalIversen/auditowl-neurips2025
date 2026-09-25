@@ -1,0 +1,33 @@
+QLearning/config/alg/iql.yaml  vs  QLearning/config/alg/base_marl_iql.yaml
+    SEED: PSI=0  BASE=30
+    EPS_START: PSI=0.8  BASE=1.0
+    EPS_FINISH: PSI=0.1  BASE=0.05
+    MAX_GRAD_NORM: PSI=5  BASE=25
+    LR: PSI=0.0035  BASE=0.005
+
+QLearning/config/alg/vdn.yaml  vs  QLearning/config/alg/base_marl_vdn.yaml
+    SEED: PSI=0  BASE=30
+    EPS_FINISH: PSI=0.1  BASE=0.05
+    MAX_GRAD_NORM: PSI=10  BASE=25
+    LR: PSI=0.007  BASE=0.005
+
+QLearning/config/alg/qmix.yaml  vs  QLearning/config/alg/base_marl_qmix.yaml
+    SEED: PSI=0  BASE=30
+    EPS_START: PSI=0.6  BASE=1.0
+    EPS_FINISH: PSI=0.1  BASE=0.05
+    MAX_GRAD_NORM: PSI=5  BASE=25
+    LR: PSI=0.004  BASE=0.005
+
+QLearning/config/alg/pqn.yaml  vs  QLearning/config/alg/base_marl_pqn.yaml
+    EPS_START: PSI=0.03  BASE=0.01
+    EPS_FINISH: PSI=0.005  BASE=0.001
+    LR: PSI=0.0002  BASE=3e-4
+
+IPPO/config/alg/ippo.yaml  vs  IPPO/config/alg/base_marl_ippo.yaml
+    LR: PSI=0.0006  BASE=5e-4
+    ENT_COEF: PSI=0.02  BASE=0.01
+
+MAPPO/config/alg/mappo.yaml  vs  MAPPO/config/alg/base_marl_mappo.yaml
+    LR: PSI=0.0065  BASE=5.0e-4
+
+any_differs: True

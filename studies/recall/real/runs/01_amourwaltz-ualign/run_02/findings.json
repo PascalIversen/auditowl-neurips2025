@@ -1,0 +1,209 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-02T09:41:47.581645+00:00",
+  "findings": [
+    {
+      "id": "/stage1-uncertainty-reward-trainer-absent",
+      "category": "missing",
+      "topic": "expected code completeness / training pipeline",
+      "title": "No trainer for the uncertainty models (τ,µ) or reward model (θ) — Alg. 1 Stage-1 absent",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "code/AmourWaltz__UAlign/code/train_sft.py",
+      "line_start": 319,
+      "line_end": 322,
+      "quote": "if data_args.method == \"sft\":\n    data_path = os.path.join(data_args.data_dir.format(\"comb\"), f\"train_sft.json\")\nelif data_args.method == \"rtuning\":\n    data_path = os.path.join(data_args.data_dir.format(\"comb\"), f\"train_{model_args.model_name}_rtuning.json\")\n",
+      "claim": "`uncertainty.py` writes confidence/entropy/reward datasets (`*_confidence`, `*_entropy`, `*_reward` dirs), but no script trains on them: the only SFT trainer hardcodes `train_sft.json` / rtuning data, `utils.methods=['prompt','sft','rtuning']` has no reward/uncertainty option, and `train_ppo.py` loads the reward model from a pre-existing `reward_model_path` (default 'gpt2'). `_audit_code/check_missing_artifacts.py` finds no consumer of those files and no sequence-classification/value-head/reward trainer.",
+      "concern": "UALIGN SFT Stage-1 (train τ, µ to predict c,e and train the binary reward model θ, which produces Table 2 and the reward signal for every UALIGN/RL-PPO/RLKF row of Table 1) has no runnable entrypoint in the repo, so those results cannot be reproduced from this code.",
+      "resolution": "Authors: please add the scripts that train the confidence/entropy uncertainty models and the reward model on the datasets `uncertainty.py` produces, or point to where the reward model checkpoint comes from.",
+      "cross_refs": [
+        "auroc-computation-absent"
+      ],
+      "check_script": "_audit_code/check_missing_artifacts.py",
+      "paper_ref": "Algorithm 1 (Stage 1); §2.2.1; Table 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "stage1-uncertainty-reward-trainer-absent",
+      "audit": "",
+      "audit_md_line": 52
+    },
+    {
+      "id": "/auroc-computation-absent",
+      "category": "missing",
+      "topic": "result traceability / statistical integrity",
+      "title": "No AUROC computation in the repo for Fig. 5 / Figs. 9-11",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "on both Llama-3 (80.45) and Mistral (82.19).\n",
+      "claim": "Appendix D.3 says AUROC is 'implemented by sklearn toolkit', and §4.3/Fig. 5 report headline AUROC numbers (confidence 80.45 / 82.19). A grep of code/ for `auroc|roc_auc|roc_curve|sklearn|auc` returns 0 hits (`_audit_code/out/missing_artifacts.txt`); no script computes any AUROC.",
+      "concern": "The entire 'Reliability of Uncertainty Estimations' analysis (Fig. 5 and Figs. 9-11, one of the paper's three contributions) has no code that produces the reported values.",
+      "resolution": "Authors: please add the AUROC computation script (predicted confidence/entropy vs. correctness labels) used for Fig. 5 and Appendix I.",
+      "cross_refs": [
+        "confidence-max-not-mean"
+      ],
+      "check_script": "_audit_code/check_missing_artifacts.py",
+      "paper_ref": "§4.3, Fig. 5; Appendix D.3, I",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "auroc-computation-absent",
+      "audit": "",
+      "audit_md_line": 80,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/inference-uncertainty-conditioning-absent",
+      "category": "missing",
+      "topic": "evaluation consistency (paper vs code)",
+      "title": "Inference-time conditioning on predicted confidence/entropy is not implemented",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "code/AmourWaltz__UAlign/code/infer.py",
+      "line_start": 255,
+      "line_end": 260,
+      "quote": "for idx, batch in enumerate(dataset):\n    if \"icl\" in infer_args.icl_type:\n        few_shot_examplar = random.choice(few_shot_examplar_list)\n        input_tokens = prompt_input.format(instruction=instruction, examples=few_shot_examplar, question=batch[\"question\"])\n    else:\n        input_tokens = prompt_input.format(instruction=instruction, question=batch[\"question\"])\n",
+      "claim": "The paper (§2.2.2, Alg. 1) states that at inference the policy is fed the question plus the predicted confidence c and entropy e; `infer.py` builds the prompt from `batch['question']` only and never loads/invokes the uncertainty models τ,µ. The only code that appends `### Conf ###`/`### Entro ###` (`uncertainty.py` align_dataset) derives c,e from sampled correctness against the gold answer, which is unavailable at genuine inference.",
+      "concern": "The UALIGN policy is trained with c,e appended (PPO align data) but evaluated on the bare question, a train/inference mismatch; alternatively, if c,e for the test set were built via `align_dataset` they would leak the test gold labels.",
+      "resolution": "Authors: please provide the inference path that predicts c,e from τ,µ and appends them before decoding the aligned policy, and confirm the test-set c,e are model-predicted (not gold-derived).",
+      "cross_refs": [
+        "confidence-max-not-mean"
+      ],
+      "paper_ref": "§2.2.2; Algorithm 1 (Stage 2)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "inference-uncertainty-conditioning-absent",
+      "audit": "",
+      "audit_md_line": 103
+    },
+    {
+      "id": "/ppo-config-duplicate-kwarg",
+      "category": "bug",
+      "topic": "PPO training / reproducibility",
+      "title": "train_ppo.py does not compile — gradient_accumulation_steps passed twice to PPOConfig",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/AmourWaltz__UAlign/code/train_ppo.py",
+      "line_start": 248,
+      "line_end": 260,
+      "quote": "config = PPOConfig(\n    learning_rate=training_args.learning_rate,\n    batch_size=training_args.batch_size,\n    mini_batch_size=training_args.mini_batch_size,\n    gradient_accumulation_steps=training_args.gradient_accumulation_steps,\n    output_dir=training_args.output_dir,\n    gradient_accumulation_steps=training_args.gradient_accumulation_steps,\n    optimize_cuda_cache=True,\n    early_stopping=training_args.early_stopping,\n    target_kl=training_args.target_kl,\n    ppo_epochs=training_args.ppo_epochs,\n    seed=training_args.seed,\n)\n",
+      "claim": "`gradient_accumulation_steps` is supplied twice (lines 252 and 254) in the same call. `python -m py_compile code/train_ppo.py` raises `SyntaxError: keyword argument repeated: gradient_accumulation_steps` (see `_audit_code/out/ppo_syntax.txt`), so the module cannot be imported or run at all.",
+      "concern": "PPO is the core UALIGN alignment step that produces every UALIGN row of Table 1 (and the RL-PPO/RLKF baselines); the script that runs it cannot execute, so the headline results are not reproducible from this repo. The same loop also references an undefined `training_args.output_max_length` (line 296) and calls `reward_model(texts)` on raw strings (line 316), which would fail after the SyntaxError is fixed.",
+      "resolution": "Remove the duplicate `gradient_accumulation_steps`, define `output_max_length`, and wrap the reward model in a tokenizer/pipeline; then confirm the PPO loop runs end-to-end.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_ppo_syntax.py",
+      "paper_ref": "§2.2.2; Table 1 (UALIGN rows)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ppo-config-duplicate-kwarg",
+      "audit": "",
+      "audit_md_line": 134
+    },
+    {
+      "id": "/semantic-entropy-list-replication-degenerate",
+      "category": "bug",
+      "topic": "uncertainty estimation / semantic entropy",
+      "title": "Semantic entropy is identically 0 for every known question (Python list-replication bug)",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/AmourWaltz__UAlign/code/uncertainty.py",
+      "line_start": 50,
+      "line_end": 54,
+      "quote": "if incorrect_ans_list == []:\n    probabilities = [conf_score]\nelse:\n    probabilities = list(calculate_probabilities(incorrect_ans_list).values())*(1-conf_score)\n    probabilities = probabilities + [conf_score]\n",
+      "claim": "`conf_score = calculate_confidence(greedy_scores) = max(greedy_scores)` is an integer 0/1 (see confidence-max-not-mean). `list(...)*(1-conf_score)` is therefore Python list *replication*, not scalar weighting: with conf_score=1 (any sample correct) the incorrect-cluster list is multiplied by 0 → `[]`, so `probabilities=[1]` and entropy=0; with conf_score=0 the list is multiplied by 1 → kept UNSCALED. `_audit_code/check_conf_entropy.py` confirms the repo entropy is exactly 0 for all four scenarios with ≥1 correct sample while a faithful Eq. 2-3 entropy gives 2.0/1.5/1.0; it also shows `list*(1-0.25)` raises TypeError, i.e. the code only runs because conf_score is an int.",
+      "concern": "The 'semantic entropy' feature — one of the two knowledge-boundary signals the paper is built on, and the mechanism illustrated in Fig. 4 for eliciting 'weakly known' facts — carries no information for any known question, contradicting the `raise ValueError('Probabilities must sum to 1')` guard's evident intent to build a conf/(1-conf)-weighted distribution over answer clusters.",
+      "resolution": "Weight each cluster probability by a scalar float (`p*(1-conf)`) with conf as the Eq. 1 mean, include the correct-answer cluster, and verify entropy is nonzero for partially-correct questions.",
+      "cross_refs": [
+        "confidence-max-not-mean",
+        "semantic-entropy-exact-string-clustering"
+      ],
+      "check_script": "_audit_code/check_conf_entropy.py",
+      "paper_ref": "Eq. (2)-(3), §2.1.2; Fig. 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "semantic-entropy-list-replication-degenerate",
+      "audit": "",
+      "audit_md_line": 171
+    },
+    {
+      "id": "/confidence-max-not-mean",
+      "category": "difference",
+      "topic": "uncertainty estimation / accuracy-based confidence",
+      "title": "Confidence computed as max(scores) (binary known-flag), not the Eq. 1 mean accuracy",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/AmourWaltz__UAlign/code/uncertainty.py",
+      "line_start": 66,
+      "line_end": 68,
+      "quote": "def calculate_confidence(probabilities):\n    \"\"\"Calculate the confidence of a probability distribution.\"\"\"\n    return max(probabilities)\n",
+      "claim": "Eq. 1 defines the accuracy-based confidence as `c_i = (1/K) Σ_k 1[ŷ=y_k]` (the mean of the K correctness scores). The code calls `calculate_confidence(data['scores']['greedy_scores'])` (line 98) where `greedy_scores` is the list of K per-prompt 0/1 correctness values (built in `eval.py:compute_scores` / `sample.py:297`), and returns `max(...)` = 1 iff any sample is correct, else 0. `_audit_code/check_conf_entropy.py` shows repo confidence is 1 for a 1/4-correct question where Eq. 1 gives 0.25. Note `max(greedy_scores)==1` is exactly the paper's 'known' label (knowns are defined by `greedy_scores_avg>0`).",
+      "concern": "The graded confidence the paper relies on (Fig. 4's '40% certainty', Fig. 5's AUROC-of-confidence, the 'Conf.' feature of Table 2) is collapsed to a binary known/unknown indicator; the mean value it should be (`greedy_scores_avg`) is already computed one field away, and because the binary confidence equals the known/unknown label, Table 2's large 'Conf.' benefit partly reflects feeding that label to the reward model.",
+      "resolution": "Use `sum(greedy_scores)/len(greedy_scores)` (i.e. `greedy_scores_avg`) as the confidence per Eq. 1, and re-derive Table 2 / Fig. 5.",
+      "cross_refs": [
+        "semantic-entropy-list-replication-degenerate",
+        "auroc-computation-absent"
+      ],
+      "check_script": "_audit_code/check_conf_entropy.py",
+      "paper_ref": "Eq. (1), §2.1.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "confidence-max-not-mean",
+      "audit": "",
+      "audit_md_line": 202
+    },
+    {
+      "id": "/semantic-entropy-exact-string-clustering",
+      "category": "difference",
+      "topic": "uncertainty estimation / semantic entropy",
+      "title": "Entropy clusters answers by exact string match, not semantic equivalence",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/AmourWaltz__UAlign/code/uncertainty.py",
+      "line_start": 31,
+      "line_end": 33,
+      "quote": "# Count the number of occurrences of each answer\nnoun_counts = Counter(incorrect_ans_list)\ntotal_nouns = sum(noun_counts.values())\n",
+      "claim": "The paper's semantic entropy (Eq. 2-3; 'calculated by clustering semantically equivalent responses', citing Kuhn et al. 2023) requires grouping responses by meaning (e.g. bidirectional NLI entailment). The code clusters by exact normalized string via `Counter(incorrect_ans_list)`; there is no semantic/NLI clustering anywhere in the repo.",
+      "concern": "'Semantic' entropy is implemented as lexical entropy, so semantically-equivalent surface variants ('U.S.' vs 'United States') are counted as distinct clusters, over-stating dispersion; the feature does not measure what the paper describes.",
+      "resolution": "Cluster responses with a semantic-equivalence model (as in Kuhn et al. 2023) before computing Eq. 3, or restate the method as lexical entropy.",
+      "cross_refs": [
+        "semantic-entropy-list-replication-degenerate"
+      ],
+      "paper_ref": "Eq. (2)-(3), §2.1.2 ('clustering semantically equivalent responses')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "semantic-entropy-exact-string-clustering",
+      "audit": "",
+      "audit_md_line": 229
+    }
+  ]
+}

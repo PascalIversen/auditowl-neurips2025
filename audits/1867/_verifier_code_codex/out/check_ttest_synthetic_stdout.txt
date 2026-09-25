@@ -1,0 +1,6 @@
+surface_DPO_vs_CrossQ: t=-1.8138, p=8.9117e-02  (computed on np.random.normal draws)
+grid_DPO_vs_STRPO: t=-9.9464, p=6.1920e-08  (computed on np.random.normal draws)
+molecule_DPO_vs_DDPG: t=-948.9124, p=8.0057e-24  (computed on np.random.normal draws)
+
+Wrote /home/author/Projects/neurips_audit/audits/1867_A_Differential_and_Pointwise_Control_Approach_to_Reinforceme/_verifier_code_codex/out/ttest_synthetic.csv
+NOTE: surface p=0.0891 is NOT significant (>0.05); this matches the paper's 'comparable performance' caveat, but ALL three p-values are derived from synthetic Gaussian samples, not the experimental seed-level means.

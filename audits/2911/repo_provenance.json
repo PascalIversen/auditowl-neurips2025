@@ -1,0 +1,17 @@
+{
+  "paper_id": "2911_HyPlaneHead_Rethinking_Tri_plane_like_Representations_in_Ful",
+  "title": "HyPlaneHead: Rethinking Tri-plane-like Representations in Full-Head Image Synthesis",
+  "repos": [
+    {
+      "name": "aigc3d__HyPlaneHead",
+      "role": "core",
+      "evidence": "README title, abstract, and author list match the paper verbatim; arXiv badge links to 2509.16748 (this paper's arXiv ID); repo owner 'aigc3d' is the Tongyi Lab/Alibaba 3D team (Qiu, Zuo, Dong are co-authors); implements the hy-plane representation via 'TriPlane_SingSph' render modes and 'TriPlaneSingSphGenerator_flatten' in training/triplane.py and training/volumetric_rendering/renderer.py; near-equal-area warping (Eq. 1-3) implemented in renderer.py; pretrained checkpoint URL points to NeurIPS 2025 path. Code_links.txt also flags it as [author-org: Tongyi Lab/Alibaba 3D team]."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo 'aigc3d__HyPlaneHead' is unambiguously this paper's own implementation: the README's title, abstract, author list, and arXiv ID (2509.16748) all match exactly, the repo owner (aigc3d = Tongyi Lab, the home org of co-authors Qiu/Zuo/Dong) aligns with the paper's author list, and the core method artefacts (TriPlaneSingSphGenerator_flatten, sample_from_triplane_singsph, near_equal_area_warping, lambert LAEA + elliptical-grid mapping) directly implement the paper's hy-plane contribution. The audit's findings (no-training-code, no-metric-driver, missing-area-bias-and-2plus2, run-model-undefined-out, etc.) are all legitimately written against this core repo and correctly characterize its incompleteness — they are valid reproducibility findings, not attribution errors.",
+  "audit_impact": "None. The repo assignment is correct. All findings were written against the genuine author repo and accurately describe its inference-only, incomplete release. No findings need to be retracted or reassigned.",
+  "recommended_action": "No provenance correction needed. Audit findings stand as-is. The paper should remain classified as source-present (inference-only) with the documented high-severity missing-code findings (no training code, no metric driver, missing area-bias/2+2 variants)."
+}

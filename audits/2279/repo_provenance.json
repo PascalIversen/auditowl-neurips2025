@@ -1,0 +1,17 @@
+{
+  "paper_id": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti",
+  "title": "Controlling the Flow: Stability and Convergence for Stochastic Gradient Descent with Decaying Regularization",
+  "repos": [
+    {
+      "name": "openreview-supplementary__Code_Submission",
+      "role": "core",
+      "evidence": "NeurIPS supplementary ZIP for this paper. readme.txt: 'This folder contains the numerical example implemented for our paper \"Controlling the Flow: Stability and Convergence for Stochastic Gradient Descent with Decaying Regularization\".' Three subdirs (Radon, Toy_example, ODE_example) map 1:1 to the paper's image-reconstruction and ODE-inverse-problem experiments. main_radon.m implements the paper's reg-SGD core update with decaying Tikhonov regularization (lambdak=0.01/k^p; x_regSGD = x_regSGD - step_sizek*(grad+noise) - step_sizek*lambdak*x_regSGD), labeled 'reg-SGD (ours)', matching Algorithm 1 and Theorems 2.3/2.4."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned artifact is the paper's own NeurIPS supplementary code, not a baseline/dependency/different paper. The readme verbatim names this exact paper title and calls it 'our paper'; the directory structure (Radon = Section A.1 image reconstruction, Toy_example = A.2, ODE_example = A.3) and the MATLAB sources implement the paper's named method reg-SGD ('reg-SGD (ours)') with the decaying-regularization update of Algorithm 1, plus the SGD baseline it is compared against. This is a theory paper whose code only produces the illustrative convergence figures; the code IS the authors' own and source-present is justified.",
+  "audit_impact": "No correction needed. The audit correctly identified this as a theory paper with author-supplied MATLAB illustration code. All eight findings are parameter-level 'difference' findings (e.g., ode-K K=63 vs 64, ode-lambda-const 0.002 vs 0.001, toy-step-const prefactor 1 vs 0.1, iteration-count-defaults) plus one low-severity 'missing' finding (toy-alpha1-script-missing: no script for the alpha1-sweep Figs 10-11) written AGAINST the author's own core code. None asserts 'no code exists', none is misattributed to a non-core repo, and none is conclusion-changing (the contributions are appendix-proved theorems). Findings stand as written.",
+  "recommended_action": "No action. Verdict 'correct' confirmed: the cloned supplement is this paper's own core implementation; existing low-severity parameter-mismatch findings are valid and correctly target the author code."
+}

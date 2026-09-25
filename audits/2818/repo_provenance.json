@@ -1,0 +1,17 @@
+{
+  "paper_id": "2818_Scaling_Up_Parameter_Generation_A_Recurrent_Diffusion_Approa",
+  "title": "Scaling Up Parameter Generation: A Recurrent Diffusion Approach",
+  "repos": [
+    {
+      "name": "NUS-HPC-AI-Lab__Recurrent-Parameter-Generation",
+      "role": "core",
+      "evidence": "README title exactly matches the paper ('Scaling Up Parameter Generation: A Recurrent Diffusion Approach'); README citation lists all six paper authors (Wang, Tang, Zhao, Schürholt, Wang, You); README arXiv link is https://arxiv.org/pdf/2501.11587; paper text line 44 states 'Code: https://github.com/NUS-HPC-AI-Lab/Recurrent-Parameter-Generation' — this is the official author-provided URL. Repo owner 'NUS-HPC-AI-Lab' matches first author's lab. model/ contains diffusion.py, mamba.py, denoiser.py, lstm.py, transformer.py (RPG core); dataset/ subdirs match all paper architectures (imagenet_vitbase, imagenet_convnextlarge, downtask_dora_r4/r16/r64, etc.); workspace/ contains train, ablation, condition, and evaluate drivers covering every table in the paper."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "A single repo was cloned: NUS-HPC-AI-Lab/Recurrent-Parameter-Generation. The paper itself (line 44) provides this exact URL as the official code link. The README reproduces the paper abstract verbatim, cites arXiv:2501.11587, names all six paper authors in the BibTeX, and is hosted under the NUS-HPC-AI-Lab GitHub org — the first author's lab affiliation. The directory structure (model/mamba.py, model/diffusion.py, dataset/imagenet_*/  dataset/downtask_dora_*/  workspace/ablation/ workspace/condition/) directly implements RPG (Recurrent Diffusion for Large-Scale Parameter Generation) as described in the paper. The audit correctly identified this as the author code and wrote all findings against the correct repository. No non-core repos were cloned. The audit's findings (missing Table 2 eval stubs, incomplete requirements, causal-mask bug, scheduler double-step, commented-out generalization driver, hardcoded paths, and two methodology findings) are all substantiated against the genuine author implementation.",
+  "audit_impact": "None. The audit correctly identified the author code and all findings are written against the real implementation. No findings are mislabeled or attributed to a wrong repo. The paper is correctly classified as source-present.",
+  "recommended_action": "No action required on provenance. The audit is clean: one core repo, all findings correctly targeted."
+}

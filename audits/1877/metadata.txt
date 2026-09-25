@@ -1,0 +1,5 @@
+paper_number: 1877
+title: Recognition through Reasoning: Reinforcing Image Geo-localization with Large Vision-Language Models
+authors: Ling Li, Yao Zhou, Yuxuan Liang, Fugee Tsung, Jiaheng Wei
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/59b6ba30f798d034a739297e3acbf5ae-Abstract-Conference.html
+category: empirical

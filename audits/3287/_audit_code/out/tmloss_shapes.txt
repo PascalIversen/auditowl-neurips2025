@@ -1,0 +1,8 @@
+vocab_size V = 5  (4 nucleotides + PAD)
+pred_bigram shape before slice = (2, 5, 5)  (B,V,V)
+pred_bigram shape after  slice = (2, 4, 4)   (B,4,4) -> matches GT (B,4,4)
+GT bigram shape = (2, 4, 4)
+KL finite = True, value = 3.1429
+CONCLUSION: shapes align; [:, :-1, :-1] drops the PAD row/col so pred matches the
+4x4 nucleotide-only ground truth. Pred row-norm uses clamp_min(1) (NOT clamp to a small
+epsilon): if a predicted row sums to < 1 it is left unnormalized, so pred rows need not sum to 1.

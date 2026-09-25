@@ -1,0 +1,71 @@
+{
+  "openai_generate_usage": {
+    "framework/evorefuse_wofitness.py": {
+      "openai.generate_calls": 2,
+      "imports_openai_module": false,
+      "defines_openai_symbol": false
+    },
+    "framework/evorefuse.py": {
+      "openai.generate_calls": 3,
+      "imports_openai_module": false,
+      "defines_openai_symbol": false
+    },
+    "framework/evorefuse_worecombine.py": {
+      "openai.generate_calls": 2,
+      "imports_openai_module": false,
+      "defines_openai_symbol": false
+    },
+    "mining/tactics_mining.py": {
+      "openai.generate_calls": 1,
+      "imports_openai_module": false,
+      "defines_openai_symbol": false
+    },
+    "metric/crr.py": {
+      "openai.generate_calls": 1,
+      "imports_openai_module": false,
+      "defines_openai_symbol": false
+    },
+    "generation/gpt4o.py": {
+      "openai.generate_calls": 1,
+      "imports_openai_module": false,
+      "defines_openai_symbol": false
+    },
+    "generation/deepseek.py": {
+      "openai.generate_calls": 1,
+      "imports_openai_module": false,
+      "defines_openai_symbol": false
+    }
+  },
+  "placeholder_path_hits": {
+    "analysis/step_required.py": 7,
+    "analysis/appendix.py": 6,
+    "framework/evorefuse_wofitness.py": 7,
+    "framework/evorefuse.py": 7,
+    "framework/evorefuse_worecombine.py": 7,
+    "mining/tactics_cluster.py": 4,
+    "mining/tactics_filter.py": 3,
+    "mining/tactics_mining.py": 3,
+    "visual/gradient.py": 2,
+    "visual/information_flow.py": 2,
+    "metric/prob.py": 3,
+    "metric/longppl.py": 4,
+    "metric/crr.py": 1,
+    "metric/lexical.py": 3,
+    "metric/prr.py": 1,
+    "generation/Mistral.py": 3,
+    "generation/finetune_model.py": 4,
+    "generation/gpt4o.py": 1,
+    "generation/Llama.py": 3,
+    "generation/Qwen.py": 3,
+    "generation/deepseek.py": 3,
+    "generation/other_llm.py": 2,
+    "generation/Gemma.py": 3
+  },
+  "dependency_files_present": {
+    "requirements.txt": false,
+    "setup.py": false,
+    "environment.yml": false,
+    "pyproject.toml": false,
+    "Pipfile": false
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "paper_id": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_",
+  "title": "Unleashing Diffusion Transformers for Visual Correspondence by Modulating Massive Activations",
+  "repos": [
+    {
+      "name": "ganchaofan0000__DiTF",
+      "role": "core",
+      "evidence": "Owner 'ganchaofan0000' = Chaofan Gan (paper first author, email ganchaofan@sjtu.edu.cn). Repo name 'DiTF' = paper's method name. README bibtex cites exact paper title and NeurIPS 2025 venue. Contains eval_spair.py implementing AdaLN modulation, channel-discard (--cd flag), eval_davis.py for temporal correspondence, and src/flux/ Flux DiT feature extractor. This is the public GitHub release of the same code submitted as the NeurIPS supplemental ZIP (cross-diffed: identical core files, GitHub adds README/eval_davis.py/environment.yml)."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo (ganchaofan0000__DiTF) is unambiguously this paper's own implementation. The repo owner matches the first author, the method name DiTF matches, and the README bibtex cites the exact paper title and NeurIPS 2025 venue. The audit was conducted primarily against the NeurIPS supplemental ZIP (which the auditor extracted to _audit_code/extracted/), not the GitHub clone — but both are this paper's code. The GitHub repo is a later public release that adds channel-discard (--cd flag) and DAVIS eval that were missing from the supplemental ZIP, partially addressing some audit findings. The audit's findings (channel-discard-missing, dinov2-pca-fusion-missing, nonflux-and-otherdataset-evals-missing, ablation-toggles-missing, chunk2-cfg-crash, ensemble-not-averaged) were written correctly against the supplemental submission code. DINOv2+PCA fusion and SD3/Pixart eval scripts remain absent in both versions.",
+  "audit_impact": "Audit findings are correctly attributed to this paper's own code. The channel-discard-missing finding is partially superseded by the GitHub public release (which adds --cd support), but remains valid for the supplemental submission the audit evaluated. The other high-severity findings (dinov2-pca-fusion-missing, nonflux-and-otherdataset-evals-missing, chunk2-cfg-crash) remain accurate for both code versions. No mis-attribution occurred.",
+  "recommended_action": "No re-audit needed for repo identity. Consider noting in the audit that the post-submission GitHub release (ganchaofan0000/DiTF) adds channel discard and DAVIS eval absent from the supplemental ZIP, which may affect the channel-discard-missing finding severity. The remaining high-severity findings stand."
+}

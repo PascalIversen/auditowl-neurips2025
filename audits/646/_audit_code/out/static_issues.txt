@@ -1,0 +1,21 @@
+delta_p assigned at lines: [915]
+delta_p used at lines:     [923, 952, 961]
+=> In train_mode=False, the assignment loop is skipped but the no_grad forward at line 952 still references delta_p -> NameError.
+
+line 873: # num_frames=13 if num_frames == 49 else 21,  (COMMENTED OUT)
+line 148: num_frames: int = 13,  (CustomWanRotaryPosEmbed default)
+line 855: indices = torch.linspace(0, gt_flow_feats.size(0) - 1, 13 if num_frames == 49 else 21).long()  (selects 21 flow frames for 81-frame run)
+line 1028: latents = torch.randn(1, 16, 13, 60, 104).to("cuda")  (hardcoded 13 latent frames)
+=> For --frames 81: 21 flow frames feed CustomWanRotaryPosEmbed whose num_frames stays 13 (arg commented out) -> reshape(13, W, H, -1) fails since h_list has 21*W rows. Also global latents has 13 frames not 21.
+
+Third-party imports and whether their dist is pinned in requirements.txt:
+  import PIL            -> dist pillow           [NOT LISTED]
+  import decord         -> dist decord           [listed]
+  import diffusers      -> dist diffusers        [listed]
+  import frechetdist    -> dist frechetdist      [listed]
+  import numpy          -> dist numpy            [NOT LISTED]
+  import torch          -> dist torch            [NOT LISTED]
+  import torchvision    -> dist torchvision      [NOT LISTED]
+  import tqdm           -> dist tqdm             [NOT LISTED]
+  import transformers   -> dist transformers     [listed]
+Note: co-tracker is loaded via torch.hub (ftd.py) -> needs internet/clone, not a pip dep.

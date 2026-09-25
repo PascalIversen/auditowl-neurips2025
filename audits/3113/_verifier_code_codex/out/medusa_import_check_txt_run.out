@@ -1,0 +1,3 @@
+_verifier_code_codex/medusa_import_check.txt: line 1: syntax error near unexpected token `('
+_verifier_code_codex/medusa_import_check.txt: line 1: `models/__init__.py -> [(4, 'medusa.model', ['MedusaModel']), (5, 'medusa.model_official', ['MedusaModel'])]'
+exit=2

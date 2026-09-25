@@ -1,0 +1,15 @@
+REPO: /home/author/Projects/neurips_audit/audits/3287_Context_Aware_Regularization_with_Markovian_Integration_for_/code/EESI__carmania
+git-tracked .py files (11): ['carmania/.ipynb_checkpoints/configuration_carmania-checkpoint.py', 'carmania/.ipynb_checkpoints/loss-checkpoint.py', 'carmania/.ipynb_checkpoints/model-checkpoint.py', 'carmania/.ipynb_checkpoints/modeling_carmania-checkpoint.py', 'carmania/.ipynb_checkpoints/tokenization_carmania-checkpoint.py', 'carmania/configuration_carmania.py', 'carmania/loss.py', 'carmania/model.py', 'carmania/modeling_carmania.py', 'carmania/tokenization_carmania.py', 'train.py']
+dependency-spec files: NONE
+
+Token search across all tracked .py (excluding notebooks, which are JSON):
+  [ABSENT] fine-tuning (classification head/Trainer): -
+  [ABSENT] cross-validation (5/10-fold): -
+  [ABSENT] FAISS retrieval / best-hit: -
+  [ABSENT] metrics (F1/MCC/accuracy/BLEU/perplexity): -
+  [ABSENT] plotting / figures: -
+  [ABSENT] second-order TM (Tables 10/11): -
+  [ABSENT] data download / accession: -
+  [ABSENT] baselines (HyenaDNA/Caduceus/etc.): -
+  [ABSENT] Hamming similarity / long-range retention (Fig 4): -
+  [ABSENT] beta sweep / sensitivity (Table 9): -

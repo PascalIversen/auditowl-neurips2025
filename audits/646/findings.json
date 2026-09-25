@@ -1,0 +1,206 @@
+{
+  "schema_version": "1",
+  "audit": "646_RoPECraft_Training_Free_Motion_Transfer_with_Trajectory_Guid",
+  "audit_md": "audits/646_RoPECraft_Training_Free_Motion_Transfer_with_Trajectory_Guid/audit.md",
+  "generated_at": "2026-05-30T06:24:06.473466+00:00",
+  "findings": [
+    {
+      "id": "646_RoPECraft_Training_Free_Motion_Transfer_with_Trajectory_Guid/no-eval-harness-baselines-metrics",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No code for Table 1/2/3 metrics, baselines, or aggregation",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 65,
+      "line_end": 75,
+      "quote": "## Evaluation\n\nThe paper details a new motion transfer metric called `Fréchet Trajectory Distance` (FTD). You can compute a sample FTD metric from a generated video provided in `assets/`.\n\n```bash\npython ftd.py \\\n    --reference_video assets/blackswan.mp4 \\\n    --target_video assets/output/A_child_in_a_duck_co.mp4 \\\n    --mask_path assets/mask/blackswan \\\n    --num_points 100\n```\n",
+      "claim": "The only evaluation script shipped is ftd.py, which computes FTD for a single (reference, generated) video pair; there is no code for CD-FVD, CLIP similarity, or Motion Fidelity, no implementation of any of the five baselines (GWTF, SMM, MOFT, DitFlow, ConMo), no DAVIS prompt set, and no harness that aggregates over a dataset to produce the mean±std numbers in Table 1.",
+      "concern": "Every quantitative claim in the paper (Tables 1-3, runtime, all §5.4 headline numbers) is untraceable to repo code, so the central claim that RoPECraft 'outperforms all recently published methods' quantitatively cannot be reproduced or checked from this repository.",
+      "resolution": "Authors: please release the evaluation harness (CD-FVD, CLIP, MF computation), the DAVIS prompt list, the adapted baseline implementations, and the script that aggregates per-video metrics into the Table 1/2/3 numbers.",
+      "cross_refs": [
+        "frames81-broken"
+      ],
+      "check_script": "_audit_code/check_static_issues.py",
+      "paper_ref": "Tables 1-3, §5.4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-eval-harness-baselines-metrics",
+      "audit": "646_RoPECraft_Training_Free_Motion_Transfer_with_Trajectory_Guid",
+      "audit_md_line": 50
+    },
+    {
+      "id": "646_RoPECraft_Training_Free_Motion_Transfer_with_Trajectory_Guid/cotracker-dep-unlisted",
+      "category": "missing",
+      "topic": "dependencies",
+      "title": "CoTracker3 (required for FTD/MF) is not a listed dependency and defaults to a hardcoded path",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "ftd.py",
+      "line_start": 17,
+      "line_end": 17,
+      "quote": "DEFAULT_COTRACKER_ROOT = Path(\"/home/ubuntu/co-tracker\")\n",
+      "claim": "ftd.py obtains trajectories from CoTracker3 via torch.hub, defaulting to a hardcoded local clone path /home/ubuntu/co-tracker, falling back to downloading facebookresearch/co-tracker at runtime; CoTracker is not mentioned in requirements.txt and frechetdist is unpinned.",
+      "concern": "FTD (and the paper's MF metric, which §5.1 says also uses Co-Tracker3) cannot be computed without an unlisted external repo fetched at runtime, and frechetdist has no version pin, so the metric environment is not reproducibly specified.",
+      "resolution": "Authors: add CoTracker3 install instructions / pin, pin frechetdist, and remove or document the hardcoded /home/ubuntu/co-tracker default.",
+      "cross_refs": [
+        "no-eval-harness-baselines-metrics"
+      ],
+      "check_script": "_audit_code/check_static_issues.py",
+      "paper_ref": "§5.1 'For MF and FTD, the trajectories are obtained using Co-Tracker3'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "cotracker-dep-unlisted",
+      "audit": "646_RoPECraft_Training_Free_Motion_Transfer_with_Trajectory_Guid",
+      "audit_md_line": 86
+    },
+    {
+      "id": "646_RoPECraft_Training_Free_Motion_Transfer_with_Trajectory_Guid/frames81-broken",
+      "category": "bug",
+      "topic": "frame-count handling",
+      "title": "--frames 81 crashes: RoPE num_frames stays 13 and global latents are hardcoded to 13",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "generate.py",
+      "line_start": 855,
+      "line_end": 873,
+      "quote": "indices = torch.linspace(0, gt_flow_feats.size(0) - 1, 13 if num_frames == 49 else 21).long()\ngt_flow_feats = gt_flow_feats[indices]\n\ncustom_rope = CustomWanRotaryPosEmbed(\n    attention_head_dim=transformer.config.attention_head_dim,\n    patch_size=transformer.config.patch_size,\n    max_seq_len=transformer.config.rope_max_seq_len,\n    u=gt_flow_feats[:, 0, :, :].to(\"cpu\"),\n    v=gt_flow_feats[:, 1, :, :].to(\"cpu\"),\n    divisor=divisor,\n    enable_smoothing=enable_smoothing,\n    theta=theta,\n    mu=mu,\n    std=std,\n    mu_time=mu_time,\n    std_time=std_time,\n    enable_lookup_norm=enable_lookup_norm,\n    lookup_norm_thr=lookup_norm_thr,\n    # num_frames=13 if num_frames == 49 else 21,\n)\n",
+      "claim": "For --frames 81 the code selects 21 flow frames (line 855) but the num_frames argument to CustomWanRotaryPosEmbed is commented out (line 873), so it keeps its default num_frames=13 (def at line 148) and reshapes the 21*W rotary rows into [13, W, H, -1] (line 324), which fails; additionally the global latents tensor is hardcoded to 13 latent frames (`torch.randn(1, 16, 13, 60, 104)`, line 1028).",
+      "concern": "The advertised --frames 81 mode (an explicit argparse choice) cannot run, so any 81-frame results in the paper are not reproducible from this code without edits.",
+      "resolution": "Authors: confirm whether 81-frame results were produced with this code; if so, restore the num_frames argument and parameterize the latents tensor by frame count.",
+      "cross_refs": [
+        "no-eval-harness-baselines-metrics"
+      ],
+      "check_script": "_audit_code/check_static_issues.py",
+      "paper_ref": "generate.py --frames choices=[49,81]",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "frames81-broken",
+      "audit": "646_RoPECraft_Training_Free_Motion_Transfer_with_Trajectory_Guid",
+      "audit_md_line": 114
+    },
+    {
+      "id": "646_RoPECraft_Training_Free_Motion_Transfer_with_Trajectory_Guid/delta-p-undefined-non-train",
+      "category": "bug",
+      "topic": "control flow",
+      "title": "delta_p referenced but never defined when train_mode=False",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "generate.py",
+      "line_start": 944,
+      "line_end": 953,
+      "quote": "# train mode or not, perform forward passes to get x_t-1\nwith torch.no_grad():\n    noise_pred = transformer(\n        hidden_states=latent_model_input,\n        timestep=timestep,\n        encoder_hidden_states=prompt_embeds,\n        attention_kwargs=attention_kwargs,\n        return_dict=False,\n        custom_rotary_emb=custom_image_rotary_emb + delta_p,\n    )[0]\n",
+      "claim": "delta_p is assigned only inside the `if train_mode:` optimization loop (line 915); the always-executed no_grad forward at line 952 references delta_p, so with train_mode=False (the inference-only branch that pre-allocates zero tunable_image_rotary_emb at line 899) delta_p is undefined and raises NameError.",
+      "concern": "The non-training (zero-delta) inference path is dead code that would crash; only train_mode=True (hardcoded in generate(), line 1067) works, so the paper's 'no optimization' ablation rows cannot be produced by toggling this flag.",
+      "resolution": "Authors: confirm train_mode=False was never used, or define delta_p in the else branch (e.g. delta_p = sum(tunable_image_rotary_emb[:i+1])).",
+      "cross_refs": [
+        "no-eval-harness-baselines-metrics"
+      ],
+      "check_script": "_audit_code/check_static_issues.py",
+      "paper_ref": "Table 2 ablation rows (Alg.1+opt etc.)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "delta-p-undefined-non-train",
+      "audit": "646_RoPECraft_Training_Free_Motion_Transfer_with_Trajectory_Guid",
+      "audit_md_line": 159
+    },
+    {
+      "id": "646_RoPECraft_Training_Free_Motion_Transfer_with_Trajectory_Guid/generate-hardcodes-divisor-smoothing",
+      "category": "difference",
+      "topic": "hyperparameters",
+      "title": "generate() hardcodes divisor=8 and smoothing params overriding documented defaults",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "question",
+      "file": "generate.py",
+      "line_start": 1069,
+      "line_end": 1079,
+      "quote": "train_mode=True,\ntuned_rope_dtype=torch.complex64,\ndivisor=8,  # 16\nenable_smoothing=True,  # True\nmu=21,\nstd=11,  ## 21,11\nmu_time=5,\nstd_time=3,  # 11,5\nenable_lookup_norm=True,\nlookup_norm_thr=1.0,\nn_replace_gt_mod=range(args.n_replace_gt_mod),\nnum_optim_steps=args.num_optim_steps,\ntune_wo_warped_uv=(1 - args.start_with_uv_warped),\n",
+      "claim": "The driver generate() overrides the documented tune_p defaults with divisor=8 (inline comment '# 16'), enable_lookup_norm=True (tune_p default False), and temporal-smoothing mu_time=5/std_time=3, while the inline comments record different prior values; these flow-warping hyperparameters are not stated in the main paper (deferred to an unavailable Supplementary).",
+      "concern": "The actual hyperparameters used to produce results differ from the in-code defaults and carry contradictory comments, and the main paper gives no values, so the exact configuration behind the reported numbers is not independently verifiable.",
+      "resolution": "Authors: state in the paper (or repo) the divisor, smoothing kernel sizes, lookup-norm setting, and theta actually used for the Table 1 results.",
+      "cross_refs": [],
+      "paper_ref": "§5.1 'The hyper parameters are detailed in Supplementary.'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "generate-hardcodes-divisor-smoothing",
+      "audit": "646_RoPECraft_Training_Free_Motion_Transfer_with_Trajectory_Guid",
+      "audit_md_line": 196
+    },
+    {
+      "id": "646_RoPECraft_Training_Free_Motion_Transfer_with_Trajectory_Guid/ftd-point-count-half",
+      "category": "difference",
+      "topic": "metric definition",
+      "title": "Default FTD samples n total points (n/2 fg + n/2 bg), not n foreground AND n background",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "question",
+      "file": "ftd.py",
+      "line_start": 146,
+      "line_end": 151,
+      "quote": "if use_fg_mask_only:\n    queries = sample_points_inside_mask(mask, n_points, device)\nelse:\n    fg_points = max(1, n_points // 2)\n    bg_points = max(0, n_points - fg_points)\n    queries = sample_points_from_mask(mask, fg_points, bg_points, device)\n",
+      "claim": "Fig. 8 / §5.2 describe sampling 'n foreground (red) and n background (green)' seeds (2n total), but the released ftd.py splits the single --num_points argument into n/2 foreground and n/2 background (n total) in the default (FG+BG) mode.",
+      "concern": "The released metric samples half as many points per region as the figure describes; with the default --num_points 100 this is 50 fg + 50 bg rather than 100+100, a definitional difference that could shift FTD values.",
+      "resolution": "Authors: clarify the intended point count per region and which setting produced the Table 1 FTD numbers.",
+      "cross_refs": [
+        "no-eval-harness-baselines-metrics"
+      ],
+      "paper_ref": "Fig. 8 caption / §5.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ftd-point-count-half",
+      "audit": "646_RoPECraft_Training_Free_Motion_Transfer_with_Trajectory_Guid",
+      "audit_md_line": 233
+    },
+    {
+      "id": "646_RoPECraft_Training_Free_Motion_Transfer_with_Trajectory_Guid/ablation-tables-inconsistent-with-main",
+      "category": "methodology",
+      "topic": "internal consistency / selective reporting",
+      "title": "Tables 2-3 absolute MF/CLIP/FTD for the full method differ sharply from Table 1",
+      "severity": "medium",
+      "confidence": "low",
+      "status": "question",
+      "file": "paper.pdf",
+      "quote": "Alg.2 + opt. + phase 0.7210 0.1656 0.2060\n",
+      "claim": "Table 2's full method (Alg.2+opt+phase) reports MF=0.7210, CLIP=0.1656, FTD=0.2060, and Table 3's best (10,5) row reports MF=0.5675, CLIP=0.1664, FTD=0.2633, whereas Table 1 'Ours' reports MF=0.5816, CLIP=0.2350, FTD(FG)=0.2644 for ostensibly the same final method; the CLIP values in particular differ by ~0.07 and MF/FTD differ substantially across tables.",
+      "concern": "The same final configuration yields materially different metric values across tables with no stated explanation (different subset, point count, or seed?), which undermines the reliability of the ablation comparisons and the main-table numbers; with no producing code (see no-eval-harness-baselines-metrics) the discrepancy cannot be resolved from the repo.",
+      "resolution": "Authors: explain why Tables 1, 2, and 3 report different absolute metrics for the full method (e.g., different evaluation subsets or point sampling), and report all tables on the same protocol.",
+      "cross_refs": [
+        "no-eval-harness-baselines-metrics"
+      ],
+      "paper_ref": "Tables 1, 2, 3",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": false,
+        "condition_satisfiable": true
+      },
+      "id_local": "ablation-tables-inconsistent-with-main",
+      "audit": "646_RoPECraft_Training_Free_Motion_Transfer_with_Trajectory_Guid",
+      "audit_md_line": 265,
+      "line_start": null,
+      "line_end": null
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+Per-row volume-ratio test p-values (paper claims all < 1e-3):
+cifar        delta= 1.0 stat=   158.8 p=0.0
+cifar        delta=10.0 stat=  82.327 p=0.0
+hatespeech   delta= 1.0 stat=   8.891 p=0.0
+hatespeech   delta=10.0 stat=    2.44 p=0.007  <-- NOT < 1e-3
+mnist        delta= 1.0 stat=  99.304 p=0.0
+mnist        delta=10.0 stat=  28.166 p=0.0
+winobias     delta= 1.0 stat=  30.575 p=0.0
+winobias     delta=10.0 stat=  14.678 p=0.0
+
+VIOLATIONS of 'all p < 1e-3': 1
+  ('hatespeech', '10.0', 0.007)
+
+Reported volume_ratio_test statistics range: 2.44 .. 158.8
+Paper text claims SiMExp explores '...bigger ... by an order of 10^1'.
+Statistics include values >= 100 (order 10^2): [158.8]

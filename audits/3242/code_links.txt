@@ -1,0 +1,6 @@
+# AUTHOR / PRIMARY repositories (cloned):
+
+# Other code links found (NOT cloned -- baseline/dependency):
+
+# Supplemental-Conference.zip (code unpacked into code/supplement):
+https://papers.nips.cc/paper_files/paper/2025/file/99fc8bc48b917c301a80cb74d91c0c06-Supplemental-Conference.zip	[supplement-code]

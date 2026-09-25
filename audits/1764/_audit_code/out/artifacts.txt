@@ -1,0 +1,18 @@
+[paths.yaml] exists=False  (code opens 'src/config/paths.yaml')
+[example_paths.yaml] exists=True
+[general_utils opens paths.yaml] count=2
+[README mentions paths.yaml] False
+[README mentions example_paths] False
+
+[../matches/ references in src]
+  src/plotting/plot_scripts/temperature.py:83: matches = np.load(f'../matches/temperature_scaling/connect_four_temp_num_{ind}/matrix.npy')
+  src/plotting/plot_scripts/elo_curves.py:18: dir_name = '../matches/oware_base/'
+  src/plotting/plot_scripts/elo_curves.py:139: matches = np.load('../matches/checkers/matrix.npy')
+[README mentions a 'matches' folder] False
+
+[data dirs in repo]
+  plot_data: exists=False
+  models: exists=False
+  ../plot_data: exists=False
+  ../matches: exists=False
+[shipped .pkl/.npz data files in repo] 0: []

@@ -1,0 +1,186 @@
+{
+  "paper": "1171",
+  "seeds": [
+    {
+      "sid": "S01",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "Remove the only MEL architecture behind the Stanford Dogs ablation",
+      "description": "Delete the repository's sole implementation of MYNET, including the meta-category vector, attention-mask branch, low/high feature transformations, dual prototype classifiers, and incremental prototype update. Table 2's M1-M5 component ablations and the reported MEL results then have no executable model implementation anywhere in the repository.",
+      "expected_reasoning": "The paper says Table 2 isolates fine-grained extraction, the meta-category vector, its incremental optimization, feature-space transformation, and relationship regularization. A careful reader maps all of those mechanisms to models/mel/Network.py: MYNET constructs the attention and transformation modules, encode executes them, and update_fc maintains both prototype branches. The patch deletes that only file; no alternative MYNET or equivalent MEL implementation exists. Since nothing runnable stands in for the reported variants, this is an absent experiment pipeline rather than a faulty substitute.",
+      "paper_anchor": "To demonstrate the effectiveness of each component in our method, we conduct ablation experiments in Table 2.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "delete_file",
+            "file": "Legenddddd__MEL/models/mel/Network.py"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S02",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "Remove the session-experiment trainer foundation",
+      "description": "Delete the only Trainer base class that initializes the dataset protocol and per-session result state consumed by FSCILTrainer. The released experiment entry point can no longer construct its trainer, and there is no second runner capable of producing the session curves in Figure 3 or the aggregate results in Table 1.",
+      "expected_reasoning": "The paper reports accuracy at every incremental session across four datasets. The executable entry point imports FSCILTrainer, which in turn imports Trainer from base.py and invokes its constructor to call set_up_datasets and allocate max_acc for every session. Searching the repository finds no other Trainer definition or experiment runner. Deleting base.py therefore leaves no code path that can instantiate and execute the reported session-wise experiment; the pipeline is absent, not replaced by a stub that does something else.",
+      "paper_anchor": "Figure 3: Classification accuracy for each session on four fine-grained benchmark datasets.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "delete_file",
+            "file": "Legenddddd__MEL/base.py"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S03",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "Use a plain twelve-layer convolutional backbone instead of ResNet-12",
+      "description": "Remove every residual addition from ResNet12Block while retaining the three learned convolutions, normalizations, nonlinearities, pooling, and regularization in each stage. The resulting backbone is a genuine trainable twelve-convolution feed-forward CNN with the expected feature shapes and gradients, but it is not the ResNet-12 architecture claimed in the paper.",
+      "expected_reasoning": "The paper explicitly states that the experiments employ ResNet-12. In the original block, the convolutional path is added to either the identity or learned projection before the final activation. The patched forward method still performs all three convolutions and backpropagates through a coherent deep CNN, but never uses self.downsample and never adds residual to out. Four such stages therefore implement a plain Conv-12-style network rather than a residual network, making this a fully functional alternative method rather than a no-op or missing backbone.",
+      "paper_anchor": "Following [18], we employ ResNet-12 as the backbone.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "Legenddddd__MEL/models/resnet12_encoder.py",
+            "old_string": "    def forward(self, x):\n        self.num_batches_tracked += 1\n\n        residual = x\n\n        out = self.conv1(x)\n        out = self.bn1(out)\n        out = self.relu(out)\n\n        out = self.conv2(out)\n        out = self.bn2(out)\n\n        out = self.relu(out)\n\n        out = self.conv3(out)\n        out = self.bn3(out)\n\n        if self.downsample is not None:\n            residual = self.downsample(x)\n        out += residual\n        out = self.relu(out)\n\n        if self.max_pool:\n            out = self.maxpool(out)\n\n        if self.drop_rate > 0:\n            if self.drop_block == True:\n                feat_size = out.size()[2]\n                keep_rate = max(1.0 - self.drop_rate / (20 * 2000) * (self.num_batches_tracked), 1.0 - self.drop_rate)\n                gamma = (1 - keep_rate) / self.block_size ** 2 * feat_size ** 2 / (feat_size - self.block_size + 1) ** 2\n                out = self.DropBlock(out, gamma=gamma)\n            else:\n                out = F.dropout(out, p=self.drop_rate, training=self.training, inplace=True)\n\n        return out",
+            "new_string": "    def forward(self, x):\n        self.num_batches_tracked += 1\n\n        out = self.conv1(x)\n        out = self.bn1(out)\n        out = self.relu(out)\n\n        out = self.conv2(out)\n        out = self.bn2(out)\n        out = self.relu(out)\n\n        out = self.conv3(out)\n        out = self.bn3(out)\n        out = self.relu(out)\n\n        if self.max_pool:\n            out = self.maxpool(out)\n\n        if self.drop_rate > 0:\n            if self.drop_block == True:\n                feat_size = out.size()[2]\n                keep_rate = max(1.0 - self.drop_rate / (20 * 2000) * (self.num_batches_tracked), 1.0 - self.drop_rate)\n                gamma = (1 - keep_rate) / self.block_size ** 2 * feat_size ** 2 / (feat_size - self.block_size + 1) ** 2\n                out = self.DropBlock(out, gamma=gamma)\n            else:\n                out = F.dropout(out, p=self.drop_rate, training=self.training, inplace=True)\n\n        return out"
+          },
+          {
+            "action": "replace",
+            "file": "Legenddddd__MEL/models/resnet12_encoder.py",
+            "old_string": "        downsample = None\n        if stride != 1 or self.inplanes != planes * block.expansion:\n            downsample = nn.Sequential(\n                nn.Conv2d(self.inplanes, planes * block.expansion,\n                          kernel_size=1, stride=1, bias=False),\n                nn.BatchNorm2d(planes * block.expansion),\n            )\n\n        layers = []\n        if n_block == 1:\n            layer = block(self.inplanes, planes, stride, downsample, drop_rate, drop_block, block_size,\n                          max_pool=max_pool)",
+            "new_string": "        layers = []\n        if n_block == 1:\n            layer = block(self.inplanes, planes, stride, None, drop_rate, drop_block, block_size,\n                          max_pool=max_pool)"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S04",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "Optimize MEL with AdamW instead of momentum SGD",
+      "description": "Replace the base-session momentum-SGD optimizer with AdamW while preserving the two parameter groups, learning-rate ratio, weight decay, schedulers, and ordinary gradient updates. Training remains fully functional, but adaptive first/second-moment updates with decoupled decay are materially different from the momentum SGD that the paper says produced the results.",
+      "expected_reasoning": "Appendix A.3 identifies SGD with momentum as the experimental optimizer. The patched get_optimizer instead constructs torch.optim.AdamW with non-default betas and the same trainable tensors; loss.backward and optimizer.step still propagate real gradients and update the complete model. AdamW rescales each parameter by adaptive moment estimates and applies decoupled weight decay, so it cannot be interpreted as the claimed SGD configuration. This is a coherent optimizer substitution, not a disabled update or trivial stand-in.",
+      "paper_anchor": "Our method is conducted with PyTorch library on a single NVIDIA 3090, and SGD with momentum is used for optimization.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "Legenddddd__MEL/utils.py",
+            "old_string": "        optimizer = torch.optim.SGD(\n            [{'params': params, 'lr': args.lr_base},\n             {'params': model.module.attention, 'lr': args.lr_base / 10}],\n            momentum=args.momentum, nesterov=True,\n            weight_decay=args.decay)\n\n\n        # prepare scheduler",
+            "new_string": "        optimizer = torch.optim.AdamW(\n            [{'params': params, 'lr': args.lr_base},\n             {'params': model.module.attention, 'lr': args.lr_base / 10}],\n            betas=(0.9, 0.99),\n            weight_decay=args.decay)\n\n\n        # prepare scheduler"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S05",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Train the Stanford Dogs base model on its test partition",
+      "description": "Route base-session training to test.csv while leaving base-session evaluation on that same file. All 80 base classes are trained, prototype-initialized, checkpoint-selected, and reported on the exact held-out images presented as test data; incremental sessions still use their normal training manifest.",
+      "expected_reasoning": "The paper defines distinct session training sets and a test set used during inference. In StanfordDog.__init__, base training arrives with train=True and base_sess=True, while base evaluation arrives with train=False. The patch resolves setname to test in both cases, so both dataset objects read data/StanfordDog/split/test.csv and select the same base classes. Tracing get_base_dataloader then shows the optimizer and prototype replacement consume the same images on which test accuracy and best checkpoints are computed, establishing complete base-session train-test leakage in the main reported pipeline.",
+      "paper_anchor": "During the inference stage in session t, the test set St test is generated from all sample distributions D0 \u222aD1 \u00b7 \u00b7 \u00b7 \u222aDt over all seen classes C0 \u222aC1 \u00b7 \u00b7 \u00b7 \u222aCt.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "Legenddddd__MEL/dataloader/StanfordDog/StanfordDog.py",
+            "old_string": "        if train:\n            setname = 'train'\n        else:\n            setname = 'test'\n        self.root = os.path.expanduser(root)",
+            "new_string": "        if train:\n            setname = 'test' if base_sess else 'train'\n        else:\n            setname = 'test'\n        self.root = os.path.expanduser(root)"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S06",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Use held-out Stanford Dogs images as every incremental support set",
+      "description": "Replace each session manifest's five training examples per novel class with five images read directly from test.csv, while preserving the correct class targets and 5-way 5-shot shape. Every incremental prototype and mutual-regularization update therefore consumes examples that remain in the cumulative test set used for the reported session accuracies.",
+      "expected_reasoning": "The paper says each Stanford Dogs incremental class contains five training samples and separately defines inference on the test set. The patched SelectfromTxt reads the requested class IDs from the normal session manifest but sources five filenames per class from data/StanfordDog/split/test.csv. It recovers the original numeric targets from the manifest's genuine training paths, so the pipeline still runs as 5-way 5-shot. The unmodified test dataset independently reads that same test.csv and includes those images, proving exact overlap between every novel-class support set and evaluation data.",
+      "paper_anchor": "Each incremental class contains 5 samples, forming a 5-way 5-shot FSCIL setting.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "Legenddddd__MEL/dataloader/StanfordDog/StanfordDog.py",
+            "old_string": "    def SelectfromTxt(self, data2label, index_path):\n        #select from txt file, and make cooresponding mampping.\n        index=[]\n        lines = [x.strip() for x in open(index_path, 'r').readlines()]\n        for line in lines:\n            index.append(line.split('/')[2])\n        data_tmp = []\n        targets_tmp = []\n        for i in index:\n            img_path = os.path.join(self.IMAGE_PATH, i)\n            data_tmp.append(img_path)\n            targets_tmp.append(data2label[img_path])\n\n        return data_tmp, targets_tmp",
+            "new_string": "    def SelectfromTxt(self, data2label, index_path):\n        index = [x.strip().split('/')[2] for x in open(index_path, 'r').readlines()]\n        target_by_class = {}\n        for name in index:\n            img_path = os.path.join(self.IMAGE_PATH, name)\n            target_by_class[name.split('_')[0]] = data2label[img_path]\n\n        csv_path = osp.join(self.SPLIT_PATH, 'test.csv')\n        lines = [x.strip() for x in open(csv_path, 'r').readlines()][1:]\n        data_tmp = []\n        targets_tmp = []\n        for class_name, target in target_by_class.items():\n            names = [line.split(';')[0] for line in lines\n                     if line.split(';')[0].split('_')[0] == class_name][:5]\n            for name in names:\n                data_tmp.append(os.path.join(self.IMAGE_PATH, name))\n                targets_tmp.append(target)\n\n        return data_tmp, targets_tmp"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S07",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "Silently leave the ResNet-12 feature extractor untrained",
+      "description": "Exclude every encoder parameter from the base-session optimizer while continuing to train the attention, mask, transformation, and classifier parameters. The program runs and losses backpropagate, but all reported features originate from a randomly initialized ResNet-12 whose weights never receive an update.",
+      "expected_reasoning": "The paper's MEL relies on base-session optimization to learn fine-grained and semantic feature extraction before incremental refinement. A reader can enumerate model.named_parameters and see that the patched filter drops every module.encoder parameter from both optimizer groups; no later optimizer is constructed for those weights, and incremental sessions put the model in eval mode. The remaining heads still update, so this is a runnable but deeply broken training mechanism rather than missing code. Recovering the claimed result requires restoring and retraining the central backbone, not fixing a typo.",
+      "paper_anchor": "During the base training phase, the overall loss function guided by sub-categories for feature extraction and feature space transformation is defined as,",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "Legenddddd__MEL/utils.py",
+            "old_string": "        params = [\n            param\n            for name, param in model.named_parameters()\n            if name not in excluded\n        ]",
+            "new_string": "        params = [\n            param\n            for name, param in model.named_parameters()\n            if name not in excluded and not name.startswith('module.encoder.')\n        ]"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S08",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "Detach both MEL feature branches below the final backbone stage",
+      "description": "Detach the penultimate feature map before it is returned to the low-level branch and passed into the final ResNet stage. Forward inference and upper-stage training continue, but neither low-level loss, high-level loss, nor mutual regularization can update layers 1-3, silently destroying the central joint feature-learning mechanism.",
+      "expected_reasoning": "The paper defines Flow as the penultimate backbone output and Fhigh as the final output, then says the base objective guides their feature extraction and transformation. In the patched encoder, x1 is detached immediately after layer3. The low branch receives that detached tensor directly, and the high branch reaches layer4 only through the same detached boundary; autograd therefore cannot propagate any loss into layers 1-3. The code still produces correctly shaped features, logits, losses, and optimizer steps, making this a substantive gradient-path bug rather than an absent implementation or obvious syntax failure.",
+      "paper_anchor": "In our experiments, Fhigh is the output of the final layer of the backbone, while Flow is the output of the penultimate layer.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "Legenddddd__MEL/models/resnet12_encoder.py",
+            "old_string": "    def forward(self, x):\n        x = self.layer1(x)\n        x = self.layer2(x)\n        x1 = self.layer3(x)\n        x = self.layer4(x1)\n        return x, x1",
+            "new_string": "    def forward(self, x):\n        x = self.layer1(x)\n        x = self.layer2(x)\n        x1 = self.layer3(x).detach()\n        x = self.layer4(x1)\n        return x, x1"
+          }
+        ]
+      },
+      "approved": false
+    }
+  ],
+  "tally": "MAJOR-MISS: 2; MAJOR-DIFF: 2; MAJOR-METH: 2; MAJOR-BUG: 2",
+  "_validation_errors": [],
+  "_repo": "Legenddddd__MEL"
+}

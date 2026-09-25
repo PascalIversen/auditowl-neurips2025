@@ -1,0 +1,233 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T10:21:54.475118+00:00",
+  "findings": [
+    {
+      "id": "/explanation-code-absent",
+      "category": "missing",
+      "topic": "explainability / result traceability",
+      "title": "No code for the explainability contribution (Table 3, Fig. 1, Fig. 4)",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "FMAD/FlowMatchingAD.py",
+      "line_start": 40,
+      "line_end": 53,
+      "quote": "def decision_function(self, X_test):\n  \"\"\"\n  Compute the anomaly scores of X_test\n  \"\"\"\n  X = torch.tensor(X_test, dtype=torch.float32)\n  X = X.to(next(self.model.parameters()).device)\n\n  with torch.no_grad():\n      t = torch.ones(X.shape[0], 1, device=X.device, dtype=torch.float32)  # Set t to 1\n      f_xt = self.model(X, t)  # Predict contraction vectors\n      anomaly_scores = torch.norm(f_xt + X, dim=1)  # compute the anomaly score, based on Equation 5.\n\n  anomaly_scores = anomaly_scores.cpu().numpy()\n  return anomaly_scores\n",
+      "claim": "The model only returns a per-sample scalar anomaly score (the L2 norm collapses the per-feature residual vector). No code anywhere in the repo computes the per-feature residual components, the ExactMatch/Jaccard explanation metrics of Table 3, the synthetic-GMM explanation experiment, the 2D contraction-vector visualisation (Fig. 1), or the MNIST 1-vs-7 feature attribution (Fig. 4).",
+      "concern": "Explainability is a headline contribution (it is in the paper title and has a dedicated quantitative table); none of its reported numbers or figures can be reproduced because the producing code is absent.",
+      "resolution": "Provide the script(s) that (a) build the synthetic GMM with known shifted dimensions, (b) compute per-feature residual attributions, and (c) compute ExactMatch and Jaccard against ground-truth dimensions, plus the Fig. 1 / Fig. 4 generators.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_inventory.py",
+      "paper_ref": "Table 3 (App. D.4.2); Fig. 1; Fig. 4; Eq. 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "explanation-code-absent",
+      "audit": "",
+      "audit_md_line": 65
+    },
+    {
+      "id": "/statistical-tests-absent",
+      "category": "missing",
+      "topic": "statistical integrity / result traceability",
+      "title": "Friedman + Nemenyi tests and critical-difference diagrams have no code",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "AggregateResults.py",
+      "line_start": 270,
+      "line_end": 273,
+      "quote": "order_roc = df_aggregated.groupby(\"Detector\")[\"Rank_ROC\"].mean().sort_values()\norder_roc.to_csv(os.path.join(f\"{base_metric_path}/{split}\", f\"Results_{split}_rank.csv\"))\norder_pr = df_aggregated.groupby(\"Detector\")[\"Rank_PR\"].mean().sort_values()\norder_pr.to_csv(os.path.join(f\"{base_metric_path}/{split}\", f\"Results_{split}_rank_PR.csv\"))\n",
+      "claim": "The aggregation script computes mean per-detector ranks and stops there; a repo-wide grep finds no Friedman, Nemenyi, critical-difference, posthoc, scikit_posthocs, or autorank usage in any of the 23 .py files.",
+      "concern": "The paper reports a Friedman omnibus test, a Nemenyi post-hoc test, and two critical-difference diagrams (Fig. 21, Fig. 22, App. D.5) as the basis for its significance claims, but no code computes them, so those statistical conclusions cannot be reproduced.",
+      "resolution": "Provide the script that runs the Friedman and Nemenyi tests on the per-dataset mean ranks and renders the CD diagrams.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_inventory.py",
+      "paper_ref": "Appendix D.5; Figures 21 and 22",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "statistical-tests-absent",
+      "audit": "",
+      "audit_md_line": 103
+    },
+    {
+      "id": "/csm-epoch-selection-absent",
+      "category": "missing",
+      "topic": "hyperparameter tuning",
+      "title": "Unsupervised CSM epoch-selection protocol absent; only final epochs hardcoded",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "FMAD/functions.py",
+      "line_start": 73,
+      "line_end": 78,
+      "quote": "def determine_FMAD_hyperparameters(dataset_name_raw):\n    dataset_name = dataset_name_raw.lower()\n    if \"census\" in dataset_name:\n        epoch_size = 5\n        batch_size = 1024\n        learning_rate = 0.005\n",
+      "claim": "The number of training epochs is returned by a per-dataset if/elif lookup of hardcoded constants; the values equal Table 5 (verified by _audit_code/check_hyperparam_coverage.py), but the CSM (Improved Contrast Score Margin) selection procedure that the paper says produced these values is nowhere in the repo (grep for 'csm'/'contrast score margin'/'select.*epoch' returns nothing).",
+      "concern": "The paper (App. B.6) claims epochs were chosen by a principled label-agnostic CSM criterion; with only the final hardcoded values present, a reviewer cannot verify that the selection was actually unsupervised rather than tuned on test performance.",
+      "resolution": "Provide the CSM-based epoch-search script (candidate range + the T(f) criterion over which data) so the selected epoch values can be regenerated.",
+      "cross_refs": [
+        "epoch-selection-test-dependence"
+      ],
+      "check_script": "_audit_code/check_hyperparam_coverage.py",
+      "paper_ref": "Appendix B.6 'Unsupervised Epoch Selection Strategy'; Table 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "csm-epoch-selection-absent",
+      "audit": "",
+      "audit_md_line": 131
+    },
+    {
+      "id": "/run-knn-wrong-filename-and-index",
+      "category": "bug",
+      "topic": "reproduction scripts",
+      "title": "run_knn.sh calls a non-existent file and the wrong model index",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "bash_files/run_knn.sh",
+      "line_start": 23,
+      "line_end": 29,
+      "quote": "for j in {50..50}; do # 1 models\n    core_id=$(( (i * 1 + j) % MAX_CORES ))\n\n    # Run the process\n    echo \"$core_id $dname $RANDOM_SEED\" >> ./logs/All_log.log\n    nohup taskset -c \"$core_id\" python Full_experiments.py -d \"$dname\" -i \"$j\" -r \"$RANDOM_SEED\" -t \"$TIME_LIMIT\" -m \"$MEMORY_LIMIT\" >> \"./logs/seed_${RANDOM_SEED}/run_${dname}_model_${j}.log\" 2>&1 &\ndone\n",
+      "claim": "run_knn.sh invokes `python Full_experiments.py` (file does not exist; the real driver is `FullExperiments.py`, verified by _audit_code/check_inventory.py) and uses model index 50, which is `INNE_semisup`, not KNN (KNN is index 16 and KNN_semisup is index 51).",
+      "concern": "The script as written cannot run (missing file) and, even if the filename were fixed, would evaluate INNE rather than KNN; the standalone KNN runner is effectively non-functional.",
+      "resolution": "Rename the called file to FullExperiments.py and set the model index to the intended KNN entry (16 for transductive KNN, or 51 for KNN_semisup).",
+      "cross_refs": [
+        "semisup-knn-index-omitted"
+      ],
+      "check_script": "_audit_code/check_model_indices.py",
+      "paper_ref": "README 'Reproduction Roadmap'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "run-knn-wrong-filename-and-index",
+      "audit": "",
+      "audit_md_line": 163
+    },
+    {
+      "id": "/semisup-knn-index-omitted",
+      "category": "bug",
+      "topic": "reproduction scripts",
+      "title": "Inductive-mode runner skips KNN_semisup (index 51)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "bash_files/run_semisupervise.sh",
+      "line_start": 23,
+      "line_end": 23,
+      "quote": "for j in {45..50}; do # 7 models\n",
+      "claim": "The loop comment says '7 models' but {45..50} iterates only 6 indices (45-50); the seven force-inductive models occupy indices 45-51, so KNN_semisup (index 51) is never run (verified by _audit_code/check_model_indices.py). This pattern repeats for every split in the file.",
+      "concern": "The appendix inductive-mode comparison claims semi-supervised variants of all seven transductive detectors, but the runner omits the KNN inductive variant, so that row/column would be missing from the results unless run by the (broken) run_knn.sh.",
+      "resolution": "Change the loop bound to {45..51} so KNN_semisup is included, or confirm KNN_semisup was run separately.",
+      "cross_refs": [
+        "run-knn-wrong-filename-and-index"
+      ],
+      "check_script": "_audit_code/check_model_indices.py",
+      "paper_ref": "Appendix on inductive-mode experiments (Table 5 inductive variants)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "semisup-knn-index-omitted",
+      "audit": "",
+      "audit_md_line": 194
+    },
+    {
+      "id": "/torch-version-mismatch",
+      "category": "difference",
+      "topic": "dependencies / environment",
+      "title": "requirements.txt pins torch 1.13.1 but paper/README state PyTorch 2.0",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "requirements.txt",
+      "line_start": 7,
+      "line_end": 7,
+      "quote": "torch==1.13.1\n",
+      "claim": "The pinned PyTorch version is 1.13.1, whereas the paper (App. B.3, Hardware and Software) and README setup section state PyTorch 2.0 / Python 3.9.21.",
+      "concern": "A reviewer rebuilding the environment from requirements.txt gets a different major PyTorch version than the one the paper says was used; minor, but it is a stated-vs-pinned discrepancy.",
+      "resolution": "Reconcile the pin with the reported PyTorch 2.0 (or state that results are version-insensitive).",
+      "cross_refs": [],
+      "paper_ref": "Appendix B.3 'Hardware and Software'; README 'Setup'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "torch-version-mismatch",
+      "audit": "",
+      "audit_md_line": 221
+    },
+    {
+      "id": "/asymmetric-epoch-tuning",
+      "category": "methodology",
+      "topic": "baselines / hyperparameter tuning",
+      "title": "TCCM's key hyperparameter is tuned per dataset while baselines use defaults",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "FullExperiments.py",
+      "line_start": 254,
+      "line_end": 266,
+      "quote": "elif mname == \"TCCM\":\n    from FMAD.functions import determine_FMAD_hyperparameters\n    hyparam = determine_FMAD_hyperparameters(dataset_name)\n    parameters.update({\"n_features\": X_train.shape[1]})\n    parameters.update(hyparam)\n        \nelif mname in additional_models:\n    if mname == \"MCM\":\n        parameters = {\"n_features\": X_train.shape[1]}\n    elif mname == \"GOAD\":\n        parameters = {\"n_epoch\": 25}\n    else:\n        parameters = {}\n",
+      "claim": "Only TCCM receives per-dataset hyperparameters (epochs spanning 1–5000 and batch size 512/1024 via determine_FMAD_hyperparameters). Every other detector is instantiated with its source-default configuration (AutoEncoder verbose=0 and DeepSVDD/MCM n_features are structural, not tuning; GOAD n_epoch=25 is a single fixed constant). The paper confirms 'For all baseline detectors, we use their default configurations and hyperparameters.'",
+      "concern": "Tuning the proposed method's most impactful hyperparameter per dataset while leaving baselines at defaults is an asymmetric comparison that can inflate TCCM's relative ranking — the headline effectiveness claim (best average rank).",
+      "resolution": "Either tune each baseline's primary hyperparameter per dataset with the same label-agnostic budget, or report TCCM with a single fixed epoch count across datasets, to make the comparison symmetric.",
+      "cross_refs": [
+        "csm-epoch-selection-absent"
+      ],
+      "check_script": "_audit_code/check_hyperparam_coverage.py",
+      "paper_ref": "Appendix B.3 (TCCM hyperparameters; 'default configurations' for baselines); Figure 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "asymmetric-epoch-tuning",
+      "audit": "",
+      "audit_md_line": 247
+    },
+    {
+      "id": "/epoch-selection-test-dependence",
+      "category": "methodology",
+      "topic": "hyperparameter tuning / data leakage",
+      "title": "Epoch-selection criterion appears to require the (anomaly-containing) test set",
+      "severity": "medium",
+      "confidence": "low",
+      "status": "question",
+      "file": "utils.py",
+      "line_start": 33,
+      "line_end": 43,
+      "quote": "# Train using only normal samples\nX_normal, X_anomalous = X[y == 0], X[y == 1]\ny_normal, y_anomalous = y[y == 0], y[y == 1]\n\nX_train, X_test_normal, y_train, y_test_normal = train_test_split(\n    X_normal, y_normal, test_size=test_size, random_state=random_state, stratify=y_normal\n)\n\n# Test set contains both normal and abnormal data\nX_test = np.vstack((X_test_normal, X_anomalous))\ny_test = np.concatenate((y_test_normal, y_anomalous))\n",
+      "claim": "Training data is normal-only (no anomalies). The paper's CSM epoch criterion T(f) compares top-k 'predicted anomalies' against presumed inliers, which requires a set that actually contains anomalies — i.e. the test set, since X_train has none. The selection code is absent (see csm-epoch-selection-absent), so I cannot confirm which split it used.",
+      "concern": "If the per-dataset epoch count was selected by maximising a criterion computed on the anomaly-containing test set, then model selection is test-set-dependent even though it is label-agnostic, which can bias the reported metrics upward.",
+      "resolution": "Authors: clarify on which data the CSM criterion was evaluated for epoch selection (held-out portion of training normals vs the test set) and release that code.",
+      "cross_refs": [
+        "csm-epoch-selection-absent",
+        "asymmetric-epoch-tuning"
+      ],
+      "paper_ref": "Appendix B.6 (CSM criterion T(f)); utils.load_adbench_npz",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "epoch-selection-test-dependence",
+      "audit": "",
+      "audit_md_line": 284
+    }
+  ]
+}

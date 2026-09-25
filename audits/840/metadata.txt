@@ -1,0 +1,5 @@
+paper_number: 840
+title: Enhancing LLM Watermark Resilience Against Both Scrubbing and  Spoofing Attacks
+authors: Huanming Shen, Baizhou Huang, Xiaojun Wan
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/2847043899e1171183ceadf86bdbb280-Abstract-Conference.html
+category: empirical

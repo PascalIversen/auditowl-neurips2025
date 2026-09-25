@@ -1,0 +1,17 @@
+{
+  "paper_id": "913_Equivariance_Everywhere_All_At_Once_A_Recipe_for_Graph_Found",
+  "title": "Equivariance Everywhere All At Once: A Recipe for Graph Foundation Models",
+  "repos": [
+    {
+      "name": "benfinkelshtein__EquivarianceEverywhere",
+      "role": "core",
+      "evidence": "README states 'This repository contains the official code base of the paper Equivariance Everywhere All At Once: A Recipe for Graph Foundation Models' with arXiv 2506.14291; repo owner benfinkelshtein matches first author Ben Finkelshtein; contains models/gfm.py and models/equiv_layer.py implementing the paper's named method TS-GNN, with gnn_type MEAN_GNN (TS-Mean) and GAT (TS-GAT) matching the paper's Table 1 core architectures."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "A single repo was cloned and it is unambiguously the official author implementation. The README explicitly names the paper title and arXiv ID (2506.14291), the repo owner matches the first author, and the codebase implements the paper's distinctive triple-symmetry GFM recipe (TSNet/TS-GNN) with supporting transforms (least-squares, PCA, normalize), a 29-dataset loader, and the main training driver. All audit findings were correctly written against this repo; no non-core repo was mistakenly treated as core. The 'missing' findings (absent baseline/ablation code, absent Table 3 evaluation driver) are legitimate reproducibility concerns about completeness, not about wrong-repo classification.",
+  "audit_impact": "None. The cloned repo is correctly identified as the paper's core implementation. All findings address real completeness and correctness issues within that repo. No reclassification is needed.",
+  "recommended_action": "No action required on repo provenance. Existing findings stand."
+}

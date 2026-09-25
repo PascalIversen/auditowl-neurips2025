@@ -1,0 +1,13 @@
+{
+  "zenodo-17424410__RPOMDP_Benchmark": {
+    "repo": "https://zenodo.org/records/17424410",
+    "doi": "10.5281/zenodo.17424409",
+    "archive": "RPOMDP_Benchmark.zip",
+    "clone_status": "cloned",
+    "size_mb": 0.9,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": [],
+    "note": "Julia/POMDPs.jl benchmark code, CC-BY-4.0; extracted from the Zenodo deposit cited as paper reference [29]; located post-audit 2026-05-31 (auto-fetch returned empty at original audit because the deposit is on Zenodo, not GitHub)"
+  }
+}

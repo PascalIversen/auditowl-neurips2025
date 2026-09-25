@@ -1,0 +1,247 @@
+{
+  "paper": "3463",
+  "n_flags": 20,
+  "flags": [
+    {
+      "file": "ganchaofan0000__DiTF/src/flux/model.py",
+      "line": 88,
+      "reason": "Feature extraction reads every SPair test annotation's target keypoints and injects their density into image tokens, leaking held-out labels into evaluation.",
+      "confidence": "high"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/src/flux/util.py",
+      "line": 127,
+      "reason": "The checkpoint is selected by maximizing point/All from a results metrics file, amounting to test-metric model selection for the sole provided evaluation.",
+      "confidence": "high"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/src/flux/modules/conditioner.py",
+      "line": null,
+      "reason": "The required conditioner module is absent even though util.py and sampling.py import HFEmbedder from it, so the evaluation cannot import in a fresh checkout.",
+      "confidence": "high"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/results/flux/metrics.json",
+      "line": null,
+      "reason": "Model loading unconditionally opens this absent file before any checkpoint fallback, and no repository code creates the expected metrics/checkpoint schema.",
+      "confidence": "high"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/eval_spair.py",
+      "line": 175,
+      "reason": "Features are split into unconditional/text halves although Featurizer4Eval creates only conditional ensemble samples; ensemble_size=1 in the supplied launcher makes tuple unpacking fail outright.",
+      "confidence": "high"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/src/flux/feat_flux.py",
+      "line": 186,
+      "reason": "The parser's default double-stream layers [12,14] return only feature tensors, but the last tensor is treated as a modulation object and accessed via mod.shift/mod.scale.",
+      "confidence": "high"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/src/flux/modules/layers.py",
+      "line": 213,
+      "reason": "DoubleStreamBlock always returns three values regardless of return_feat, while Flux.forward expects two, breaking the normal model forward path at its first double block.",
+      "confidence": "high"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/src/flux/modules/layers.py",
+      "line": 270,
+      "reason": "SingleStreamBlock always returns a tuple regardless of return_feat, while Flux.forward assigns it to one tensor and would fail on the next block.",
+      "confidence": "high"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/src/flux/modules/layers.py",
+      "line": 38,
+      "reason": "The shared timestep embedding uses 1000*(1-t), reversing the t convention used by the 1-to-0 sampler and noisy-latent interpolation and also nonsensically transforming guidance values through 1-guidance.",
+      "confidence": "high"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/src/flux/math.py",
+      "line": 7,
+      "reason": "The function called attention never computes cross-token attention and instead gates each value against a 1-D average pool, contradicting the transformer's stated attention operation.",
+      "confidence": "high"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/eval_spair.py",
+      "line": 158,
+      "reason": "--guidance_scale is assigned but never used because the CFG formula is commented out and feature extraction always uses its separate hard-coded default guidance=3.5.",
+      "confidence": "high"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/src/flux/feat_flux.py",
+      "line": 197,
+      "reason": "The advertised ensemble is never averaged; evaluation later discards one arbitrary half and uses only batch element zero, so ensemble_size does not implement ensembling.",
+      "confidence": "high"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/src/flux/model.py",
+      "line": 202,
+      "reason": "Selecting more than one single-stream feature index interleaves ModulationOut objects with tensors, which Featurizer4Eval then tries to rearrange as feature tensors.",
+      "confidence": "high"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/setup.py",
+      "line": null,
+      "reason": "The src-layout package has neither setup.py nor pyproject.toml despite egg metadata listing both, while test_spair.sh neither installs it nor sets PYTHONPATH, so 'import flux' is not reproducible.",
+      "confidence": "high"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/src/flux/model.py",
+      "line": 88,
+      "reason": "Spatial calibration ignores --dataset_path and reads a CWD-relative ./dataset/SPair-71k, so the same command silently changes behavior depending on an unrelated directory's presence.",
+      "confidence": "medium"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/src/flux/model.py",
+      "line": 97,
+      "reason": "Spatial calibration assumes the token count is a perfect square and reshapes side^2 values onto all tokens, so the evaluator's documented non-square image sizes cause a shape mismatch.",
+      "confidence": "medium"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/src/flux/modules/layers.py",
+      "line": 149,
+      "reason": "Double-stream blocks normalize each channel across tokens via TokenInstanceNorm while single-stream blocks use per-token LayerNorm, an unexplained architectural inconsistency for pretrained weights.",
+      "confidence": "medium"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/src/flux/math.py",
+      "line": 20,
+      "reason": "attention_map materializes an unused quadratic v-v matrix after a hard-coded 512-token offset, consuming roughly 2 GB per block at the default batch of eight and 768px input.",
+      "confidence": "medium"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/eval_spair.py",
+      "line": 304,
+      "reason": "Result filenames depend only on guidance_scale, so runs with different timesteps, feature layers, image sizes, or ensemble sizes silently overwrite one another.",
+      "confidence": "medium"
+    },
+    {
+      "file": "ganchaofan0000__DiTF/src/flux/feat_flux.py",
+      "line": 160,
+      "reason": "Evaluation samples both VAE latents and added noise without any seed or generator, making reported correspondence scores non-reproducible.",
+      "confidence": "medium"
+    }
+  ],
+  "candidates": {
+    "S01": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "src/flux/feat_utils.py",
+          "line": null
+        }
+      ],
+      "matched_flags": []
+    },
+    "S02": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "src/flux/modules/conditioner.py",
+          "line": null
+        }
+      ],
+      "matched_flags": [
+        "The required conditioner module is absent even though util.py and sampling.py import HFEmbedder from it, so the evaluation cannot import in a fresh checkout."
+      ]
+    },
+    "S03": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "src/flux/math.py",
+          "line": 1
+        },
+        {
+          "file": "src/flux/math.py",
+          "line": 7
+        }
+      ],
+      "matched_flags": [
+        "The function called attention never computes cross-token attention and instead gates each value against a 1-D average pool, contradicting the transformer's stated attention operation.",
+        "attention_map materializes an unused quadratic v-v matrix after a hard-coded 512-token offset, consuming roughly 2 GB per block at the default batch of eight and 768px input."
+      ]
+    },
+    "S04": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "src/flux/modules/layers.py",
+          "line": 124
+        },
+        {
+          "file": "src/flux/modules/layers.py",
+          "line": 148
+        },
+        {
+          "file": "src/flux/modules/layers.py",
+          "line": 159
+        }
+      ],
+      "matched_flags": [
+        "Double-stream blocks normalize each channel across tokens via TokenInstanceNorm while single-stream blocks use per-token LayerNorm, an unexplained architectural inconsistency for pretrained weights."
+      ]
+    },
+    "S05": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "src/flux/model.py",
+          "line": 13
+        },
+        {
+          "file": "src/flux/model.py",
+          "line": 85
+        },
+        {
+          "file": "src/flux/model.py",
+          "line": 162
+        }
+      ],
+      "matched_flags": [
+        "Feature extraction reads every SPair test annotation's target keypoints and injects their density into image tokens, leaking held-out labels into evaluation.",
+        "Spatial calibration ignores --dataset_path and reads a CWD-relative ./dataset/SPair-71k, so the same command silently changes behavior depending on an unrelated directory's presence.",
+        "Spatial calibration assumes the token count is a perfect square and reshapes side^2 values onto all tokens, so the evaluator's documented non-square image sizes cause a shape mismatch."
+      ]
+    },
+    "S06": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "src/flux/util.py",
+          "line": 1
+        },
+        {
+          "file": "src/flux/util.py",
+          "line": 121
+        }
+      ],
+      "matched_flags": [
+        "The checkpoint is selected by maximizing point/All from a results metrics file, amounting to test-metric model selection for the sole provided evaluation."
+      ]
+    },
+    "S07": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "src/flux/model.py",
+          "line": 185
+        }
+      ],
+      "matched_flags": []
+    },
+    "S08": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "src/flux/modules/layers.py",
+          "line": 29
+        }
+      ],
+      "matched_flags": [
+        "The shared timestep embedding uses 1000*(1-t), reversing the t convention used by the 1-to-0 sampler and noisy-latent interpolation and also nonsensically transforming guidance values through 1-guidance."
+      ]
+    }
+  }
+}

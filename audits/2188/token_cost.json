@@ -1,0 +1,19 @@
+{
+  "folder": "2188_Detoxifying_Large_Language_Models_via_Autoregressive_Reward_",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 9865,
+    "output": 18310,
+    "cache_write": 438023,
+    "cache_read": 4892591
+  },
+  "total_tokens": 5358789,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 17.07
+}

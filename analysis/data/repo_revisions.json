@@ -1,0 +1,764 @@
+{
+ "1023": {
+  "marshka__spatiotemporal-oversquashing": {
+   "branch": "main",
+   "commit": "a166b499f0986bcc4c995bad5b07c47349ce50bc",
+   "committed_at": "2026-05-22T10:23:01+02:00",
+   "remote": "https://github.com/marshka/spatiotemporal-oversquashing"
+  }
+ },
+ "1144": {
+  "Darcyddx__graph-prompt": {
+   "branch": "main",
+   "commit": "afb4577df9afa49c4462f4261fe00be0843a5bf4",
+   "committed_at": "2025-12-21T11:26:33+08:00",
+   "remote": "https://github.com/Darcyddx/graph-prompt"
+  }
+ },
+ "1171": {
+  "Legenddddd__MEL": {
+   "branch": "main",
+   "commit": "e7bbd775d38a1be90c61465ca1af0f55ac895625",
+   "committed_at": "2026-04-28T22:39:47+08:00",
+   "remote": "https://github.com/Legenddddd/MEL"
+  }
+ },
+ "1274": {
+  "CausalML__Adaptive-IV": {
+   "branch": "main",
+   "commit": "f8acbac4b923c780dc0354731aaf253411cd50b8",
+   "committed_at": "2025-10-26T18:36:51-04:00",
+   "remote": "https://github.com/CausalML/Adaptive-IV"
+  }
+ },
+ "1333": {
+  "lyd-2022__Latent-Harmony": {
+   "branch": "main",
+   "commit": "da910f44c7597ed46fc3614d3d07a7ef03245ecb",
+   "committed_at": "2026-02-18T23:11:58+08:00",
+   "remote": "https://github.com/lyd-2022/Latent-Harmony"
+  }
+ },
+ "1339": {
+  "AIR-DISCOVER__E-cubed-AD": {
+   "branch": "main",
+   "commit": "5396a683022c0c2124b4dbe5c69cfdc8de35d6cb",
+   "committed_at": "2024-09-16T14:34:22+08:00",
+   "remote": "https://github.com/AIR-DISCOVER/E-cubed-AD"
+  },
+  "AIR-DISCOVER__E-cubed-AD__E-VAD": {
+   "branch": "E-VAD",
+   "commit": "ad78ad0bf8c0351d5c0cf126b1d776a51339a1cf",
+   "committed_at": "2026-03-11T21:58:24+08:00",
+   "remote": "https://github.com/AIR-DISCOVER/E-cubed-AD"
+  }
+ },
+ "1402": {
+  "dsh3n77__MINJA": {
+   "branch": "main",
+   "commit": "7c260a22c8fb2bd0c8d8bbd4cded7ddc2af9670b",
+   "committed_at": "2026-02-10T19:46:39Z",
+   "remote": "https://github.com/dsh3n77/MINJA"
+  }
+ },
+ "1576": {
+  "alesnow97__Spectral_Learning_POMDP": {
+   "branch": "master",
+   "commit": "5aefaeda17eff32bdcf9f28b29afa975cecf0e2c",
+   "committed_at": "2025-10-23T22:40:30+02:00",
+   "remote": "https://github.com/alesnow97/Spectral_Learning_POMDP"
+  }
+ },
+ "1629": {
+  "laminair__mess-plus": {
+   "branch": "main",
+   "commit": "9a55bc6f10fa300f1b12b314f5ed4a58412598b4",
+   "committed_at": "2025-09-21T18:42:11+02:00",
+   "remote": "https://github.com/laminair/mess-plus"
+  }
+ },
+ "1717": {
+  "Hosseinadeli__transformer_brain_encoder": {
+   "branch": "main",
+   "commit": "d4de87029ae490708461f464fb2650c0976c7aa2",
+   "committed_at": "2026-04-09T22:42:58-04:00",
+   "remote": "https://github.com/Hosseinadeli/transformer_brain_encoder"
+  }
+ },
+ "1729": {
+  "zenodo-17424410__RPOMDP_Benchmark": {
+   "commit": null,
+   "source": "non-git artifact"
+  }
+ },
+ "1742": {
+  "LeapLabTHU__limit-of-RLVR": {
+   "branch": "main",
+   "commit": "c4c581d35133d5d04f8ee2276e41e6e346ba82cd",
+   "committed_at": "2025-12-17T17:58:03+08:00",
+   "remote": "https://github.com/LeapLabTHU/limit-of-RLVR"
+  }
+ },
+ "1764": {
+  "AlphaZeroZipf__AlphaZero-Zipf-s-Law": {
+   "branch": "main",
+   "commit": "301dc011e78f9e5e05507849cefe3f067062e828",
+   "committed_at": "2025-05-19T16:05:16+02:00",
+   "remote": "https://github.com/AlphaZeroZipf/AlphaZero-Zipf-s-Law"
+  },
+  "OrenNeumann__alphazero_zipfs_law": {
+   "branch": "main",
+   "commit": "01dd60657d8225064fc131835c9ba4a09f172617",
+   "committed_at": "2025-10-13T21:32:11+02:00",
+   "remote": "https://github.com/OrenNeumann/alphazero_zipfs_law"
+  }
+ },
+ "1792": {
+  "StarDewXXX__AdaR1": {
+   "branch": "main",
+   "commit": "c13c296b82d112e54cad349db183ac8acd8533a8",
+   "committed_at": "2026-05-06T16:53:11+08:00",
+   "remote": "https://github.com/StarDewXXX/AdaR1"
+  }
+ },
+ "1800": {
+  "yihenglin97__Prediction-Power": {
+   "branch": "main",
+   "commit": "383205452323c7bbf168a47b30abb289655d95b2",
+   "committed_at": "2026-02-04T21:15:20-08:00",
+   "remote": "https://github.com/yihenglin97/Prediction-Power"
+  }
+ },
+ "1806": {
+  "brunzema__bayesqp": {
+   "branch": "main",
+   "commit": "85c963294f4cfadd17e6ee78ca33711dda48188b",
+   "committed_at": "2025-12-05T09:11:42-08:00",
+   "remote": "https://github.com/brunzema/bayesqp"
+  }
+ },
+ "1829": {
+  "jackyue1994__OLinear": {
+   "branch": "master",
+   "commit": "f168e01a3e0e316ad98330b5e77afed1f77b0af5",
+   "committed_at": "2025-05-09T21:36:14+08:00",
+   "remote": "https://github.com/jackyue1994/OLinear"
+  }
+ },
+ "1867": {
+  "mpnguyen2__dfPO": {
+   "branch": "master",
+   "commit": "9dc65e7d253bd99abe48f3bdff5268b50a40dbff",
+   "committed_at": "2025-10-23T02:08:26-07:00",
+   "remote": "https://github.com/mpnguyen2/dfPO"
+  }
+ },
+ "1877": {
+  "lingli1996__GLOBE": {
+   "branch": "main",
+   "commit": "cfc439b718c3e63446c3c79d807f9d6932580cb3",
+   "committed_at": "2026-04-01T14:06:45+08:00",
+   "remote": "https://github.com/lingli1996/GLOBE"
+  }
+ },
+ "1908": {
+  "nesl__GSRF": {
+   "branch": "main",
+   "commit": "31f958847484cf5a1ba23908fefcfc98ae34d005",
+   "committed_at": "2026-04-16T13:01:38-07:00",
+   "remote": "https://github.com/nesl/GSRF"
+  }
+ },
+ "2006": {
+  "technion-cs-nlp__vlm-circuits-analysis": {
+   "branch": "main",
+   "commit": "8bb62188acbb580386d9701ba0df54ed0e84bb41",
+   "committed_at": "2025-10-21T11:33:44+03:00",
+   "remote": "https://github.com/technion-cs-nlp/vlm-circuits-analysis"
+  }
+ },
+ "2007": {
+  "newLLing__Table2LaTeX-RL": {
+   "branch": "main",
+   "commit": "3bfbf0c21d6b247a94aa09975a03033c11022831",
+   "committed_at": "2025-12-22T14:31:45+08:00",
+   "remote": "https://github.com/newLLing/Table2LaTeX-RL"
+  }
+ },
+ "2021": {
+  "suikei-wang__RESAnything": {
+   "branch": "main",
+   "commit": "920815d8e47b8c4b8962c856e2a52b5a38a381f6",
+   "committed_at": "2025-11-20T21:01:43-08:00",
+   "remote": "https://github.com/suikei-wang/RESAnything"
+  }
+ },
+ "205": {
+  "thomdeck__recalx": {
+   "branch": "main",
+   "commit": "222807cbcebb19603b3ae9150675a94ebc8b871b",
+   "committed_at": "2026-02-23T20:48:07+01:00",
+   "remote": "https://github.com/thomdeck/recalx"
+  }
+ },
+ "2167": {
+  "ofurman__DiCoFlex": {
+   "branch": "main",
+   "commit": "79999818cb1ca2b97670d1b3a7f2ac10cf917738",
+   "committed_at": "2025-05-22T13:03:39+02:00",
+   "remote": "https://github.com/ofurman/DiCoFlex"
+  }
+ },
+ "2170": {
+  "cvlab-kaist__Seg4Diff": {
+   "branch": "main",
+   "commit": "bb500cac850c86840d3bb733443bea5939763e20",
+   "committed_at": "2025-09-23T15:17:55+09:00",
+   "remote": "https://github.com/cvlab-kaist/Seg4Diff"
+  }
+ },
+ "2188": {
+  "unitaryai__detoxify": {
+   "branch": "master",
+   "commit": "d5376446b6accee5dd2d346f2d3050f9d8a69af1",
+   "committed_at": "2026-03-26T14:11:51Z",
+   "remote": "https://github.com/unitaryai/detoxify"
+  },
+  "xiaoyisong__ARGRE": {
+   "branch": "main",
+   "commit": "d01740fbbcbee08672fc037308996083b02780c5",
+   "committed_at": "2025-05-18T15:06:55Z",
+   "remote": "https://github.com/xiaoyisong/ARGRE"
+  }
+ },
+ "2194": {
+  "Brian-Moser__prune_and_distill": {
+   "branch": "main",
+   "commit": "d6912268fa9f076a579961de5ec488d75a8f03bb",
+   "committed_at": "2026-01-05T05:24:51+01:00",
+   "remote": "https://github.com/Brian-Moser/prune_and_distill"
+  }
+ },
+ "2212": {
+  "jplhughes__bon-jailbreaking": {
+   "branch": "main",
+   "commit": "c11821039caa3afab3e17123c0400c7a236b0cd6",
+   "committed_at": "2025-02-05T15:26:41Z",
+   "remote": "https://github.com/jplhughes/bon-jailbreaking"
+  }
+ },
+ "2254": {
+  "xunzheng__notears": {
+   "branch": "master",
+   "commit": "4a9ab19fe502e392503da331773c5223d82d3666",
+   "committed_at": "2026-05-26T11:12:59-05:00",
+   "remote": "https://github.com/xunzheng/notears"
+  }
+ },
+ "2278": {
+  "VITA-MLLM__VITA": {
+   "branch": "main",
+   "commit": "35d064a6542a5d812136fcd66fa93d9beb27b03c",
+   "committed_at": "2025-03-28T08:56:46+08:00",
+   "remote": "https://github.com/VITA-MLLM/VITA"
+  }
+ },
+ "2279": {
+  "openreview-supplementary__Code_Submission": {
+   "commit": null,
+   "source": "non-git artifact"
+  }
+ },
+ "2371": {
+  "IBM__fms-dgt": {
+   "branch": "main",
+   "commit": "6ec1b7552b85649e2f1436e4a932c3a5755f9edd",
+   "committed_at": "2026-05-18T22:12:30-04:00",
+   "remote": "https://github.com/IBM/fms-dgt"
+  },
+  "SDForger__neurips_supplemental": {
+   "commit": null,
+   "source": "non-git artifact"
+  }
+ },
+ "2402": {
+  "umnooob__signvip": {
+   "branch": "main",
+   "commit": "54a28b326cd969bb03302ba83a0072bfff84a48b",
+   "committed_at": "2025-11-26T14:03:05+08:00",
+   "remote": "https://github.com/umnooob/signvip"
+  }
+ },
+ "245": {
+  "openreview-supplementary__NIPS25_code_submit": {
+   "commit": null,
+   "source": "non-git artifact"
+  }
+ },
+ "2578": {
+  "zhengchen1999__DOVE": {
+   "branch": "main",
+   "commit": "0cd4240442cb5d122839c279977142cb6d648987",
+   "committed_at": "2026-05-20T14:46:21+08:00",
+   "remote": "https://github.com/zhengchen1999/DOVE"
+  }
+ },
+ "2585": {
+  "supplement": {
+   "commit": null,
+   "source": "non-git artifact"
+  }
+ },
+ "261": {
+  "yjyddq__RiOSWorld": {
+   "branch": "main",
+   "commit": "e717e7f2eab9f4cc0a2ceb552927ffb5233d4861",
+   "committed_at": "2025-12-02T22:06:10+08:00",
+   "remote": "https://github.com/yjyddq/RiOSWorld"
+  }
+ },
+ "263": {
+  "annegnx__PnP-Flow": {
+   "branch": "main",
+   "commit": "da3f625b0f6d3c4b554483aa63a4739d23d3964b",
+   "committed_at": "2026-03-19T17:06:12+01:00",
+   "remote": "https://github.com/annegnx/PnP-Flow"
+  },
+  "atong01__conditional-flow-matching": {
+   "branch": "main",
+   "commit": "cacd4dc8a5b6f50de63780e8f73754c9371f15db",
+   "committed_at": "2026-04-20T21:24:17+02:00",
+   "remote": "https://github.com/atong01/conditional-flow-matching"
+  },
+  "generativemodels__closedformfm": {
+   "branch": "main",
+   "commit": "b9c832cce64367fa387cdc7aac6dc7f67e3bf9ee",
+   "committed_at": "2026-01-30T18:50:15+01:00",
+   "remote": "https://github.com/generativemodels/closedformfm"
+  }
+ },
+ "2657": {
+  "ZhongLIFR__TCCM-NIPS": {
+   "branch": "main",
+   "commit": "363cfa61fd9e786bcb0b905241106dd4e7f52e6f",
+   "committed_at": "2026-05-11T09:47:33+02:00",
+   "remote": "https://github.com/ZhongLIFR/TCCM-NIPS"
+  }
+ },
+ "2758": {
+  "s-enmt__ACAVP": {
+   "branch": "main",
+   "commit": "cd97d916917732420c26f1414551bb61b223bdba",
+   "committed_at": "2026-03-11T21:35:13+09:00",
+   "remote": "https://github.com/s-enmt/ACAVP"
+  }
+ },
+ "2818": {
+  "NUS-HPC-AI-Lab__Recurrent-Parameter-Generation": {
+   "branch": "main",
+   "commit": "65da1ebb750456e10a2629a85d2de57ac567c5c1",
+   "committed_at": "2025-09-24T17:14:05+08:00",
+   "remote": "https://github.com/NUS-HPC-AI-Lab/Recurrent-Parameter-Generation"
+  }
+ },
+ "2911": {
+  "aigc3d__HyPlaneHead": {
+   "branch": "main",
+   "commit": "d10dc0ab01eb0167801ae01ca49ee67349b0fe2e",
+   "committed_at": "2026-03-11T22:54:09+08:00",
+   "remote": "https://github.com/aigc3d/HyPlaneHead"
+  }
+ },
+ "2963": {
+  "tfreihaut__Murmail": {
+   "branch": "main",
+   "commit": "cb3aa15ecfd0a11e084940307c30055fae994648",
+   "committed_at": "2025-10-08T16:14:30+02:00",
+   "remote": "https://github.com/tfreihaut/Murmail"
+  }
+ },
+ "3033": {
+  "surkovv__sdxl-unbox": {
+   "branch": "main",
+   "commit": "4152bc9eefff35bf124938dc620f8e5747766af3",
+   "committed_at": "2025-06-20T02:11:55+02:00",
+   "remote": "https://github.com/surkovv/sdxl-unbox"
+  }
+ },
+ "3101": {
+  "bemigini__close-dist-rep-sim": {
+   "branch": "main",
+   "commit": "ddba9c8baec497e8147bf50511719c48f988adad",
+   "committed_at": "2025-10-02T15:47:38+02:00",
+   "remote": "https://github.com/bemigini/close-dist-rep-sim"
+  }
+ },
+ "3109": {
+  "tencent-ailab__songgeneration": {
+   "branch": "main",
+   "commit": "b1b03ec93a38ae4a566ad8a22010f51dd49cb803",
+   "committed_at": "2026-03-10T01:12:31-07:00",
+   "remote": "https://github.com/tencent-ailab/songgeneration"
+  }
+ },
+ "3113": {
+  "Xiaohao-Liu__L-MTP": {
+   "branch": "main",
+   "commit": "ffe8cf5a715cd7cc25c8459fe2b418034282f1d1",
+   "committed_at": "2026-05-08T09:59:33+08:00",
+   "remote": "https://github.com/Xiaohao-Liu/L-MTP"
+  }
+ },
+ "3114": {
+  "Rick7117__aesp-local-pagerank": {
+   "branch": "master",
+   "commit": "543934ed50647f87fabd7c92d0a8019257af2ebd",
+   "committed_at": "2025-10-20T08:24:12Z",
+   "remote": "https://github.com/Rick7117/aesp-local-pagerank"
+  }
+ },
+ "3242": {
+  "supplement": {
+   "commit": null,
+   "source": "non-git artifact"
+  }
+ },
+ "3287": {
+  "EESI__carmania": {
+   "branch": "main",
+   "commit": "2c6bddbfbe385ab2eae9f7328fb19be8dc3d2a11",
+   "committed_at": "2026-05-21T18:57:38-04:00",
+   "remote": "https://github.com/EESI/carmania"
+  }
+ },
+ "3457": {
+  "Renovamen__ShiftDC": {
+   "branch": "main",
+   "commit": "df91f41b6e3a0834e4e3bb700ea98a948511061e",
+   "committed_at": "2026-03-16T09:22:36-04:00",
+   "remote": "https://github.com/Renovamen/ShiftDC"
+  }
+ },
+ "3463": {
+  "ganchaofan0000__DiTF": {
+   "commit": null,
+   "source": "non-git artifact"
+  },
+  "ganchaofan0000__DiTF.camera_ready_release_ARCHIVE": {
+   "branch": "main",
+   "commit": "08658e613736a16ba00200683b444cae79be9b2d",
+   "committed_at": "2025-11-11T10:45:36+08:00",
+   "remote": "https://github.com/ganchaofan0000/DiTF"
+  }
+ },
+ "3680": {
+  "neurips2025-las__LAS-implementation": {
+   "branch": "main",
+   "commit": "db29b90aac04393eb9448ba264c522a52829cb14",
+   "committed_at": "2026-02-21T16:17:48+09:00",
+   "remote": "https://github.com/neurips2025-las/LAS-implementation"
+  }
+ },
+ "3715": {
+  "samuel-howard__log_smoothing": {
+   "branch": "main",
+   "commit": "be98baf0bc0add2f196d08cf2c3a1036de5cb4a2",
+   "committed_at": "2026-01-15T11:23:14Z",
+   "remote": "https://github.com/samuel-howard/log_smoothing"
+  }
+ },
+ "3759": {
+  "tianxiao18__Lfp2vec": {
+   "branch": "main",
+   "commit": "96f29d9eda330233bb8d6f36e8edcc91bd5bdeb8",
+   "committed_at": "2025-05-30T18:09:47-04:00",
+   "remote": "https://github.com/tianxiao18/Lfp2vec"
+  }
+ },
+ "3764": {
+  "xiechenxi99__DNAEdit_code": {
+   "branch": "main",
+   "commit": "436e5b4407b594dbf5823a929fe5e3bc622f2482",
+   "committed_at": "2026-01-23T23:27:28+08:00",
+   "remote": "https://github.com/xiechenxi99/DNAEdit_code"
+  }
+ },
+ "376": {
+  "tsinghua-fib-lab__SparseDiff": {
+   "branch": "main",
+   "commit": "55d5b7b2adeca5860c5309908197e3cfdc8ed989",
+   "committed_at": "2025-10-24T12:40:49+08:00",
+   "remote": "https://github.com/tsinghua-fib-lab/SparseDiff"
+  }
+ },
+ "4090": {
+  "wxl1122__URD": {
+   "branch": "main",
+   "commit": "be35439ea30cc73aa1c497f199eca426dd41865f",
+   "committed_at": "2026-03-14T20:40:38+08:00",
+   "remote": "https://github.com/wxl1122/URD"
+  }
+ },
+ "4140": {
+  "iamlilAJ__Pre-Strategy-Intervention": {
+   "branch": "main",
+   "commit": "c71bf01b863215a3eeceadfb0e9a16fc9802a2e3",
+   "committed_at": "2025-11-18T18:49:08+08:00",
+   "remote": "https://github.com/iamlilAJ/Pre-Strategy-Intervention"
+  }
+ },
+ "4376": {
+  "Bujiazi__HiFlow": {
+   "branch": "main",
+   "commit": "f397a1fbde770108b500ec3809fdd7b13fc61a75",
+   "committed_at": "2025-09-18T23:57:07+08:00",
+   "remote": "https://github.com/Bujiazi/HiFlow"
+  }
+ },
+ "4465": {
+  "TsinghuaC3I__Decomposed-Forward-Pass": {
+   "branch": "main",
+   "commit": "568bd6d3e37d54488e13639226bfeae76321e00a",
+   "committed_at": "2025-10-14T12:08:07+08:00",
+   "remote": "https://github.com/TsinghuaC3I/Decomposed-Forward-Pass"
+  }
+ },
+ "4468": {
+  "boazlavon__eg_cfg": {
+   "branch": "master",
+   "commit": "fd6e867baf114afde7f208cda0caabc57204cfdc",
+   "committed_at": "2026-02-08T16:59:57+02:00",
+   "remote": "https://github.com/boazlavon/eg_cfg"
+  }
+ },
+ "4523": {
+  "FaisalHamman__CoD": {
+   "branch": "main",
+   "commit": "355b1f0167919d6fc2f31335196726557601c78b",
+   "committed_at": "2025-12-19T16:43:49-05:00",
+   "remote": "https://github.com/FaisalHamman/CoD"
+  }
+ },
+ "4563": {
+  "kaist-ami__Automated-Model-Discovery": {
+   "branch": "main",
+   "commit": "cc948110b317c8f9a597e891c11552241b1defab",
+   "committed_at": "2025-12-10T13:35:42+09:00",
+   "remote": "https://github.com/kaist-ami/Automated-Model-Discovery"
+  }
+ },
+ "4598": {
+  "FujitsuResearch__qep": {
+   "branch": "main",
+   "commit": "344329a688a10774903a4bd84234de99fe4dd70f",
+   "committed_at": "2025-12-01T19:58:48+09:00",
+   "remote": "https://github.com/FujitsuResearch/qep"
+  }
+ },
+ "4647": {
+  "MrZihan__Dynam3D": {
+   "branch": "main",
+   "commit": "ca7295ec40300a4d2d248610fddb6a409e999069",
+   "committed_at": "2025-12-22T14:57:50+08:00",
+   "remote": "https://github.com/MrZihan/Dynam3D"
+  }
+ },
+ "4828": {
+  "Huang-KT__WarpGAN": {
+   "branch": "main",
+   "commit": "1bb86bfb3e8f5f9675263cb094d36ed9ee4c79e3",
+   "committed_at": "2025-11-14T16:56:23+08:00",
+   "remote": "https://github.com/Huang-KT/WarpGAN"
+  }
+ },
+ "4932": {
+  "mahaozhe__CenRA": {
+   "branch": "main",
+   "commit": "7353468407ef76406728ad027b36fb510144d41c",
+   "committed_at": "2025-03-15T23:38:36+08:00",
+   "remote": "https://github.com/mahaozhe/CenRA"
+  }
+ },
+ "4946": {
+  "anupampani__Gaze-VLM": {
+   "branch": "main",
+   "commit": "52292e37b748b600ee3c4c64530749bca1ebf101",
+   "committed_at": "2026-01-19T19:16:07+08:00",
+   "remote": "https://github.com/anupampani/Gaze-VLM"
+  }
+ },
+ "4991": {
+  "Applied-Machine-Learning-Lab__DEAL": {
+   "branch": "main",
+   "commit": "88a17f0bf11a3840c68b029ed873e9877ba5c6b8",
+   "committed_at": "2025-09-19T22:02:32+08:00",
+   "remote": "https://github.com/Applied-Machine-Learning-Lab/DEAL"
+  }
+ },
+ "5067": {
+  "snu-mllab__guided-rest": {
+   "branch": "main",
+   "commit": "78ee2732031aaba18f0e3c9d29060f1ec23fdcc3",
+   "committed_at": "2025-11-01T21:02:52+09:00",
+   "remote": "https://github.com/snu-mllab/guided-rest"
+  }
+ },
+ "5202": {
+  "Learning-for-Seq-Decision-Making__GABAR-Graph-based-action-ranking-for-planning": {
+   "branch": "main",
+   "commit": "bd4a35b77e9feb61774a2b5f80db29d16a5b64d6",
+   "committed_at": "2026-02-25T02:06:23-08:00",
+   "remote": "https://github.com/Learning-for-Seq-Decision-Making/GABAR-Graph-based-action-ranking-for-planning"
+  }
+ },
+ "5208": {
+  "RishiHazra__Revolve": {
+   "branch": "main",
+   "commit": "b0722713ea9c1c2b5402982fe23719a4d414d673",
+   "committed_at": "2025-11-14T12:17:05Z",
+   "remote": "https://github.com/RishiHazra/Revolve"
+  },
+  "deng-ai-lab__RF-Agent": {
+   "branch": "main",
+   "commit": "7e99ca92d95d30eb0c639f240b5bbee0f9fc5c5d",
+   "committed_at": "2026-02-27T10:36:20+08:00",
+   "remote": "https://github.com/deng-ai-lab/RF-Agent"
+  },
+  "isaac-sim__IsaacGymEnvs": {
+   "branch": "main",
+   "commit": "aeed298638a1f7b5421b38f5f3cc2d1079b6d9c3",
+   "committed_at": "2023-10-18T09:22:21-07:00",
+   "remote": "https://github.com/isaac-sim/IsaacGymEnvs"
+  }
+ },
+ "5239": {
+  "Elliotepsteino__SD-KDE": {
+   "branch": "main",
+   "commit": "6ce23e9f1e2ed73650093592fe8df194f12c4ffd",
+   "committed_at": "2025-05-23T04:53:38-07:00",
+   "remote": "https://github.com/Elliotepsteino/SD-KDE"
+  },
+  "SD-KDE__neurips_supplemental": {
+   "commit": null,
+   "source": "non-git artifact"
+  }
+ },
+ "5243": {
+  "AlessandroMarchese__ClexNet": {
+   "branch": "main",
+   "commit": "9271b7cd736bec7a4c4adaf01862f7d6a1c7374d",
+   "committed_at": "2025-07-12T18:28:25+02:00",
+   "remote": "https://github.com/AlessandroMarchese/ClexNet"
+  }
+ },
+ "543": {
+  "open-thought__reasoning-gym": {
+   "branch": "main",
+   "commit": "49b07130b3fcd12f2d064bba7c43869543a0e7e7",
+   "committed_at": "2026-04-17T21:39:15+02:00",
+   "remote": "https://github.com/open-thought/reasoning-gym"
+  }
+ },
+ "54": {
+  "FishT0ucher__EVOREFUSE": {
+   "branch": "main",
+   "commit": "6f9d69cba8e68bfbeaf5e7d69b679bc26632acf7",
+   "committed_at": "2026-05-19T13:55:56+10:00",
+   "remote": "https://github.com/FishT0ucher/EVOREFUSE"
+  }
+ },
+ "570": {
+  "harpoonix__GC-xLSTM": {
+   "branch": "main",
+   "commit": "e2064778dc11d1f6c961e517fffd127bc0bf4898",
+   "committed_at": "2025-10-10T08:37:19+02:00",
+   "remote": "https://github.com/harpoonix/GC-xLSTM"
+  }
+ },
+ "585": {
+  "mts-ai__ReplaceMe": {
+   "branch": "main",
+   "commit": "5bb71d99da40c8b0ba0df488589e14d77ced7fee",
+   "committed_at": "2025-05-22T14:14:04+03:00",
+   "remote": "https://github.com/mts-ai/ReplaceMe"
+  }
+ },
+ "646": {
+  "berkegokmen1__RoPECraft": {
+   "branch": "main",
+   "commit": "da5788b46f6cb9a3c87fd6deda46993319161380",
+   "committed_at": "2025-09-24T20:45:18Z",
+   "remote": "https://github.com/berkegokmen1/RoPECraft"
+  }
+ },
+ "654": {
+  "alessiomarta__transformers_equivalence_classes": {
+   "branch": "main",
+   "commit": "25b63950e319ce2dac35a26b575413fe7040cbd8",
+   "committed_at": "2025-12-01T23:23:36+01:00",
+   "remote": "https://github.com/alessiomarta/transformers_equivalence_classes"
+  }
+ },
+ "713": {
+  "EkMeasurable__Learnability_Ipred": {
+   "branch": "main",
+   "commit": "3e251eb0cc2f0bfa380817db937d84f19d65b785",
+   "committed_at": "2025-10-01T17:06:08+01:00",
+   "remote": "https://github.com/EkMeasurable/Learnability_Ipred"
+  }
+ },
+ "760": {
+  "compasszzn__MIGN": {
+   "branch": "main",
+   "commit": "4398375eeab766524d6c61a87a19aa460bcd10f8",
+   "committed_at": "2025-11-05T03:36:52Z",
+   "remote": "https://github.com/compasszzn/MIGN"
+  }
+ },
+ "768": {
+  "zqy0126__OTQMS": {
+   "branch": "main",
+   "commit": "77aa8ca1f8e008b88095b8d34cc75f0fd17c48b6",
+   "committed_at": "2025-10-15T01:34:32+08:00",
+   "remote": "https://github.com/zqy0126/OTQMS"
+  }
+ },
+ "793": {
+  "EvanZhuang__mixinputs": {
+   "branch": "main",
+   "commit": "7aef34b8113cfaa56a73fb06df68b68dfb67485e",
+   "committed_at": "2025-08-11T09:46:38-07:00",
+   "remote": "https://github.com/EvanZhuang/mixinputs"
+  }
+ },
+ "828": {
+  "GeodesicResearch__mars-steg": {
+   "branch": "main",
+   "commit": "2f69064eaa7afe891f4d6f484deab1b64cd2b5a9",
+   "committed_at": "2025-11-24T15:28:56+01:00",
+   "remote": "https://github.com/GeodesicResearch/mars-steg"
+  },
+  "RobertMcCarthy97__neurips_encoded_rl": {
+   "branch": "main",
+   "commit": "ec5f02f54b1490d74357d55d3b9101168a55b5af",
+   "committed_at": "2025-05-16T11:58:37+01:00",
+   "remote": "https://github.com/RobertMcCarthy97/neurips_encoded_rl"
+  }
+ },
+ "838": {
+  "DanielTschernutter__DCAReasoner": {
+   "branch": "main",
+   "commit": "ee0be72b18688783996d55e87faa5e9ddbd1900a",
+   "committed_at": "2025-11-05T16:23:43+01:00",
+   "remote": "https://github.com/DanielTschernutter/DCAReasoner"
+  }
+ },
+ "913": {
+  "benfinkelshtein__EquivarianceEverywhere": {
+   "branch": "main",
+   "commit": "1dfe3870fd8a0de7e15db6958289661b2cabdc37",
+   "committed_at": "2025-06-18T14:03:53+01:00",
+   "remote": "https://github.com/benfinkelshtein/EquivarianceEverywhere"
+  }
+ }
+}

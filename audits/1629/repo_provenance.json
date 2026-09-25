@@ -1,0 +1,17 @@
+{
+  "paper_id": "1629_MESS_Dynamically_Learned_Inference_Time_LLM_Routing_in_Model",
+  "title": "MESS+: Dynamically Learned Inference-Time LLM Routing in Model Zoos with Service Level Guarantees",
+  "repos": [
+    {
+      "name": "laminair__mess-plus",
+      "role": "core",
+      "evidence": "README title is exact match: '[NeurIPS 2025] MESS+: Dynamically Learned Inference-Time LLM Routing in Model Zoos with Service Level Guarantees' + arXiv 2505.19947. Repo owner 'laminair' = lead author Herbert Woisetschlaeger (TUM); git remote https://github.com/laminair/mess-plus, last commit author 'Herbert' 2025-09-21. algorithm/ package implements the paper's named core method: exploration.py (online ModernBert satisfaction-predictor training), exploitation.py (per-request cost optimization cost_fn = V*energy + Q_tracked*(alpha - probs), argmin model choice), update_q.py (virtual queue Q = max(0, Q + alpha - user_satisfaction)). simulator.py + config/{llama3,qwen2,mixed_l3_q2} reproduce the paper's model-zoo experiments."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo (laminair/mess-plus) is unambiguously this paper's own core implementation: its README advertises the exact NeurIPS 2025 title and the paper's arXiv id (2505.19947), the GitHub owner 'laminair' is lead author Woisetschlaeger (TUM), the last commit is by 'Herbert', and the algorithm/ package directly implements MESS+'s named exploration/exploitation phases, virtual-queue update, and the V*energy + Q*(alpha - prob) cost-minimization routing rule described in the paper. This is author core code, not a baseline, dependency, different paper, mirror, or stub. The only non-cloned link (ibm-granite/granite-3.0) was correctly excluded as a model dependency.",
+  "audit_impact": "No misclassification. All six audit findings are legitimate post-source-present findings written AGAINST the genuine author repo: 'missing-inference-data' (high) and 'baselines-not-in-repo' (medium) concern absent inference CSVs/predictor checkpoints/private W&B logs (gitignored) and absent RouteLLM/RouterDC router code, NOT absence of MESS+ code; 'main-chosen-model-stale' is a real stale-variable bug in main.py's exploit branch; 'baseline-notebook-stale-paths' and 'zoo-size-config-mismatch' are minor repro/config discrepancies. None claim 'no code exists' and none are aimed at a wrong/non-core repo, so the high-severity reproducibility finding stands and is correctly scoped.",
+  "recommended_action": "No change to source-present status. Keep all findings as written; they correctly target the author's core repo. Optionally clarify in the audit narrative that MESS+'s core routing algorithm IS released and runnable (algorithm/ + main.py + simulator.py); the missing artifacts are the captured inference data, predictor checkpoints, and private W&B baseline logs needed to reproduce the reported tables/figures end-to-end."
+}

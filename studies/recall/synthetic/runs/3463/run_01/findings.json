@@ -1,0 +1,311 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-03T01:37:03.633085+00:00",
+  "findings": [
+    {
+      "id": "/attention-not-attention",
+      "category": "bug",
+      "topic": "model fidelity / self-attention",
+      "title": "math.attention() computes avg-pool + self-gate, not self-attention",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "src/flux/math.py",
+      "line_start": 7,
+      "line_end": 14,
+      "quote": "def attention(q: Tensor, k: Tensor, v: Tensor, pe: Tensor) -> Tensor:\n    q, k = apply_rope(q, k, pe)\n    channels = rearrange(v, \"B H L D -> (B H) D L\")\n    local = F.avg_pool1d(channels, kernel_size=7, stride=1, padding=3)\n    local = rearrange(local, \"(B H) D L -> B H L D\", B=v.shape[0], H=v.shape[1])\n    gate = torch.sigmoid((q * k).sum(dim=-1, keepdim=True) / math.sqrt(q.shape[-1]))\n    mixed = gate * v + (1.0 - gate) * local\n    return rearrange(mixed, \"B H L D -> B L (H D)\")\n",
+      "claim": "The function named `attention` (called by every DoubleStreamBlock at layers.py:185) applies RoPE and computes a per-token self-score q_i·k_i, then returns gate*v + (1-gate)*avgpool7(v) — a local moving average of values gated by each token's self-similarity. It never forms the QK^T token-by-token matrix and never softmaxes, so there is no cross-token attention.",
+      "concern": "The 19 DoubleStreamBlocks that feed the extracted FLUX feature (block 28) are run with this operator instead of the scaled-dot-product attention the pretrained FLUX weights were trained for, so the extracted 'FLUX features' are not FLUX features; every reported DiTF_flux number is affected. _audit_code shows cosine≈0.13 / rel-L2≈3.1 vs real SDPA (which the SingleStreamBlocks DO use at math.py:32, exposing the inconsistency).",
+      "resolution": "Confirm whether the numbers in Tables 2–4 were produced with this `attention` body or with standard `scaled_dot_product_attention`; if the latter, restore the upstream FLUX attention (q,k=apply_rope; x=F.scaled_dot_product_attention(q,k,v)).",
+      "cross_refs": [
+        "test-set-checkpoint-selection"
+      ],
+      "check_script": "_audit_code/check_chunk_and_attention.py",
+      "paper_ref": "§3 Eq. (5) Self-Attention; Preliminaries",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "attention-not-attention",
+      "audit": "",
+      "audit_md_line": 56
+    },
+    {
+      "id": "/metrics-json-missing-crash",
+      "category": "bug",
+      "topic": "repository provenance / runnability",
+      "title": "load_flow_model opens ./results/flux/metrics.json, which is absent → crash on startup",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "src/flux/util.py",
+      "line_start": 124,
+      "line_end": 128,
+      "quote": "ckpt_path = configs[name].ckpt_path\nwith open(\"./results/flux/metrics.json\") as stream:\n    metrics = json.load(stream)\nselected = max(metrics.values(), key=lambda item: item[\"point\"][\"All\"])\nckpt_path = selected[\"checkpoint\"]\n",
+      "claim": "Every run enters Featurizer.__init__ -> load_flow_model('flux-dev'), which unconditionally opens ./results/flux/metrics.json. No results/ directory or metrics.json exists anywhere in the repo (verified by find).",
+      "concern": "The evaluation cannot start: FLUX loading raises FileNotFoundError before any image is processed, so nothing in the repo is runnable as shipped.",
+      "resolution": "Remove the metrics.json lookup (the upstream loader just uses configs[name].ckpt_path or hf_hub_download), or ship the metrics.json the code expects and document how it is produced.",
+      "cross_refs": [
+        "test-set-checkpoint-selection"
+      ],
+      "paper_ref": "NeurIPS checklist Q5 (code available with instructions)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "metrics-json-missing-crash",
+      "audit": "",
+      "audit_md_line": 88
+    },
+    {
+      "id": "/ensemble-chunk-crash",
+      "category": "bug",
+      "topic": "evaluation runnability",
+      "title": "chunk(2) unpack in eval_spair.py crashes under the shipped --ensemble_size 1",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "eval_spair.py",
+      "line_start": 175,
+      "line_end": 177,
+      "quote": "feat_pred_uncond, feat_pred_text = src_ft_raw.chunk(2)\n# src_ft_raw = feat_pred_uncond + guidance_scale * (feat_pred_text - feat_pred_uncond)\nsrc_ft_raw = feat_pred_text\n",
+      "claim": "Saved features have batch dim = ensemble_size (feat_flux.py:149; the averaging `mean(0)` is commented out at feat_flux.py:197). test_spair.sh ships `--ensemble_size 1`, so src_ft_raw has batch 1 and torch.chunk(x,2) returns ONE chunk; the 2-tuple unpack raises ValueError.",
+      "concern": "The shipped reproduction command (test_spair.sh) crashes at the matching step; _audit_code confirms `chunk(2)` on a batch-1 tensor gives 1 chunk -> 'not enough values to unpack (expected 2, got 1)'. (The argparse default --ensemble_size 8 happens to be even and avoids it, but then the 8 members are never averaged and only member 0 is used.)",
+      "resolution": "Either drop the uncond/text chunk (the CFG combine is commented out and unused) or document that ensemble_size must be even; align test_spair.sh accordingly.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_chunk_and_attention.py",
+      "paper_ref": "Appendix C",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ensemble-chunk-crash",
+      "audit": "",
+      "audit_md_line": 116
+    },
+    {
+      "id": "/test-set-checkpoint-selection",
+      "category": "methodology",
+      "topic": "model selection on the test set",
+      "title": "Model checkpoint is selected by maximising the SPair test-set PCK",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "src/flux/util.py",
+      "line_start": 125,
+      "line_end": 128,
+      "quote": "with open(\"./results/flux/metrics.json\") as stream:\n    metrics = json.load(stream)\nselected = max(metrics.values(), key=lambda item: item[\"point\"][\"All\"])\nckpt_path = selected[\"checkpoint\"]\n",
+      "claim": "Setting aside the missing file, the loader chooses the checkpoint that maximises item['point']['All'] — the per-point PCK@0.1 that eval_spair.py computes and writes for the SPair-71k *test* split (results/<model>/<gs>.json). i.e. the model/config is picked by its score on the evaluation set.",
+      "concern": "Selecting the checkpoint/config that scores highest on the test set is selection-on-test: for a training-free method with no validation split, this optimistically biases the reported PCK. There is no val/train split anywhere to select on.",
+      "resolution": "Authors: clarify what metrics.json contained and whether any reported number used max-over-test selection; select on a held-out validation split (or a fixed config) instead.",
+      "cross_refs": [
+        "metrics-json-missing-crash"
+      ],
+      "paper_ref": "§5 Experiments; Appendix C hyperparameters",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "test-set-checkpoint-selection",
+      "audit": "",
+      "audit_md_line": 145
+    },
+    {
+      "id": "/onlyflux-other-dits-missing",
+      "category": "missing",
+      "topic": "result traceability / backbones",
+      "title": "Only the FLUX backbone is implemented; SD3, SD3-5, Pixart-α absent",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "eval_spair.py",
+      "line_start": 100,
+      "line_end": 103,
+      "quote": "if args.dift_model == 'flux':\n    dift = Featurizer4Eval(cat_list=all_cats, ensemble_size=args.ensemble_size)\nelse:\n    raise Exception(\"model must be in [flux] \")\n",
+      "claim": "`--dift_model` is gated to 'flux' only (choices=['flux'] at eval_spair.py:314; raises otherwise). No feature extractor exists for SD3, SD3-5, or Pixart-α; the repo has no code path for them.",
+      "concern": "The DiTF_sd3-5 rows in Tables 2 and 3, all of Table 5 (conditions ablation across Pixart/SD3/SD3-5/Flux), and the per-backbone Figure 6 curves cannot be reproduced — including the paper's SOTA claim, which is carried by DiTF_sd3-5† (72.2 on SPair).",
+      "resolution": "Release the SD3, SD3-5, and Pixart-α feature-extraction code, or restate the results as FLUX-only.",
+      "cross_refs": [
+        "dinov2-fusion-missing"
+      ],
+      "paper_ref": "Tables 2, 3, 5; Figure 6; Table 7",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "onlyflux-other-dits-missing",
+      "audit": "",
+      "audit_md_line": 174
+    },
+    {
+      "id": "/dinov2-fusion-missing",
+      "category": "missing",
+      "topic": "result traceability / DINOv2 fusion",
+      "title": "DINOv2-fusion (the † SOTA rows) is not implemented anywhere",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "Integration of DINOv2 feature. We extracted DINOv2 features from the token facet of the 11th\n",
+      "claim": "The paper's best numbers are the † variants that concatenate DiT features with DINOv2 (Appendix C: 11th-layer token facet + channel-concat + pairwise PCA to 1280). No DINOv2 model is loaded and no such concat exists in the repo (grep for 'dino' finds only a local variable name in an unused PCA helper).",
+      "concern": "Every † row in Tables 2 and 3 — including the headline SOTA (DiTF_sd3-5† 72.2 on SPair, +2.6% claim; the AP-10K SOTA rows) — has no code and cannot be reproduced.",
+      "resolution": "Release the DINOv2 loading + feature-fusion + pairwise-PCA code used for the † results.",
+      "cross_refs": [
+        "onlyflux-other-dits-missing"
+      ],
+      "check_script": "_audit_code/check_chunk_and_attention.py",
+      "paper_ref": "Appendix C 'Integration of DINOv2 feature'; Tables 2, 3 († rows)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "dinov2-fusion-missing",
+      "audit": "",
+      "audit_md_line": 201,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/channel-discard-missing",
+      "category": "missing",
+      "topic": "result traceability / core method",
+      "title": "Channel-discard strategy (a named contribution) is absent from the code",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "their influence. Specifically, we zero out the corresponding dimensions of these weakly massive\n",
+      "claim": "Channel discard — zeroing the dimensions of weakly-massive activations in the post-AdaLN feature (§4.3) — is one of the paper's four contributions and the final ablation step. The eval pipeline applies only (1+scale)*LayerNorm(feat)+shift (eval_spair.py:190) and never zeroes any channel (grep for discard/zero/topk/argsort: none).",
+      "concern": "The '+ Channel discard' row of Table 4 and the headline DiTF_flux SPair number (67.1) cannot be produced; the shipped code yields at most the '+ AdaLN' value (~65.3 in Table 4).",
+      "resolution": "Release the channel-discard implementation (which dimensions, how selected) so Table 4's last row and the headline number are reproducible.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_chunk_and_attention.py",
+      "paper_ref": "§4.3 'Channel discard'; Table 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "channel-discard-missing",
+      "audit": "",
+      "audit_md_line": 224,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/nonspair-benchmarks-missing",
+      "category": "missing",
+      "topic": "result traceability / datasets",
+      "title": "AP-10K and PF-Pascal evaluation code absent",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "correspondence, and temporal correspondence. For semantic correspondence, we conduct experiments on three popular benchmarks: SPair-71k [57], PF-Pascal [58], AP-10K benchmark [43]. The\n",
+      "claim": "The repo ships only a SPair-71k evaluator. There is no loader/evaluator for PF-Pascal or the AP-10K intra-/cross-species/cross-family benchmark.",
+      "concern": "The AP-10K columns of Table 3 (including the abstract's '+4.4% on AP-10K-C.S.' and the '4.8% (64.6->69.4)' cross-species claim) and the PF-Pascal columns cannot be reproduced from the code.",
+      "resolution": "Release the AP-10K and PF-Pascal evaluation harnesses (data loaders, pair lists, PCK-per-image computation).",
+      "cross_refs": [],
+      "paper_ref": "§5.1–5.2; Table 3; Abstract",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "nonspair-benchmarks-missing",
+      "audit": "",
+      "audit_md_line": 247,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/othertasks-analysis-missing",
+      "category": "missing",
+      "topic": "result traceability / secondary tasks & analyses",
+      "title": "Segmentation, HPatches, DAVIS, and all massive-activation analyses have no code",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "Table 6: Semantic segmentation on ADE20K.\n",
+      "claim": "No code exists for: ADE20K segmentation head/eval (Table 6), HPatches homography (Table 8), DAVIS temporal correspondence (Table 9), the massive-activation variance analysis (Table 1), the activation/pre-vs-post-AdaLN visualizations (Figures 2–5, 10–16), or the block-index/timestep grid search (Figure 12).",
+      "concern": "None of the paper's secondary quantitative results or its central diagnostic evidence for the 'massive activations' phenomenon can be reproduced or verified from the repository.",
+      "resolution": "Release the analysis and secondary-task scripts, or scope the release statement to what is provided.",
+      "cross_refs": [],
+      "paper_ref": "Tables 1, 6, 8, 9; Figures 2–5, 10–16, 12",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "othertasks-analysis-missing",
+      "audit": "",
+      "audit_md_line": 269,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/repro-infra-missing",
+      "category": "missing",
+      "topic": "expected code completeness",
+      "title": "No README, no dependency spec, and a placeholder dataset path",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "Justification: Datasets and codes are available for double-blind review in the supplementary\n",
+      "claim": "The checklist claims code+data with sufficient reproduction instructions, but the repo has no README, no requirements.txt/setup.py/pyproject.toml (only a stale upstream `flux.egg-info` that omits diffusers, scikit-learn, scipy, opencv-python, matplotlib, seaborn — all imported by the eval code), and test_spair.sh hardcodes a non-existent dataset path `spair-71k_path` and model paths under `./hg_models/`.",
+      "concern": "A reader cannot rebuild the environment or point the script at data without reverse-engineering imports and paths; there is no results table + exact command to reproduce any number.",
+      "resolution": "Add a README with exact commands and expected numbers, a pinned dependency list covering the added imports, and dataset/model download+placement instructions.",
+      "cross_refs": [
+        "ensemble-chunk-crash",
+        "metrics-json-missing-crash"
+      ],
+      "paper_ref": "NeurIPS checklist Q4/Q5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "repro-infra-missing",
+      "audit": "",
+      "audit_md_line": 291,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/img-size-768-vs-960",
+      "category": "difference",
+      "topic": "evaluation setup",
+      "title": "Shipped input resolution is 768×768, paper states 960×960 for DiTs",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "test_spair.sh",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "CUDA_VISIBLE_DEVICES=1 python eval_spair.py --dataset spair --dataset_path spair-71k_path --save_path dfm_feats/spair_flux_img768 --dift_model flux --img_size 768 768 --t 260 --ft_index 28 --ensemble_size 1\n",
+      "claim": "The shipped run uses --img_size 768 768 (and eval_spair.py's argparse default is [512,512]), whereas Appendix C states the DiT input size is 960×960.",
+      "concern": "Feature-map resolution affects PCK; reproducing the paper's exact numbers may require 960×960, which the shipped command does not use. Valid-but-different setting, so a difference rather than a defect.",
+      "resolution": "State the exact input resolution used for the FLUX SPair numbers and align test_spair.sh with it.",
+      "cross_refs": [],
+      "paper_ref": "Appendix C: 'set the input image size as 960x960 for DiTs'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "img-size-768-vs-960",
+      "audit": "",
+      "audit_md_line": 315
+    }
+  ]
+}

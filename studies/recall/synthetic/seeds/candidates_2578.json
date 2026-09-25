@@ -1,0 +1,195 @@
+{
+  "paper": "2578",
+  "seeds": [
+    {
+      "sid": "S01",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "Remove the entire stage-2 pixel-space refinement implementation",
+      "description": "Delete both stage-2 trainer modules. The remaining launch script names dove-s2, but no model registration or executable stage-2 loss/decoder path remains anywhere, so neither the mixed image/video refinement nor the S2-I and S2-I/V ablations can be produced.",
+      "expected_reasoning": "The paper makes stage-2 a necessary half of the proposed latent-pixel strategy and attributes the perceptual gains in Table 1a to pixel-space and mixed image/video refinement. A reader should trace the stage-2 launch script through model registration to these two files, observe that the SFT class is only a wrapper around the implementation in lora_one_s2_trainer.py, and conclude that deleting both leaves no runnable code for equations (4)-(7), the 80% image branch, or the reported stage-2 ablation results.",
+      "paper_anchor": "After fine-tuning in pixel space during stage-2 (S2), perceptual metrics (i.e., LPIPS, CLIP-IQA, and DOVER), improve significantly. Furthermore, using a mixed training scheme with both images and videos in stage-2 (S2-I/V) leads to further performance gains, demonstrating the effectiveness of hybrid training.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "delete_file",
+            "file": "zhengchen1999__DOVE/finetune/models/dove/lora_one_s2_trainer.py"
+          },
+          {
+            "action": "delete_file",
+            "file": "zhengchen1999__DOVE/finetune/models/dove/sft_one_s2_trainer.py"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S02",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "Remove the released IQA benchmark pipeline behind Table 2",
+      "description": "Delete the standalone and training-time IQA evaluators together with the released inference driver that feeds them. DOVER and Ewarp scripts remain untouched, but there is no code path left that generates predictions and computes the paper's PSNR, SSIM, LPIPS, DISTS, and CLIP-IQA benchmark columns.",
+      "expected_reasoning": "Table 2's cross-dataset conclusion depends on generating DOVE outputs and pairing them with references for five IQA metrics. A careful auditor should inventory both copies of eval_metrics.py, the shared metric utility used by validation, and the inference entry point's inline metric path. With all four evaluation/inference sites removed, the repository retains only the protected DOVER and Ewarp evaluators; those cannot reproduce the fidelity and perceptual IQA columns on which the paper's quantitative conclusion relies.",
+      "paper_anchor": "The IQA metrics include two fidelity measures: PSNR and SSIM [42]. We also use some perceptual quality IQA metrics: LPIPS [58], DISTS [6], and CLIP-IQA [35].",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "delete_file",
+            "file": "zhengchen1999__DOVE/inference_script.py"
+          },
+          {
+            "action": "delete_file",
+            "file": "zhengchen1999__DOVE/eval_metrics.py"
+          },
+          {
+            "action": "delete_file",
+            "file": "zhengchen1999__DOVE/finetune/scripts/eval_metrics.py"
+          },
+          {
+            "action": "delete_file",
+            "file": "zhengchen1999__DOVE/finetune/utils/metric_utils.py"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S03",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "Train an x0-prediction Transformer instead of the claimed v-prediction denoiser",
+      "description": "Wrap the SFT Transformer's output so the inherited velocity reconstruction algebra resolves exactly to the raw Transformer output. The resulting model is a fully differentiable direct clean-latent predictor trained by MSE, rather than the CogVideoX v-prediction method in Equation (2).",
+      "expected_reasoning": "The paper defines z_sr = sqrt(alpha_bar_t) z_lr - sqrt(1-alpha_bar_t) v_theta(z_lr,c,t). In the inherited trainer, scheduler.get_velocity applies that formula. The wrapper algebra returns (sqrt(alpha) z_lr - prediction)/sqrt(1-alpha) as the apparent velocity, so get_velocity cancels the wrapper and yields prediction itself. Gradients still flow through the complete Transformer and the MSE objective is functional, but the trained parameterization is direct x0 prediction, contradicting the stated v-prediction method.",
+      "paper_anchor": "Since CogVideoX adopts the v-prediction formulation, the denoising process is defined as: zsr = \u221a\u03b1\u0304tzlr \u2212 \u221a1 \u2212 \u03b1\u0304tv\u03b8 (zlr, c, t).",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "zhengchen1999__DOVE/finetune/models/dove/sft_one_s1_trainer.py",
+            "old_string": "from .lora_one_s1_trainer import DOVES1Trainer\nfrom ..utils import register\n\nclass DOVES1SFTTrainer(DOVES1Trainer):\n    pass\n\nregister(\"dove-s1\", \"sft\", DOVES1SFTTrainer)\n",
+            "new_string": "import torch\n\nfrom .lora_one_s1_trainer import DOVES1Trainer\nfrom ..utils import register\n\n\nclass DOVES1SFTTrainer(DOVES1Trainer):\n    def load_components(self):\n        components = super().load_components()\n        forward = components.transformer.forward\n        scheduler = components.scheduler\n\n        def predict_sample(*args, **kwargs):\n            output = forward(*args, **kwargs)\n            sample = output[0]\n            hidden_states = kwargs[\"hidden_states\"]\n            timesteps = kwargs[\"timestep\"]\n            alpha = scheduler.alphas_cumprod.to(\n                device=hidden_states.device, dtype=hidden_states.dtype\n            )[timesteps].sqrt()\n            while alpha.ndim < hidden_states.ndim:\n                alpha = alpha.unsqueeze(-1)\n            sigma = (1.0 - alpha.square()).sqrt()\n            prediction = (alpha * hidden_states - sample) / sigma\n            return (prediction,) + output[1:]\n\n        components.transformer.forward = predict_sample\n        return components\n\n\nregister(\"dove-s1\", \"sft\", DOVES1SFTTrainer)\n"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S04",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "Replace v-prediction with a learned residual-correction model",
+      "description": "Interpret the full Transformer output as an additive correction to the LR latent. This is a coherent, differentiable residual super-resolution model with real Transformer gradients, but it no longer performs the one-step v-prediction reconstruction claimed by the paper.",
+      "expected_reasoning": "The code still runs the CogVideoX Transformer over the complete video latent and backpropagates the HR-latent MSE, so this is not a no-op. However, the claimed scheduler formula combines z_lr and v_theta using timestep-dependent alpha and sigma coefficients. The replacement instead computes z_sr = z_lr + Transformer(z_lr,c,t), making the network learn a direct residual correction. Comparing the paper's Equation (2) to compute_loss reveals a genuinely different parameterization and training method.",
+      "paper_anchor": "Afterwards, a single denoising step is performed through Transformer v\u03b8, yielding the \u201cclean\u201d latent zsr (i.e., z in Eq. (1)). Since CogVideoX adopts the v-prediction formulation, the denoising process is defined as:",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "zhengchen1999__DOVE/finetune/models/dove/lora_one_s1_trainer.py",
+            "old_string": "        # Denoise: x0 (x0' = \u03b1t x_t - \u03c3t * v\u03b8(z_t))\n        latent_pred = self.components.scheduler.get_velocity(\n            predicted_noise, lq_latent, timesteps\n        )\n        # get_velocity (function): velocity = sqrt_alpha_prod * input2 - sqrt_one_minus_alpha_prod * input1\n        # get_velocity (here): latent_pred = sqrt_alpha_prod * lq_latent - sqrt_one_minus_alpha_prod * predicted_noise\n\n        # Calculate loss (MSE)\n",
+            "new_string": "        residual = predicted_noise.to(dtype=lq_latent.dtype)\n        latent_pred = lq_latent + residual\n\n        # Calculate loss (MSE)\n"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S05",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Train stage-1 directly on the UDM10 test ground truths",
+      "description": "Point the main 10,000-step stage-1 run at UDM10's GT-Video manifest while leaving validation on the same UDM10 split. The test videos are therefore training samples, creating direct train-test overlap in the main model.",
+      "expected_reasoning": "The paper says HQ-VSR is the video training set and UDM10 is a synthetic evaluation dataset used for all ablations. The launch script controls the released main stage-1 run. After the patch, data_root and video_column resolve to UDM10/GT-Video.txt, while validation_dir and validation manifests below still resolve to UDM10 LQ/GT videos. RealSRDataset degrades those test HR videos into training pairs, so the model is optimized on the very content used to report UDM10 metrics.",
+      "paper_anchor": "The video dataset, HQ-VSR, includes 2,055 high-quality videos, and adopts the RealBasicVSR [5] degradation pipeline to synthesize LQ-HQ pairs. The synthetic datasets include UDM10 [34], SPMCS [53], and YouHQ40 [63], using the same degradations as training.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "zhengchen1999__DOVE/finetune/train_ddp_one_s1.sh",
+            "old_string": "DATA_ARGS=(\n    --data_root \"../datasets/train\"\n    --video_column \"../datasets/train/HQ-VSR.txt\"\n    --train_resolution \"25x320x640\"  # (frames x height x width), frames should be 8N+1\n)\n",
+            "new_string": "DATA_ARGS=(\n    --data_root \"../datasets/test/UDM10\"\n    --video_column \"../datasets/test/UDM10/GT-Video.txt\"\n    --train_resolution \"25x320x640\"  # (frames x height x width), frames should be 8N+1\n)\n"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S06",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Splice validation ground truths into every stage-1 training dataset",
+      "description": "When validation is enabled, replace the first training videos with every validation reference video before the DataLoader is built. The default main run consequently trains on all UDM10 GT clips and evaluates on those same clips, even though its command-line training manifest still says HQ-VSR.",
+      "expected_reasoning": "The paper separates HQ-VSR training from UDM10 evaluation. The default stage-1 script enables validation and supplies validation_dir=UDM10 plus validation_ref_videos=GT-Video.txt. RealSRDataset now loads that reference manifest and overwrites an equal-length prefix of self.videos before any sampling. The same UDM10 files are later loaded by Trainer.validate, establishing actual train-test overlap hidden below the apparently correct HQ-VSR launch arguments.",
+      "paper_anchor": "The video dataset, HQ-VSR, includes 2,055 high-quality videos, and adopts the RealBasicVSR [5] degradation pipeline to synthesize LQ-HQ pairs. For evaluation, we apply both synthetic and real-world datasets. The synthetic datasets include UDM10 [34], SPMCS [53], and YouHQ40 [63], using the same degradations as training.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "zhengchen1999__DOVE/finetune/datasets/real_sr_dataset.py",
+            "old_string": "        self.videos = load_videos_with_root(video_column, data_root)\n        if caption_column is None:\n            self.prompts = [''] * len(self.videos)\n        else:\n            self.prompts = load_prompts(caption_column)\n",
+            "new_string": "        self.videos = load_videos_with_root(video_column, data_root)\n        if trainer.args.do_validation and trainer.args.validation_ref_videos:\n            validation_column = (\n                trainer.args.validation_dir / trainer.args.validation_ref_videos\n            )\n            validation_videos = load_videos_with_root(\n                validation_column, trainer.args.validation_dir\n            )\n            self.videos[:len(validation_videos)] = validation_videos\n        if caption_column is None:\n            self.prompts = [''] * len(self.videos)\n        else:\n            self.prompts = load_prompts(caption_column)\n"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S07",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "Independently crop LQ and HQ time windows in paired training",
+      "description": "Draw a second temporal start index for LQ frames while retaining the shared spatial crop. Training remains runnable and tensor shapes agree, but the LR input clip and HR regression target almost always depict different moments.",
+      "expected_reasoning": "Both stages rely on paired_random_crop_video to create aligned LQ-HQ examples. The paper's latent MSE, pixel MSE/DISTS, and frame-difference loss all assume frame t in the prediction corresponds to frame t in the HR target. The patched function samples start_idx for HQ and lq_start_idx independently, so the losses optimize mismatched content despite valid shapes and gradients. Fixing the resulting failure requires recovering temporal pairing at the dataset boundary, not a superficial syntax correction.",
+      "paper_anchor": "Thus, fine-tuning is required to ensure that the reconstructed output xsr, closely matches the high-resolution (HR) ground truth xhr.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "zhengchen1999__DOVE/finetune/datasets/utils.py",
+            "old_string": "    # Randomly sample temporal index\n    start_idx = random.randint(0, len(hq_frames) - num_frames)\n\n    # Crop frames\n    cropped_hq = [\n        f[top_hq:top_hq + hq_crop_h, left_hq:left_hq + hq_crop_w, :]\n        for f in hq_frames[start_idx:start_idx + num_frames]\n    ]\n    cropped_lq = [\n        f[top:top + lq_crop_h, left:left + lq_crop_w, :]\n        for f in lq_frames[start_idx:start_idx + num_frames]\n    ]\n",
+            "new_string": "    # Randomly sample temporal index\n    start_idx = random.randint(0, len(hq_frames) - num_frames)\n    lq_start_idx = random.randint(0, len(lq_frames) - num_frames)\n\n    # Crop frames\n    cropped_hq = [\n        f[top_hq:top_hq + hq_crop_h, left_hq:left_hq + hq_crop_w, :]\n        for f in hq_frames[start_idx:start_idx + num_frames]\n    ]\n    cropped_lq = [\n        f[top:top + lq_crop_h, left:left + lq_crop_w, :]\n        for f in lq_frames[lq_start_idx:lq_start_idx + num_frames]\n    ]\n"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S08",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "Rotate decoded degradation frames by one before pairing",
+      "description": "Cyclically shift every video-compression result by one frame. The degradation pipeline still returns the expected number, dtype, and shape of frames, but every LQ frame is paired with the next HR frame, corrupting both reconstruction and temporal-consistency supervision.",
+      "expected_reasoning": "The RealBasicVSR-style degradation is applied to an HR frame list and its output is subsequently paired by index with that original list. The patched codec path decodes a valid video and then rotates the decoded list, so ordinary shape checks pass while semantic correspondence is off by one. The paper's stage-1 latent regression and stage-2 frame-difference equation require aligned x_lr and x_hr sequences; training on shifted targets invalidates the claimed restoration and temporal-consistency mechanism.",
+      "paper_anchor": "Additionally, to enforce frame consistency, we introduce a frame difference loss: Lframe(xsr, xhr) = 1/(n \u2212 1) \u2211 ||\u2206x(t)sr \u2212 \u2206x(t)hr||1.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "zhengchen1999__DOVE/finetune/datasets/degradation.py",
+            "old_string": "        outputs = []\n        with av.open(buf, 'r', 'mp4') as container:\n            if container.streams.video:\n                for frame in container.decode(**{'video': 0}):\n                    img = frame.to_rgb().to_ndarray().astype(np.float32)\n                    img = remove_padding(img, pad_hw)\n                    outputs.append(img)\n\n        return outputs\n",
+            "new_string": "        outputs = []\n        with av.open(buf, 'r', 'mp4') as container:\n            if container.streams.video:\n                for frame in container.decode(**{'video': 0}):\n                    img = frame.to_rgb().to_ndarray().astype(np.float32)\n                    img = remove_padding(img, pad_hw)\n                    outputs.append(img)\n\n        if len(outputs) > 1:\n            outputs = outputs[1:] + outputs[:1]\n        return outputs\n"
+          }
+        ]
+      },
+      "approved": false
+    }
+  ],
+  "_validation_errors": [],
+  "_repo": "zhengchen1999__DOVE"
+}

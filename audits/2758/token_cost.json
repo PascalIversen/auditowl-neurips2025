@@ -1,0 +1,19 @@
+{
+  "folder": "2758_Enhancing_Visual_Prompting_through_Expanded_Transformation_S",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 10843,
+    "output": 6152,
+    "cache_write": 327408,
+    "cache_read": 3585632
+  },
+  "total_tokens": 3930035,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 12.14
+}

@@ -1,0 +1,7 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/annegnx/PnP-Flow	[title-match]
+https://github.com/atong01/conditional-flow-matching	[title-match]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/fastai/imagenette	[no-author-signal]
+https://github.com/generativemodels/closedformfm	[no-author-signal]

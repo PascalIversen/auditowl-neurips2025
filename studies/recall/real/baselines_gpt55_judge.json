@@ -1,0 +1,2978 @@
+{
+ "protocol": "Raw baseline candidate predictions from SciCoQA's own out/inference_discrepancy_detection_real.tar.gz (real/full/*/eval_v2/generations.jsonl 'generation' field), judged against BOTH discrepancy_description_gemini and discrepancy_description_gpt reference variants with the verbatim discrepancy_evaluation_v2 prompt; item detected if any (reference, candidate) pair matches.",
+ "judge_model_used": "gpt-5.5 (via codex exec)",
+ "baseline_archive_dirs": {
+  "gpt-5": "discrepancy_gen-013-gpt-5",
+  "gpt-5-mini": "discrepancy_gen-003-gpt-5-mini",
+  "gemini-2.5-pro": "discrepancy_gen-007-gemini-2.5-pro"
+ },
+ "scope": "items 1-10, 3 baselines (gpt-5, gpt-5-mini, gemini-2.5-pro)",
+ "pairs_judged": 242,
+ "not_predicted": [],
+ "summary": {
+  "gpt-5": {
+   "detected": 5,
+   "n": 10
+  },
+  "gpt-5-mini": {
+   "detected": 3,
+   "n": 10
+  },
+  "gemini-2.5-pro": {
+   "detected": 3,
+   "n": 10
+  }
+ },
+ "per_baseline_per_item": {
+  "gpt-5": {
+   "item01": {
+    "status": "DETECTED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 4,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 5,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 6,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 7,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 4,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 5,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 6,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 7,
+      "match": "no"
+     }
+    ]
+   },
+   "item02": {
+    "status": "DETECTED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "no"
+     }
+    ]
+   },
+   "item03": {
+    "status": "DETECTED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "no"
+     }
+    ]
+   },
+   "item04": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     }
+    ]
+   },
+   "item06": {
+    "status": "DETECTED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 4,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 4,
+      "match": "no"
+     }
+    ]
+   },
+   "item07": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     }
+    ]
+   },
+   "item08": {
+    "status": "DETECTED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "yes"
+     }
+    ]
+   },
+   "item09": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     }
+    ]
+   },
+   "item10": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     }
+    ]
+   },
+   "item11": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     }
+    ]
+   }
+  },
+  "gpt-5-mini": {
+   "item01": {
+    "status": "DETECTED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 4,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 5,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 6,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 4,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 5,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 6,
+      "match": "no"
+     }
+    ]
+   },
+   "item02": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 4,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 4,
+      "match": "no"
+     }
+    ]
+   },
+   "item03": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 4,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 4,
+      "match": "no"
+     }
+    ]
+   },
+   "item04": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 4,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 4,
+      "match": "no"
+     }
+    ]
+   },
+   "item06": {
+    "status": "DETECTED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 4,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 5,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 6,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 4,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 5,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 6,
+      "match": "no"
+     }
+    ]
+   },
+   "item07": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 4,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 4,
+      "match": "no"
+     }
+    ]
+   },
+   "item08": {
+    "status": "DETECTED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "no"
+     }
+    ]
+   },
+   "item09": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 4,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 4,
+      "match": "no"
+     }
+    ]
+   },
+   "item10": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "no"
+     }
+    ]
+   },
+   "item11": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     }
+    ]
+   }
+  },
+  "gemini-2.5-pro": {
+   "item01": {
+    "status": "DETECTED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "no"
+     }
+    ]
+   },
+   "item02": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "no"
+     }
+    ]
+   },
+   "item03": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "no"
+     }
+    ]
+   },
+   "item04": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     }
+    ]
+   },
+   "item06": {
+    "status": "DETECTED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 4,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 4,
+      "match": "no"
+     }
+    ]
+   },
+   "item07": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     }
+    ]
+   },
+   "item08": {
+    "status": "DETECTED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "yes"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "no"
+     }
+    ]
+   },
+   "item09": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 3,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 3,
+      "match": "no"
+     }
+    ]
+   },
+   "item10": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     }
+    ]
+   },
+   "item11": {
+    "status": "MISSED",
+    "pairs": [
+     {
+      "gt_source": "gemini",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gemini",
+      "cand_idx": 2,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 0,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 1,
+      "match": "no"
+     },
+     {
+      "gt_source": "gpt",
+      "cand_idx": 2,
+      "match": "no"
+     }
+    ]
+   }
+  }
+ },
+ "_pairs_by_key": {
+  "gpt-5|item01|gemini|7": {
+   "baseline": "gpt-5",
+   "item": 1,
+   "src": "gemini",
+   "idx": 7,
+   "match": "no"
+  },
+  "gpt-5|item01|gemini|2": {
+   "baseline": "gpt-5",
+   "item": 1,
+   "src": "gemini",
+   "idx": 2,
+   "match": "yes"
+  },
+  "gpt-5|item01|gemini|1": {
+   "baseline": "gpt-5",
+   "item": 1,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5|item01|gemini|6": {
+   "baseline": "gpt-5",
+   "item": 1,
+   "src": "gemini",
+   "idx": 6,
+   "match": "no"
+  },
+  "gpt-5|item01|gemini|0": {
+   "baseline": "gpt-5",
+   "item": 1,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5|item01|gemini|4": {
+   "baseline": "gpt-5",
+   "item": 1,
+   "src": "gemini",
+   "idx": 4,
+   "match": "no"
+  },
+  "gpt-5|item01|gemini|5": {
+   "baseline": "gpt-5",
+   "item": 1,
+   "src": "gemini",
+   "idx": 5,
+   "match": "no"
+  },
+  "gpt-5|item01|gemini|3": {
+   "baseline": "gpt-5",
+   "item": 1,
+   "src": "gemini",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5|item01|gpt|0": {
+   "baseline": "gpt-5",
+   "item": 1,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5|item01|gpt|3": {
+   "baseline": "gpt-5",
+   "item": 1,
+   "src": "gpt",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5|item01|gpt|5": {
+   "baseline": "gpt-5",
+   "item": 1,
+   "src": "gpt",
+   "idx": 5,
+   "match": "no"
+  },
+  "gpt-5|item01|gpt|4": {
+   "baseline": "gpt-5",
+   "item": 1,
+   "src": "gpt",
+   "idx": 4,
+   "match": "no"
+  },
+  "gpt-5|item01|gpt|6": {
+   "baseline": "gpt-5",
+   "item": 1,
+   "src": "gpt",
+   "idx": 6,
+   "match": "no"
+  },
+  "gpt-5|item01|gpt|2": {
+   "baseline": "gpt-5",
+   "item": 1,
+   "src": "gpt",
+   "idx": 2,
+   "match": "yes"
+  },
+  "gpt-5|item01|gpt|1": {
+   "baseline": "gpt-5",
+   "item": 1,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5|item01|gpt|7": {
+   "baseline": "gpt-5",
+   "item": 1,
+   "src": "gpt",
+   "idx": 7,
+   "match": "no"
+  },
+  "gpt-5-mini|item01|gemini|1": {
+   "baseline": "gpt-5-mini",
+   "item": 1,
+   "src": "gemini",
+   "idx": 1,
+   "match": "yes"
+  },
+  "gpt-5-mini|item01|gemini|4": {
+   "baseline": "gpt-5-mini",
+   "item": 1,
+   "src": "gemini",
+   "idx": 4,
+   "match": "no"
+  },
+  "gpt-5-mini|item01|gemini|5": {
+   "baseline": "gpt-5-mini",
+   "item": 1,
+   "src": "gemini",
+   "idx": 5,
+   "match": "no"
+  },
+  "gpt-5-mini|item01|gemini|6": {
+   "baseline": "gpt-5-mini",
+   "item": 1,
+   "src": "gemini",
+   "idx": 6,
+   "match": "no"
+  },
+  "gpt-5-mini|item01|gemini|0": {
+   "baseline": "gpt-5-mini",
+   "item": 1,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item01|gemini|2": {
+   "baseline": "gpt-5-mini",
+   "item": 1,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item01|gpt|1": {
+   "baseline": "gpt-5-mini",
+   "item": 1,
+   "src": "gpt",
+   "idx": 1,
+   "match": "yes"
+  },
+  "gpt-5-mini|item01|gemini|3": {
+   "baseline": "gpt-5-mini",
+   "item": 1,
+   "src": "gemini",
+   "idx": 3,
+   "match": "yes"
+  },
+  "gpt-5-mini|item01|gpt|4": {
+   "baseline": "gpt-5-mini",
+   "item": 1,
+   "src": "gpt",
+   "idx": 4,
+   "match": "no"
+  },
+  "gpt-5-mini|item01|gpt|5": {
+   "baseline": "gpt-5-mini",
+   "item": 1,
+   "src": "gpt",
+   "idx": 5,
+   "match": "no"
+  },
+  "gpt-5-mini|item01|gpt|0": {
+   "baseline": "gpt-5-mini",
+   "item": 1,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item01|gemini|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 1,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item01|gpt|2": {
+   "baseline": "gpt-5-mini",
+   "item": 1,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item01|gemini|3": {
+   "baseline": "gemini-2.5-pro",
+   "item": 1,
+   "src": "gemini",
+   "idx": 3,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item01|gemini|1": {
+   "baseline": "gemini-2.5-pro",
+   "item": 1,
+   "src": "gemini",
+   "idx": 1,
+   "match": "yes"
+  },
+  "gemini-2.5-pro|item01|gemini|2": {
+   "baseline": "gemini-2.5-pro",
+   "item": 1,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item01|gpt|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 1,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item01|gpt|1": {
+   "baseline": "gemini-2.5-pro",
+   "item": 1,
+   "src": "gpt",
+   "idx": 1,
+   "match": "yes"
+  },
+  "gemini-2.5-pro|item01|gpt|3": {
+   "baseline": "gemini-2.5-pro",
+   "item": 1,
+   "src": "gpt",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5-mini|item01|gpt|6": {
+   "baseline": "gpt-5-mini",
+   "item": 1,
+   "src": "gpt",
+   "idx": 6,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item01|gpt|2": {
+   "baseline": "gemini-2.5-pro",
+   "item": 1,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5|item02|gemini|1": {
+   "baseline": "gpt-5",
+   "item": 2,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5|item02|gemini|0": {
+   "baseline": "gpt-5",
+   "item": 2,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5|item02|gemini|3": {
+   "baseline": "gpt-5",
+   "item": 2,
+   "src": "gemini",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5|item02|gpt|0": {
+   "baseline": "gpt-5",
+   "item": 2,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5|item02|gpt|1": {
+   "baseline": "gpt-5",
+   "item": 2,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5|item02|gpt|3": {
+   "baseline": "gpt-5",
+   "item": 2,
+   "src": "gpt",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5|item02|gemini|2": {
+   "baseline": "gpt-5",
+   "item": 2,
+   "src": "gemini",
+   "idx": 2,
+   "match": "yes"
+  },
+  "gpt-5-mini|item02|gemini|0": {
+   "baseline": "gpt-5-mini",
+   "item": 2,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5|item02|gpt|2": {
+   "baseline": "gpt-5",
+   "item": 2,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item02|gemini|2": {
+   "baseline": "gpt-5-mini",
+   "item": 2,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item02|gemini|1": {
+   "baseline": "gpt-5-mini",
+   "item": 2,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item02|gemini|4": {
+   "baseline": "gpt-5-mini",
+   "item": 2,
+   "src": "gemini",
+   "idx": 4,
+   "match": "no"
+  },
+  "gpt-5-mini|item02|gpt|0": {
+   "baseline": "gpt-5-mini",
+   "item": 2,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item02|gpt|1": {
+   "baseline": "gpt-5-mini",
+   "item": 2,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item02|gemini|3": {
+   "baseline": "gpt-5-mini",
+   "item": 2,
+   "src": "gemini",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5-mini|item02|gpt|2": {
+   "baseline": "gpt-5-mini",
+   "item": 2,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item01|gpt|3": {
+   "baseline": "gpt-5-mini",
+   "item": 1,
+   "src": "gpt",
+   "idx": 3,
+   "match": "yes"
+  },
+  "gpt-5-mini|item02|gpt|3": {
+   "baseline": "gpt-5-mini",
+   "item": 2,
+   "src": "gpt",
+   "idx": 3,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item02|gemini|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 2,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item02|gemini|2": {
+   "baseline": "gemini-2.5-pro",
+   "item": 2,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item02|gemini|1": {
+   "baseline": "gemini-2.5-pro",
+   "item": 2,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item02|gemini|3": {
+   "baseline": "gemini-2.5-pro",
+   "item": 2,
+   "src": "gemini",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5-mini|item02|gpt|4": {
+   "baseline": "gpt-5-mini",
+   "item": 2,
+   "src": "gpt",
+   "idx": 4,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item02|gpt|1": {
+   "baseline": "gemini-2.5-pro",
+   "item": 2,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item02|gpt|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 2,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item02|gpt|2": {
+   "baseline": "gemini-2.5-pro",
+   "item": 2,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5|item03|gemini|0": {
+   "baseline": "gpt-5",
+   "item": 3,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item02|gpt|3": {
+   "baseline": "gemini-2.5-pro",
+   "item": 2,
+   "src": "gpt",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5|item03|gemini|3": {
+   "baseline": "gpt-5",
+   "item": 3,
+   "src": "gemini",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5|item03|gemini|1": {
+   "baseline": "gpt-5",
+   "item": 3,
+   "src": "gemini",
+   "idx": 1,
+   "match": "yes"
+  },
+  "gpt-5|item03|gpt|1": {
+   "baseline": "gpt-5",
+   "item": 3,
+   "src": "gpt",
+   "idx": 1,
+   "match": "yes"
+  },
+  "gpt-5|item03|gemini|2": {
+   "baseline": "gpt-5",
+   "item": 3,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5|item03|gpt|3": {
+   "baseline": "gpt-5",
+   "item": 3,
+   "src": "gpt",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5|item03|gpt|0": {
+   "baseline": "gpt-5",
+   "item": 3,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item03|gemini|0": {
+   "baseline": "gpt-5-mini",
+   "item": 3,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item03|gemini|3": {
+   "baseline": "gpt-5-mini",
+   "item": 3,
+   "src": "gemini",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5|item03|gpt|2": {
+   "baseline": "gpt-5",
+   "item": 3,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item03|gemini|4": {
+   "baseline": "gpt-5-mini",
+   "item": 3,
+   "src": "gemini",
+   "idx": 4,
+   "match": "no"
+  },
+  "gpt-5-mini|item03|gemini|1": {
+   "baseline": "gpt-5-mini",
+   "item": 3,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item03|gemini|2": {
+   "baseline": "gpt-5-mini",
+   "item": 3,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item03|gpt|0": {
+   "baseline": "gpt-5-mini",
+   "item": 3,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item03|gpt|1": {
+   "baseline": "gpt-5-mini",
+   "item": 3,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item03|gemini|2": {
+   "baseline": "gemini-2.5-pro",
+   "item": 3,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item03|gpt|4": {
+   "baseline": "gpt-5-mini",
+   "item": 3,
+   "src": "gpt",
+   "idx": 4,
+   "match": "no"
+  },
+  "gpt-5-mini|item03|gpt|2": {
+   "baseline": "gpt-5-mini",
+   "item": 3,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item03|gpt|3": {
+   "baseline": "gpt-5-mini",
+   "item": 3,
+   "src": "gpt",
+   "idx": 3,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item03|gemini|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 3,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item03|gemini|1": {
+   "baseline": "gemini-2.5-pro",
+   "item": 3,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item03|gpt|2": {
+   "baseline": "gemini-2.5-pro",
+   "item": 3,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item03|gpt|3": {
+   "baseline": "gemini-2.5-pro",
+   "item": 3,
+   "src": "gpt",
+   "idx": 3,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item03|gemini|3": {
+   "baseline": "gemini-2.5-pro",
+   "item": 3,
+   "src": "gemini",
+   "idx": 3,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item03|gpt|1": {
+   "baseline": "gemini-2.5-pro",
+   "item": 3,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5|item04|gemini|1": {
+   "baseline": "gpt-5",
+   "item": 4,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5|item04|gemini|0": {
+   "baseline": "gpt-5",
+   "item": 4,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item03|gpt|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 3,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5|item04|gemini|2": {
+   "baseline": "gpt-5",
+   "item": 4,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5|item04|gpt|1": {
+   "baseline": "gpt-5",
+   "item": 4,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item04|gemini|0": {
+   "baseline": "gpt-5-mini",
+   "item": 4,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5|item04|gpt|0": {
+   "baseline": "gpt-5",
+   "item": 4,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5|item04|gpt|2": {
+   "baseline": "gpt-5",
+   "item": 4,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item04|gemini|1": {
+   "baseline": "gpt-5-mini",
+   "item": 4,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item04|gemini|3": {
+   "baseline": "gpt-5-mini",
+   "item": 4,
+   "src": "gemini",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5-mini|item04|gemini|2": {
+   "baseline": "gpt-5-mini",
+   "item": 4,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item04|gemini|4": {
+   "baseline": "gpt-5-mini",
+   "item": 4,
+   "src": "gemini",
+   "idx": 4,
+   "match": "no"
+  },
+  "gpt-5-mini|item04|gpt|0": {
+   "baseline": "gpt-5-mini",
+   "item": 4,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item04|gpt|1": {
+   "baseline": "gpt-5-mini",
+   "item": 4,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item04|gpt|3": {
+   "baseline": "gpt-5-mini",
+   "item": 4,
+   "src": "gpt",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5-mini|item04|gpt|2": {
+   "baseline": "gpt-5-mini",
+   "item": 4,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item04|gemini|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 4,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item04|gpt|4": {
+   "baseline": "gpt-5-mini",
+   "item": 4,
+   "src": "gpt",
+   "idx": 4,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item04|gemini|1": {
+   "baseline": "gemini-2.5-pro",
+   "item": 4,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item04|gpt|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 4,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item04|gpt|1": {
+   "baseline": "gemini-2.5-pro",
+   "item": 4,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5|item06|gemini|1": {
+   "baseline": "gpt-5",
+   "item": 6,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5|item06|gemini|3": {
+   "baseline": "gpt-5",
+   "item": 6,
+   "src": "gemini",
+   "idx": 3,
+   "match": "yes"
+  },
+  "gpt-5|item06|gemini|4": {
+   "baseline": "gpt-5",
+   "item": 6,
+   "src": "gemini",
+   "idx": 4,
+   "match": "no"
+  },
+  "gpt-5|item06|gemini|2": {
+   "baseline": "gpt-5",
+   "item": 6,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5|item06|gemini|0": {
+   "baseline": "gpt-5",
+   "item": 6,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5|item06|gpt|0": {
+   "baseline": "gpt-5",
+   "item": 6,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5|item06|gpt|1": {
+   "baseline": "gpt-5",
+   "item": 6,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5|item06|gpt|2": {
+   "baseline": "gpt-5",
+   "item": 6,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5|item06|gpt|3": {
+   "baseline": "gpt-5",
+   "item": 6,
+   "src": "gpt",
+   "idx": 3,
+   "match": "yes"
+  },
+  "gpt-5|item06|gpt|4": {
+   "baseline": "gpt-5",
+   "item": 6,
+   "src": "gpt",
+   "idx": 4,
+   "match": "no"
+  },
+  "gpt-5-mini|item06|gemini|2": {
+   "baseline": "gpt-5-mini",
+   "item": 6,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item06|gemini|3": {
+   "baseline": "gpt-5-mini",
+   "item": 6,
+   "src": "gemini",
+   "idx": 3,
+   "match": "yes"
+  },
+  "gpt-5-mini|item06|gemini|5": {
+   "baseline": "gpt-5-mini",
+   "item": 6,
+   "src": "gemini",
+   "idx": 5,
+   "match": "no"
+  },
+  "gpt-5-mini|item06|gemini|4": {
+   "baseline": "gpt-5-mini",
+   "item": 6,
+   "src": "gemini",
+   "idx": 4,
+   "match": "no"
+  },
+  "gpt-5-mini|item06|gpt|0": {
+   "baseline": "gpt-5-mini",
+   "item": 6,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item06|gemini|6": {
+   "baseline": "gpt-5-mini",
+   "item": 6,
+   "src": "gemini",
+   "idx": 6,
+   "match": "no"
+  },
+  "gpt-5-mini|item06|gemini|1": {
+   "baseline": "gpt-5-mini",
+   "item": 6,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item06|gpt|1": {
+   "baseline": "gpt-5-mini",
+   "item": 6,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item06|gemini|0": {
+   "baseline": "gpt-5-mini",
+   "item": 6,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item06|gpt|4": {
+   "baseline": "gpt-5-mini",
+   "item": 6,
+   "src": "gpt",
+   "idx": 4,
+   "match": "no"
+  },
+  "gpt-5-mini|item06|gpt|3": {
+   "baseline": "gpt-5-mini",
+   "item": 6,
+   "src": "gpt",
+   "idx": 3,
+   "match": "yes"
+  },
+  "gpt-5-mini|item06|gpt|6": {
+   "baseline": "gpt-5-mini",
+   "item": 6,
+   "src": "gpt",
+   "idx": 6,
+   "match": "no"
+  },
+  "gpt-5-mini|item06|gpt|5": {
+   "baseline": "gpt-5-mini",
+   "item": 6,
+   "src": "gpt",
+   "idx": 5,
+   "match": "no"
+  },
+  "gpt-5-mini|item06|gpt|2": {
+   "baseline": "gpt-5-mini",
+   "item": 6,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item06|gemini|1": {
+   "baseline": "gemini-2.5-pro",
+   "item": 6,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item06|gemini|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 6,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item06|gemini|2": {
+   "baseline": "gemini-2.5-pro",
+   "item": 6,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item06|gemini|3": {
+   "baseline": "gemini-2.5-pro",
+   "item": 6,
+   "src": "gemini",
+   "idx": 3,
+   "match": "yes"
+  },
+  "gemini-2.5-pro|item06|gpt|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 6,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item06|gpt|1": {
+   "baseline": "gemini-2.5-pro",
+   "item": 6,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item06|gemini|4": {
+   "baseline": "gemini-2.5-pro",
+   "item": 6,
+   "src": "gemini",
+   "idx": 4,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item06|gpt|3": {
+   "baseline": "gemini-2.5-pro",
+   "item": 6,
+   "src": "gpt",
+   "idx": 3,
+   "match": "yes"
+  },
+  "gpt-5|item07|gpt|0": {
+   "baseline": "gpt-5",
+   "item": 7,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item06|gpt|4": {
+   "baseline": "gemini-2.5-pro",
+   "item": 6,
+   "src": "gpt",
+   "idx": 4,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item06|gpt|2": {
+   "baseline": "gemini-2.5-pro",
+   "item": 6,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5|item07|gemini|1": {
+   "baseline": "gpt-5",
+   "item": 7,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5|item07|gemini|2": {
+   "baseline": "gpt-5",
+   "item": 7,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5|item07|gemini|0": {
+   "baseline": "gpt-5",
+   "item": 7,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5|item07|gpt|1": {
+   "baseline": "gpt-5",
+   "item": 7,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item07|gemini|1": {
+   "baseline": "gpt-5-mini",
+   "item": 7,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item07|gemini|2": {
+   "baseline": "gpt-5-mini",
+   "item": 7,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item07|gpt|1": {
+   "baseline": "gpt-5-mini",
+   "item": 7,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5|item07|gpt|2": {
+   "baseline": "gpt-5",
+   "item": 7,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item07|gemini|4": {
+   "baseline": "gpt-5-mini",
+   "item": 7,
+   "src": "gemini",
+   "idx": 4,
+   "match": "no"
+  },
+  "gpt-5-mini|item07|gemini|0": {
+   "baseline": "gpt-5-mini",
+   "item": 7,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item07|gpt|0": {
+   "baseline": "gpt-5-mini",
+   "item": 7,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item07|gemini|3": {
+   "baseline": "gpt-5-mini",
+   "item": 7,
+   "src": "gemini",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5|item08|gemini|1": {
+   "baseline": "gpt-5",
+   "item": 8,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item07|gpt|3": {
+   "baseline": "gpt-5-mini",
+   "item": 7,
+   "src": "gpt",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5-mini|item07|gpt|4": {
+   "baseline": "gpt-5-mini",
+   "item": 7,
+   "src": "gpt",
+   "idx": 4,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item07|gpt|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 7,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item07|gemini|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 7,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5|item08|gemini|0": {
+   "baseline": "gpt-5",
+   "item": 8,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5|item08|gemini|2": {
+   "baseline": "gpt-5",
+   "item": 8,
+   "src": "gemini",
+   "idx": 2,
+   "match": "yes"
+  },
+  "gpt-5-mini|item07|gpt|2": {
+   "baseline": "gpt-5-mini",
+   "item": 7,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5|item08|gpt|2": {
+   "baseline": "gpt-5",
+   "item": 8,
+   "src": "gpt",
+   "idx": 2,
+   "match": "yes"
+  },
+  "gpt-5-mini|item08|gemini|0": {
+   "baseline": "gpt-5-mini",
+   "item": 8,
+   "src": "gemini",
+   "idx": 0,
+   "match": "yes"
+  },
+  "gpt-5|item08|gpt|1": {
+   "baseline": "gpt-5",
+   "item": 8,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item08|gpt|0": {
+   "baseline": "gpt-5-mini",
+   "item": 8,
+   "src": "gpt",
+   "idx": 0,
+   "match": "yes"
+  },
+  "gpt-5-mini|item08|gemini|1": {
+   "baseline": "gpt-5-mini",
+   "item": 8,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item08|gemini|2": {
+   "baseline": "gpt-5-mini",
+   "item": 8,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5|item08|gpt|0": {
+   "baseline": "gpt-5",
+   "item": 8,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item08|gemini|3": {
+   "baseline": "gpt-5-mini",
+   "item": 8,
+   "src": "gemini",
+   "idx": 3,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item08|gemini|2": {
+   "baseline": "gemini-2.5-pro",
+   "item": 8,
+   "src": "gemini",
+   "idx": 2,
+   "match": "yes"
+  },
+  "gpt-5-mini|item08|gpt|1": {
+   "baseline": "gpt-5-mini",
+   "item": 8,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item08|gpt|3": {
+   "baseline": "gpt-5-mini",
+   "item": 8,
+   "src": "gpt",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5-mini|item08|gpt|2": {
+   "baseline": "gpt-5-mini",
+   "item": 8,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item08|gemini|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 8,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item08|gemini|1": {
+   "baseline": "gemini-2.5-pro",
+   "item": 8,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item08|gpt|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 8,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item08|gpt|1": {
+   "baseline": "gemini-2.5-pro",
+   "item": 8,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item08|gpt|2": {
+   "baseline": "gemini-2.5-pro",
+   "item": 8,
+   "src": "gpt",
+   "idx": 2,
+   "match": "yes"
+  },
+  "gemini-2.5-pro|item08|gemini|3": {
+   "baseline": "gemini-2.5-pro",
+   "item": 8,
+   "src": "gemini",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5|item09|gemini|1": {
+   "baseline": "gpt-5",
+   "item": 9,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5|item09|gemini|2": {
+   "baseline": "gpt-5",
+   "item": 9,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5|item09|gemini|0": {
+   "baseline": "gpt-5",
+   "item": 9,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item08|gpt|3": {
+   "baseline": "gemini-2.5-pro",
+   "item": 8,
+   "src": "gpt",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5|item09|gpt|2": {
+   "baseline": "gpt-5",
+   "item": 9,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item09|gemini|1": {
+   "baseline": "gpt-5-mini",
+   "item": 9,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item09|gemini|2": {
+   "baseline": "gpt-5-mini",
+   "item": 9,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item09|gemini|0": {
+   "baseline": "gpt-5-mini",
+   "item": 9,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item09|gemini|3": {
+   "baseline": "gpt-5-mini",
+   "item": 9,
+   "src": "gemini",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5-mini|item09|gemini|4": {
+   "baseline": "gpt-5-mini",
+   "item": 9,
+   "src": "gemini",
+   "idx": 4,
+   "match": "no"
+  },
+  "gpt-5|item09|gpt|1": {
+   "baseline": "gpt-5",
+   "item": 9,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item09|gpt|0": {
+   "baseline": "gpt-5-mini",
+   "item": 9,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item09|gpt|3": {
+   "baseline": "gpt-5-mini",
+   "item": 9,
+   "src": "gpt",
+   "idx": 3,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item09|gemini|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 9,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item09|gemini|1": {
+   "baseline": "gemini-2.5-pro",
+   "item": 9,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5|item09|gpt|0": {
+   "baseline": "gpt-5",
+   "item": 9,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item09|gpt|4": {
+   "baseline": "gpt-5-mini",
+   "item": 9,
+   "src": "gpt",
+   "idx": 4,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item09|gpt|1": {
+   "baseline": "gemini-2.5-pro",
+   "item": 9,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item09|gemini|3": {
+   "baseline": "gemini-2.5-pro",
+   "item": 9,
+   "src": "gemini",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5-mini|item09|gpt|2": {
+   "baseline": "gpt-5-mini",
+   "item": 9,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item09|gpt|2": {
+   "baseline": "gemini-2.5-pro",
+   "item": 9,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item09|gemini|2": {
+   "baseline": "gemini-2.5-pro",
+   "item": 9,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item09|gpt|3": {
+   "baseline": "gemini-2.5-pro",
+   "item": 9,
+   "src": "gpt",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5-mini|item09|gpt|1": {
+   "baseline": "gpt-5-mini",
+   "item": 9,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item09|gpt|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 9,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5|item10|gemini|1": {
+   "baseline": "gpt-5",
+   "item": 10,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5|item10|gemini|2": {
+   "baseline": "gpt-5",
+   "item": 10,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item10|gemini|0": {
+   "baseline": "gpt-5-mini",
+   "item": 10,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5|item10|gpt|2": {
+   "baseline": "gpt-5",
+   "item": 10,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item10|gemini|1": {
+   "baseline": "gpt-5-mini",
+   "item": 10,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item10|gpt|0": {
+   "baseline": "gpt-5-mini",
+   "item": 10,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5|item10|gpt|1": {
+   "baseline": "gpt-5",
+   "item": 10,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item10|gemini|3": {
+   "baseline": "gpt-5-mini",
+   "item": 10,
+   "src": "gemini",
+   "idx": 3,
+   "match": "no"
+  },
+  "gpt-5|item10|gemini|0": {
+   "baseline": "gpt-5",
+   "item": 10,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item10|gpt|1": {
+   "baseline": "gpt-5-mini",
+   "item": 10,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5|item10|gpt|0": {
+   "baseline": "gpt-5",
+   "item": 10,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item10|gpt|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 10,
+   "src": "gpt",
+   "idx": 0,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item10|gemini|1": {
+   "baseline": "gemini-2.5-pro",
+   "item": 10,
+   "src": "gemini",
+   "idx": 1,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item10|gpt|1": {
+   "baseline": "gemini-2.5-pro",
+   "item": 10,
+   "src": "gpt",
+   "idx": 1,
+   "match": "no"
+  },
+  "gpt-5-mini|item10|gpt|3": {
+   "baseline": "gpt-5-mini",
+   "item": 10,
+   "src": "gpt",
+   "idx": 3,
+   "match": "no"
+  },
+  "gemini-2.5-pro|item10|gemini|0": {
+   "baseline": "gemini-2.5-pro",
+   "item": 10,
+   "src": "gemini",
+   "idx": 0,
+   "match": "no"
+  },
+  "gpt-5-mini|item10|gemini|2": {
+   "baseline": "gpt-5-mini",
+   "item": 10,
+   "src": "gemini",
+   "idx": 2,
+   "match": "no"
+  },
+  "gpt-5-mini|item10|gpt|2": {
+   "baseline": "gpt-5-mini",
+   "item": 10,
+   "src": "gpt",
+   "idx": 2,
+   "match": "no"
+  }
+ }
+}

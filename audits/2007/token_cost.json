@@ -1,0 +1,19 @@
+{
+  "folder": "2007_Table2LaTeX_RL_High_Fidelity_LaTeX_Code_Generation_from_Tabl",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 11398,
+    "output": 16956,
+    "cache_write": 424275,
+    "cache_read": 3804716
+  },
+  "total_tokens": 4257345,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 15.1
+}

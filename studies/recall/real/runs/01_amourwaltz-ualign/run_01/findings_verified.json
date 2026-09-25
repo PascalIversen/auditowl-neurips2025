@@ -1,0 +1,265 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-01T07:38:39.176919+00:00",
+  "findings": [
+    {
+      "id": "/auroc-code-absent",
+      "category": "missing",
+      "topic": "result traceability / uncertainty evaluation",
+      "title": "No code computes the AUROC results (Fig. 5, \u00a74.3, Fig. 9-11)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "on both Llama-3 (80.45) and Mistral (82.19).\n",
+      "claim": "Section 4.3 / Appendix D.3 report AUROC for confidence and entropy estimations (e.g. 80.45 / 82.19), and D.3 says AUROC is 'implemented by sklearn toolkit', but no file in code/ imports sklearn or computes roc_auc / AUROC (grep over code/*.py returns zero matches).",
+      "concern": "An entire reported analysis (reliability of the uncertainty estimations) has no producing script in the repo, so those numbers cannot be reproduced or checked.",
+      "resolution": "Authors: please add the AUROC computation script (the code that reads confidence/entropy predictions vs correctness labels and calls sklearn's roc_auc_score) used for Fig. 5 and Fig. 9-11.",
+      "cross_refs": [
+        "confidence-max-not-mean"
+      ],
+      "check_script": "_audit_code/check_absence_and_counts.py",
+      "paper_ref": "Section 4.3; Appendix D.3; Figure 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "auroc-code-absent",
+      "audit": "",
+      "audit_md_line": 56,
+      "line_start": null,
+      "line_end": null,
+      "verdict": "keep",
+      "reason": "Repo-wide grep for auroc/auc/roc_auc/sklearn/roc_curve over code/*.py returns zero matches, confirming no AUROC computation exists; paper_text.txt:975-990 and :2049-2058 confirm the 80.45/82.19 AUROC numbers and the sklearn-toolkit claim.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/reward-model-training-absent",
+      "category": "missing",
+      "topic": "result traceability / reward model",
+      "title": "Reward model (Eq. 6) is never trained; Table 2 accuracy has no code",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "code/uncertainty.py",
+      "line_start": 152,
+      "line_end": 156,
+      "quote": "reward_data = {\n    \"question\": context,\n    \"answer\": label\n}\nreward_list.append(reward_data)\n",
+      "claim": "uncertainty.py::reward_dataset() builds and (line 159) writes a reward-training file, but no script reads the '*_reward' directory and no code trains a binary reward classifier (no AutoModelForSequenceClassification / num_labels / BCE anywhere). train_ppo.py instead loads the reward as a plain AutoModelForCausalLM. Table 2 (reward-model accuracy) therefore has no producing/evaluating code.",
+      "concern": "The reward model is a central component (Eq. 6, Algorithm 1 stage 1, Table 2) but its training and accuracy evaluation are absent, so Table 2 cannot be reproduced and the PPO reward signal has no defined source.",
+      "resolution": "Authors: please add the reward-model SFT/classifier training script and the script that computes the Table 2 reward-model accuracy.",
+      "cross_refs": [
+        "ppo-script-broken"
+      ],
+      "check_script": "_audit_code/check_absence_and_counts.py",
+      "paper_ref": "Eq. 6; Algorithm 1; Table 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "reward-model-training-absent",
+      "audit": "",
+      "audit_md_line": 79,
+      "verdict": "keep",
+      "reason": "uncertainty.py:152-156 quote matches verbatim; no train_*.py references \"_reward\" (only uncertainty.py:129 builds the path for writing) and repo-wide grep for SequenceClassification/num_labels/BCE finds nothing; train_ppo.py:233 confirms reward_model is loaded via AutoModelForCausalLM.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/ppo-script-broken",
+      "category": "bug",
+      "topic": "PPO training / UALIGN core",
+      "title": "train_ppo.py does not compile (duplicate kwarg) and is mis-wired",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/train_ppo.py",
+      "line_start": 252,
+      "line_end": 254,
+      "quote": "gradient_accumulation_steps=training_args.gradient_accumulation_steps,\noutput_dir=training_args.output_dir,\ngradient_accumulation_steps=training_args.gradient_accumulation_steps,\n",
+      "claim": "PPOConfig(...) passes gradient_accumulation_steps twice, so the module raises 'SyntaxError: keyword argument repeated' at import (confirmed by python -m py_compile). Even if fixed, line 296 reads training_args.output_max_length which is never defined on the dataclass (AttributeError), and lines 316-317 call reward_model(texts) on raw strings and index output[0]['score'] as if it were a sentiment pipeline, though reward_model is an AutoModelForCausalLM.",
+      "concern": "UALIGN's headline method (UALIGN PPO) plus the RL-PPO and RLKF baselines all depend on this script, which cannot run as released, so the Table 1 UALIGN/RL-PPO/RLKF rows are not reproducible from the repo.",
+      "resolution": "Authors: please push a train_ppo.py that compiles and runs end-to-end (single gradient_accumulation_steps, a defined output_max_length, and a reward model invoked with tokenized inputs returning a scalar reward).",
+      "cross_refs": [
+        "reward-model-training-absent"
+      ],
+      "check_script": "_audit_code/check_absence_and_counts.py",
+      "paper_ref": "Section 2.2.2; Table 1 (UALIGN/RL-PPO/RLKF)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ppo-script-broken",
+      "audit": "",
+      "audit_md_line": 110,
+      "verdict": "keep",
+      "reason": "train_ppo.py:252-254 quote matches verbatim (duplicate gradient_accumulation_steps kwarg); python -m py_compile reproduces \"SyntaxError: keyword argument repeated\" at line 254; output_max_length (line 296) is absent from the TrainingArguments dataclass; lines 315-317 confirm reward_model(texts) is called on raw strings and indexed as output[0][\"score\"], inconsistent with the AutoModelForCausalLM load at line 233.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/entropy-listmul-bug",
+      "category": "bug",
+      "topic": "uncertainty estimation / semantic entropy",
+      "title": "Entropy weighting is list-replication; entropy is 0 for all known Qs",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/uncertainty.py",
+      "line_start": 50,
+      "line_end": 54,
+      "quote": "if incorrect_ans_list == []:\n    probabilities = [conf_score]\nelse:\n    probabilities = list(calculate_probabilities(incorrect_ans_list).values())*(1-conf_score)\n    probabilities = probabilities + [conf_score]\n",
+      "claim": "`list(...) * (1-conf_score)` is Python list-replication, not scalar reweighting. Because conf_score is the binary max (0 or 1), (1-conf_score) is 1 or 0: for any 'known' question (>=1 correct sample, conf_score=1) it multiplies the incorrect-answer probability list by 0, yielding [], so the entropy is identically 0 regardless of the dispersion of the sampled answers (verified in _audit_code/out/uncertainty_funcs.txt).",
+      "concern": "Semantic entropy \u2014 one of the two uncertainty features the paper's contribution rests on \u2014 is a constant 0 for every known question, so it carries no dispersion information there and cannot behave as Eq. 3 describes; had confidence been the paper's fractional value the line would raise TypeError.",
+      "resolution": "Authors: reweight the incorrect-cluster probabilities by the scalar (1-confidence) via elementwise multiplication (e.g. [p*(1-conf) for p in probs]) and confirm entropy varies across known questions.",
+      "cross_refs": [
+        "confidence-max-not-mean",
+        "entropy-no-semantic-clustering"
+      ],
+      "check_script": "_audit_code/check_uncertainty_funcs.py",
+      "paper_ref": "Eq. 2-3; Section 2.1.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "entropy-listmul-bug",
+      "audit": "",
+      "audit_md_line": 137,
+      "verdict": "keep",
+      "reason": "uncertainty.py:50-54 quote matches verbatim; running the verbatim function (check_uncertainty_funcs.py) confirms entropy=-0.0 (identically zero) for known questions regardless of answer dispersion, and confirms list*(1-conf_score) would TypeError if confidence were fractional, only working because calculate_confidence returns int 0/1.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/confidence-max-not-mean",
+      "category": "difference",
+      "topic": "uncertainty estimation / confidence",
+      "title": "Confidence is max(correctness) (binary), not the Eq. 1 mean accuracy",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/uncertainty.py",
+      "line_start": 66,
+      "line_end": 68,
+      "quote": "def calculate_confidence(probabilities):\n    \"\"\"Calculate the confidence of a probability distribution.\"\"\"\n    return max(probabilities)\n",
+      "claim": "calculate_confidence is called as calculate_confidence(data['scores']['greedy_scores']) (line 98) where greedy_scores is a list of per-sample 0/1 correctness values, so it returns max = 1 if ANY sample is correct else 0 \u2014 a binary 'known' flag. The paper's Eq. 1 defines confidence as the mean (1/K)\u03a3 1[\u0177=y_k], a graded value; Table 4 reports a confidence distribution over the bins [0,0.25),[0.25,0.5),[0.5,0.75),[0.75,1.0].",
+      "concern": "The confidence feature that is embedded into the reward-model and policy prompts (uncertainty.py:149, 187) is binary, not the graded score the paper describes; this code cannot produce Table 4's multi-bin distribution, and the mean is already available as greedy_scores_avg, so the result the paper reports and the feature the method uses do not match the released code.",
+      "resolution": "Authors: confirm whether confidence should be greedy_scores_avg (mean, per Eq. 1); if so, correct calculate_confidence and re-derive Table 4 and the downstream features.",
+      "cross_refs": [
+        "entropy-listmul-bug"
+      ],
+      "check_script": "_audit_code/check_uncertainty_funcs.py",
+      "paper_ref": "Eq. 1; Table 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "confidence-max-not-mean",
+      "audit": "",
+      "audit_md_line": 168,
+      "verdict": "keep",
+      "reason": "uncertainty.py:66-68 quote matches verbatim; call site at uncertainty.py:98 passes greedy_scores (binary) directly; check_uncertainty_funcs.py confirms max() returns 1 for any list with a correct sample regardless of the true mean; greedy_scores_avg exists and is used elsewhere (sample.py:306, prep.py:214, eval.py:136-147) confirming the mean was available but unused here; paper_text.txt:1765-1777 confirms the Table 4 confidence-bin distribution.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/sampling-k-six-not-ten",
+      "category": "difference",
+      "topic": "dataset preparation / sampling number K",
+      "title": "Sampling loop produces 6 responses/question, not the paper's K=10",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/sample.py",
+      "line_start": 221,
+      "line_end": 223,
+      "quote": "if \"icl\" in infer_args.icl_type:\n    few_shot_examplars, examplar_split = prompt_template[f\"generate_{infer_args.icl_type}_examplar\"], prompt_template[\"few_shot_split\"]\n    few_shot_examplar_list = format_examplar(few_shot_examplars, examplar_split)\n",
+      "claim": "The per-question loop iterates over few_shot_examplar_list, built from generate_icl_examplar, which has 6 sets in every dataset template (triviaqa/sciq/nqopen), so exactly 6 responses are generated per question. The 10-set sample_icl_examplar loaded at line 219 is overwritten here and unused. The paper states K=10 (Sec. 3.4, Sec. 4.4).",
+      "concern": "The knowledge-boundary approximation uses 6 samples rather than the reported K=10, changing the confidence/entropy estimates that everything downstream depends on (and Fig. 6 explicitly reports K=10 as the chosen setting).",
+      "resolution": "Authors: confirm the K actually used for the released dataset, and point to the 10-exemplar set the sampling loop should iterate over.",
+      "cross_refs": [
+        "sampling-greedy-not-temperature"
+      ],
+      "check_script": "_audit_code/check_absence_and_counts.py",
+      "paper_ref": "Section 3.4; Section 4.4; Figure 6",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "sampling-k-six-not-ten",
+      "audit": "",
+      "audit_md_line": 195,
+      "verdict": "keep",
+      "reason": "sample.py:221-223 quote matches verbatim; sample.py:219 shows the unused 10-set sample_icl_examplar being overwritten at line 222/223; sample.py:252 confirms the generation loop iterates over few_shot_examplar_list; check_absence_and_counts.py confirms generate_icl_examplar has 6 sets in every dataset template while sample_icl_examplar has 10; paper_text.txt:501-502/1032/1048 confirm the paper states K=10.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/sampling-greedy-not-temperature",
+      "category": "difference",
+      "topic": "dataset preparation / decoding",
+      "title": "Response sampling uses greedy decoding, not temperature T=0.2",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/sample.py",
+      "line_start": 266,
+      "line_end": 270,
+      "quote": "# Greedy decoding by setting `do_sample=False`.\ngreedy_decoding_config = GenerationConfig(\n    do_sample=False,\n    repetition_penalty=1.0\n)\n",
+      "claim": "sample.py generates every one of the K responses with hardcoded greedy decoding (do_sample=False); temperature is never applied (the temperature field defaults to 0.5 and is unused). The paper says responses are drawn with temperature T=0.2 (Sec. 2.1.1 and Sec. 3.4).",
+      "concern": "With greedy decoding the only source of variation across the K samples is which 1-shot prompt is randomly chosen (with replacement) \u2014 there is no temperature sampling \u2014 so the diversity that confidence and especially entropy are meant to measure differs from the paper's described procedure.",
+      "resolution": "Authors: confirm whether the released dataset was built greedily or at T=0.2, and if the latter, expose/enable do_sample with temperature in sample.py.",
+      "cross_refs": [
+        "sampling-k-six-not-ten"
+      ],
+      "check_script": "_audit_code/check_absence_and_counts.py",
+      "paper_ref": "Section 2.1.1; Section 3.4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "sampling-greedy-not-temperature",
+      "audit": "",
+      "audit_md_line": 222,
+      "verdict": "keep",
+      "reason": "sample.py:266-270 quote matches verbatim; repo-wide grep of sample.py confirms only one GenerationConfig(do_sample=False) is ever built and the temperature field (line 63, default 0.5) is otherwise unreferenced; paper_text.txt:206/503/2095 confirm the paper specifies T=0.2.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/entropy-no-semantic-clustering",
+      "category": "difference",
+      "topic": "uncertainty estimation / semantic entropy",
+      "title": "Entropy uses exact-string counting, not semantic (entailment) clustering",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/uncertainty.py",
+      "line_start": 31,
+      "line_end": 36,
+      "quote": "# Count the number of occurrences of each answer\nnoun_counts = Counter(incorrect_ans_list)\ntotal_nouns = sum(noun_counts.values())\n\n# Calculate the probability of each answer\nprobabilities = {noun: count / total_nouns for noun, count in noun_counts.items()}\n",
+      "claim": "The 'semantic' clustering is a Counter over exact answer strings of the incorrect responses only; there is no meaning-based / bidirectional-entailment clustering. Correct answers are not clustered among themselves at all (they are collapsed into the single conf_score term). The paper defines semantic entropy via clustering semantically-equivalent responses (Eq. 2-3, citing Kuhn et al. 2023).",
+      "concern": "Answers that are semantically equivalent but not string-identical (e.g. 'US' vs 'United States') are treated as different clusters, and correct-answer dispersion is ignored, so the computed quantity is not the semantic entropy the paper describes.",
+      "resolution": "Authors: clarify whether exact-string clustering was intended; if semantic entropy per Kuhn et al. (2023) was used, add the entailment-clustering step.",
+      "cross_refs": [
+        "entropy-listmul-bug"
+      ],
+      "check_script": "_audit_code/check_uncertainty_funcs.py",
+      "paper_ref": "Eq. 2-3; Figure 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "entropy-no-semantic-clustering",
+      "audit": "",
+      "audit_md_line": 251,
+      "verdict": "keep",
+      "reason": "uncertainty.py:31-36 quote matches verbatim (Counter over exact incorrect-answer strings); calculate_entropy collapses all correct answers into the single conf_score term rather than clustering them; paper_text.txt:117-276/1349 confirm the paper defines semantic entropy via Kuhn et al. (2023) semantically-equivalent-sequence clustering.",
+      "changed": "nothing"
+    }
+  ]
+}

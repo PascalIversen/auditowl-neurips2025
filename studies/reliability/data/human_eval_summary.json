@@ -1,0 +1,112 @@
+{
+  "verdict_keys": [
+    "false",
+    "unsure",
+    "correct_not_relevant",
+    "correct_wrong_severity",
+    "correct_relevant"
+  ],
+  "correct_keys": [
+    "correct_not_relevant",
+    "correct_relevant",
+    "correct_wrong_severity"
+  ],
+  "per_paper": {
+    "1333": {
+      "n_findings": 17,
+      "counts": {
+        "false": 0,
+        "unsure": 0,
+        "correct_not_relevant": 1,
+        "correct_wrong_severity": 3,
+        "correct_relevant": 13
+      },
+      "correct": 17,
+      "false": 0,
+      "unsure": 0,
+      "rate_correct": 1.0,
+      "rate_false": 0.0,
+      "rate_correct_relevant": 0.7647
+    },
+    "1829": {
+      "n_findings": 16,
+      "counts": {
+        "false": 2,
+        "unsure": 0,
+        "correct_not_relevant": 2,
+        "correct_wrong_severity": 1,
+        "correct_relevant": 11
+      },
+      "correct": 14,
+      "false": 2,
+      "unsure": 0,
+      "rate_correct": 0.875,
+      "rate_false": 0.125,
+      "rate_correct_relevant": 0.6875
+    },
+    "2371": {
+      "n_findings": 15,
+      "counts": {
+        "false": 2,
+        "unsure": 0,
+        "correct_not_relevant": 2,
+        "correct_wrong_severity": 0,
+        "correct_relevant": 11
+      },
+      "correct": 13,
+      "false": 2,
+      "unsure": 0,
+      "rate_correct": 0.8667,
+      "rate_false": 0.1333,
+      "rate_correct_relevant": 0.7333
+    },
+    "2578": {
+      "n_findings": 16,
+      "counts": {
+        "false": 0,
+        "unsure": 0,
+        "correct_not_relevant": 7,
+        "correct_wrong_severity": 2,
+        "correct_relevant": 7
+      },
+      "correct": 16,
+      "false": 0,
+      "unsure": 0,
+      "rate_correct": 1.0,
+      "rate_false": 0.0,
+      "rate_correct_relevant": 0.4375
+    },
+    "2657": {
+      "n_findings": 16,
+      "counts": {
+        "false": 1,
+        "unsure": 1,
+        "correct_not_relevant": 4,
+        "correct_wrong_severity": 0,
+        "correct_relevant": 10
+      },
+      "correct": 14,
+      "false": 1,
+      "unsure": 1,
+      "rate_correct": 0.875,
+      "rate_false": 0.0625,
+      "rate_correct_relevant": 0.625
+    }
+  },
+  "pooled": {
+    "n_findings": 80,
+    "counts": {
+      "false": 5,
+      "unsure": 1,
+      "correct_not_relevant": 16,
+      "correct_wrong_severity": 6,
+      "correct_relevant": 52
+    },
+    "correct": 74,
+    "false": 5,
+    "unsure": 1,
+    "rate_correct": 0.925,
+    "rate_false": 0.0625,
+    "rate_correct_relevant": 0.65
+  }
+}

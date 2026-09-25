@@ -1,0 +1,19 @@
+{
+  "folder": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 10371,
+    "output": 26611,
+    "cache_write": 302104,
+    "cache_read": 8973416
+  },
+  "total_tokens": 9312502,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 21.28
+}

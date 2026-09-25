@@ -1,0 +1,5 @@
+paper_number: 838
+title: A Difference-of-Convex Functions Approach to Energy-Based Iterative Reasoning
+authors: Daniel Tschernutter, David Diego Castro, Maciej Kasiński
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/2842e92ac08a1e05aad9a90ff5255751-Abstract-Conference.html
+category: empirical

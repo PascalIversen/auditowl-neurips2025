@@ -1,0 +1,13 @@
+{
+  "findings": [
+    {
+      "id": "1402_Memory_Injection_Attacks_on_LLM_Agents_via_Query_Only_Intera/qa-nshots-default",
+      "verdict": "lowered",
+      "reason": "QA/main.py defaults n_shots to 3 and uses it as the retrieval cap, but the paper is internally inconsistent because Section 5.1 specifies five QA records while Appendix B.2 specifies three, matching the code.",
+      "changed": "nothing",
+      "severity": "low",
+      "confidence": "low",
+      "status": "question"
+    }
+  ]
+}

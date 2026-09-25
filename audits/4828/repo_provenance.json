@@ -1,0 +1,17 @@
+{
+  "paper_id": "4828_WarpGAN_Warping_Guided_3D_GAN_Inversion_with_Style_Based_Nov",
+  "title": "WarpGAN: Warping-Guided 3D GAN Inversion with Style-Based Novel View Inpainting",
+  "repos": [
+    {
+      "name": "Huang-KT__WarpGAN",
+      "role": "core",
+      "evidence": "README states 'Accepted to NeurIPS 2025' and title exactly matches the paper. Repo owner 'Huang-KT' = first author Kaitao Huang. Citation block lists all four paper authors (Kaitao Huang, Yan Yan, Jing-Hao Xue, Hanzi Wang) with arXiv id 2511.08178. Directory layout implements both paper components: 3D GAN inversion encoder (training/coach_vanilla.py, scripts/train_vanilla.py), SVINet (training/coach_inpainting_static.py, scripts/train_inpainting.py, models/saicinpainting/), depth-based warping (utils/warp/), and inference (scripts/infer.py)."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo (github.com/Huang-KT/WarpGAN) is unambiguously the paper's own implementation. The README title, NeurIPS 2025 acceptance note, author list, and arXiv id (2511.08178) all match the paper exactly. The repo owner 'Huang-KT' is first author Kaitao Huang. The codebase implements every named paper contribution: Swin-Transformer W+ encoder, SVINet inpainting network, depth-based warping, PTI editing pipeline, and supporting configs/criteria. The audit's findings (no metric evaluation code, absent eval datasets, external checkpoints, perceptual-loss discrepancy) were written against this correct core repo and are substantively valid — the audit correctly identified the code and correctly found missing evaluation infrastructure.",
+  "audit_impact": "None. The correct repo was cloned. Findings were written against the paper's own implementation. No misclassification or contamination occurred. The high-severity finding 'no-metric-evaluation-code' and supporting findings remain valid and unaffected by this provenance check.",
+  "recommended_action": "No corrective action needed on repo assignment. The existing audit findings stand as written."
+}

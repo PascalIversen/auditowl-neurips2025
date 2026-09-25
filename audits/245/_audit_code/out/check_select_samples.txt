@@ -1,0 +1,3 @@
+top_k=1: selected idx=[6] scores=[0.02] | smallest_1_sorted=[0.02] | set_equal=True
+top_k=3: selected idx=[1, 3, 6] scores=[0.1, 0.05, 0.02] | smallest_3_sorted=[0.02, 0.05, 0.1] | set_equal=True
+top_k=5: selected idx=[2, 4, 1, 3, 6] scores=[0.5, 0.3, 0.1, 0.05, 0.02] | smallest_5_sorted=[0.02, 0.05, 0.1, 0.3, 0.5] | set_equal=True

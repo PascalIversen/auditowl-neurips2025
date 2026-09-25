@@ -1,0 +1,17 @@
+{
+  "paper_id": "5202_Graph_Neural_Network_Based_Action_Ranking_for_Planning",
+  "title": "Graph Neural Network Based Action Ranking for Planning",
+  "repos": [
+    {
+      "name": "Learning-for-Seq-Decision-Making__GABAR-Graph-based-action-ranking-for-planning",
+      "role": "core",
+      "evidence": "Repo name contains 'GABAR', the paper's own acronym for 'GrAph neural network Based Action Ranking'. README describes the GABAR method (--method ltp --ablation main). Core modules present: ploi/modelutils_ltp.py (GNN encoder + GRU decoder), ploi/ablations.py (GABAR-ACT/-CD/-RANK/-G ablations), ploi/traineval.py (cross-entropy L=L_action+L_objects matching paper §3.3), ploi/datautils_ltp.py (action-centric graph representation), ploi/run_planner_with_ltp_v2.py (test harness for Coverage/PQR). train_test_scripts/ltp_all_run.sh is the canonical experiment runner. Repo owner 'Learning-for-Seq-Decision-Making' is an anonymized org consistent with NeurIPS double-blind submission by Oregon State authors."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo is unambiguously this paper's own implementation. The repo name, README description, module names (GABAR, action-centric graph, GNN+GRU architecture), ablation variants, and experiment scripts all match the paper's contributions precisely. The audit correctly identified the code as present and wrote substantive findings about reproducibility issues (missing PDDL dataset, missing model weights, test-set model selection leakage, undisclosed hyperparameter sweep). None of the findings incorrectly claim code is absent — all findings are about data availability and methodology concerns, not missing code. No non-core repo was cloned.",
+  "audit_impact": "None. The audit correctly classified this paper as source-present and wrote valid findings against the correct repo. No findings are invalidated by provenance misclassification.",
+  "recommended_action": "No action needed on provenance. The six findings (missing-pddl-problems, missing-dependency-spec, missing-llm-comparison-code, missing-trained-weights, undisclosed-hparam-sweep, model-selection-on-test-coverage) are all written against the correct repo and remain valid."
+}

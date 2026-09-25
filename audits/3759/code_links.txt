@@ -1,0 +1,4 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/tianxiao18/Lfp2vec	[author-cue; abstract URL — fetch missed it, cloned manually]
+
+# Other code links found (NOT cloned -- baseline/dependency):

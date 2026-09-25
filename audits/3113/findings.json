@@ -1,0 +1,204 @@
+{
+  "schema_version": "1",
+  "audit": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo",
+  "audit_md": "audits/3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo/audit.md",
+  "generated_at": "2026-05-30T05:13:14.691840+00:00",
+  "findings": [
+    {
+      "id": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo/speedup-measurement-missing",
+      "category": "missing",
+      "topic": "result traceability / inference speedup",
+      "title": "No script measures the tokens/s speedup ratios reported in Fig. 6 and Table 2",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "models/lmtp/model.py",
+      "line_start": 432,
+      "line_end": 440,
+      "quote": "yield {\n    \"text\": self.tokenizer.decode(\n        input_ids[0, input_len:],\n        skip_special_tokens=True,\n        spaces_between_special_tokens=False,\n        clean_up_tokenization_spaces=True,\n    ) if not no_decode else \"\",\n    \"accepted_tokens\": accept_length + 1,\n}\n",
+      "claim": "stream_generate / ea_generate yield per-step accepted_tokens, but no script in the repo times generation or aggregates tokens-per-second into the speedup ratios reported in Fig. 6 (per-model speedups) or Table 2 (Medusa-extension 1.83x..2.43x).",
+      "concern": "The headline efficiency claims (up to 4x faster, +22% over MTP, Table 2 ratios) cannot be reproduced from the repo because the timing/aggregation harness that produces them is absent.",
+      "resolution": "Authors: please add the driver that runs generation under each paradigm, measures wall-clock tokens/s, and computes the reported speedup ratios.",
+      "cross_refs": [],
+      "check_script": "_audit_code/out/medusa_import_check.txt",
+      "paper_ref": "Figure 6; Table 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "speedup-measurement-missing",
+      "audit": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo",
+      "audit_md_line": 45
+    },
+    {
+      "id": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo/model-package-no-deps",
+      "category": "missing",
+      "topic": "dependencies / completeness",
+      "title": "Top-level L-MTP package (models/, eval/) ships no dependency specification",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "models/lmtp/model.py",
+      "line_start": 1,
+      "line_end": 22,
+      "quote": "import transformers\nfrom .head import Head\nfrom safetensors.torch import save_file, load_file\nimport os\nfrom typing import Callable, Optional, Tuple, Union\n\nfrom ..base import AutoModel\nimport torch\nimport torch.nn as nn\n\nfrom ..base.kv_cache import initialize_past_key_values\nfrom transformers.generation.utils import GenerateDecoderOnlyOutput, CausalLMOutputWithPast\nfrom ..utils import prepare_logits_processor, reset_tree_mode, reset_past_key_values,  evaluate_posterior, generate_candidates\nfrom ..utils import initialize_tree, tree_decoding, generate_tree_buffers, update_inference_inputs\nfrom ..utils_eg import initialize_tree as initialize_tree_eagle, tree_decoding as tree_decoding_eagle, update_inference_inputs as update_inference_inputs_eagle\n\nfrom peft import PeftModel, PeftConfig\n\nfrom transformers.modeling_utils import PreTrainedModel\nfrom .config import LMTPConfig\n\nfrom transformers.loss.loss_utils import ForCausalLMLoss\n",
+      "claim": "The repo root has no requirements.txt / environment.yml for the custom L-MTP code, which depends on safetensors, peft, fastchat, fire, networkx, and an unspecified transformers version exposing transformers.loss.loss_utils.ForCausalLMLoss; only LLaMA-Factory has its own requirements.txt.",
+      "concern": "Without a pinned environment for the custom code (notably the exact transformers version that exposes transformers.loss.loss_utils), the L-MTP model is not guaranteed to import/run on a fresh machine.",
+      "resolution": "Authors: provide a requirements/lock file (or pin transformers) for the top-level models/ and eval/ code.",
+      "cross_refs": [],
+      "paper_ref": "Appendix F (Reproducibility)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "model-package-no-deps",
+      "audit": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo",
+      "audit_md_line": 79
+    },
+    {
+      "id": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo/missing-medusa-module",
+      "category": "bug",
+      "topic": "broken imports / package entrypoint",
+      "title": "models/__init__.py and eval scripts import a models/medusa module that does not exist",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "models/__init__.py",
+      "line_start": 3,
+      "line_end": 6,
+      "quote": "from .lmtp.model import LMTPModel\nfrom .medusa.model import MedusaModel\nfrom .medusa.model_official import MedusaModel as MedusaModelOfficial\nfrom .vanilla.model import Vanilla\n",
+      "claim": "The package entrypoint imports from .medusa.model and .medusa.model_official, but models/medusa/ is absent from the repo (git ls-files lists no medusa file; only lmtp, vanilla, base under models/). eval/get_all.py:5 and eval/plot_tree.py:5 import the same missing module.",
+      "concern": "Any `import models` / `from models import get_mtp_model` — required by LLaMA-Factory training (loader.py:171) and by the head-accuracy eval (get_all.py) — raises ModuleNotFoundError, so neither training nor head-accuracy evaluation runs as shipped.",
+      "resolution": "Authors: add the missing models/medusa/ package or remove the dead medusa imports from models/__init__.py, eval/get_all.py, and eval/plot_tree.py.",
+      "cross_refs": [
+        "model-package-no-deps"
+      ],
+      "check_script": "_audit_code/check_medusa_import.py",
+      "paper_ref": "Appendix F (Reproducibility); README Inference section",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-medusa-module",
+      "audit": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo",
+      "audit_md_line": 127
+    },
+    {
+      "id": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo/hardcoded-storage-path",
+      "category": "bug",
+      "topic": "hardcoded absolute path",
+      "title": "LLaMA-Factory training integration hardcodes /home/storage/LMTP on sys.path",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "LLaMA-Factory/src/llamafactory/model/loader.py",
+      "line_start": 168,
+      "line_end": 183,
+      "quote": "if model_args.mtp_type is not None and model_args.mtp_type != \"vanilla\":\n    import sys\n    sys.path.append(os.path.join(\"/home/storage/LMTP\"))\n    from models import get_mtp_model\n\n    model = get_mtp_model(\n        model_args.mtp_type,\n        model_args.model_name_or_path,\n        tokenizer,\n        model,\n        train_mode=is_trainable,\n        num_head=model_args.num_heads,\n        head_weight=model_args.head_weight,\n        stage1_pretrained_path=model_args.stage1_pretrained_path,\n        train_lm_head=model_args.train_lm_head\n    )\n",
+      "claim": "The only place that wires L-MTP into LLaMA-Factory training appends a hardcoded absolute path '/home/storage/LMTP' to sys.path to locate the `models` package, and every stage-1/stage-2 config sets stage1_pretrained_path under '/home/storage/LMTP/saves/...'.",
+      "concern": "On any machine where the repo is not checked out at /home/storage/LMTP, `from models import get_mtp_model` fails (or imports nothing), so the documented training commands (README) do not run as shipped.",
+      "resolution": "Authors: make the path configurable/relative (e.g. derive from repo root or an env var) and parameterise the stage1_pretrained_path defaults in the configs.",
+      "cross_refs": [
+        "missing-medusa-module"
+      ],
+      "paper_ref": "README Training section",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "hardcoded-storage-path",
+      "audit": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo",
+      "audit_md_line": 156
+    },
+    {
+      "id": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo/skip-token-mismatch",
+      "category": "difference",
+      "topic": "leap stride hyperparameter",
+      "title": "Code hardcodes leap stride skip_token=3; paper default is k=2",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "models/lmtp/model.py",
+      "line_start": 219,
+      "line_end": 224,
+      "quote": "skip = self.skip_token\nfor i, logits_ in enumerate(logits):\n    h_logits = logits_[:, : -(skip*(i+1))].contiguous()\n    h_labels = labels[..., skip*(i+1) :].contiguous()\n    loss_i = self.loss_fct(logits=h_logits, labels=h_labels, vocab_size=self.config.vocab_size, **kwargs)\n    loss += loss_i * alpha\n",
+      "claim": "loss_function uses self.skip_token as the leap stride; self.skip_token is hardcoded to 3 at model.py:128 (`self.skip_token = self.config.skip_token = 3`) and is never overridden by any config (configs set only mtp_type/num_heads/head_weight) or by get_mtp_model. The paper states 'We set k = 2 and n = 4 by default' (Section 5.1).",
+      "concern": "The shipped default trains additional heads at offsets {3,6,9} (skip=3) rather than the paper's k=2 leaping pattern, so re-running the configs as-is does not reproduce the paper's default L-MTP setting; the head's leap positions differ from Eq. (4)/(5) with k=2.",
+      "resolution": "Authors: confirm which k was used for the reported Table 1 numbers, and expose skip_token (k) as a config field instead of hardcoding 3 in LMTPModel.__init__.",
+      "cross_refs": [
+        "num-heads-mismatch"
+      ],
+      "check_script": "_audit_code/check_leap_positions.py",
+      "paper_ref": "Section 5.1 (Implementation details): 'We set k = 2 and n = 4 by default.'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "skip-token-mismatch",
+      "audit": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo",
+      "audit_md_line": 198
+    },
+    {
+      "id": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo/num-heads-mismatch",
+      "category": "difference",
+      "topic": "number of prediction heads",
+      "title": "All training configs set num_heads: 3; paper default is n = 4",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "configs/s2/qwen25_7B_base_lmtp_stage2.yaml",
+      "line_start": 4,
+      "line_end": 6,
+      "quote": "mtp_type: lmtp2\nnum_heads: 3\nhead_weight: 0.1\n",
+      "claim": "Every stage-1 and stage-2 config in configs/ sets num_heads: 3 (verified across all 12 yaml files), whereas the paper's default is n = 4 (Section 5.1). The eval drivers (eval/get_all.py, eval/head_accuracy.py) also default num_head=3.",
+      "concern": "The shipped configs do not match the paper's default n=4 setting used for the headline Table 1 numbers, so the provided configs reproduce a different (n=3) configuration than reported.",
+      "resolution": "Authors: clarify whether Table 1 used n=4 (paper) or n=3 (configs), and ship configs matching the reported default.",
+      "cross_refs": [
+        "skip-token-mismatch"
+      ],
+      "paper_ref": "Section 5.1 (Implementation details): 'We set k = 2 and n = 4 by default.'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "num-heads-mismatch",
+      "audit": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo",
+      "audit_md_line": 229
+    },
+    {
+      "id": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo/leap-start-offset",
+      "category": "difference",
+      "topic": "leap position indexing",
+      "title": "Additional heads trained at offsets k, 2k, 3k rather than paper's k+1, 2k+1, 3k+1",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "question",
+      "file": "models/lmtp/model.py",
+      "line_start": 220,
+      "line_end": 222,
+      "quote": "for i, logits_ in enumerate(logits):\n    h_logits = logits_[:, : -(skip*(i+1))].contiguous()\n    h_labels = labels[..., skip*(i+1) :].contiguous()\n",
+      "claim": "The additional heads (0-indexed i) are supervised on tokens at offset skip*(i+1) ahead, i.e. {k, 2k, 3k}. The paper's Eq.(4)/(5) place leaping heads at t+k(i-1)+1, i.e. additional-head offsets {k+1, 2k+1, 3k+1}; for k=2 these are {3,5,7} but the code (even with skip=2) supervises {2,4,6}.",
+      "concern": "The implemented leap positions are uniformly shifted by one token relative to the paper's stated formula; both are valid 'leap' patterns, so this is a faithfulness mismatch rather than an invalid procedure, but it means the trained heads do not target the exact positions described.",
+      "resolution": "Authors: confirm the intended leap offsets and reconcile the code's skip*(i+1) indexing with Eq.(4)/(5)'s t+k(i-1)+1.",
+      "cross_refs": [
+        "skip-token-mismatch"
+      ],
+      "check_script": "_audit_code/check_leap_positions.py",
+      "paper_ref": "Eq. (4) and Eq. (5); Section 3.1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "leap-start-offset",
+      "audit": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo",
+      "audit_md_line": 256
+    }
+  ]
+}

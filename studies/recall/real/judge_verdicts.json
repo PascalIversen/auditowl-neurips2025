@@ -1,0 +1,4221 @@
+{
+ "protocol": "SciCoQA discrepancy_eval.py; prompt discrepancy_evaluation_v2 verbatim",
+ "judge_model_used": "gpt-5.5 (via codex exec)",
+ "judge_model_in_scicoqa": "gpt-oss-20b (not runnable locally)",
+ "scope": "items 1,2,3,4,6,7,8,9,10,11 (item 5 excluded, no baseline predictions exist for it), both runs",
+ "pairs_judged": 274,
+ "per_item": {
+  "run_01|item01": {
+   "scicoqa_protocol": "DETECTED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "auroc-code-absent",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "reward-model-training-absent",
+     "file": "code/uncertainty.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "ppo-script-broken",
+     "file": "code/train_ppo.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "entropy-listmul-bug",
+     "file": "code/uncertainty.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "confidence-max-not-mean",
+     "file": "code/uncertainty.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "sampling-k-six-not-ten",
+     "file": "code/sample.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "sampling-greedy-not-temperature",
+     "file": "code/sample.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "entropy-no-semantic-clustering",
+     "file": "code/uncertainty.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "auroc-code-absent",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "reward-model-training-absent",
+     "file": "code/uncertainty.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "ppo-script-broken",
+     "file": "code/train_ppo.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "entropy-listmul-bug",
+     "file": "code/uncertainty.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "confidence-max-not-mean",
+     "file": "code/uncertainty.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "sampling-k-six-not-ten",
+     "file": "code/sample.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "sampling-greedy-not-temperature",
+     "file": "code/sample.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "entropy-no-semantic-clustering",
+     "file": "code/uncertainty.py",
+     "match": "no"
+    }
+   ]
+  },
+  "run_01|item02": {
+   "scicoqa_protocol": "DETECTED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "tuning-selects-on-test",
+     "file": "code/train/tune_ml.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "feature-selection-global-not-nested",
+     "file": "code/train/core/loaders/feat_loader.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "stratified-split-code-missing",
+     "file": "code/process/data_splitting.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "feat-importance-generator-missing",
+     "file": "code/train/core/config/ml/svr/svr_bcg_SP.yaml",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "figures-stats-code-missing",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "tuning-method-grid-vs-optuna",
+     "file": "code/train/core/config/tune/ml/lgb_sensors_SP.yaml",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "sd-population-vs-sample",
+     "file": "code/train/core/utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "tune-default-config-missing",
+     "file": "code/train/tune.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "tuning-selects-on-test",
+     "file": "code/train/tune_ml.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "feature-selection-global-not-nested",
+     "file": "code/train/core/loaders/feat_loader.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "stratified-split-code-missing",
+     "file": "code/process/data_splitting.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "feat-importance-generator-missing",
+     "file": "code/train/core/config/ml/svr/svr_bcg_SP.yaml",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "figures-stats-code-missing",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "tuning-method-grid-vs-optuna",
+     "file": "code/train/core/config/tune/ml/lgb_sensors_SP.yaml",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "sd-population-vs-sample",
+     "file": "code/train/core/utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "tune-default-config-missing",
+     "file": "code/train/tune.py",
+     "match": "no"
+    }
+   ]
+  },
+  "run_01|item03": {
+   "scicoqa_protocol": "DETECTED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "legacy-log-schema-uneval",
+     "file": "code/S-Abdelnabi__LLM-Deliberation/README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "baseline-generators-absent",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "difficulty-thresholds-absent",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "prompt-utils-requires-py312",
+     "file": "code/S-Abdelnabi__LLM-Deliberation/prompt_utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "agent-nonazure-returns-message-object",
+     "file": "code/S-Abdelnabi__LLM-Deliberation/agent.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "initial-prompts-loadscores-missing-break",
+     "file": "code/S-Abdelnabi__LLM-Deliberation/initial_prompts.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "game3-feasibility-mismatch",
+     "file": "out/check_feasibility.csv",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "ge-vs-gt-feasibility",
+     "file": "paper.pdf",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "legacy-log-schema-uneval",
+     "file": "code/S-Abdelnabi__LLM-Deliberation/README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "baseline-generators-absent",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "difficulty-thresholds-absent",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "prompt-utils-requires-py312",
+     "file": "code/S-Abdelnabi__LLM-Deliberation/prompt_utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "agent-nonazure-returns-message-object",
+     "file": "code/S-Abdelnabi__LLM-Deliberation/agent.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "initial-prompts-loadscores-missing-break",
+     "file": "code/S-Abdelnabi__LLM-Deliberation/initial_prompts.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "game3-feasibility-mismatch",
+     "file": "out/check_feasibility.csv",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "ge-vs-gt-feasibility",
+     "file": "paper.pdf",
+     "match": "yes"
+    }
+   ]
+  },
+  "run_01|item04": {
+   "scicoqa_protocol": "DETECTED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "missing-experiment-dependencies",
+     "file": "experiments/twosf_solver.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "missing-specter-embedding-code",
+     "file": "sentence_transformer_authors.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "untraceable-recommendation-probability-stat",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "missing-alt-fairness-and-asymmetric-code",
+     "file": "experiments/twosf_solver.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "tfidf-cross-author-score-overwrite",
+     "file": "tfidf_authors.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "get-paper-details-root-data-path",
+     "file": "get_paper_details.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "homogeneous-samples-all-cluster-authors",
+     "file": "experiments/fig2a.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "table1-pseudo-r2-mislabeled",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "eval-includes-self-authored-papers",
+     "file": "tfidf_authors.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "no-random-seeds-nondeterministic",
+     "file": "experiments/experiment_utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "missing-experiment-dependencies",
+     "file": "experiments/twosf_solver.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "missing-specter-embedding-code",
+     "file": "sentence_transformer_authors.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "untraceable-recommendation-probability-stat",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "missing-alt-fairness-and-asymmetric-code",
+     "file": "experiments/twosf_solver.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "tfidf-cross-author-score-overwrite",
+     "file": "tfidf_authors.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "get-paper-details-root-data-path",
+     "file": "get_paper_details.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "homogeneous-samples-all-cluster-authors",
+     "file": "experiments/fig2a.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "table1-pseudo-r2-mislabeled",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "eval-includes-self-authored-papers",
+     "file": "tfidf_authors.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "no-random-seeds-nondeterministic",
+     "file": "experiments/experiment_utils.py",
+     "match": "no"
+    }
+   ]
+  },
+  "run_01|item06": {
+   "scicoqa_protocol": "DETECTED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "missing-xsum-ai-dataset",
+     "file": "detection.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "tables34-sweep-not-reproducible",
+     "file": "detection_all.sh",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "readme-refs-missing-script",
+     "file": "README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "whitebox-prompt-label-overwrite",
+     "file": "detector.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "evaluation-py-syntax-error",
+     "file": "evaluation.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "roc-threshold-uses-tpr-not-fpr",
+     "file": "utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "committed-results-contradict-table2",
+     "file": "out/results_vs_table2.csv",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "binoculars-model-not-phi15",
+     "file": "detector.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "length-confound-human-vs-ai",
+     "file": "generate_human_dataset.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "missing-xsum-ai-dataset",
+     "file": "detection.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "tables34-sweep-not-reproducible",
+     "file": "detection_all.sh",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "readme-refs-missing-script",
+     "file": "README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "whitebox-prompt-label-overwrite",
+     "file": "detector.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "evaluation-py-syntax-error",
+     "file": "evaluation.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "roc-threshold-uses-tpr-not-fpr",
+     "file": "utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "committed-results-contradict-table2",
+     "file": "out/results_vs_table2.csv",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "binoculars-model-not-phi15",
+     "file": "detector.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "length-confound-human-vs-ai",
+     "file": "generate_human_dataset.py",
+     "match": "no"
+    }
+   ]
+  },
+  "run_01|item07": {
+   "scicoqa_protocol": "MISSED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "novelty-metric-not-computed",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "text8-experiment-code-absent",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "dispersion-stats-not-computed",
+     "file": "multiflow/experiments/inference_se3_flows.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "distillation-set-count-mismatch",
+     "file": "multiflow/data/datasets.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "novelty-metric-not-computed",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "text8-experiment-code-absent",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "dispersion-stats-not-computed",
+     "file": "multiflow/experiments/inference_se3_flows.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "distillation-set-count-mismatch",
+     "file": "multiflow/data/datasets.py",
+     "match": "no"
+    }
+   ]
+  },
+  "run_01|item08": {
+   "scicoqa_protocol": "DETECTED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "hyperparameters-ignored",
+     "file": "code/YangLing0818__consistency_flow_matching/sde_lib.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "threshold-isinstance-typo",
+     "file": "code/YangLing0818__consistency_flow_matching/losses.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "checkpoint-index-mismatch",
+     "file": "code/YangLing0818__consistency_flow_matching/README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "data-pipeline-nondeterminism",
+     "file": "code/YangLing0818__consistency_flow_matching/pytorch_datasets.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "speedup-not-traceable",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "ema-vs-stopgrad-target",
+     "file": "code/YangLing0818__consistency_flow_matching/losses.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "hyperparameters-ignored",
+     "file": "code/YangLing0818__consistency_flow_matching/sde_lib.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "threshold-isinstance-typo",
+     "file": "code/YangLing0818__consistency_flow_matching/losses.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "checkpoint-index-mismatch",
+     "file": "code/YangLing0818__consistency_flow_matching/README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "data-pipeline-nondeterminism",
+     "file": "code/YangLing0818__consistency_flow_matching/pytorch_datasets.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "speedup-not-traceable",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "ema-vs-stopgrad-target",
+     "file": "code/YangLing0818__consistency_flow_matching/losses.py",
+     "match": "yes"
+    }
+   ]
+  },
+  "run_01|item09": {
+   "scicoqa_protocol": "MISSED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "no-significance-test-code",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "baselines-jsr-srjgraph-absent",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "no-repro-instructions-or-deps",
+     "file": "README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "dead-scripts-syntax-errors",
+     "file": "kgc-dr/evaluation/metrics.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "reranking-eval-write-rankdata-undefined",
+     "file": "kgc-dr/evaluation/reranking_evaluator.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "kgc-dr-readme-wrong-paper",
+     "file": "kgc-dr/README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "no-significance-test-code",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "baselines-jsr-srjgraph-absent",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "no-repro-instructions-or-deps",
+     "file": "README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "dead-scripts-syntax-errors",
+     "file": "kgc-dr/evaluation/metrics.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "reranking-eval-write-rankdata-undefined",
+     "file": "kgc-dr/evaluation/reranking_evaluator.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "kgc-dr-readme-wrong-paper",
+     "file": "kgc-dr/README.md",
+     "match": "no"
+    }
+   ]
+  },
+  "run_01|item10": {
+   "scicoqa_protocol": "MISSED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "math10k-mawps-test-contamination",
+     "file": "out/contamination.csv",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "math10k-composition-misstated",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "deps-unpinned-transformers-git-main",
+     "file": "requirements.txt",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "chatgpt-baseline-eval-code-missing",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "trained-adapters-not-in-repo",
+     "file": "README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "aqua-first-letter-extraction",
+     "file": "evaluate.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "math10k-mawps-test-contamination",
+     "file": "out/contamination.csv",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "math10k-composition-misstated",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "deps-unpinned-transformers-git-main",
+     "file": "requirements.txt",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "chatgpt-baseline-eval-code-missing",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "trained-adapters-not-in-repo",
+     "file": "README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "aqua-first-letter-extraction",
+     "file": "evaluate.py",
+     "match": "no"
+    }
+   ]
+  },
+  "run_02|item01": {
+   "scicoqa_protocol": "DETECTED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "stage1-uncertainty-reward-trainer-absent",
+     "file": "code/AmourWaltz__UAlign/code/train_sft.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "auroc-computation-absent",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "inference-uncertainty-conditioning-absent",
+     "file": "code/AmourWaltz__UAlign/code/infer.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "ppo-config-duplicate-kwarg",
+     "file": "code/AmourWaltz__UAlign/code/train_ppo.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "semantic-entropy-list-replication-degenerate",
+     "file": "code/AmourWaltz__UAlign/code/uncertainty.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "confidence-max-not-mean",
+     "file": "code/AmourWaltz__UAlign/code/uncertainty.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "semantic-entropy-exact-string-clustering",
+     "file": "code/AmourWaltz__UAlign/code/uncertainty.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "stage1-uncertainty-reward-trainer-absent",
+     "file": "code/AmourWaltz__UAlign/code/train_sft.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "auroc-computation-absent",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "inference-uncertainty-conditioning-absent",
+     "file": "code/AmourWaltz__UAlign/code/infer.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "ppo-config-duplicate-kwarg",
+     "file": "code/AmourWaltz__UAlign/code/train_ppo.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "semantic-entropy-list-replication-degenerate",
+     "file": "code/AmourWaltz__UAlign/code/uncertainty.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "confidence-max-not-mean",
+     "file": "code/AmourWaltz__UAlign/code/uncertainty.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "semantic-entropy-exact-string-clustering",
+     "file": "code/AmourWaltz__UAlign/code/uncertainty.py",
+     "match": "no"
+    }
+   ]
+  },
+  "run_02|item02": {
+   "scicoqa_protocol": "DETECTED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "missing-stratified-split-code",
+     "file": "code/inventec-ai-center__bp-benchmark/code/process/data_splitting.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "missing-featimp-gen-code",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "missing-significance-experiment-code",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "earlystop-patience-10-vs-15",
+     "file": "code/inventec-ai-center__bp-benchmark/code/train/core/config/dl/resnet/resnet_bcg.yaml",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "tune-selects-on-test",
+     "file": "code/inventec-ai-center__bp-benchmark/code/train/tune.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "missing-stratified-split-code",
+     "file": "code/inventec-ai-center__bp-benchmark/code/process/data_splitting.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "missing-featimp-gen-code",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "missing-significance-experiment-code",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "earlystop-patience-10-vs-15",
+     "file": "code/inventec-ai-center__bp-benchmark/code/train/core/config/dl/resnet/resnet_bcg.yaml",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "tune-selects-on-test",
+     "file": "code/inventec-ai-center__bp-benchmark/code/train/tune.py",
+     "match": "yes"
+    }
+   ]
+  },
+  "run_02|item03": {
+   "scicoqa_protocol": "DETECTED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "eval-code-incompatible-with-shared-logs",
+     "file": "README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "heuristic-baseline-no-code",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "tom-bestguess-no-code",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "ablation-variants-no-code",
+     "file": "rounds.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "random-deal-baseline-no-code",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "openai-nonazure-returns-message-object",
+     "file": "agent.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "extract-answer-constant-and",
+     "file": "save_utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "base-game-dimensions-mismatch",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "inconsistent-acceptance-operator",
+     "file": "_audit_code/out/threshold_operator.txt",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "eval-code-incompatible-with-shared-logs",
+     "file": "README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "heuristic-baseline-no-code",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "tom-bestguess-no-code",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "ablation-variants-no-code",
+     "file": "rounds.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "random-deal-baseline-no-code",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "openai-nonazure-returns-message-object",
+     "file": "agent.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "extract-answer-constant-and",
+     "file": "save_utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "base-game-dimensions-mismatch",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "inconsistent-acceptance-operator",
+     "file": "_audit_code/out/threshold_operator.txt",
+     "match": "yes"
+    }
+   ]
+  },
+  "run_02|item04": {
+   "scicoqa_protocol": "DETECTED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "mean-score-model-not-implemented",
+     "file": "experiments/experiment_utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "cvxpy-and-plotting-deps-unpinned",
+     "file": "experiments/twosf_solver.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "figure-input-pickle-not-produced",
+     "file": "experiments/experiment_utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "exposure-47pct-untraced",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "tfidf-similarity-score-last-author-overwrite",
+     "file": "tfidf_authors.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "adjusted-r2-is-mcfadden-pseudo-r2",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "evaluation-scale-mismatch",
+     "file": "tfidf_authors.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "pooled-logit-nonindependent-pairs",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "experiments-unseeded-rng",
+     "file": "experiments/experiment_utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "refs-dict-keyerror-risk",
+     "file": "model_evaluation.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "mean-score-model-not-implemented",
+     "file": "experiments/experiment_utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "cvxpy-and-plotting-deps-unpinned",
+     "file": "experiments/twosf_solver.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "figure-input-pickle-not-produced",
+     "file": "experiments/experiment_utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "exposure-47pct-untraced",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "tfidf-similarity-score-last-author-overwrite",
+     "file": "tfidf_authors.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "adjusted-r2-is-mcfadden-pseudo-r2",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "evaluation-scale-mismatch",
+     "file": "tfidf_authors.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "pooled-logit-nonindependent-pairs",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "experiments-unseeded-rng",
+     "file": "experiments/experiment_utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "refs-dict-keyerror-risk",
+     "file": "model_evaluation.py",
+     "match": "no"
+    }
+   ]
+  },
+  "run_02|item06": {
+   "scicoqa_protocol": "DETECTED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "xsum-main-inputs-absent",
+     "file": "code/kaito25atugich__Detector/detection.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "readme-binoculars-entrypoint-absent",
+     "file": "code/kaito25atugich__Detector/README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "whitebox-prompt-label-override",
+     "file": "code/kaito25atugich__Detector/detector.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "evaluation-syntax-error",
+     "file": "code/kaito25atugich__Detector/evaluation.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "binoculars-model-mismatch",
+     "file": "code/kaito25atugich__Detector/detector.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "committed-results-mismatch-table2",
+     "file": "out/table2_trace.csv",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "human-vs-ai-length-confound",
+     "file": "code/kaito25atugich__Detector/generate_human_dataset.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "xsum-main-inputs-absent",
+     "file": "code/kaito25atugich__Detector/detection.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "readme-binoculars-entrypoint-absent",
+     "file": "code/kaito25atugich__Detector/README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "whitebox-prompt-label-override",
+     "file": "code/kaito25atugich__Detector/detector.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "evaluation-syntax-error",
+     "file": "code/kaito25atugich__Detector/evaluation.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "binoculars-model-mismatch",
+     "file": "code/kaito25atugich__Detector/detector.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "committed-results-mismatch-table2",
+     "file": "out/table2_trace.csv",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "human-vs-ai-length-confound",
+     "file": "code/kaito25atugich__Detector/generate_human_dataset.py",
+     "match": "no"
+    }
+   ]
+  },
+  "run_02|item07": {
+   "scicoqa_protocol": "MISSED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "novelty-metric-not-in-repo",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "text8-experiments-not-in-repo",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "dispersion-not-computed",
+     "file": "multiflow/experiments/inference_se3_flows.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "diversity-raw-cluster-count",
+     "file": "multiflow/experiments/utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "novelty-metric-not-in-repo",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "text8-experiments-not-in-repo",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "dispersion-not-computed",
+     "file": "multiflow/experiments/inference_se3_flows.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "diversity-raw-cluster-count",
+     "file": "multiflow/experiments/utils.py",
+     "match": "no"
+    }
+   ]
+  },
+  "run_02|item08": {
+   "scicoqa_protocol": "DETECTED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "baseline-training-and-efficiency-not-reproducible",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "highres-weights-and-fid-stats-absent",
+     "file": "README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "hardcoded-hyperparameters-ignore-config",
+     "file": "sde_lib.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "config-key-delta-mismatch",
+     "file": "configs/consistencyfm/cifar10_gaussian_ddpmpp.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "readme-eval-ckpt-indices-unreachable",
+     "file": "README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "tuple-not-isinstance-boundary-check",
+     "file": "losses.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "config-seed-unused-nondeterministic",
+     "file": "configs/default_cifar10_configs.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "loss-target-stopgrad-not-ema",
+     "file": "losses.py",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "baseline-training-and-efficiency-not-reproducible",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "highres-weights-and-fid-stats-absent",
+     "file": "README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "hardcoded-hyperparameters-ignore-config",
+     "file": "sde_lib.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "config-key-delta-mismatch",
+     "file": "configs/consistencyfm/cifar10_gaussian_ddpmpp.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "readme-eval-ckpt-indices-unreachable",
+     "file": "README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "tuple-not-isinstance-boundary-check",
+     "file": "losses.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "config-seed-unused-nondeterministic",
+     "file": "configs/default_cifar10_configs.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "loss-target-stopgrad-not-ema",
+     "file": "losses.py",
+     "match": "yes"
+    }
+   ]
+  },
+  "run_02|item09": {
+   "scicoqa_protocol": "MISSED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "no-significance-test-code",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "esci-pipeline-absent",
+     "file": "kgc-dr/evaluation/dual_encoder_rerank_evaluator.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "ablation-pct-inconsistent-qbe",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "no-dependency-spec",
+     "file": "out/check_repo.csv",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "repo-readme-documents-wrong-paper",
+     "file": "kgc-dr/README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "no-pretrained-models-or-index",
+     "file": ".gitignore",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "validation-selection-not-implemented",
+     "file": "kgc-dr/trainer/unified_train.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "hardcoded-absolute-paths",
+     "file": "kgc-dr/scripts/unified_kgc/static_user_pipline.sh",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "write-rankdata-orphan-self",
+     "file": "kgc-dr/evaluation/utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "metrics-py-syntax-error",
+     "file": "kgc-dr/evaluation/metrics.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "divide-user-by-groups-broken",
+     "file": "preprocess/unified_user/divide_user_by_groups.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "no-significance-test-code",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "esci-pipeline-absent",
+     "file": "kgc-dr/evaluation/dual_encoder_rerank_evaluator.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "ablation-pct-inconsistent-qbe",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "no-dependency-spec",
+     "file": "out/check_repo.csv",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "repo-readme-documents-wrong-paper",
+     "file": "kgc-dr/README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "no-pretrained-models-or-index",
+     "file": ".gitignore",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "validation-selection-not-implemented",
+     "file": "kgc-dr/trainer/unified_train.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "hardcoded-absolute-paths",
+     "file": "kgc-dr/scripts/unified_kgc/static_user_pipline.sh",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "write-rankdata-orphan-self",
+     "file": "kgc-dr/evaluation/utils.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "metrics-py-syntax-error",
+     "file": "kgc-dr/evaluation/metrics.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "divide-user-by-groups-broken",
+     "file": "preprocess/unified_user/divide_user_by_groups.py",
+     "match": "no"
+    }
+   ]
+  },
+  "run_02|item10": {
+   "scicoqa_protocol": "MISSED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "math10k-test-leakage",
+     "file": "out/math10k_test_overlap.csv",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "deps-unpinned",
+     "file": "requirements.txt",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "trained-weights-not-in-repo",
+     "file": "README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "prefix-training-config-differs",
+     "file": "math_running_commands",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "aqua-answer-letter-first-match",
+     "file": "evaluate.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "finetune-datapath-not-at-root",
+     "file": "README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "math10k-test-leakage",
+     "file": "out/math10k_test_overlap.csv",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "deps-unpinned",
+     "file": "requirements.txt",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "trained-weights-not-in-repo",
+     "file": "README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "prefix-training-config-differs",
+     "file": "math_running_commands",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "aqua-answer-letter-first-match",
+     "file": "evaluate.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gpt",
+     "finding": "finetune-datapath-not-at-root",
+     "file": "README.md",
+     "match": "no"
+    }
+   ]
+  },
+  "run_01|item11": {
+   "scicoqa_protocol": "DETECTED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "fig1-fig3-no-generating-code",
+     "file": "README.md",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "liu-precond-derivative-wrong-denominator",
+     "file": "applications/Liu/M_Liu.m",
+     "match": "yes"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "liu-baseline-cubature-wrong-scaling",
+     "file": "applications/Liu/reproduce_results_Liu.m",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "gauss-beta-missing-min-cap",
+     "file": "applications/Gauss/reproduce_results_Gauss.m",
+     "match": "no"
+    }
+   ]
+  },
+  "run_02|item11": {
+   "scicoqa_protocol": "MISSED",
+   "pairs": [
+    {
+     "gt_source": "gemini",
+     "finding": "illustration-figs-no-code",
+     "file": "paper.pdf",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "python-deps-unpinned",
+     "file": "applications/V0_Ising/RobustKSD.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "ising-weight-sigmoid-vs-indicator",
+     "file": "applications/V0_Ising/RobustKSD.py",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "egm-outlier-no-centering",
+     "file": "applications/EGM/load_Sachs_dataset.m",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "gauss-beta-min-inconsistent",
+     "file": "applications/Gauss/reproduce_results_Gauss.m",
+     "match": "no"
+    },
+    {
+     "gt_source": "gemini",
+     "finding": "egm-contamination-unseeded",
+     "file": "applications/EGM/reproduce_results_EGM.m",
+     "match": "no"
+    }
+   ]
+  }
+ },
+ "_pairs_by_key": {
+  "run_01|item01|gemini|1|reward-model-training-absent": {
+   "run": "run_01",
+   "item": 1,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "reward-model-training-absent",
+   "file": "code/uncertainty.py",
+   "match": "no"
+  },
+  "run_01|item01|gemini|4|confidence-max-not-mean": {
+   "run": "run_01",
+   "item": 1,
+   "src": "gemini",
+   "idx": "4",
+   "finding": "confidence-max-not-mean",
+   "file": "code/uncertainty.py",
+   "match": "yes"
+  },
+  "run_01|item01|gemini|5|sampling-k-six-not-ten": {
+   "run": "run_01",
+   "item": 1,
+   "src": "gemini",
+   "idx": "5",
+   "finding": "sampling-k-six-not-ten",
+   "file": "code/sample.py",
+   "match": "no"
+  },
+  "run_01|item01|gemini|0|auroc-code-absent": {
+   "run": "run_01",
+   "item": 1,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "auroc-code-absent",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item01|gemini|6|sampling-greedy-not-temperature": {
+   "run": "run_01",
+   "item": 1,
+   "src": "gemini",
+   "idx": "6",
+   "finding": "sampling-greedy-not-temperature",
+   "file": "code/sample.py",
+   "match": "no"
+  },
+  "run_01|item01|gemini|2|ppo-script-broken": {
+   "run": "run_01",
+   "item": 1,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "ppo-script-broken",
+   "file": "code/train_ppo.py",
+   "match": "no"
+  },
+  "run_01|item01|gpt|0|auroc-code-absent": {
+   "run": "run_01",
+   "item": 1,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "auroc-code-absent",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item01|gpt|1|reward-model-training-absent": {
+   "run": "run_01",
+   "item": 1,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "reward-model-training-absent",
+   "file": "code/uncertainty.py",
+   "match": "no"
+  },
+  "run_01|item01|gpt|2|ppo-script-broken": {
+   "run": "run_01",
+   "item": 1,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "ppo-script-broken",
+   "file": "code/train_ppo.py",
+   "match": "no"
+  },
+  "run_01|item01|gemini|3|entropy-listmul-bug": {
+   "run": "run_01",
+   "item": 1,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "entropy-listmul-bug",
+   "file": "code/uncertainty.py",
+   "match": "no"
+  },
+  "run_01|item01|gpt|4|confidence-max-not-mean": {
+   "run": "run_01",
+   "item": 1,
+   "src": "gpt",
+   "idx": "4",
+   "finding": "confidence-max-not-mean",
+   "file": "code/uncertainty.py",
+   "match": "yes"
+  },
+  "run_01|item01|gemini|7|entropy-no-semantic-clustering": {
+   "run": "run_01",
+   "item": 1,
+   "src": "gemini",
+   "idx": "7",
+   "finding": "entropy-no-semantic-clustering",
+   "file": "code/uncertainty.py",
+   "match": "no"
+  },
+  "run_01|item01|gpt|5|sampling-k-six-not-ten": {
+   "run": "run_01",
+   "item": 1,
+   "src": "gpt",
+   "idx": "5",
+   "finding": "sampling-k-six-not-ten",
+   "file": "code/sample.py",
+   "match": "no"
+  },
+  "run_01|item01|gpt|6|sampling-greedy-not-temperature": {
+   "run": "run_01",
+   "item": 1,
+   "src": "gpt",
+   "idx": "6",
+   "finding": "sampling-greedy-not-temperature",
+   "file": "code/sample.py",
+   "match": "no"
+  },
+  "run_01|item02|gemini|1|feature-selection-global-not-nested": {
+   "run": "run_01",
+   "item": 2,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "feature-selection-global-not-nested",
+   "file": "code/train/core/loaders/feat_loader.py",
+   "match": "no"
+  },
+  "run_01|item01|gpt|3|entropy-listmul-bug": {
+   "run": "run_01",
+   "item": 1,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "entropy-listmul-bug",
+   "file": "code/uncertainty.py",
+   "match": "no"
+  },
+  "run_01|item02|gemini|0|tuning-selects-on-test": {
+   "run": "run_01",
+   "item": 2,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "tuning-selects-on-test",
+   "file": "code/train/tune_ml.py",
+   "match": "yes"
+  },
+  "run_01|item02|gemini|2|stratified-split-code-missing": {
+   "run": "run_01",
+   "item": 2,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "stratified-split-code-missing",
+   "file": "code/process/data_splitting.py",
+   "match": "no"
+  },
+  "run_01|item02|gemini|3|feat-importance-generator-missing": {
+   "run": "run_01",
+   "item": 2,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "feat-importance-generator-missing",
+   "file": "code/train/core/config/ml/svr/svr_bcg_SP.yaml",
+   "match": "no"
+  },
+  "run_01|item02|gemini|4|figures-stats-code-missing": {
+   "run": "run_01",
+   "item": 2,
+   "src": "gemini",
+   "idx": "4",
+   "finding": "figures-stats-code-missing",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item01|gpt|7|entropy-no-semantic-clustering": {
+   "run": "run_01",
+   "item": 1,
+   "src": "gpt",
+   "idx": "7",
+   "finding": "entropy-no-semantic-clustering",
+   "file": "code/uncertainty.py",
+   "match": "no"
+  },
+  "run_01|item02|gemini|5|tuning-method-grid-vs-optuna": {
+   "run": "run_01",
+   "item": 2,
+   "src": "gemini",
+   "idx": "5",
+   "finding": "tuning-method-grid-vs-optuna",
+   "file": "code/train/core/config/tune/ml/lgb_sensors_SP.yaml",
+   "match": "no"
+  },
+  "run_01|item02|gemini|6|sd-population-vs-sample": {
+   "run": "run_01",
+   "item": 2,
+   "src": "gemini",
+   "idx": "6",
+   "finding": "sd-population-vs-sample",
+   "file": "code/train/core/utils.py",
+   "match": "no"
+  },
+  "run_01|item02|gemini|7|tune-default-config-missing": {
+   "run": "run_01",
+   "item": 2,
+   "src": "gemini",
+   "idx": "7",
+   "finding": "tune-default-config-missing",
+   "file": "code/train/tune.py",
+   "match": "no"
+  },
+  "run_01|item02|gpt|0|tuning-selects-on-test": {
+   "run": "run_01",
+   "item": 2,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "tuning-selects-on-test",
+   "file": "code/train/tune_ml.py",
+   "match": "yes"
+  },
+  "run_01|item02|gpt|2|stratified-split-code-missing": {
+   "run": "run_01",
+   "item": 2,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "stratified-split-code-missing",
+   "file": "code/process/data_splitting.py",
+   "match": "no"
+  },
+  "run_01|item02|gpt|3|feat-importance-generator-missing": {
+   "run": "run_01",
+   "item": 2,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "feat-importance-generator-missing",
+   "file": "code/train/core/config/ml/svr/svr_bcg_SP.yaml",
+   "match": "no"
+  },
+  "run_01|item02|gpt|1|feature-selection-global-not-nested": {
+   "run": "run_01",
+   "item": 2,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "feature-selection-global-not-nested",
+   "file": "code/train/core/loaders/feat_loader.py",
+   "match": "no"
+  },
+  "run_01|item02|gpt|4|figures-stats-code-missing": {
+   "run": "run_01",
+   "item": 2,
+   "src": "gpt",
+   "idx": "4",
+   "finding": "figures-stats-code-missing",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item03|gemini|0|legacy-log-schema-uneval": {
+   "run": "run_01",
+   "item": 3,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "legacy-log-schema-uneval",
+   "file": "code/S-Abdelnabi__LLM-Deliberation/README.md",
+   "match": "no"
+  },
+  "run_01|item03|gemini|1|baseline-generators-absent": {
+   "run": "run_01",
+   "item": 3,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "baseline-generators-absent",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item03|gemini|2|difficulty-thresholds-absent": {
+   "run": "run_01",
+   "item": 3,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "difficulty-thresholds-absent",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item03|gemini|3|prompt-utils-requires-py312": {
+   "run": "run_01",
+   "item": 3,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "prompt-utils-requires-py312",
+   "file": "code/S-Abdelnabi__LLM-Deliberation/prompt_utils.py",
+   "match": "no"
+  },
+  "run_01|item02|gpt|6|sd-population-vs-sample": {
+   "run": "run_01",
+   "item": 2,
+   "src": "gpt",
+   "idx": "6",
+   "finding": "sd-population-vs-sample",
+   "file": "code/train/core/utils.py",
+   "match": "no"
+  },
+  "run_01|item02|gpt|5|tuning-method-grid-vs-optuna": {
+   "run": "run_01",
+   "item": 2,
+   "src": "gpt",
+   "idx": "5",
+   "finding": "tuning-method-grid-vs-optuna",
+   "file": "code/train/core/config/tune/ml/lgb_sensors_SP.yaml",
+   "match": "no"
+  },
+  "run_01|item03|gemini|4|agent-nonazure-returns-message-object": {
+   "run": "run_01",
+   "item": 3,
+   "src": "gemini",
+   "idx": "4",
+   "finding": "agent-nonazure-returns-message-object",
+   "file": "code/S-Abdelnabi__LLM-Deliberation/agent.py",
+   "match": "no"
+  },
+  "run_01|item02|gpt|7|tune-default-config-missing": {
+   "run": "run_01",
+   "item": 2,
+   "src": "gpt",
+   "idx": "7",
+   "finding": "tune-default-config-missing",
+   "file": "code/train/tune.py",
+   "match": "no"
+  },
+  "run_01|item03|gemini|5|initial-prompts-loadscores-missing-break": {
+   "run": "run_01",
+   "item": 3,
+   "src": "gemini",
+   "idx": "5",
+   "finding": "initial-prompts-loadscores-missing-break",
+   "file": "code/S-Abdelnabi__LLM-Deliberation/initial_prompts.py",
+   "match": "no"
+  },
+  "run_01|item03|gemini|7|ge-vs-gt-feasibility": {
+   "run": "run_01",
+   "item": 3,
+   "src": "gemini",
+   "idx": "7",
+   "finding": "ge-vs-gt-feasibility",
+   "file": "paper.pdf",
+   "match": "yes"
+  },
+  "run_01|item03|gpt|0|legacy-log-schema-uneval": {
+   "run": "run_01",
+   "item": 3,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "legacy-log-schema-uneval",
+   "file": "code/S-Abdelnabi__LLM-Deliberation/README.md",
+   "match": "no"
+  },
+  "run_01|item03|gpt|1|baseline-generators-absent": {
+   "run": "run_01",
+   "item": 3,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "baseline-generators-absent",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item03|gemini|6|game3-feasibility-mismatch": {
+   "run": "run_01",
+   "item": 3,
+   "src": "gemini",
+   "idx": "6",
+   "finding": "game3-feasibility-mismatch",
+   "file": "out/check_feasibility.csv",
+   "match": "no"
+  },
+  "run_01|item03|gpt|3|prompt-utils-requires-py312": {
+   "run": "run_01",
+   "item": 3,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "prompt-utils-requires-py312",
+   "file": "code/S-Abdelnabi__LLM-Deliberation/prompt_utils.py",
+   "match": "no"
+  },
+  "run_01|item03|gpt|2|difficulty-thresholds-absent": {
+   "run": "run_01",
+   "item": 3,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "difficulty-thresholds-absent",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item03|gpt|4|agent-nonazure-returns-message-object": {
+   "run": "run_01",
+   "item": 3,
+   "src": "gpt",
+   "idx": "4",
+   "finding": "agent-nonazure-returns-message-object",
+   "file": "code/S-Abdelnabi__LLM-Deliberation/agent.py",
+   "match": "no"
+  },
+  "run_01|item04|gemini|0|missing-experiment-dependencies": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "missing-experiment-dependencies",
+   "file": "experiments/twosf_solver.py",
+   "match": "no"
+  },
+  "run_01|item03|gpt|6|game3-feasibility-mismatch": {
+   "run": "run_01",
+   "item": 3,
+   "src": "gpt",
+   "idx": "6",
+   "finding": "game3-feasibility-mismatch",
+   "file": "out/check_feasibility.csv",
+   "match": "no"
+  },
+  "run_01|item03|gpt|7|ge-vs-gt-feasibility": {
+   "run": "run_01",
+   "item": 3,
+   "src": "gpt",
+   "idx": "7",
+   "finding": "ge-vs-gt-feasibility",
+   "file": "paper.pdf",
+   "match": "yes"
+  },
+  "run_01|item03|gpt|5|initial-prompts-loadscores-missing-break": {
+   "run": "run_01",
+   "item": 3,
+   "src": "gpt",
+   "idx": "5",
+   "finding": "initial-prompts-loadscores-missing-break",
+   "file": "code/S-Abdelnabi__LLM-Deliberation/initial_prompts.py",
+   "match": "no"
+  },
+  "run_01|item04|gemini|2|untraceable-recommendation-probability-stat": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "untraceable-recommendation-probability-stat",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item04|gemini|3|missing-alt-fairness-and-asymmetric-code": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "missing-alt-fairness-and-asymmetric-code",
+   "file": "experiments/twosf_solver.py",
+   "match": "no"
+  },
+  "run_01|item04|gemini|4|tfidf-cross-author-score-overwrite": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gemini",
+   "idx": "4",
+   "finding": "tfidf-cross-author-score-overwrite",
+   "file": "tfidf_authors.py",
+   "match": "yes"
+  },
+  "run_01|item04|gemini|5|get-paper-details-root-data-path": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gemini",
+   "idx": "5",
+   "finding": "get-paper-details-root-data-path",
+   "file": "get_paper_details.py",
+   "match": "no"
+  },
+  "run_01|item04|gemini|1|missing-specter-embedding-code": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "missing-specter-embedding-code",
+   "file": "sentence_transformer_authors.py",
+   "match": "no"
+  },
+  "run_01|item04|gemini|6|homogeneous-samples-all-cluster-authors": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gemini",
+   "idx": "6",
+   "finding": "homogeneous-samples-all-cluster-authors",
+   "file": "experiments/fig2a.py",
+   "match": "no"
+  },
+  "run_01|item04|gemini|7|table1-pseudo-r2-mislabeled": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gemini",
+   "idx": "7",
+   "finding": "table1-pseudo-r2-mislabeled",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item04|gpt|0|missing-experiment-dependencies": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "missing-experiment-dependencies",
+   "file": "experiments/twosf_solver.py",
+   "match": "no"
+  },
+  "run_01|item04|gemini|9|no-random-seeds-nondeterministic": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gemini",
+   "idx": "9",
+   "finding": "no-random-seeds-nondeterministic",
+   "file": "experiments/experiment_utils.py",
+   "match": "no"
+  },
+  "run_01|item04|gpt|1|missing-specter-embedding-code": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "missing-specter-embedding-code",
+   "file": "sentence_transformer_authors.py",
+   "match": "no"
+  },
+  "run_01|item04|gemini|8|eval-includes-self-authored-papers": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gemini",
+   "idx": "8",
+   "finding": "eval-includes-self-authored-papers",
+   "file": "tfidf_authors.py",
+   "match": "no"
+  },
+  "run_01|item04|gpt|3|missing-alt-fairness-and-asymmetric-code": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "missing-alt-fairness-and-asymmetric-code",
+   "file": "experiments/twosf_solver.py",
+   "match": "no"
+  },
+  "run_01|item04|gpt|2|untraceable-recommendation-probability-stat": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "untraceable-recommendation-probability-stat",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item04|gpt|4|tfidf-cross-author-score-overwrite": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gpt",
+   "idx": "4",
+   "finding": "tfidf-cross-author-score-overwrite",
+   "file": "tfidf_authors.py",
+   "match": "yes"
+  },
+  "run_01|item04|gpt|5|get-paper-details-root-data-path": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gpt",
+   "idx": "5",
+   "finding": "get-paper-details-root-data-path",
+   "file": "get_paper_details.py",
+   "match": "no"
+  },
+  "run_01|item04|gpt|7|table1-pseudo-r2-mislabeled": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gpt",
+   "idx": "7",
+   "finding": "table1-pseudo-r2-mislabeled",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item04|gpt|6|homogeneous-samples-all-cluster-authors": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gpt",
+   "idx": "6",
+   "finding": "homogeneous-samples-all-cluster-authors",
+   "file": "experiments/fig2a.py",
+   "match": "no"
+  },
+  "run_01|item04|gpt|8|eval-includes-self-authored-papers": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gpt",
+   "idx": "8",
+   "finding": "eval-includes-self-authored-papers",
+   "file": "tfidf_authors.py",
+   "match": "no"
+  },
+  "run_01|item04|gpt|9|no-random-seeds-nondeterministic": {
+   "run": "run_01",
+   "item": 4,
+   "src": "gpt",
+   "idx": "9",
+   "finding": "no-random-seeds-nondeterministic",
+   "file": "experiments/experiment_utils.py",
+   "match": "no"
+  },
+  "run_01|item06|gemini|1|tables34-sweep-not-reproducible": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "tables34-sweep-not-reproducible",
+   "file": "detection_all.sh",
+   "match": "no"
+  },
+  "run_01|item06|gemini|0|missing-xsum-ai-dataset": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "missing-xsum-ai-dataset",
+   "file": "detection.py",
+   "match": "no"
+  },
+  "run_01|item06|gemini|3|whitebox-prompt-label-overwrite": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "whitebox-prompt-label-overwrite",
+   "file": "detector.py",
+   "match": "no"
+  },
+  "run_01|item06|gemini|5|roc-threshold-uses-tpr-not-fpr": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gemini",
+   "idx": "5",
+   "finding": "roc-threshold-uses-tpr-not-fpr",
+   "file": "utils.py",
+   "match": "no"
+  },
+  "run_01|item06|gemini|2|readme-refs-missing-script": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "readme-refs-missing-script",
+   "file": "README.md",
+   "match": "no"
+  },
+  "run_01|item06|gemini|4|evaluation-py-syntax-error": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gemini",
+   "idx": "4",
+   "finding": "evaluation-py-syntax-error",
+   "file": "evaluation.py",
+   "match": "no"
+  },
+  "run_01|item06|gemini|8|length-confound-human-vs-ai": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gemini",
+   "idx": "8",
+   "finding": "length-confound-human-vs-ai",
+   "file": "generate_human_dataset.py",
+   "match": "no"
+  },
+  "run_01|item06|gemini|6|committed-results-contradict-table2": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gemini",
+   "idx": "6",
+   "finding": "committed-results-contradict-table2",
+   "file": "out/results_vs_table2.csv",
+   "match": "no"
+  },
+  "run_01|item06|gemini|7|binoculars-model-not-phi15": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gemini",
+   "idx": "7",
+   "finding": "binoculars-model-not-phi15",
+   "file": "detector.py",
+   "match": "yes"
+  },
+  "run_01|item06|gpt|0|missing-xsum-ai-dataset": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "missing-xsum-ai-dataset",
+   "file": "detection.py",
+   "match": "no"
+  },
+  "run_01|item06|gpt|1|tables34-sweep-not-reproducible": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "tables34-sweep-not-reproducible",
+   "file": "detection_all.sh",
+   "match": "no"
+  },
+  "run_01|item06|gpt|3|whitebox-prompt-label-overwrite": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "whitebox-prompt-label-overwrite",
+   "file": "detector.py",
+   "match": "no"
+  },
+  "run_01|item06|gpt|4|evaluation-py-syntax-error": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gpt",
+   "idx": "4",
+   "finding": "evaluation-py-syntax-error",
+   "file": "evaluation.py",
+   "match": "no"
+  },
+  "run_01|item06|gpt|2|readme-refs-missing-script": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "readme-refs-missing-script",
+   "file": "README.md",
+   "match": "no"
+  },
+  "run_01|item06|gpt|5|roc-threshold-uses-tpr-not-fpr": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gpt",
+   "idx": "5",
+   "finding": "roc-threshold-uses-tpr-not-fpr",
+   "file": "utils.py",
+   "match": "no"
+  },
+  "run_01|item06|gpt|7|binoculars-model-not-phi15": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gpt",
+   "idx": "7",
+   "finding": "binoculars-model-not-phi15",
+   "file": "detector.py",
+   "match": "yes"
+  },
+  "run_01|item06|gpt|6|committed-results-contradict-table2": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gpt",
+   "idx": "6",
+   "finding": "committed-results-contradict-table2",
+   "file": "out/results_vs_table2.csv",
+   "match": "no"
+  },
+  "run_01|item07|gemini|1|text8-experiment-code-absent": {
+   "run": "run_01",
+   "item": 7,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "text8-experiment-code-absent",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item07|gpt|0|novelty-metric-not-computed": {
+   "run": "run_01",
+   "item": 7,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "novelty-metric-not-computed",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item06|gpt|8|length-confound-human-vs-ai": {
+   "run": "run_01",
+   "item": 6,
+   "src": "gpt",
+   "idx": "8",
+   "finding": "length-confound-human-vs-ai",
+   "file": "generate_human_dataset.py",
+   "match": "no"
+  },
+  "run_01|item07|gemini|2|dispersion-stats-not-computed": {
+   "run": "run_01",
+   "item": 7,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "dispersion-stats-not-computed",
+   "file": "multiflow/experiments/inference_se3_flows.py",
+   "match": "no"
+  },
+  "run_01|item07|gemini|0|novelty-metric-not-computed": {
+   "run": "run_01",
+   "item": 7,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "novelty-metric-not-computed",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item07|gpt|1|text8-experiment-code-absent": {
+   "run": "run_01",
+   "item": 7,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "text8-experiment-code-absent",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item07|gemini|3|distillation-set-count-mismatch": {
+   "run": "run_01",
+   "item": 7,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "distillation-set-count-mismatch",
+   "file": "multiflow/data/datasets.py",
+   "match": "no"
+  },
+  "run_01|item07|gpt|2|dispersion-stats-not-computed": {
+   "run": "run_01",
+   "item": 7,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "dispersion-stats-not-computed",
+   "file": "multiflow/experiments/inference_se3_flows.py",
+   "match": "no"
+  },
+  "run_01|item07|gpt|3|distillation-set-count-mismatch": {
+   "run": "run_01",
+   "item": 7,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "distillation-set-count-mismatch",
+   "file": "multiflow/data/datasets.py",
+   "match": "no"
+  },
+  "run_01|item08|gemini|0|hyperparameters-ignored": {
+   "run": "run_01",
+   "item": 8,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "hyperparameters-ignored",
+   "file": "code/YangLing0818__consistency_flow_matching/sde_lib.py",
+   "match": "no"
+  },
+  "run_01|item08|gemini|1|threshold-isinstance-typo": {
+   "run": "run_01",
+   "item": 8,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "threshold-isinstance-typo",
+   "file": "code/YangLing0818__consistency_flow_matching/losses.py",
+   "match": "no"
+  },
+  "run_01|item08|gemini|4|speedup-not-traceable": {
+   "run": "run_01",
+   "item": 8,
+   "src": "gemini",
+   "idx": "4",
+   "finding": "speedup-not-traceable",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item08|gemini|3|data-pipeline-nondeterminism": {
+   "run": "run_01",
+   "item": 8,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "data-pipeline-nondeterminism",
+   "file": "code/YangLing0818__consistency_flow_matching/pytorch_datasets.py",
+   "match": "no"
+  },
+  "run_01|item08|gemini|2|checkpoint-index-mismatch": {
+   "run": "run_01",
+   "item": 8,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "checkpoint-index-mismatch",
+   "file": "code/YangLing0818__consistency_flow_matching/README.md",
+   "match": "no"
+  },
+  "run_01|item08|gpt|0|hyperparameters-ignored": {
+   "run": "run_01",
+   "item": 8,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "hyperparameters-ignored",
+   "file": "code/YangLing0818__consistency_flow_matching/sde_lib.py",
+   "match": "no"
+  },
+  "run_01|item08|gpt|3|data-pipeline-nondeterminism": {
+   "run": "run_01",
+   "item": 8,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "data-pipeline-nondeterminism",
+   "file": "code/YangLing0818__consistency_flow_matching/pytorch_datasets.py",
+   "match": "no"
+  },
+  "run_01|item08|gpt|1|threshold-isinstance-typo": {
+   "run": "run_01",
+   "item": 8,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "threshold-isinstance-typo",
+   "file": "code/YangLing0818__consistency_flow_matching/losses.py",
+   "match": "no"
+  },
+  "run_01|item08|gpt|4|speedup-not-traceable": {
+   "run": "run_01",
+   "item": 8,
+   "src": "gpt",
+   "idx": "4",
+   "finding": "speedup-not-traceable",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item09|gemini|0|no-significance-test-code": {
+   "run": "run_01",
+   "item": 9,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "no-significance-test-code",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item08|gemini|5|ema-vs-stopgrad-target": {
+   "run": "run_01",
+   "item": 8,
+   "src": "gemini",
+   "idx": "5",
+   "finding": "ema-vs-stopgrad-target",
+   "file": "code/YangLing0818__consistency_flow_matching/losses.py",
+   "match": "yes"
+  },
+  "run_01|item09|gemini|1|baselines-jsr-srjgraph-absent": {
+   "run": "run_01",
+   "item": 9,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "baselines-jsr-srjgraph-absent",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item08|gpt|5|ema-vs-stopgrad-target": {
+   "run": "run_01",
+   "item": 8,
+   "src": "gpt",
+   "idx": "5",
+   "finding": "ema-vs-stopgrad-target",
+   "file": "code/YangLing0818__consistency_flow_matching/losses.py",
+   "match": "yes"
+  },
+  "run_01|item09|gemini|3|dead-scripts-syntax-errors": {
+   "run": "run_01",
+   "item": 9,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "dead-scripts-syntax-errors",
+   "file": "kgc-dr/evaluation/metrics.py",
+   "match": "no"
+  },
+  "run_01|item09|gemini|4|reranking-eval-write-rankdata-undefined": {
+   "run": "run_01",
+   "item": 9,
+   "src": "gemini",
+   "idx": "4",
+   "finding": "reranking-eval-write-rankdata-undefined",
+   "file": "kgc-dr/evaluation/reranking_evaluator.py",
+   "match": "no"
+  },
+  "run_01|item09|gpt|0|no-significance-test-code": {
+   "run": "run_01",
+   "item": 9,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "no-significance-test-code",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item09|gemini|5|kgc-dr-readme-wrong-paper": {
+   "run": "run_01",
+   "item": 9,
+   "src": "gemini",
+   "idx": "5",
+   "finding": "kgc-dr-readme-wrong-paper",
+   "file": "kgc-dr/README.md",
+   "match": "no"
+  },
+  "run_01|item08|gpt|2|checkpoint-index-mismatch": {
+   "run": "run_01",
+   "item": 8,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "checkpoint-index-mismatch",
+   "file": "code/YangLing0818__consistency_flow_matching/README.md",
+   "match": "no"
+  },
+  "run_01|item09|gpt|2|no-repro-instructions-or-deps": {
+   "run": "run_01",
+   "item": 9,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "no-repro-instructions-or-deps",
+   "file": "README.md",
+   "match": "no"
+  },
+  "run_01|item09|gpt|1|baselines-jsr-srjgraph-absent": {
+   "run": "run_01",
+   "item": 9,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "baselines-jsr-srjgraph-absent",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item09|gpt|3|dead-scripts-syntax-errors": {
+   "run": "run_01",
+   "item": 9,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "dead-scripts-syntax-errors",
+   "file": "kgc-dr/evaluation/metrics.py",
+   "match": "no"
+  },
+  "run_01|item09|gpt|4|reranking-eval-write-rankdata-undefined": {
+   "run": "run_01",
+   "item": 9,
+   "src": "gpt",
+   "idx": "4",
+   "finding": "reranking-eval-write-rankdata-undefined",
+   "file": "kgc-dr/evaluation/reranking_evaluator.py",
+   "match": "no"
+  },
+  "run_01|item09|gpt|5|kgc-dr-readme-wrong-paper": {
+   "run": "run_01",
+   "item": 9,
+   "src": "gpt",
+   "idx": "5",
+   "finding": "kgc-dr-readme-wrong-paper",
+   "file": "kgc-dr/README.md",
+   "match": "no"
+  },
+  "run_01|item10|gemini|0|math10k-mawps-test-contamination": {
+   "run": "run_01",
+   "item": 10,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "math10k-mawps-test-contamination",
+   "file": "out/contamination.csv",
+   "match": "no"
+  },
+  "run_01|item10|gemini|3|chatgpt-baseline-eval-code-missing": {
+   "run": "run_01",
+   "item": 10,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "chatgpt-baseline-eval-code-missing",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item09|gemini|2|no-repro-instructions-or-deps": {
+   "run": "run_01",
+   "item": 9,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "no-repro-instructions-or-deps",
+   "file": "README.md",
+   "match": "no"
+  },
+  "run_01|item10|gemini|2|deps-unpinned-transformers-git-main": {
+   "run": "run_01",
+   "item": 10,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "deps-unpinned-transformers-git-main",
+   "file": "requirements.txt",
+   "match": "no"
+  },
+  "run_01|item10|gemini|1|math10k-composition-misstated": {
+   "run": "run_01",
+   "item": 10,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "math10k-composition-misstated",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item10|gpt|0|math10k-mawps-test-contamination": {
+   "run": "run_01",
+   "item": 10,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "math10k-mawps-test-contamination",
+   "file": "out/contamination.csv",
+   "match": "no"
+  },
+  "run_01|item10|gemini|4|trained-adapters-not-in-repo": {
+   "run": "run_01",
+   "item": 10,
+   "src": "gemini",
+   "idx": "4",
+   "finding": "trained-adapters-not-in-repo",
+   "file": "README.md",
+   "match": "no"
+  },
+  "run_01|item10|gpt|3|chatgpt-baseline-eval-code-missing": {
+   "run": "run_01",
+   "item": 10,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "chatgpt-baseline-eval-code-missing",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item10|gpt|4|trained-adapters-not-in-repo": {
+   "run": "run_01",
+   "item": 10,
+   "src": "gpt",
+   "idx": "4",
+   "finding": "trained-adapters-not-in-repo",
+   "file": "README.md",
+   "match": "no"
+  },
+  "run_01|item10|gpt|1|math10k-composition-misstated": {
+   "run": "run_01",
+   "item": 10,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "math10k-composition-misstated",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item10|gemini|5|aqua-first-letter-extraction": {
+   "run": "run_01",
+   "item": 10,
+   "src": "gemini",
+   "idx": "5",
+   "finding": "aqua-first-letter-extraction",
+   "file": "evaluate.py",
+   "match": "no"
+  },
+  "run_01|item10|gpt|5|aqua-first-letter-extraction": {
+   "run": "run_01",
+   "item": 10,
+   "src": "gpt",
+   "idx": "5",
+   "finding": "aqua-first-letter-extraction",
+   "file": "evaluate.py",
+   "match": "no"
+  },
+  "run_02|item01|gemini|1|auroc-computation-absent": {
+   "run": "run_02",
+   "item": 1,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "auroc-computation-absent",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item01|gemini|0|stage1-uncertainty-reward-trainer-absent": {
+   "run": "run_02",
+   "item": 1,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "stage1-uncertainty-reward-trainer-absent",
+   "file": "code/AmourWaltz__UAlign/code/train_sft.py",
+   "match": "no"
+  },
+  "run_02|item01|gemini|3|ppo-config-duplicate-kwarg": {
+   "run": "run_02",
+   "item": 1,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "ppo-config-duplicate-kwarg",
+   "file": "code/AmourWaltz__UAlign/code/train_ppo.py",
+   "match": "no"
+  },
+  "run_02|item01|gemini|2|inference-uncertainty-conditioning-absent": {
+   "run": "run_02",
+   "item": 1,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "inference-uncertainty-conditioning-absent",
+   "file": "code/AmourWaltz__UAlign/code/infer.py",
+   "match": "no"
+  },
+  "run_02|item01|gemini|5|confidence-max-not-mean": {
+   "run": "run_02",
+   "item": 1,
+   "src": "gemini",
+   "idx": "5",
+   "finding": "confidence-max-not-mean",
+   "file": "code/AmourWaltz__UAlign/code/uncertainty.py",
+   "match": "yes"
+  },
+  "run_02|item01|gpt|0|stage1-uncertainty-reward-trainer-absent": {
+   "run": "run_02",
+   "item": 1,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "stage1-uncertainty-reward-trainer-absent",
+   "file": "code/AmourWaltz__UAlign/code/train_sft.py",
+   "match": "no"
+  },
+  "run_02|item01|gpt|1|auroc-computation-absent": {
+   "run": "run_02",
+   "item": 1,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "auroc-computation-absent",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item10|gpt|2|deps-unpinned-transformers-git-main": {
+   "run": "run_01",
+   "item": 10,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "deps-unpinned-transformers-git-main",
+   "file": "requirements.txt",
+   "match": "no"
+  },
+  "run_02|item01|gemini|6|semantic-entropy-exact-string-clustering": {
+   "run": "run_02",
+   "item": 1,
+   "src": "gemini",
+   "idx": "6",
+   "finding": "semantic-entropy-exact-string-clustering",
+   "file": "code/AmourWaltz__UAlign/code/uncertainty.py",
+   "match": "no"
+  },
+  "run_02|item01|gpt|3|ppo-config-duplicate-kwarg": {
+   "run": "run_02",
+   "item": 1,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "ppo-config-duplicate-kwarg",
+   "file": "code/AmourWaltz__UAlign/code/train_ppo.py",
+   "match": "no"
+  },
+  "run_02|item01|gemini|4|semantic-entropy-list-replication-degenerate": {
+   "run": "run_02",
+   "item": 1,
+   "src": "gemini",
+   "idx": "4",
+   "finding": "semantic-entropy-list-replication-degenerate",
+   "file": "code/AmourWaltz__UAlign/code/uncertainty.py",
+   "match": "yes"
+  },
+  "run_02|item01|gpt|5|confidence-max-not-mean": {
+   "run": "run_02",
+   "item": 1,
+   "src": "gpt",
+   "idx": "5",
+   "finding": "confidence-max-not-mean",
+   "file": "code/AmourWaltz__UAlign/code/uncertainty.py",
+   "match": "yes"
+  },
+  "run_02|item01|gpt|2|inference-uncertainty-conditioning-absent": {
+   "run": "run_02",
+   "item": 1,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "inference-uncertainty-conditioning-absent",
+   "file": "code/AmourWaltz__UAlign/code/infer.py",
+   "match": "no"
+  },
+  "run_02|item01|gpt|6|semantic-entropy-exact-string-clustering": {
+   "run": "run_02",
+   "item": 1,
+   "src": "gpt",
+   "idx": "6",
+   "finding": "semantic-entropy-exact-string-clustering",
+   "file": "code/AmourWaltz__UAlign/code/uncertainty.py",
+   "match": "no"
+  },
+  "run_02|item02|gemini|2|missing-significance-experiment-code": {
+   "run": "run_02",
+   "item": 2,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "missing-significance-experiment-code",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item02|gemini|1|missing-featimp-gen-code": {
+   "run": "run_02",
+   "item": 2,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "missing-featimp-gen-code",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item01|gpt|4|semantic-entropy-list-replication-degenerate": {
+   "run": "run_02",
+   "item": 1,
+   "src": "gpt",
+   "idx": "4",
+   "finding": "semantic-entropy-list-replication-degenerate",
+   "file": "code/AmourWaltz__UAlign/code/uncertainty.py",
+   "match": "no"
+  },
+  "run_02|item02|gemini|3|earlystop-patience-10-vs-15": {
+   "run": "run_02",
+   "item": 2,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "earlystop-patience-10-vs-15",
+   "file": "code/inventec-ai-center__bp-benchmark/code/train/core/config/dl/resnet/resnet_bcg.yaml",
+   "match": "no"
+  },
+  "run_02|item02|gemini|0|missing-stratified-split-code": {
+   "run": "run_02",
+   "item": 2,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "missing-stratified-split-code",
+   "file": "code/inventec-ai-center__bp-benchmark/code/process/data_splitting.py",
+   "match": "no"
+  },
+  "run_02|item02|gpt|1|missing-featimp-gen-code": {
+   "run": "run_02",
+   "item": 2,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "missing-featimp-gen-code",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item02|gpt|0|missing-stratified-split-code": {
+   "run": "run_02",
+   "item": 2,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "missing-stratified-split-code",
+   "file": "code/inventec-ai-center__bp-benchmark/code/process/data_splitting.py",
+   "match": "no"
+  },
+  "run_02|item02|gpt|2|missing-significance-experiment-code": {
+   "run": "run_02",
+   "item": 2,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "missing-significance-experiment-code",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item02|gpt|3|earlystop-patience-10-vs-15": {
+   "run": "run_02",
+   "item": 2,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "earlystop-patience-10-vs-15",
+   "file": "code/inventec-ai-center__bp-benchmark/code/train/core/config/dl/resnet/resnet_bcg.yaml",
+   "match": "no"
+  },
+  "run_02|item03|gemini|1|heuristic-baseline-no-code": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "heuristic-baseline-no-code",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item02|gemini|4|tune-selects-on-test": {
+   "run": "run_02",
+   "item": 2,
+   "src": "gemini",
+   "idx": "4",
+   "finding": "tune-selects-on-test",
+   "file": "code/inventec-ai-center__bp-benchmark/code/train/tune.py",
+   "match": "yes"
+  },
+  "run_02|item03|gemini|3|ablation-variants-no-code": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "ablation-variants-no-code",
+   "file": "rounds.py",
+   "match": "no"
+  },
+  "run_02|item03|gemini|2|tom-bestguess-no-code": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "tom-bestguess-no-code",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item03|gemini|0|eval-code-incompatible-with-shared-logs": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "eval-code-incompatible-with-shared-logs",
+   "file": "README.md",
+   "match": "no"
+  },
+  "run_02|item03|gemini|4|random-deal-baseline-no-code": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gemini",
+   "idx": "4",
+   "finding": "random-deal-baseline-no-code",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item02|gpt|4|tune-selects-on-test": {
+   "run": "run_02",
+   "item": 2,
+   "src": "gpt",
+   "idx": "4",
+   "finding": "tune-selects-on-test",
+   "file": "code/inventec-ai-center__bp-benchmark/code/train/tune.py",
+   "match": "yes"
+  },
+  "run_02|item03|gemini|6|extract-answer-constant-and": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gemini",
+   "idx": "6",
+   "finding": "extract-answer-constant-and",
+   "file": "save_utils.py",
+   "match": "no"
+  },
+  "run_02|item03|gemini|5|openai-nonazure-returns-message-object": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gemini",
+   "idx": "5",
+   "finding": "openai-nonazure-returns-message-object",
+   "file": "agent.py",
+   "match": "no"
+  },
+  "run_02|item03|gemini|7|base-game-dimensions-mismatch": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gemini",
+   "idx": "7",
+   "finding": "base-game-dimensions-mismatch",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item03|gpt|0|eval-code-incompatible-with-shared-logs": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "eval-code-incompatible-with-shared-logs",
+   "file": "README.md",
+   "match": "no"
+  },
+  "run_02|item03|gpt|1|heuristic-baseline-no-code": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "heuristic-baseline-no-code",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item03|gemini|8|inconsistent-acceptance-operator": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gemini",
+   "idx": "8",
+   "finding": "inconsistent-acceptance-operator",
+   "file": "_audit_code/out/threshold_operator.txt",
+   "match": "yes"
+  },
+  "run_02|item03|gpt|2|tom-bestguess-no-code": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "tom-bestguess-no-code",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item03|gpt|3|ablation-variants-no-code": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "ablation-variants-no-code",
+   "file": "rounds.py",
+   "match": "no"
+  },
+  "run_02|item03|gpt|4|random-deal-baseline-no-code": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gpt",
+   "idx": "4",
+   "finding": "random-deal-baseline-no-code",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item03|gpt|5|openai-nonazure-returns-message-object": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gpt",
+   "idx": "5",
+   "finding": "openai-nonazure-returns-message-object",
+   "file": "agent.py",
+   "match": "no"
+  },
+  "run_02|item03|gpt|6|extract-answer-constant-and": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gpt",
+   "idx": "6",
+   "finding": "extract-answer-constant-and",
+   "file": "save_utils.py",
+   "match": "no"
+  },
+  "run_02|item03|gpt|7|base-game-dimensions-mismatch": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gpt",
+   "idx": "7",
+   "finding": "base-game-dimensions-mismatch",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item04|gemini|0|mean-score-model-not-implemented": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "mean-score-model-not-implemented",
+   "file": "experiments/experiment_utils.py",
+   "match": "no"
+  },
+  "run_02|item03|gpt|8|inconsistent-acceptance-operator": {
+   "run": "run_02",
+   "item": 3,
+   "src": "gpt",
+   "idx": "8",
+   "finding": "inconsistent-acceptance-operator",
+   "file": "_audit_code/out/threshold_operator.txt",
+   "match": "yes"
+  },
+  "run_02|item04|gemini|2|figure-input-pickle-not-produced": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "figure-input-pickle-not-produced",
+   "file": "experiments/experiment_utils.py",
+   "match": "no"
+  },
+  "run_02|item04|gemini|3|exposure-47pct-untraced": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "exposure-47pct-untraced",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item04|gemini|1|cvxpy-and-plotting-deps-unpinned": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "cvxpy-and-plotting-deps-unpinned",
+   "file": "experiments/twosf_solver.py",
+   "match": "no"
+  },
+  "run_02|item04|gemini|4|tfidf-similarity-score-last-author-overwrite": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gemini",
+   "idx": "4",
+   "finding": "tfidf-similarity-score-last-author-overwrite",
+   "file": "tfidf_authors.py",
+   "match": "yes"
+  },
+  "run_02|item04|gemini|5|adjusted-r2-is-mcfadden-pseudo-r2": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gemini",
+   "idx": "5",
+   "finding": "adjusted-r2-is-mcfadden-pseudo-r2",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item04|gemini|6|evaluation-scale-mismatch": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gemini",
+   "idx": "6",
+   "finding": "evaluation-scale-mismatch",
+   "file": "tfidf_authors.py",
+   "match": "no"
+  },
+  "run_02|item04|gemini|8|experiments-unseeded-rng": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gemini",
+   "idx": "8",
+   "finding": "experiments-unseeded-rng",
+   "file": "experiments/experiment_utils.py",
+   "match": "no"
+  },
+  "run_02|item04|gpt|1|cvxpy-and-plotting-deps-unpinned": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "cvxpy-and-plotting-deps-unpinned",
+   "file": "experiments/twosf_solver.py",
+   "match": "no"
+  },
+  "run_02|item04|gpt|0|mean-score-model-not-implemented": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "mean-score-model-not-implemented",
+   "file": "experiments/experiment_utils.py",
+   "match": "no"
+  },
+  "run_02|item04|gpt|2|figure-input-pickle-not-produced": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "figure-input-pickle-not-produced",
+   "file": "experiments/experiment_utils.py",
+   "match": "no"
+  },
+  "run_02|item04|gemini|9|refs-dict-keyerror-risk": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gemini",
+   "idx": "9",
+   "finding": "refs-dict-keyerror-risk",
+   "file": "model_evaluation.py",
+   "match": "no"
+  },
+  "run_02|item04|gemini|7|pooled-logit-nonindependent-pairs": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gemini",
+   "idx": "7",
+   "finding": "pooled-logit-nonindependent-pairs",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item04|gpt|4|tfidf-similarity-score-last-author-overwrite": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gpt",
+   "idx": "4",
+   "finding": "tfidf-similarity-score-last-author-overwrite",
+   "file": "tfidf_authors.py",
+   "match": "yes"
+  },
+  "run_02|item04|gpt|3|exposure-47pct-untraced": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "exposure-47pct-untraced",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item04|gpt|8|experiments-unseeded-rng": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gpt",
+   "idx": "8",
+   "finding": "experiments-unseeded-rng",
+   "file": "experiments/experiment_utils.py",
+   "match": "no"
+  },
+  "run_02|item04|gpt|5|adjusted-r2-is-mcfadden-pseudo-r2": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gpt",
+   "idx": "5",
+   "finding": "adjusted-r2-is-mcfadden-pseudo-r2",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item04|gpt|7|pooled-logit-nonindependent-pairs": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gpt",
+   "idx": "7",
+   "finding": "pooled-logit-nonindependent-pairs",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item04|gpt|6|evaluation-scale-mismatch": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gpt",
+   "idx": "6",
+   "finding": "evaluation-scale-mismatch",
+   "file": "tfidf_authors.py",
+   "match": "no"
+  },
+  "run_02|item04|gpt|9|refs-dict-keyerror-risk": {
+   "run": "run_02",
+   "item": 4,
+   "src": "gpt",
+   "idx": "9",
+   "finding": "refs-dict-keyerror-risk",
+   "file": "model_evaluation.py",
+   "match": "no"
+  },
+  "run_02|item06|gemini|0|xsum-main-inputs-absent": {
+   "run": "run_02",
+   "item": 6,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "xsum-main-inputs-absent",
+   "file": "code/kaito25atugich__Detector/detection.py",
+   "match": "no"
+  },
+  "run_02|item06|gemini|2|whitebox-prompt-label-override": {
+   "run": "run_02",
+   "item": 6,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "whitebox-prompt-label-override",
+   "file": "code/kaito25atugich__Detector/detector.py",
+   "match": "no"
+  },
+  "run_02|item06|gemini|1|readme-binoculars-entrypoint-absent": {
+   "run": "run_02",
+   "item": 6,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "readme-binoculars-entrypoint-absent",
+   "file": "code/kaito25atugich__Detector/README.md",
+   "match": "no"
+  },
+  "run_02|item06|gemini|3|evaluation-syntax-error": {
+   "run": "run_02",
+   "item": 6,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "evaluation-syntax-error",
+   "file": "code/kaito25atugich__Detector/evaluation.py",
+   "match": "no"
+  },
+  "run_02|item06|gemini|5|committed-results-mismatch-table2": {
+   "run": "run_02",
+   "item": 6,
+   "src": "gemini",
+   "idx": "5",
+   "finding": "committed-results-mismatch-table2",
+   "file": "out/table2_trace.csv",
+   "match": "no"
+  },
+  "run_02|item06|gemini|4|binoculars-model-mismatch": {
+   "run": "run_02",
+   "item": 6,
+   "src": "gemini",
+   "idx": "4",
+   "finding": "binoculars-model-mismatch",
+   "file": "code/kaito25atugich__Detector/detector.py",
+   "match": "yes"
+  },
+  "run_02|item06|gemini|6|human-vs-ai-length-confound": {
+   "run": "run_02",
+   "item": 6,
+   "src": "gemini",
+   "idx": "6",
+   "finding": "human-vs-ai-length-confound",
+   "file": "code/kaito25atugich__Detector/generate_human_dataset.py",
+   "match": "no"
+  },
+  "run_02|item06|gpt|1|readme-binoculars-entrypoint-absent": {
+   "run": "run_02",
+   "item": 6,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "readme-binoculars-entrypoint-absent",
+   "file": "code/kaito25atugich__Detector/README.md",
+   "match": "no"
+  },
+  "run_02|item06|gpt|2|whitebox-prompt-label-override": {
+   "run": "run_02",
+   "item": 6,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "whitebox-prompt-label-override",
+   "file": "code/kaito25atugich__Detector/detector.py",
+   "match": "no"
+  },
+  "run_02|item06|gpt|0|xsum-main-inputs-absent": {
+   "run": "run_02",
+   "item": 6,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "xsum-main-inputs-absent",
+   "file": "code/kaito25atugich__Detector/detection.py",
+   "match": "no"
+  },
+  "run_02|item06|gpt|3|evaluation-syntax-error": {
+   "run": "run_02",
+   "item": 6,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "evaluation-syntax-error",
+   "file": "code/kaito25atugich__Detector/evaluation.py",
+   "match": "no"
+  },
+  "run_02|item06|gpt|4|binoculars-model-mismatch": {
+   "run": "run_02",
+   "item": 6,
+   "src": "gpt",
+   "idx": "4",
+   "finding": "binoculars-model-mismatch",
+   "file": "code/kaito25atugich__Detector/detector.py",
+   "match": "yes"
+  },
+  "run_02|item06|gpt|6|human-vs-ai-length-confound": {
+   "run": "run_02",
+   "item": 6,
+   "src": "gpt",
+   "idx": "6",
+   "finding": "human-vs-ai-length-confound",
+   "file": "code/kaito25atugich__Detector/generate_human_dataset.py",
+   "match": "no"
+  },
+  "run_02|item07|gemini|0|novelty-metric-not-in-repo": {
+   "run": "run_02",
+   "item": 7,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "novelty-metric-not-in-repo",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item07|gemini|1|text8-experiments-not-in-repo": {
+   "run": "run_02",
+   "item": 7,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "text8-experiments-not-in-repo",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item07|gemini|2|dispersion-not-computed": {
+   "run": "run_02",
+   "item": 7,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "dispersion-not-computed",
+   "file": "multiflow/experiments/inference_se3_flows.py",
+   "match": "no"
+  },
+  "run_02|item07|gpt|1|text8-experiments-not-in-repo": {
+   "run": "run_02",
+   "item": 7,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "text8-experiments-not-in-repo",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item07|gpt|0|novelty-metric-not-in-repo": {
+   "run": "run_02",
+   "item": 7,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "novelty-metric-not-in-repo",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item07|gemini|3|diversity-raw-cluster-count": {
+   "run": "run_02",
+   "item": 7,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "diversity-raw-cluster-count",
+   "file": "multiflow/experiments/utils.py",
+   "match": "no"
+  },
+  "run_02|item06|gpt|5|committed-results-mismatch-table2": {
+   "run": "run_02",
+   "item": 6,
+   "src": "gpt",
+   "idx": "5",
+   "finding": "committed-results-mismatch-table2",
+   "file": "out/table2_trace.csv",
+   "match": "no"
+  },
+  "run_02|item07|gpt|2|dispersion-not-computed": {
+   "run": "run_02",
+   "item": 7,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "dispersion-not-computed",
+   "file": "multiflow/experiments/inference_se3_flows.py",
+   "match": "no"
+  },
+  "run_02|item08|gemini|0|baseline-training-and-efficiency-not-reproducible": {
+   "run": "run_02",
+   "item": 8,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "baseline-training-and-efficiency-not-reproducible",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item08|gemini|1|highres-weights-and-fid-stats-absent": {
+   "run": "run_02",
+   "item": 8,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "highres-weights-and-fid-stats-absent",
+   "file": "README.md",
+   "match": "no"
+  },
+  "run_02|item07|gpt|3|diversity-raw-cluster-count": {
+   "run": "run_02",
+   "item": 7,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "diversity-raw-cluster-count",
+   "file": "multiflow/experiments/utils.py",
+   "match": "no"
+  },
+  "run_02|item08|gemini|3|config-key-delta-mismatch": {
+   "run": "run_02",
+   "item": 8,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "config-key-delta-mismatch",
+   "file": "configs/consistencyfm/cifar10_gaussian_ddpmpp.py",
+   "match": "no"
+  },
+  "run_02|item08|gemini|2|hardcoded-hyperparameters-ignore-config": {
+   "run": "run_02",
+   "item": 8,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "hardcoded-hyperparameters-ignore-config",
+   "file": "sde_lib.py",
+   "match": "no"
+  },
+  "run_02|item08|gemini|4|readme-eval-ckpt-indices-unreachable": {
+   "run": "run_02",
+   "item": 8,
+   "src": "gemini",
+   "idx": "4",
+   "finding": "readme-eval-ckpt-indices-unreachable",
+   "file": "README.md",
+   "match": "no"
+  },
+  "run_02|item08|gemini|7|loss-target-stopgrad-not-ema": {
+   "run": "run_02",
+   "item": 8,
+   "src": "gemini",
+   "idx": "7",
+   "finding": "loss-target-stopgrad-not-ema",
+   "file": "losses.py",
+   "match": "yes"
+  },
+  "run_02|item08|gemini|5|tuple-not-isinstance-boundary-check": {
+   "run": "run_02",
+   "item": 8,
+   "src": "gemini",
+   "idx": "5",
+   "finding": "tuple-not-isinstance-boundary-check",
+   "file": "losses.py",
+   "match": "no"
+  },
+  "run_02|item08|gemini|6|config-seed-unused-nondeterministic": {
+   "run": "run_02",
+   "item": 8,
+   "src": "gemini",
+   "idx": "6",
+   "finding": "config-seed-unused-nondeterministic",
+   "file": "configs/default_cifar10_configs.py",
+   "match": "no"
+  },
+  "run_02|item08|gpt|0|baseline-training-and-efficiency-not-reproducible": {
+   "run": "run_02",
+   "item": 8,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "baseline-training-and-efficiency-not-reproducible",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item08|gpt|2|hardcoded-hyperparameters-ignore-config": {
+   "run": "run_02",
+   "item": 8,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "hardcoded-hyperparameters-ignore-config",
+   "file": "sde_lib.py",
+   "match": "no"
+  },
+  "run_02|item08|gpt|3|config-key-delta-mismatch": {
+   "run": "run_02",
+   "item": 8,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "config-key-delta-mismatch",
+   "file": "configs/consistencyfm/cifar10_gaussian_ddpmpp.py",
+   "match": "no"
+  },
+  "run_02|item08|gpt|1|highres-weights-and-fid-stats-absent": {
+   "run": "run_02",
+   "item": 8,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "highres-weights-and-fid-stats-absent",
+   "file": "README.md",
+   "match": "no"
+  },
+  "run_02|item08|gpt|4|readme-eval-ckpt-indices-unreachable": {
+   "run": "run_02",
+   "item": 8,
+   "src": "gpt",
+   "idx": "4",
+   "finding": "readme-eval-ckpt-indices-unreachable",
+   "file": "README.md",
+   "match": "no"
+  },
+  "run_02|item08|gpt|5|tuple-not-isinstance-boundary-check": {
+   "run": "run_02",
+   "item": 8,
+   "src": "gpt",
+   "idx": "5",
+   "finding": "tuple-not-isinstance-boundary-check",
+   "file": "losses.py",
+   "match": "no"
+  },
+  "run_02|item09|gemini|0|no-significance-test-code": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "no-significance-test-code",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item08|gpt|7|loss-target-stopgrad-not-ema": {
+   "run": "run_02",
+   "item": 8,
+   "src": "gpt",
+   "idx": "7",
+   "finding": "loss-target-stopgrad-not-ema",
+   "file": "losses.py",
+   "match": "yes"
+  },
+  "run_02|item09|gemini|4|no-pretrained-models-or-index": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gemini",
+   "idx": "4",
+   "finding": "no-pretrained-models-or-index",
+   "file": ".gitignore",
+   "match": "no"
+  },
+  "run_02|item08|gpt|6|config-seed-unused-nondeterministic": {
+   "run": "run_02",
+   "item": 8,
+   "src": "gpt",
+   "idx": "6",
+   "finding": "config-seed-unused-nondeterministic",
+   "file": "configs/default_cifar10_configs.py",
+   "match": "no"
+  },
+  "run_02|item09|gemini|1|esci-pipeline-absent": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "esci-pipeline-absent",
+   "file": "kgc-dr/evaluation/dual_encoder_rerank_evaluator.py",
+   "match": "no"
+  },
+  "run_02|item09|gemini|5|validation-selection-not-implemented": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gemini",
+   "idx": "5",
+   "finding": "validation-selection-not-implemented",
+   "file": "kgc-dr/trainer/unified_train.py",
+   "match": "no"
+  },
+  "run_02|item09|gemini|3|repo-readme-documents-wrong-paper": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "repo-readme-documents-wrong-paper",
+   "file": "kgc-dr/README.md",
+   "match": "no"
+  },
+  "run_02|item09|gemini|6|hardcoded-absolute-paths": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gemini",
+   "idx": "6",
+   "finding": "hardcoded-absolute-paths",
+   "file": "kgc-dr/scripts/unified_kgc/static_user_pipline.sh",
+   "match": "no"
+  },
+  "run_02|item09|gemini|8|metrics-py-syntax-error": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gemini",
+   "idx": "8",
+   "finding": "metrics-py-syntax-error",
+   "file": "kgc-dr/evaluation/metrics.py",
+   "match": "no"
+  },
+  "run_02|item09|gemini|7|write-rankdata-orphan-self": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gemini",
+   "idx": "7",
+   "finding": "write-rankdata-orphan-self",
+   "file": "kgc-dr/evaluation/utils.py",
+   "match": "no"
+  },
+  "run_02|item09|gemini|10|ablation-pct-inconsistent-qbe": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gemini",
+   "idx": "10",
+   "finding": "ablation-pct-inconsistent-qbe",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item09|gemini|9|divide-user-by-groups-broken": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gemini",
+   "idx": "9",
+   "finding": "divide-user-by-groups-broken",
+   "file": "preprocess/unified_user/divide_user_by_groups.py",
+   "match": "no"
+  },
+  "run_02|item09|gpt|1|esci-pipeline-absent": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "esci-pipeline-absent",
+   "file": "kgc-dr/evaluation/dual_encoder_rerank_evaluator.py",
+   "match": "no"
+  },
+  "run_02|item09|gemini|2|no-dependency-spec": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "no-dependency-spec",
+   "file": "out/check_repo.csv",
+   "match": "no"
+  },
+  "run_02|item09|gpt|0|no-significance-test-code": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "no-significance-test-code",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item09|gpt|2|no-dependency-spec": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "no-dependency-spec",
+   "file": "out/check_repo.csv",
+   "match": "no"
+  },
+  "run_02|item09|gpt|3|repo-readme-documents-wrong-paper": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "repo-readme-documents-wrong-paper",
+   "file": "kgc-dr/README.md",
+   "match": "no"
+  },
+  "run_02|item09|gpt|4|no-pretrained-models-or-index": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gpt",
+   "idx": "4",
+   "finding": "no-pretrained-models-or-index",
+   "file": ".gitignore",
+   "match": "no"
+  },
+  "run_02|item09|gpt|5|validation-selection-not-implemented": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gpt",
+   "idx": "5",
+   "finding": "validation-selection-not-implemented",
+   "file": "kgc-dr/trainer/unified_train.py",
+   "match": "no"
+  },
+  "run_02|item10|gemini|1|deps-unpinned": {
+   "run": "run_02",
+   "item": 10,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "deps-unpinned",
+   "file": "requirements.txt",
+   "match": "no"
+  },
+  "run_02|item09|gpt|8|metrics-py-syntax-error": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gpt",
+   "idx": "8",
+   "finding": "metrics-py-syntax-error",
+   "file": "kgc-dr/evaluation/metrics.py",
+   "match": "no"
+  },
+  "run_02|item09|gpt|9|divide-user-by-groups-broken": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gpt",
+   "idx": "9",
+   "finding": "divide-user-by-groups-broken",
+   "file": "preprocess/unified_user/divide_user_by_groups.py",
+   "match": "no"
+  },
+  "run_02|item10|gemini|0|math10k-test-leakage": {
+   "run": "run_02",
+   "item": 10,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "math10k-test-leakage",
+   "file": "out/math10k_test_overlap.csv",
+   "match": "no"
+  },
+  "run_02|item10|gemini|3|prefix-training-config-differs": {
+   "run": "run_02",
+   "item": 10,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "prefix-training-config-differs",
+   "file": "math_running_commands",
+   "match": "no"
+  },
+  "run_02|item10|gemini|2|trained-weights-not-in-repo": {
+   "run": "run_02",
+   "item": 10,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "trained-weights-not-in-repo",
+   "file": "README.md",
+   "match": "no"
+  },
+  "run_02|item10|gemini|4|aqua-answer-letter-first-match": {
+   "run": "run_02",
+   "item": 10,
+   "src": "gemini",
+   "idx": "4",
+   "finding": "aqua-answer-letter-first-match",
+   "file": "evaluate.py",
+   "match": "no"
+  },
+  "run_02|item10|gemini|5|finetune-datapath-not-at-root": {
+   "run": "run_02",
+   "item": 10,
+   "src": "gemini",
+   "idx": "5",
+   "finding": "finetune-datapath-not-at-root",
+   "file": "README.md",
+   "match": "no"
+  },
+  "run_02|item09|gpt|6|hardcoded-absolute-paths": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gpt",
+   "idx": "6",
+   "finding": "hardcoded-absolute-paths",
+   "file": "kgc-dr/scripts/unified_kgc/static_user_pipline.sh",
+   "match": "no"
+  },
+  "run_02|item09|gpt|7|write-rankdata-orphan-self": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gpt",
+   "idx": "7",
+   "finding": "write-rankdata-orphan-self",
+   "file": "kgc-dr/evaluation/utils.py",
+   "match": "no"
+  },
+  "run_02|item10|gpt|0|math10k-test-leakage": {
+   "run": "run_02",
+   "item": 10,
+   "src": "gpt",
+   "idx": "0",
+   "finding": "math10k-test-leakage",
+   "file": "out/math10k_test_overlap.csv",
+   "match": "no"
+  },
+  "run_02|item10|gpt|2|trained-weights-not-in-repo": {
+   "run": "run_02",
+   "item": 10,
+   "src": "gpt",
+   "idx": "2",
+   "finding": "trained-weights-not-in-repo",
+   "file": "README.md",
+   "match": "no"
+  },
+  "run_02|item10|gpt|1|deps-unpinned": {
+   "run": "run_02",
+   "item": 10,
+   "src": "gpt",
+   "idx": "1",
+   "finding": "deps-unpinned",
+   "file": "requirements.txt",
+   "match": "no"
+  },
+  "run_02|item10|gpt|3|prefix-training-config-differs": {
+   "run": "run_02",
+   "item": 10,
+   "src": "gpt",
+   "idx": "3",
+   "finding": "prefix-training-config-differs",
+   "file": "math_running_commands",
+   "match": "no"
+  },
+  "run_02|item10|gpt|4|aqua-answer-letter-first-match": {
+   "run": "run_02",
+   "item": 10,
+   "src": "gpt",
+   "idx": "4",
+   "finding": "aqua-answer-letter-first-match",
+   "file": "evaluate.py",
+   "match": "no"
+  },
+  "run_02|item10|gpt|5|finetune-datapath-not-at-root": {
+   "run": "run_02",
+   "item": 10,
+   "src": "gpt",
+   "idx": "5",
+   "finding": "finetune-datapath-not-at-root",
+   "file": "README.md",
+   "match": "no"
+  },
+  "run_02|item09|gpt|10|ablation-pct-inconsistent-qbe": {
+   "run": "run_02",
+   "item": 9,
+   "src": "gpt",
+   "idx": "10",
+   "finding": "ablation-pct-inconsistent-qbe",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_01|item11|gemini|0|fig1-fig3-no-generating-code": {
+   "run": "run_01",
+   "item": 11,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "fig1-fig3-no-generating-code",
+   "file": "README.md",
+   "match": "no"
+  },
+  "run_01|item11|gemini|1|liu-precond-derivative-wrong-denominator": {
+   "run": "run_01",
+   "item": 11,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "liu-precond-derivative-wrong-denominator",
+   "file": "applications/Liu/M_Liu.m",
+   "match": "yes"
+  },
+  "run_01|item11|gemini|2|liu-baseline-cubature-wrong-scaling": {
+   "run": "run_01",
+   "item": 11,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "liu-baseline-cubature-wrong-scaling",
+   "file": "applications/Liu/reproduce_results_Liu.m",
+   "match": "no"
+  },
+  "run_01|item11|gemini|3|gauss-beta-missing-min-cap": {
+   "run": "run_01",
+   "item": 11,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "gauss-beta-missing-min-cap",
+   "file": "applications/Gauss/reproduce_results_Gauss.m",
+   "match": "no"
+  },
+  "run_02|item11|gemini|0|illustration-figs-no-code": {
+   "run": "run_02",
+   "item": 11,
+   "src": "gemini",
+   "idx": "0",
+   "finding": "illustration-figs-no-code",
+   "file": "paper.pdf",
+   "match": "no"
+  },
+  "run_02|item11|gemini|1|python-deps-unpinned": {
+   "run": "run_02",
+   "item": 11,
+   "src": "gemini",
+   "idx": "1",
+   "finding": "python-deps-unpinned",
+   "file": "applications/V0_Ising/RobustKSD.py",
+   "match": "no"
+  },
+  "run_02|item11|gemini|2|ising-weight-sigmoid-vs-indicator": {
+   "run": "run_02",
+   "item": 11,
+   "src": "gemini",
+   "idx": "2",
+   "finding": "ising-weight-sigmoid-vs-indicator",
+   "file": "applications/V0_Ising/RobustKSD.py",
+   "match": "no"
+  },
+  "run_02|item11|gemini|3|egm-outlier-no-centering": {
+   "run": "run_02",
+   "item": 11,
+   "src": "gemini",
+   "idx": "3",
+   "finding": "egm-outlier-no-centering",
+   "file": "applications/EGM/load_Sachs_dataset.m",
+   "match": "no"
+  },
+  "run_02|item11|gemini|4|gauss-beta-min-inconsistent": {
+   "run": "run_02",
+   "item": 11,
+   "src": "gemini",
+   "idx": "4",
+   "finding": "gauss-beta-min-inconsistent",
+   "file": "applications/Gauss/reproduce_results_Gauss.m",
+   "match": "no"
+  },
+  "run_02|item11|gemini|5|egm-contamination-unseeded": {
+   "run": "run_02",
+   "item": 11,
+   "src": "gemini",
+   "idx": "5",
+   "finding": "egm-contamination-unseeded",
+   "file": "applications/EGM/reproduce_results_EGM.m",
+   "match": "no"
+  }
+ }
+}

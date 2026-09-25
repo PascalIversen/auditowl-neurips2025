@@ -1,0 +1,11 @@
+mlp_layers=[512, 200]
+  real proj params        : ['proj.1.weight', 'proj.1.bias', 'proj.3.weight', 'proj.3.bias']
+  hardcoded trainable keys: ['proj.0.weight', 'proj.0.bias', 'proj.2.weight', 'proj.2.bias']
+  overlap                 : EMPTY -> entire video branch requires_grad=False
+
+mlp_layers=[200, 200]
+  real proj params        : ['proj.1.weight', 'proj.1.bias', 'proj.3.weight', 'proj.3.bias']
+  hardcoded trainable keys: ['proj.0.weight', 'proj.0.bias', 'proj.2.weight', 'proj.2.bias']
+  overlap                 : EMPTY -> entire video branch requires_grad=False
+
+[written] /home/author/Projects/neurips_audit/audits/1339_Embodied_Cognition_Augmented_End2End_Autonomous_Driving/_verifier_code_codex/out/video_branch_freeze.txt

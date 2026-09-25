@@ -1,0 +1,5 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/RobertMcCarthy97/neurips_encoded_rl
+https://github.com/GeodesicResearch/mars-steg
+
+# Other code links found (NOT cloned -- baseline/dependency):

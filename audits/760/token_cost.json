@@ -1,0 +1,19 @@
+{
+  "folder": "760_Mesh_Interpolation_Graph_Network_for_Dynamic_and_Spatially_I",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 10879,
+    "output": 16774,
+    "cache_write": 539216,
+    "cache_read": 4988698
+  },
+  "total_tokens": 5555567,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 19.01
+}

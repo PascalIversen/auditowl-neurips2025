@@ -1,0 +1,4 @@
+alpha=0.0: rel_diff_code_vs_paper=0.00e+00  obj=6.3735
+alpha=0.5: rel_diff_code_vs_paper=1.13e-04  obj=6.2744
+alpha=1.0: rel_diff_code_vs_paper=2.27e-04  obj=6.2402
+objective at alpha=1 (closed form, no damp) = 6.24e+00 (expect ~0)

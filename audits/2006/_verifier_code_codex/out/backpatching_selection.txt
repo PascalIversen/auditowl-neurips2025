@@ -1,0 +1,13 @@
+script_backpatching_experiment.py main():
+  - loads vl_prompts via load_dataset(..., correct_preds_only=False)[0]  (all prompts; index [0] = original_vl_prompts)
+  - clean baseline accuracy measured on the SAME vl_prompts
+  - grid over layer_window_size in {5,3,1} x src_layer_range x dst_layer_range
+    each cell calls backpatching(model, args, vl_prompts, ...) -> accuracy on the SAME vl_prompts
+  - no discovery/eval split for back-patching (comment line ~388: 'Doesn't matter, we don't split to discovery and test here')
+
+Notebook cell 8 (produces Table 1 numbers):
+  - bp_best_acc = max accuracy over all configs via topk_2d(...,k=1) then sorted(...,reverse=True)[:1]
+  - i.e. the single best (window,src,dst) cell on the evaluation set is reported
+
+Confirm 'no split' comment present in script: True
+Confirm 'max' selection present in cell8: True

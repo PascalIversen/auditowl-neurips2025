@@ -1,0 +1,30 @@
+{
+  "Fig2/Fig3/training EV (explained_variance fn)": [
+    "scripts/train_sae.py"
+  ],
+  "Fig3 feature-overlap cosine similarity across timesteps": [],
+  "Fig5 LPIPS metric (RIEBench)": [],
+  "Fig5 CLIP-similarity metric (RIEBench)": [
+    "retrieval.py"
+  ],
+  "Fig5/Fig6 grounded SAM2 masks": [],
+  "Fig5/Fig6 RIEBench / PIEBench harness": [],
+  "Fig5/Fig6 feature-selection score eq.(8)/(9)": [],
+  "Table1 per-block ablation LPIPS (ablate_block)": [
+    "utils/hooks.py"
+  ],
+  "Table5 reconstruction (reconstruct_sae_hook)": [
+    "utils/hooks.py"
+  ],
+  "Table5 pixel Manhattan distance (mean/median)": [],
+  "FLUX SAE training / layer-18 activations": [],
+  "Data collection (collect_latents)": [
+    "SDLens/hooked_sd_pipeline.py",
+    "app.py",
+    "example.ipynb::codecells",
+    "scripts/collect_latents_dataset.py"
+  ],
+  "SAE training loop": [
+    "scripts/train_sae.py"
+  ]
+}

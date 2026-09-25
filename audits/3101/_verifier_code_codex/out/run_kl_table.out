@@ -1,0 +1,401 @@
+1 KL: 0.7875916361808777
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1133.07it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3176703453063965
+t2: 0.8181816935539246
+1 d_prob: 1.3176703453063965
+1 mCCA f correlations: [0.0015946834172955355, 0.00048523897015259924]
+1 mCCA f: 0.0010399611937240674
+1 mCCA g correlations: [-1.9408061301783737e-17, 4.627732732278142e-17]
+1 mCCA g: 1.3434633010498842e-17
+1 max d_rep f: 0.9991784216474525
+N1: tensor([4.5205, 0.0701], dtype=torch.float64)
+N2: tensor([5.5639, 0.0738], dtype=torch.float64)
+cross cov: tensor([4.4986e-17, 1.1867e-17], dtype=torch.float64)
+
+1 mSVD gs: [4.140678047167844e-17]
+2 KL: 1.057145357131958
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1300.85it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3176947832107544
+t2: 0.8106694221496582
+2 d_prob: 1.3176947832107544
+2 mCCA f correlations: [0.0013122493780978798, 0.0004522230060839748]
+2 mCCA f: 0.0008822361920909273
+2 mCCA g correlations: [-1.9408061301783737e-17, 4.627732732278142e-17]
+2 mCCA g: 1.3434633010498842e-17
+2 max d_rep f: 0.9995247971687239
+N1: tensor([4.5258, 0.0312], dtype=torch.float64)
+N2: tensor([5.5690, 0.0275], dtype=torch.float64)
+cross cov: tensor([5.4089e-17, 1.1770e-17], dtype=torch.float64)
+
+2 mSVD gs: [4.409742088330704e-17]
+3 KL: 0.8865887522697449
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1342.30it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.317332148551941
+t2: 0.8118451237678528
+3 d_prob: 1.317332148551941
+3 mCCA f correlations: [0.0009727256501650339, 0.00033326586256022405]
+3 mCCA f: 0.000652995756362629
+3 mCCA g correlations: [-4.645748481647679e-17, 8.635326804873139e-17]
+3 mCCA g: 1.99478916161273e-17
+3 max d_rep f: 0.9996307560305908
+N1: tensor([4.5521e+00, 3.6629e-03], dtype=torch.float64)
+N2: tensor([5.5586, 0.1201], dtype=torch.float64)
+cross cov: tensor([1.0745e-16, 1.6955e-17], dtype=torch.float64)
+
+3 mSVD gs: [1.0308340990583688e-16]
+4 KL: 0.6139821410179138
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1304.08it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3171836137771606
+t2: 0.8131752014160156
+4 d_prob: 1.3171836137771606
+4 mCCA f correlations: [0.0014218923978522107, 0.00016950597479918755]
+4 mCCA f: 0.0007956991863256991
+4 mCCA g correlations: [-1.9408061301783737e-17, 4.627732732278142e-17]
+4 mCCA g: 1.3434633010498842e-17
+4 max d_rep f: 0.9996793363319977
+N1: tensor([4.5071, 0.0261], dtype=torch.float64)
+N2: tensor([5.5670, 0.0273], dtype=torch.float64)
+cross cov: tensor([8.2347e-17, 1.6376e-17], dtype=torch.float64)
+
+4 mSVD gs: [-3.8418658102824706e-17]
+5 KL: 0.38151443004608154
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1358.13it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3180872201919556
+t2: 0.8179917931556702
+5 d_prob: 1.3180872201919556
+5 mCCA f correlations: [0.002212990696367722, 0.00024225092519401093]
+5 mCCA f: 0.0012276208107808665
+5 mCCA g correlations: [3.0644158392214516e-17, 6.210593031995541e-17]
+5 mCCA g: 4.637504435608496e-17
+5 max d_rep f: 0.9994969487519337
+N1: tensor([4.5057, 0.0183], dtype=torch.float64)
+N2: tensor([5.5396e+00, 2.6289e-03], dtype=torch.float64)
+cross cov: tensor([6.2671e-17, 4.3297e-17], dtype=torch.float64)
+
+5 mSVD gs: [4.066714694896589e-17]
+6 KL: 0.22291117906570435
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1344.70it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3174515962600708
+t2: 0.8135021328926086
+6 d_prob: 1.3174515962600708
+6 mCCA f correlations: [0.0012321650987877242, 0.0003218873744133679]
+6 mCCA f: 0.0007770262366005461
+6 mCCA g correlations: [-4.645748481647679e-17, 8.635326804873139e-17]
+6 mCCA g: 1.99478916161273e-17
+6 max d_rep f: 0.9995454721023193
+N1: tensor([3.5936, 2.7363], dtype=torch.float64)
+N2: tensor([5.4040, 1.2268], dtype=torch.float64)
+cross cov: tensor([8.9717e-17, 5.6901e-17], dtype=torch.float64)
+
+6 mSVD gs: [2.3423000118067008e-17]
+7 KL: 0.12532563507556915
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1163.75it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3176188468933105
+t2: 0.8165758848190308
+7 d_prob: 1.3176188468933105
+7 mCCA f correlations: [0.0005569871587144318, 0.0002519671608985043]
+7 mCCA f: 0.00040447715980646806
+7 mCCA g correlations: [-3.1004846893961444e-17, 1.3485568388419388e-17]
+7 mCCA g: -8.759639252771028e-18
+7 max d_rep f: 0.9997053170815611
+N1: tensor([4.4986, 0.0676], dtype=torch.float64)
+N2: tensor([5.5767, 0.0193], dtype=torch.float64)
+cross cov: tensor([5.4212e-17, 8.6560e-19], dtype=torch.float64)
+
+7 mSVD gs: [7.821874184153087e-18]
+8 KL: 0.0686245784163475
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1316.77it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3176244497299194
+t2: 0.8204432725906372
+8 d_prob: 1.3176244497299194
+8 mCCA f correlations: [0.0008082368544119604, 4.7326188629249096e-05]
+8 mCCA f: 0.00042778152152060477
+8 mCCA g correlations: [-1.9408061301783737e-17, 4.627732732278142e-17]
+8 mCCA g: 1.3434633010498842e-17
+8 max d_rep f: 0.9998212191165079
+N1: tensor([3.5394, 2.7436], dtype=torch.float64)
+N2: tensor([5.3801, 1.2498], dtype=torch.float64)
+cross cov: tensor([7.6848e-17, 4.8457e-17], dtype=torch.float64)
+
+8 mSVD gs: [7.337832387956555e-17]
+9 KL: 0.03701513260602951
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1349.77it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3161624670028687
+t2: 0.8090217113494873
+9 d_prob: 1.3161624670028687
+9 mCCA f correlations: [0.0024030490671758595, 0.0002951819068945194]
+9 mCCA f: 0.0013491154870351894
+9 mCCA g correlations: [6.933435375194666e-18, -3.0811320910385096e-18]
+9 mCCA g: 1.926151642078078e-18
+9 max d_rep f: 0.99937285709817
+N1: tensor([4.5573, 0.0150], dtype=torch.float64)
+N2: tensor([5.5358e+00, 2.8150e-03], dtype=torch.float64)
+cross cov: tensor([5.6273e-17, 1.5795e-17], dtype=torch.float64)
+
+9 mSVD gs: [3.0204574970778643e-17]
+10 KL: 0.01971311680972576
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1355.31it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3177125453948975
+t2: 0.8092489242553711
+10 d_prob: 1.3177125453948975
+10 mCCA f correlations: [0.0007320844634768449, 0.00013705120574651058]
+10 mCCA f: 0.00043456783461167774
+10 mCCA g correlations: [3.0644158392214516e-17, 6.210593031995541e-17]
+10 mCCA g: 4.637504435608496e-17
+10 max d_rep f: 0.9997917005989139
+N1: tensor([4.5358, 0.0146], dtype=torch.float64)
+N2: tensor([5.5382, 0.0808], dtype=torch.float64)
+cross cov: tensor([5.8351e-17, 1.8034e-17], dtype=torch.float64)
+
+10 mSVD gs: [2.4138155882245284e-17]
+11 KL: 0.010395211167633533
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1366.10it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3178043365478516
+t2: 0.8129955530166626
+11 d_prob: 1.3178043365478516
+11 mCCA f correlations: [0.002464848253373782, 0.0007467005656274864]
+11 mCCA f: 0.0016057744095006343
+11 mCCA g correlations: [1.0668881680479682e-16, -5.621504617171433e-17]
+11 mCCA g: 2.5236885316541246e-17
+11 max d_rep f: 0.9990975939351169
+N1: tensor([4.5593, 0.0078], dtype=torch.float64)
+N2: tensor([5.5341, 0.0485], dtype=torch.float64)
+cross cov: tensor([8.6277e-17, 7.6083e-18], dtype=torch.float64)
+
+11 mSVD gs: [3.9391324538272846e-17]
+12 KL: 0.005462134722620249
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1352.69it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3168420791625977
+t2: 0.8124297261238098
+12 d_prob: 1.3168420791625977
+12 mCCA f correlations: [0.0009839003730236753, 0.0003414450747816826]
+12 mCCA f: 0.0006626727239026789
+12 mCCA g correlations: [-4.645748481647679e-17, 8.635326804873139e-17]
+12 mCCA g: 1.99478916161273e-17
+12 max d_rep f: 0.999650372024879
+N1: tensor([4.5669, 0.0522], dtype=torch.float64)
+N2: tensor([5.5108, 0.0844], dtype=torch.float64)
+cross cov: tensor([8.0027e-17, 1.6849e-17], dtype=torch.float64)
+
+12 mSVD gs: [4.098137061928373e-17]
+13 KL: 0.0028380840085446835
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1356.13it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3177556991577148
+t2: 0.8088119029998779
+13 d_prob: 1.3177556991577148
+13 mCCA f correlations: [0.0014324543352930463, 0.00023474008931067213]
+13 mCCA f: 0.0008335972123018592
+13 mCCA g correlations: [1.1274863226426589e-16, 9.66492138876267e-18]
+13 mCCA g: 6.120677682651428e-17
+13 max d_rep f: 0.9995320161342052
+N1: tensor([4.5564e+00, 8.1189e-05], dtype=torch.float64)
+N2: tensor([5.4960, 0.0519], dtype=torch.float64)
+cross cov: tensor([8.8410e-17, 2.1478e-17], dtype=torch.float64)
+
+13 mSVD gs: [6.679634321792062e-17]
+14 KL: 0.0014730374095961452
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1381.46it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3178472518920898
+t2: 0.8197085857391357
+14 d_prob: 1.3178472518920898
+14 mCCA f correlations: [0.0004316855735119916, 8.8758260137362e-06]
+14 mCCA f: 0.0002202806997628639
+14 mCCA g correlations: [-3.1004846893961444e-17, 1.3485568388419388e-17]
+14 mCCA g: -8.759639252771028e-18
+14 max d_rep f: 0.9999201236741461
+N1: tensor([4.4588, 0.0047], dtype=torch.float64)
+N2: tensor([5.5699, 0.0813], dtype=torch.float64)
+cross cov: tensor([7.1865e-17, 6.1063e-18], dtype=torch.float64)
+
+14 mSVD gs: [2.1688176781390486e-17]
+15 KL: 0.000760426337365061
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1358.70it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3178614377975464
+t2: 0.8179808855056763
+15 d_prob: 1.3178614377975464
+15 mCCA f correlations: [0.0010120712883564518, 0.0004140911586813041]
+15 mCCA f: 0.000713081223518878
+15 mCCA g correlations: [4.4840858253266384e-17, 2.9447110844580825e-17]
+15 mCCA g: 3.7143984548923604e-17
+15 max d_rep f: 0.9996144970846721
+N1: tensor([4.4958, 0.0307], dtype=torch.float64)
+N2: tensor([5.5894, 0.0141], dtype=torch.float64)
+cross cov: tensor([1.1743e-16, 2.9747e-17], dtype=torch.float64)
+
+15 mSVD gs: [3.7843047980096657e-17]
+16 KL: 0.0003944965428672731
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1366.10it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3173774480819702
+t2: 0.8050618171691895
+16 d_prob: 1.3173774480819702
+16 mCCA f correlations: [0.0011584560851334704, 5.8590535230118994e-05]
+16 mCCA f: 0.0006085233101817947
+16 mCCA g correlations: [-1.9408061301783737e-17, 4.627732732278142e-17]
+16 mCCA g: 1.3434633010498842e-17
+16 max d_rep f: 0.9996485962897724
+N1: tensor([4.5868, 0.0115], dtype=torch.float64)
+N2: tensor([5.5962, 0.0088], dtype=torch.float64)
+cross cov: tensor([8.1885e-17, 9.1682e-18], dtype=torch.float64)
+
+16 mSVD gs: [3.970993880604658e-17]
+17 KL: 0.0002032831689575687
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1347.72it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3173201084136963
+t2: 0.8138086795806885
+17 d_prob: 1.3173201084136963
+17 mCCA f correlations: [0.0010369396898088025, 0.00020442040471086904]
+17 mCCA f: 0.0006206800472598358
+17 mCCA g correlations: [6.789862096871706e-17, 3.3374319772979716e-17]
+17 mCCA g: 5.063647037084838e-17
+17 max d_rep f: 0.9996867875795056
+N1: tensor([4.5162, 0.0049], dtype=torch.float64)
+N2: tensor([5.4977e+00, 4.0553e-03], dtype=torch.float64)
+cross cov: tensor([9.0171e-17, 2.2061e-17], dtype=torch.float64)
+
+17 mSVD gs: [6.948320644961033e-17]
+18 KL: 0.00010396793368272483
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1371.39it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3169360160827637
+t2: 0.8173356056213379
+18 d_prob: 1.3169360160827637
+18 mCCA f correlations: [0.0015872403809467442, 0.0007396326048023582]
+18 mCCA f: 0.0011634364928745512
+18 mCCA g correlations: [6.933435375194666e-18, -3.0811320910385096e-18]
+18 mCCA g: 1.926151642078078e-18
+18 max d_rep f: 0.9992307791656229
+N1: tensor([4.4759, 0.0141], dtype=torch.float64)
+N2: tensor([5.5600e+00, 2.9761e-03], dtype=torch.float64)
+cross cov: tensor([1.2596e-16, 2.5503e-17], dtype=torch.float64)
+
+18 mSVD gs: [7.544784872947188e-17]
+19 KL: 5.301694181980565e-05
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1350.57it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3168601989746094
+t2: 0.8152707815170288
+19 d_prob: 1.3168601989746094
+19 mCCA f correlations: [0.0007939417813196292, 0.0004084577688593596]
+19 mCCA f: 0.0006011997750894944
+19 mCCA g correlations: [5.099185379039186e-17, 2.435073223447893e-17]
+19 mCCA g: 3.7671293012435396e-17
+19 max d_rep f: 0.9996000830753187
+N1: tensor([4.5451, 0.0824], dtype=torch.float64)
+N2: tensor([5.5563, 0.0326], dtype=torch.float64)
+cross cov: tensor([6.4771e-17, 1.3446e-17], dtype=torch.float64)
+
+19 mSVD gs: [6.683679419899642e-17]
+20 KL: 2.7230596970184706e-05
+
+  0%|          | 0/7 [00:00<?, ?it/s]
+100%|██████████| 7/7 [00:00<00:00, 1357.38it/s]
+/home/author/miniforge3/lib/python3.10/site-packages/sklearn/cross_decomposition/_pls.py:104: ConvergenceWarning: Maximum number of iterations reached
+  warnings.warn("Maximum number of iterations reached", ConvergenceWarning)
+t1: 1.3178493976593018
+t2: 0.8170694708824158
+20 d_prob: 1.3178493976593018
+20 mCCA f correlations: [0.0004850668180682539, 0.00010598368827704787]
+20 mCCA f: 0.0002955252531726509
+20 mCCA g correlations: [3.0644158392214516e-17, 6.210593031995541e-17]
+20 mCCA g: 4.637504435608496e-17
+20 max d_rep f: 0.9998622482856688
+N1: tensor([3.5740, 2.7424], dtype=torch.float64)
+N2: tensor([5.3927, 1.2344], dtype=torch.float64)
+cross cov: tensor([6.2736e-17, 1.8100e-17], dtype=torch.float64)
+
+20 mSVD gs: [4.3555821033897576e-17]
+ROWS (g_length, KL, d_prob, mCCA_f, max_d_rep_f):
+1 0.7876 1.3177 0.001 0.9992
+2 1.0571 1.3177 0.0009 0.9995
+3 0.8866 1.3173 0.0007 0.9996
+4 0.614 1.3172 0.0008 0.9997
+5 0.3815 1.3181 0.0012 0.9995
+6 0.2229 1.3175 0.0008 0.9995
+7 0.1253 1.3176 0.0004 0.9997
+8 0.0686 1.3176 0.0004 0.9998
+9 0.037 1.3162 0.0013 0.9994
+10 0.0197 1.3177 0.0004 0.9998
+11 0.0104 1.3178 0.0016 0.9991
+12 0.0055 1.3168 0.0007 0.9997
+13 0.0028 1.3178 0.0008 0.9995
+14 0.0015 1.3178 0.0002 0.9999
+15 0.0008 1.3179 0.0007 0.9996
+16 0.0004 1.3174 0.0006 0.9996
+17 0.0002 1.3173 0.0006 0.9997
+18 0.0001 1.3169 0.0012 0.9992
+19 0.0001 1.3169 0.0006 0.9996
+20 0.0 1.3178 0.0003 0.9999

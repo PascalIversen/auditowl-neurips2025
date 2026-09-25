@@ -1,0 +1,5 @@
+paper_number: 1144
+title: Graph Your Own Prompt
+authors: Xi Ding, Lei Wang, Piotr Koniusz, Yongsheng Gao
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/368b5802665d8151a0e2e787bc4ccf94-Abstract-Conference.html
+category: empirical

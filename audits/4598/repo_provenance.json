@@ -1,0 +1,17 @@
+{
+  "paper_id": "4598_Quantization_Error_Propagation_Revisiting_Layer_Wise_Post_Tr",
+  "title": "Quantization Error Propagation: Revisiting Layer-Wise Post-Training Quantization",
+  "repos": [
+    {
+      "name": "FujitsuResearch__qep",
+      "role": "core",
+      "evidence": "README cites exactly this paper ('Quantization Error Propagation: Revisiting Layer-Wise Post-Training Quantization', Yamato Arai and Yuma Ichikawa, NeurIPS 2025) and matches the paper's stated code URL (https://github.com/FujitsuResearch/qep). Repo owner FujitsuResearch matches both authors' affiliation (Fujitsu Limited). Core source files qep_awq.py, gptq.py, llama.py implement the QEP weight correction W += (W @ H_delta @ Hinv) * perccorr matching paper Eq. (6)."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "Exactly one repo was cloned (FujitsuResearch/qep). Its README explicitly cites this paper by full title, both author names, and NeurIPS 2025 venue; the paper itself lists this GitHub URL as the official code link. The repo implements the paper's named method QEP (Quantization Error Propagation) with the closed-form weight correction that matches paper Eq. (6), along with RTN/GPTQ/AWQ/QuIP drivers. All audit findings are written against this core repo and address genuine reproducibility gaps (missing scipy/portalocker in requirements, missing Fig. 2 error-accumulation script, missing Table 3 timing harness, missing OmniQuant runner, incomplete README, per-layer alpha not exposed in CLI, best-of-5-seed reporting), none of which misattribute findings to a wrong repository.",
+  "audit_impact": "None. The audit correctly identified the core repo and wrote substantive findings about real reproducibility issues. No misclassification occurred.",
+  "recommended_action": "No action required. The provenance is correct."
+}

@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/author/Projects/neurips_audit/audits/2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti/_verifier_code_codex/check_params.py", line 20, in <module>
+    ode = read("ODE_example/main_ODE.m")
+  File "/home/author/Projects/neurips_audit/audits/2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti/_verifier_code_codex/check_params.py", line 13, in read
+    with open(os.path.join(ROOT, p)) as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/home/author/Projects/neurips_audit/audits/2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti/_verifier_code_codex/../code/Code_Submission/ODE_example/main_ODE.m'

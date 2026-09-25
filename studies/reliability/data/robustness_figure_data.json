@@ -1,0 +1,151 @@
+{
+  "overall_mean_detection": {
+    "merged": 0.4175000000000001
+  },
+  "by_severity_majority": {
+    "merged": {
+      "high": {
+        "mean_det": 0.6846153846153845,
+        "n": 13
+      },
+      "medium": {
+        "mean_det": 0.5130434782608696,
+        "n": 23
+      },
+      "low": {
+        "mean_det": 0.28863636363636364,
+        "n": 44
+      }
+    }
+  },
+  "by_severity_x_confidence_merged": {
+    "high|high": {
+      "mean_det": 0.7333333333333334,
+      "n": 12
+    },
+    "high|medium": {
+      "mean_det": 0.1,
+      "n": 1
+    },
+    "medium|high": {
+      "mean_det": 0.5470588235294118,
+      "n": 17
+    },
+    "medium|medium": {
+      "mean_det": 0.5,
+      "n": 4
+    },
+    "medium|low": {
+      "mean_det": 0.25,
+      "n": 2
+    },
+    "low|high": {
+      "mean_det": 0.34666666666666673,
+      "n": 30
+    },
+    "low|medium": {
+      "mean_det": 0.1666666666666667,
+      "n": 12
+    },
+    "low|low": {
+      "mean_det": 0.15000000000000002,
+      "n": 2
+    }
+  },
+  "stable_core": {
+    "merged": 15,
+    "merged_total": 80,
+    "strict": 9,
+    "strict_total": 118
+  },
+  "flaky": {
+    "merged": 44,
+    "strict": 85
+  },
+  "headlined_det": 0.4799999999999999,
+  "not_headlined_det": 0.1466666666666667,
+  "ac1_merged_mean": 0.3653718761573968,
+  "ac1_strict_mean": 0.48790399740083756,
+  "alpha_merged_mean": 0.30433355240386606,
+  "fp_vs_fn": {
+    "verifier_reject_total": 0,
+    "n_findings_total": 343,
+    "by_bucket": {
+      "singleton(1)": {
+        "n": 20,
+        "reject": 0,
+        "check_backed_pct": 25.0
+      },
+      "flaky(2-3)": {
+        "n": 60,
+        "reject": 0,
+        "check_backed_pct": 30.0
+      },
+      "mid(4-7)": {
+        "n": 116,
+        "reject": 0,
+        "check_backed_pct": 50.86206896551724
+      },
+      "core(8-10)": {
+        "n": 147,
+        "reject": 0,
+        "check_backed_pct": 75.51020408163265
+      }
+    },
+    "conclusion": "false-negative dominated: verifier rejects ~0 in every detection bucket; check-backing rises with reproducibility"
+  },
+  "ensemble_recall_vs_runs": [
+    0.5253613053613053,
+    0.7126884226884227,
+    0.821563714063714,
+    0.8907070707070706,
+    0.9363738113738114,
+    0.9663403263403264,
+    0.9850757575757576,
+    0.9955685055685055,
+    1.0,
+    1.0
+  ],
+  "per_paper": {
+    "1829": {
+      "count_cv": 0.31140917439720817,
+      "head_det": 0.32857142857142846,
+      "nothead_det": 0.1,
+      "ac1_merged": 0.35344827586206895,
+      "ac1_strict": 0.6017814186333792,
+      "alpha_merged": 0.11272321428571808
+    },
+    "1333": {
+      "count_cv": 0.13973664175919848,
+      "head_det": 0.5615384615384615,
+      "nothead_det": 0.19999999999999998,
+      "ac1_merged": 0.43393331185072687,
+      "ac1_strict": 0.43000838222967336,
+      "alpha_merged": 0.4347651854934478
+    },
+    "2657": {
+      "count_cv": 0.2541699457600955,
+      "head_det": 0.5166666666666666,
+      "nothead_det": 0.1,
+      "ac1_merged": 0.3315814298227882,
+      "ac1_strict": 0.4962905950013899,
+      "alpha_merged": 0.29378895336342603
+    },
+    "2578": {
+      "count_cv": 0.21081851067789198,
+      "head_det": 0.5666666666666665,
+      "nothead_det": 0.175,
+      "ac1_merged": 0.42723735408560315,
+      "ac1_strict": 0.4171766371091965,
+      "alpha_merged": 0.42635294117647593
+    },
+    "2371": {
+      "count_cv": 0.24325212770525997,
+      "head_det": 0.45,
+      "nothead_det": 0.1,
+      "ac1_merged": 0.2806590091657967,
+      "ac1_strict": 0.49426295403054893,
+      "alpha_merged": 0.25403746770026236
+    }
+  }
+}

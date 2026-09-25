@@ -1,0 +1,5 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/samuel-howard/log_	[author-cue]
+https://github.com/samuel-howard/log_smoothing	[title-match]
+
+# Other code links found (NOT cloned -- baseline/dependency):

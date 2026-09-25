@@ -1,0 +1,10 @@
+{
+  "func_line_start": 424,
+  "func_line_end": 471,
+  "out_assigned": false,
+  "out_used": true,
+  "decoder_called": false,
+  "sampled_features_assigned": true,
+  "sampled_features_used": false,
+  "VERDICT": "BUG: 'out' used/returned but never assigned; decoder never called; sampled_features computed but discarded -> run_model raises NameError"
+}

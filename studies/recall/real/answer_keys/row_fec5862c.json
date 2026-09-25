@@ -1,0 +1,56 @@
+{
+  "discrepancy_id": "fec5862c",
+  "paper_url": "https://arxiv.org/abs/2304.01933",
+  "paper_url_versioned": "https://arxiv.org/pdf/2304.01933v3.pdf",
+  "code_url": "https://github.com/AGI-Edgerunners/LLM-Adapters",
+  "code_url_versioned": "https://github.com/AGI-Edgerunners/LLM-Adapters/tree/816657208af4db747803f87ba40a4c71383fed7a",
+  "discrepancy_date": "2025-02-06T13:57:37.000Z",
+  "origin_type": "GitHub Issue",
+  "origin_url": "https://github.com/AGI-Edgerunners/LLM-Adapters/issues/76",
+  "origin_discrepancy_text": "Prompt templates in your paper did not align with your code.\nTake PIQA for example, in your paper:\n\n> Please choose the correct solution to the question: [QUESTION]\n> Solution1: [SOLUTION_1]\n> Solution2: [SOLUTION_2]\n> Answer format: solution1/solution2\n> the correct answer is [ANSWER]\n\n\nbut in your code:\n\n> Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.\n> \n> ### Instruction:\n> Please choose the correct solution to the question: [QUESTION]\n> Solution1: [SOLUTION_1]\n> Solution2: [SOLUTION_2]\n> ### Response:\n> the correct answer is [ANSWER]\n\n\nSince you are fine-tuning base model (not instruction-tuned), It makes quite a huge difference, please help me clarify this, thanks!",
+  "discrepancy_description_pooled_gpt_5": null,
+  "discrepancy_description_pooled_gemini_2_5_pro": null,
+  "discrepancy_description_pooled_gpt_oss_20b": null,
+  "is_valid_discrepancy_gemini": true,
+  "is_valid_discrepancy_gpt": true,
+  "is_valid_discrepancy_reason_gemini": "The paper describes specific data templates without any overarching formatting, but the code wraps these templates in an Alpaca-style instruction-response wrapper.",
+  "is_valid_discrepancy_reason_gpt": "The paper\u2019s Appendix A.2 shows dataset-specific templates (e.g., for PIQA) without any outer instruction wrapper, while the released code wraps every prompt inside an Alpaca-style instruction preamble with \"Below is an instruction...\" and \"### Instruction/### Response\" markers for both training and evaluation.",
+  "discrepancy_description_gemini": "The paper describes the prompt templates used for fine-tuning on the commonsense reasoning datasets in Table 7, presenting them simply as task descriptions followed by options and the expected answer format. In contrast, the implemented code wraps these task-specific templates within an Alpaca-style instruction wrapper. The code prepends a general system message (\"Below is an instruction...\") and structures the prompt using `### Instruction:` and `### Response:` markers. Consequently, there is a clear difference in the actual prompt structure provided to the base models compared to what is documented in the paper.",
+  "discrepancy_description_gpt": "The paper describes commonsense fine-tuning data using concise, dataset-specific templates; for PIQA, it shows a prompt that includes the question, two solutions, an \u201cAnswer format\u201d line, and then the target line \u201cthe correct answer is [ANSWER]\u201d. In the code, however, these dataset-specific instructions are further wrapped inside an Alpaca-like meta-instruction: \u201cBelow is an instruction that describes a task...\u201d, with \u201c### Instruction:\u201d preceding the dataset-specific text and \u201c### Response:\u201d preceding the answer, both during training (finetune.py) and evaluation (commonsense_evaluate.py). Thus, the actual prompts used in code contain an additional instruction preamble not documented in the paper\u2019s template table, which is a mismatch between the paper\u2019s stated templates and the code\u2019s implemented prompt format.",
+  "relevant_paper_sections_gemini": [
+    "To facilitate fine-tuning in the domain of commonsense reasoning, we construct fine-tuning data by formatting the training sets from BoolQ, PIQA, SIQA, HellaSwag, WinoGrande, ARC-e, ARC-c, and OBQA with pre-defined templates. As each dataset in the commonsense reasoning domain entails distinct tasks, we adopt a structured template by initially describing the task\u2019s goal, followed by the corresponding content and answer. The template utilized for creating the fine-tuning data can be found in A.2.",
+    "Please choose the correct solution to the question: [QUESTION] <br> Solution1: [SOLUTION_1] <br> Solution2: [SOLUTION_2] <br> Answer format: solution1/solution2 <br> the correct answer is [ANSWER]"
+  ],
+  "relevant_paper_sections_gpt": [
+    "To facilitate fine-tuning in the domain of commonsense reasoning, we construct fine-tuning data by formatting the training sets from BoolQ, PIQA, SIQA, HellaSwag, WinoGrande, ARC-e, ARC-c, and OBQA with pre-defined templates. As each dataset in the commonsense reasoning domain entails distinct tasks, we adopt a structured template by initially describing the task\u2019s goal, followed by the corresponding content and answer. The template utilized for creating the fine-tuning data can be found in A.2.",
+    "Table 7: The data template of each dataset used to create commonsense reasoning data for fine-tuning. PIQA | Please choose the correct solution to the question: [QUESTION] Solution1: [SOLUTION_1] Solution2: [SOLUTION_2] Answer format: solution1/solution2 the correct answer is [ANSWER]"
+  ],
+  "relevant_code_files_gemini": [
+    "finetune.py",
+    "commonsense_evaluate.py",
+    "evaluate.py",
+    "generate.py"
+  ],
+  "relevant_code_files_gpt": [
+    "finetune.py",
+    "commonsense_evaluate.py",
+    "evaluate.py",
+    "generate.py"
+  ],
+  "changed_code_files": {
+    "file_name": [],
+    "discrepancy_code": []
+  },
+  "changed_code_snippets": {
+    "original_file": [],
+    "original_code": [],
+    "changed_code": []
+  },
+  "discrepancy_type": "Paper Omission",
+  "discrepancy_category": "Data",
+  "arxiv_subject": "cs",
+  "arxiv_categories": [
+    "cs.CL"
+  ],
+  "arxiv_year": 2023
+}

@@ -1,0 +1,70 @@
+{
+  "py_files": [
+    "datasets.py",
+    "model/DDPM.py",
+    "model/__init__.py",
+    "model/block.py",
+    "model/cUnet.py",
+    "model/common.py",
+    "model/grand_predictor.py",
+    "model/unet_new.py",
+    "model/vq_vae.py",
+    "train_sh.py",
+    "utils.py"
+  ],
+  "ipynb_files": [
+    "sample_sh.ipynb"
+  ],
+  "config_files": [
+    "config/sh.yaml"
+  ],
+  "train_sh_trains_DDPM": true,
+  "train_sh_imports": [
+    "DDPM, UNet_new"
+  ],
+  "vqvae_constructed_anywhere": true,
+  "graphmodel_constructed_anywhere": true,
+  "vqvae_backward_or_optim": false,
+  "predictor_backward_or_optim": false,
+  "backward_call_files": [
+    "train_sh.py"
+  ],
+  "notebook_backward": [],
+  "mentions_cosine_similarity": true,
+  "mentions_threshold_tau_adaptation": false,
+  "notebook_uses_fixed_change_step": true,
+  "notebook_pde_guided_call_active": false,
+  "notebook_pde_guided_call_commented": true,
+  "notebook_active_sampler": [
+    "ddim_guided_sample_full_sh",
+    "ddim_sample_from_reconstructed_sh"
+  ],
+  "hardcoded_abs_paths_datasets": [
+    "/data5/chengjingwen/sh/uv.npy",
+    "/data5/chengjingwen/ns/uv.npy",
+    "/data5/chengjingwen/cy/uv.npy",
+    "/data5/chengjingwen/sevir_tem/uv.npy",
+    "/data5/chengjingwen/sevir_tem/uv.npy",
+    "/data5/chengjingwen/cy/uv.npy",
+    "/data5/chengjingwen/lo/uv.npy",
+    "/data5/chengjingwen/sh/uv.npy",
+    "/data5/chengjingwen/ns/uv.npy"
+  ],
+  "data_dir_exists": false,
+  "log_dir_exists": false,
+  "any_npy": [],
+  "any_pth": [],
+  "dataset_names_in_get_dataset": [
+    "bruss",
+    "lo_diffusion",
+    "sh",
+    "ns",
+    "cy",
+    "sevir_tem",
+    "sevir_tem",
+    "cy",
+    "lo",
+    "sh",
+    "ns"
+  ]
+}

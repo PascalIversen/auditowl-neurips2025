@@ -1,0 +1,12 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/unitaryai/detoxify	[title-match]
+https://github.com/xiaoyisong/ARGRE	[title-match]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-andOtherwise-Bad-Words	[no-author-signal]
+https://github.com/Lingkai-Kong/RE-Control	[no-author-signal]
+https://github.com/LizLizLi/DeStein	[no-author-signal]
+https://github.com/Uppaal/detox-edit	[no-author-signal]
+https://github.com/Yuancheng-Xu/GenARM	[no-author-signal]
+https://github.com/ajyl/dpo_toxic	[no-author-signal]
+https://github.com/cooperleong00/ToxificationReversal	[no-author-signal]

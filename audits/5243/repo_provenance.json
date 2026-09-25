@@ -1,0 +1,17 @@
+{
+  "paper_id": "5243_Causal_Explanation_Guided_Learning_for_Organ_Allocation",
+  "title": "Causal Explanation-Guided Learning for Organ Allocation",
+  "repos": [
+    {
+      "name": "AlessandroMarchese__ClexNet",
+      "role": "partial_core",
+      "evidence": "Repo owner is AlessandroMarchese — the paper's first/corresponding author (Alessandro Marchese, Vrije Universiteit Brussel). README title is 'CLEXNET – Synthetic-Data Tutorial Notebook', using the paper's own method name CLEXNET. The notebook contains an sklearn-compatible ClexNetClassifier implementing the paper's causal model, the make_dataset synthetic generator with IPW and uniform reason mechanisms, the model zoo (Logistic Regression, Random Forest, PatientNet, OrganITE, ClexNet), and evaluation code. This is the paper's own released code. However, the semi-synthetic UNOS-PTR evaluation pipeline (right half of Tables 1 & 3, Table 4), the boundary-intersection reason sampler (Table 2 winning row), and all sweep drivers (Fig. 4, Figs. 5-6, Table 6, Fig. 7) are absent — hence partial_core rather than core."
+    }
+  ],
+  "core_present": "partial",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo AlessandroMarchese/ClexNet is owned by the paper's first/corresponding author and implements the paper's named method CLEXNET in a tutorial notebook. The code_links.txt tagged it [no-author-signal], but this is wrong: 'AlessandroMarchese' directly maps to 'Alessandro Marchese' in the author list. The audit correctly treated it as the paper's own code and wrote all findings against it. The paper is legitimately classified as source-present. The high-severity 'missing' findings (UNOS pipeline, boundary-intersection sampler, sweep drivers) are genuine gaps within the partial release — not misclassifications of the repo identity.",
+  "audit_impact": "No misclassification: the audit correctly identified this as the paper's own code and all findings are written against the right repo. The code_links.txt [no-author-signal] tag is a clone-step labeling error with no downstream impact, since the audit itself used the repo correctly. The three high-severity missing findings stand: UNOS semi-synthetic pipeline, boundary-intersection sampler, and sweep drivers are all genuinely absent from the public release.",
+  "recommended_action": "No verdict change needed. Optionally correct the code_links.txt tag from [no-author-signal] to [author-cue] to reflect that AlessandroMarchese = Alessandro Marchese (first author). The existing findings remain valid."
+}

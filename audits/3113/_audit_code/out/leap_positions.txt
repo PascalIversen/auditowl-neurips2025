@@ -1,0 +1,5 @@
+CODE skip_token=2, n_head=4: additional-head label offsets ahead = [2, 4, 6, 8]
+CODE skip_token=3, n_head=4: additional-head label offsets ahead = [3, 6, 9, 12]
+PAPER k=2, n=4: leap positions incl. NTP head = [1, 3, 5, 7] (additional heads at [3, 5, 7])
+PAPER k=3, n=4: leap positions incl. NTP head = [1, 4, 7, 10] (additional heads at [4, 7, 10])
+NTP head (head0) covered separately by ori_loss at offset 1 in stage-2 loss.

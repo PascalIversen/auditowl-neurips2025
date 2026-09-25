@@ -1,0 +1,5 @@
+paper_number: 3109
+title: LeVo: High-Quality Song Generation with Multi-Preference Alignment
+authors: Shun Lei, Yaoxun XU, ZhiweiLin, Huaicheng Zhang, Wei tan, Hangting Chen, Yixuan Zhang, Chenyu Yang, Haina Zhu, Shuai Wang, Zhiyong Wu, Dong Yu
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/944f0b5d4f224f8d2a30e65082b51b76-Abstract-Conference.html
+category: empirical

@@ -1,0 +1,5 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/EvanZhuang/mixinputs	[author-cue]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/Jiayi-Pan/TinyZero	[no-author-signal]

@@ -1,0 +1,29 @@
+Reduction_DMDP_parallel.py:
+    makedirs in source : os.makedirs(data)
+    save path          : data/Reduction_DMDP/kl/p_0.90_T.pkl
+    open(...,'wb')     : FileNotFoundError: No such file or directory -> data/Reduction_DMDP/kl
+
+Anchored_AMDP_parallel.py:
+    makedirs in source : os.makedirs(data)
+    save path          : data/Anchored_AMDP/kl/p_0.90_T.pkl
+    open(...,'wb')     : FileNotFoundError: No such file or directory -> data/Anchored_AMDP/kl
+
+add_baseline.py:
+    makedirs in source : NONE
+    save path          : rebuttal/baseline/T_1_10.pkl
+    open(...,'wb')     : FileNotFoundError: No such file or directory -> rebuttal/baseline
+
+dr_q_learning_experiment.py:
+    makedirs in source : NONE
+    save path          : rebuttal/baseline/T_1_10.pkl
+    open(...,'wb')     : FileNotFoundError: No such file or directory -> rebuttal/baseline
+
+add_large_scale_dmdp.py:
+    makedirs in source : NONE
+    save path          : rebuttal/large_scale/T_1_10.pkl
+    open(...,'wb')     : FileNotFoundError: No such file or directory -> rebuttal/large_scale
+
+add_large_scale_anchored.py:
+    makedirs in source : NONE
+    save path          : rebuttal/large_scale/T_1_10.pkl
+    open(...,'wb')     : FileNotFoundError: No such file or directory -> rebuttal/large_scale

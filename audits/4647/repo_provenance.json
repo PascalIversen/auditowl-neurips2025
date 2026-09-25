@@ -1,0 +1,17 @@
+{
+  "paper_id": "4647_Dynam3D_Dynamic_Layered_3D_Tokens_Empower_VLM_for_Vision_and",
+  "title": "Dynam3D: Dynamic Layered 3D Tokens Empower VLM for Vision-and-Language Navigation",
+  "repos": [
+    {
+      "name": "MrZihan__Dynam3D",
+      "role": "core",
+      "evidence": "Repo owner is MrZihan (Zihan Wang, paper first author). README title, authors (Zihan Wang, Seungjun Lee, Gim Hee Lee), and venue (NeurIPS 2025) match the paper exactly. README links arXiv:2505.11383. Paper §1 states: 'The code is available at https://github.com/MrZihan/Dynam3D.' Directories Dynam3D_Pretrain/ (pretraining losses Eqs. 4-7), Dynam3D_VLN/ (navigation policy Policy_Dynam3D_VLN), and discrete_to_CE/ directly implement the paper's core contributions."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo MrZihan__Dynam3D is unambiguously the paper's own code: the paper explicitly links to https://github.com/MrZihan/Dynam3D, the repo owner is the paper's first author, and the README states the exact paper title, author list, and NeurIPS 2025 venue. The code implements the paper's two main components (Dynam3D_Pretrain with merging-discriminator/distillation/subspace-contrastive losses, and Dynam3D_VLN with the navigation policy). All audit findings are correctly anchored to this repo and identify legitimate gaps (unreleased VLN checkpoints, missing REVERIE/NavRAG eval configs, absent pre-exploration/lifelong-memory code, missing ablation toggles and noise-injection code).",
+  "audit_impact": "No misclassification. The audit correctly identified the core repo and wrote substantive, well-evidenced findings against it. All 8 findings (6 missing, 1 bug, 1 difference) are correctly attributed to the right codebase. No findings were written against a wrong repo.",
+  "recommended_action": "No corrective action needed on repo provenance. The findings about missing checkpoints and incomplete evaluation coverage are valid and should be retained."
+}

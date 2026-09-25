@@ -1,0 +1,260 @@
+{
+  "schema_version": "1",
+  "audit": "run_01",
+  "audit_md": "/home/author/Desktop/code/major_recall_study_export_v2/for_rebuttal/recall_experiment/major_recall_study/runs/913/run_01/audit.md",
+  "generated_at": "2026-08-02T21:03:23.081444+00:00",
+  "findings": [
+    {
+      "id": "run_01/gat-modules-missing",
+      "category": "missing",
+      "topic": "repository completeness / imports",
+      "title": "gnn_type.py imports two GAT modules that do not exist; nothing imports",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "helpers/gnn_type.py",
+      "line_start": 14,
+      "line_end": 16,
+      "quote": "from triton_tests.gat import GATConv\nfrom models.triton_nn.mean_gnn import TritonMeanGNN\nfrom models.triton_nn.gat import TritonGAT\n",
+      "claim": "The top of helpers/gnn_type.py imports `triton_tests.gat.GATConv` and `models.triton_nn.gat.TritonGAT`, but neither `triton_tests/gat.py` nor `models/triton_nn/gat.py` exists in the repo (a full-tree `find` and a `grep -rn 'class GATConv|class TritonGAT'` return nothing).",
+      "concern": "These are module-level imports, and helpers/arguments.py imports helpers.gnn_type, which main.py imports first — so every entrypoint raises ModuleNotFoundError before any experiment starts, and the GAT / TS-GAT results (Table 1 TS-GAT column, GAT baseline) have no runnable code.",
+      "resolution": "Add the missing triton_tests/gat.py and models/triton_nn/gat.py (the GAT / TritonGAT layers), or gate the imports so MEAN_GNN can run without them; confirm which commit produced the paper's numbers.",
+      "cross_refs": [
+        "baseline-code-absent"
+      ],
+      "paper_ref": "Table 1 (TS-GAT / GAT columns)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "gat-modules-missing",
+      "audit": "run_01",
+      "audit_md_line": 57
+    },
+    {
+      "id": "run_01/ablation-architectures-missing",
+      "category": "missing",
+      "topic": "ablations / architecture coverage",
+      "title": "DSS-Mean and TS-SGC/GCN/GCNII (Tables 5–6) are not implemented",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "helpers/gnn_type.py",
+      "line_start": 33,
+      "line_end": 34,
+      "quote": "GAT = auto()\nMEAN_GNN = auto()\n",
+      "claim": "GNNType only defines GAT and MEAN_GNN; a repo-wide grep finds no SGC, GCN, GCNII, or DSS aggregation anywhere, yet Table 5 reports DSS-Mean and Table 6 reports TS-SGC, TS-GCN and TS-GCNII.",
+      "concern": "The architectures behind Section G.3 (Table 5, 'necessity of triple-symmetry') and Section G.4 (Table 6, TS-GNN variants) are absent, so those ablation results cannot be reproduced from the repo.",
+      "resolution": "Provide the DSS-Mean, SGC, GCN and GCNII aggregation modules and their GNNType entries, or point to the branch/commit that contains them.",
+      "cross_refs": [
+        "gat-modules-missing",
+        "single-train-graph-hardcoded-cora"
+      ],
+      "paper_ref": "Table 5; Table 6; Sections G.3–G.4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ablation-architectures-missing",
+      "audit": "run_01",
+      "audit_md_line": 83
+    },
+    {
+      "id": "run_01/single-train-graph-hardcoded-cora",
+      "category": "missing",
+      "topic": "experimental protocol / training-set selection",
+      "title": "No way to train on a single non-cora graph (Table 2 / Table 5 setup)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "helpers/train_test_setup.py",
+      "line_start": 29,
+      "line_end": 36,
+      "quote": "def get_train_datasets(self, train_size: int) -> List[DataSet]:\n    if self is TrainTestSetup.trainset1:\n        return [DataSet.cora]\n\n    assert train_size in [1, 3, 5, 7, 9], \"Invalid train size\"\n    train_idx = math.floor(train_size/2)\n    trainset_list = [DataSet.cora] + TRAIN_MULTISETS[train_idx]\n    return sorted(trainset_list, key=lambda x: x.value)\n",
+      "claim": "The only single-graph training set is cora: `trainset1` returns `[DataSet.cora]`, and `inc_trainset` with train_size=1 uses TRAIN_MULTISETS[0]=[] → also `[cora]`. There is no CLI/enum path to train on a single graph other than cora.",
+      "concern": "Table 2 (pretraining-source sensitivity: cora / chameleon / roman-empire / wiki-cs) and Table 5 (trained on cora / roman-empire / chameleon / wiki-cs) require training on single non-cora graphs, which the shipped code cannot do without editing the source.",
+      "resolution": "Expose the single training graph as a CLI argument (or add the corresponding TrainTestSetup entries) so the Section G.1/G.3 experiments are reproducible.",
+      "cross_refs": [
+        "ablation-architectures-missing"
+      ],
+      "paper_ref": "Table 2; Table 5; Section G.1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "single-train-graph-hardcoded-cora",
+      "audit": "run_01",
+      "audit_md_line": 108
+    },
+    {
+      "id": "run_01/baseline-code-absent",
+      "category": "missing",
+      "topic": "baselines",
+      "title": "End-to-end MeanGNN/GAT and GraphAny baselines (3 of 5 Table 1 columns) not in repo",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "main.py",
+      "line_start": 4,
+      "line_end": 10,
+      "quote": "if __name__ == '__main__':\n    args = parse_arguments()\n    if args.is_train:\n        dataset_list = args.train_test_setup.get_train_datasets(train_size=args.train_size)\n        Experiment(args=args).run_multiple_data(is_train=True, dataset_list=dataset_list)\n    else:\n        Experiment(args=args).test_single_data()\n",
+      "claim": "The only entrypoint builds and evaluates the TS-GNN (GFM). There is no code path for the three comparison columns in Table 1: the end-to-end MeanGNN baseline, the end-to-end GAT baseline, or GraphAny.",
+      "concern": "3 of the 5 Table 1 columns (and the GraphAny curves in Figure 3 / Table 2) cannot be regenerated from this repo; GraphAny is an external repo, but the two end-to-end GNN baselines have no training script here.",
+      "resolution": "Add the end-to-end MeanGNN/GAT baseline scripts (or reference the exact external commands/repo used) so the full Table 1 comparison is reproducible.",
+      "cross_refs": [
+        "gat-modules-missing"
+      ],
+      "paper_ref": "Table 1 (MeanGNN / GAT / GraphAny columns)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "baseline-code-absent",
+      "audit": "run_01",
+      "audit_md_line": 139
+    },
+    {
+      "id": "run_01/deps-unlisted",
+      "category": "missing",
+      "topic": "dependencies / environment",
+      "title": "No requirements file; ogb and scikit-learn imported but not in install instructions",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "helpers/datasets.py",
+      "line_start": 16,
+      "line_end": 16,
+      "quote": "from ogb.nodeproppred import PygNodePropPredDataset\n",
+      "claim": "The repo has no requirements.txt / environment.yml / setup.py / pyproject.toml (verified by `find`). The README install block (README.md:8-14) lists torch, torchvision/audio, torch_scatter/sparse/cluster/spline, torch-geometric, neptune, triton — but not `ogb` (imported here) or `scikit-learn` (used in transforms/pca.py, transforms/least_squares.py, helpers/split_data.py).",
+      "concern": "`import ogb` and `import sklearn` will fail on a clean environment built only from the README, and no pinned dependency manifest exists, so the environment cannot be rebuilt deterministically.",
+      "resolution": "Add a pinned requirements file including ogb and scikit-learn (and any other transitive deps) so the environment is reproducible.",
+      "cross_refs": [],
+      "paper_ref": "README installation section",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "deps-unlisted",
+      "audit": "run_01",
+      "audit_md_line": 169
+    },
+    {
+      "id": "run_01/split-index-uses-ndim",
+      "category": "bug",
+      "topic": "data splitting / seeds",
+      "title": "Fold index uses `seed % train_mask.ndim` (=2), so only 2 official splits ever used",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "helpers/split_data.py",
+      "line_start": 62,
+      "line_end": 64,
+      "quote": "split_index = seed\n# Avoid invalid split index\nsplit_index = (split_index % train_mask.ndim)\n",
+      "claim": "For datasets whose official masks are 2-D `[N, num_splits]` (heterophilous, wiki-net, WebKB, texas, wiki-cs, …), the per-seed split column is `seed % train_mask.ndim`. `train_mask.ndim` is the number of tensor dimensions (always 2 for a 2-D mask), not the number of splits, so seeds 0..4 select columns [0,1,0,1,0].",
+      "concern": "The paper reports mean±std over five random seeds, but for every multi-split dataset only two distinct official splits (columns 0 and 1) are ever evaluated and three of them are duplicates, so the reported variability and the choice of splits do not match the intended '5 seeds' protocol. The obvious intent was `% train_mask.shape[1]` (num_splits).",
+      "resolution": "Change to `split_index = seed % train_mask.shape[1]` and re-run; confirm whether the reported numbers used the buggy indexing.",
+      "cross_refs": [
+        "test-label-leakage-align-masks"
+      ],
+      "check_script": "_audit_code/check_align_masks_leakage.py",
+      "paper_ref": "Section 6.1 ('five random seeds')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "split-index-uses-ndim",
+      "audit": "run_01",
+      "audit_md_line": 195
+    },
+    {
+      "id": "run_01/test-label-leakage-align-masks",
+      "category": "methodology",
+      "topic": "target leakage / evaluation protocol",
+      "title": "align_masks folds test_mask into train_mask; test labels enter the label-prop input at eval",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "helpers/datasets.py",
+      "line_start": 86,
+      "line_end": 92,
+      "quote": "train_mask = data.train_mask\ntest_mask = data.test_mask\nif train_mask.ndim > test_mask.ndim:\n    test_mask = test_mask.unsqueeze(-1).expand_as(train_mask)\nelif test_mask.ndim > train_mask.ndim:\n    train_mask = train_mask.unsqueeze(-1).expand_as(test_mask)\ndata.train_mask = train_mask | test_mask\n",
+      "claim": "For any dataset that ships train+test masks, align_masks sets train_mask = train_mask | test_mask (test nodes become members of train_mask), while test_mask is left unchanged. At evaluation, experiment.py:243-244 builds `train_y` = labels of all `train_mask` nodes, gfm.py:80 sets `lp_mask = train_mask` (is_batch=False) and propagates those labels; accuracy is then scored on `data.test_mask` (experiment.py:249,256) — i.e. the test nodes' own ground-truth labels are fed to the model that predicts them.",
+      "concern": "This is a leakage channel on the ~15 datasets with official splits (heterophilous, planetoid pubmed/citeseer, wiki-net, WebKB, texas, wiki-cs, arxiv): the evaluated test nodes have their true labels in the model's label input (and the LS/pool operators in transforms/least_squares.py:106-112,122-123 are fit on `data.train_mask` = train∪test), whereas the val split is excluded — so val and test are not evaluated under the same protocol. Because the headline Table 1 margin of TS-Mean over GraphAny is only ~0.2% (65.78 vs 65.56), even small leakage-driven inflation on the official-split datasets could account for the claimed advantage. (Ambiguity: the model is trained with target labels masked, so it is not explicitly trained to copy self-labels, and the reported per-dataset numbers on leaked datasets are not obviously ceiling-inflated — the magnitude is unverified without a GPU run.)",
+      "resolution": "At evaluation, exclude test (and val) nodes from the propagation input (`train_y`) and from the LS fit, matching GraphAny's protocol; re-run and report whether Table 1 changes. Clarify whether align_masks' union was intended.",
+      "cross_refs": [
+        "split-index-uses-ndim",
+        "generated-splits-not-official"
+      ],
+      "check_script": "_audit_code/check_align_masks_leakage.py",
+      "paper_ref": "Section 6.1 'Datasets'; Table 1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "test-label-leakage-align-masks",
+      "audit": "run_01",
+      "audit_md_line": 224
+    },
+    {
+      "id": "run_01/generated-splits-not-official",
+      "category": "difference",
+      "topic": "data splitting / faithfulness",
+      "title": "Paper says 'official splits'; code generates 20/class splits when masks are absent",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "helpers/split_data.py",
+      "line_start": 46,
+      "line_end": 52,
+      "quote": "else:\n    n_nodes = data.x.shape[0]\n    label = data.y\n    num_class = label.max().item() + 1\n    train_mask, val_mask, test_mask = graphany_mask_splits(\n        n_nodes, label, num_train_nodes=20 * num_class, seed=seed\n    )\n",
+      "claim": "When a dataset's PyG loader does not provide train/val/test masks (e.g. Amazon computers/photo, Coauthor co-cs/co-physics, Airports brazil/usa/europe, CitationFull full-cora/full-DBLP, AttributedGraph wiki-attr/blogcatalog, LastFMAsia, DeezerEurope), get_masks generates a GraphAny-style stratified split with 20 labelled nodes per class, rather than using an 'official' split.",
+      "concern": "The paper states it uses the datasets' 'respective official splits', but for the sizeable subset without predefined masks the splits are synthesised (a valid GraphAny-style protocol, just not the official one), so the description overstates split provenance.",
+      "resolution": "State which datasets use official splits vs a generated 20/class split; the generated procedure itself is fine, only the 'official splits' claim needs qualification.",
+      "cross_refs": [
+        "test-label-leakage-align-masks"
+      ],
+      "paper_ref": "Section 6.1 'Datasets' ('their respective official splits')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "generated-splits-not-official",
+      "audit": "run_01",
+      "audit_md_line": 257
+    },
+    {
+      "id": "run_01/ablation-bias-toggle-not-exposed",
+      "category": "missing",
+      "topic": "ablations / reproducibility",
+      "title": "No CLI toggle for the 'plain' / 'no-bias' LS ablations (Tables 3–4)",
+      "severity": "low",
+      "confidence": "low",
+      "status": "question",
+      "file": "transforms/least_squares.py",
+      "line_start": 106,
+      "line_end": 112,
+      "quote": "if 'pool2y_w' not in xy_keys:\n    xy_conversions[f'pool2y_w'], xy_conversions[f'pool2y_b'] = \\\n        solve_ls_with_bias_cv(x=pool_x[data.train_mask], y=data.y_mat[data.train_mask])\n\nif 'pool2x_w' not in xy_keys:\n    xy_conversions[f'pool2x_w'], xy_conversions[f'pool2x_b'] = \\\n        solve_ls_with_bias_cv(x=pool_y[data.train_mask], y=data.x[data.train_mask])\n",
+      "claim": "The pool→label/feature LS operators (with a bias term `_b`) are always computed and always applied (equiv_layer.py:67-71). `ls_num_layers < 0` disables only the extra ls2x/ls2y layers, and there is no argument to remove the bias term. Tables 3–4 report 'plain' (no LS, no bias) and 'LS-only' (no bias) variants.",
+      "concern": "The exact ablation configurations in Tables 3 and 4 do not appear to be selectable through the provided CLI, so they may have required manual source edits — I could not confirm how they were produced.",
+      "resolution": "Authors: how were the 'plain' and 'no-bias' rows of Tables 3–4 generated — is there a flag or branch that disables the bias term and the pool-LS mixing?",
+      "cross_refs": [],
+      "paper_ref": "Table 3; Table 4; Section G.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "ablation-bias-toggle-not-exposed",
+      "audit": "run_01",
+      "audit_md_line": 289
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+Scanned 45 .py files under /home/author/Projects/neurips_audit/audits/2167_DiCoFlex_Model_Agnostic_Diverse_Counterfactuals_with_Flexibl/code/ofurman__DiCoFlex
+hypervolume_computation            hits=  0  
+baseline_dice                      hits=  0  
+baseline_cchvae                    hits=  0  
+baseline_revise                    hits=  0  
+baseline_tabcf                     hits=  0  
+baseline_wachter                   hits=  0  
+baseline_carla                     hits=  0  
+german_credit_experiment           hits=  0  
+sensitivity_p_sweep_driver         hits=  0  
+model_selection_nll_nice_realnvp   hits= 10  counterfactuals/generative_models/__init__.py:4; counterfactuals/generative_models/__init__.py:5; counterfactuals/generative_models/real_nvp.py:6; counterfactuals/generative_models/real_nvp.py:11; counterfactuals/generative_models/real_nvp.py:26
+alpha_actionability_penalty        hits=  0  
+
+Wrote /home/author/Projects/neurips_audit/audits/2167_DiCoFlex_Model_Agnostic_Diverse_Counterfactuals_with_Flexibl/_verifier_code_codex/out/artifact_presence.csv

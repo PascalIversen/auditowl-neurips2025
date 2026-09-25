@@ -1,0 +1,5 @@
+paper_number: 5150
+title: Learning in Stackelberg Mean Field Games: A Non-Asymptotic Analysis
+authors: Sihan Zeng, Benjamin Patrick Evans, Sujay Bhatt, Leo Ardon, Sumitra Ganesh, Alec Koppel
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/f8f5329ee619d1cb398b4b6233e093d4-Abstract-Conference.html
+category: empirical

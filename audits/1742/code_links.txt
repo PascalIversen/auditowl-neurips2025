@@ -1,0 +1,5 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/LeapLabTHU/limit-of-RLVR	[author-cue; official repo linked from project page limit-of-rlvr.github.io — fetch surfaced only cited baselines, cloned manually]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/ganler/code-r1	[baseline/reference]

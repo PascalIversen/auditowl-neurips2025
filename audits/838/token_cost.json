@@ -1,0 +1,19 @@
+{
+  "folder": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 14949,
+    "output": 13802,
+    "cache_write": 156668,
+    "cache_read": 1939775
+  },
+  "total_tokens": 2125194,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 7.11
+}

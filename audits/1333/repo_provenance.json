@@ -1,0 +1,17 @@
+{
+  "paper_id": "1333_Latent_Harmony_Synergistic_Unified_UHD_Image_Restoration_via",
+  "title": "Latent Harmony: Synergistic Unified UHD Image Restoration via Latent Space Regularization and Controllable Refinement",
+  "repos": [
+    {
+      "name": "lyd-2022__Latent-Harmony",
+      "role": "core",
+      "evidence": "git remote origin = https://github.com/lyd-2022/Latent-Harmony, exactly the official URL the paper states ('The code will be available at https://github.com/lyd-2022/Latent-Harmony'). Owner 'lyd-2022' = first author Liu Yi-Di; LHVAE_arch.py hardcodes sys.path '/fs-computility/ai4sData/liuyidi/code/LatentGen' (liuyidi = liuyidi2023@mail.ustc.edu.cn, first author). Contains the paper's named core: basicsr/archs/LHVAE_arch.py (LH-VAE, 480 lines) + LHVAE_hflora_arch.py, lora_arch.py (HF-LoRA), models/EQvae_model.py (Stage-1 equivariance VAE, EQVAEModel) + VAEadapter_model.py (Stage-2), utils/hf_ops.py (high-frequency FFT extraction), and configs stage1_eqvae.yml / stage2_hflora.yml with DINOv2 semantic-alignment, pdps progressive degradation, KL/inv/eqv losses, and adjustable alpha -- a direct map of the paper's two-stage framework."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo is the genuine author repository (git remote = the exact official URL printed in the paper; owner lyd-2022 and embedded cluster path liuyidi map to first author Yidi Liu). Its custom arch/model files (RAVAE_EQ / RAVAEHFLora / EQVAEModel / VAEadapter, lora_arch, hf_ops) and stage1/stage2 configs implement this paper's named contributions (LH-VAE, latent equivariance, HF-LoRA, DINOv2 semantic loss, progressive degradation perturbation, adjustable alpha). It is a BasicSR-based framework fork, but the paper-specific method code is the authors' own, not a baseline, dependency, mirror, or different paper. Source-present is justified.",
+  "audit_impact": "None on provenance. The audit correctly identified the repo as the author's own preliminary upload (single commit 'first', ~0.4 MB) and its high/medium findings are legitimate partial-completeness and correctness critiques written AGAINST the genuine core repo: 'No evaluation/inference code, metrics, weights, datasets, or baselines' (high), 'Stage-2 restoration network Rtheta absent' (high), 'Stage-2 config requests unregistered arch RAVAE' (high, bug), 'hardcoded experiments root' (high, bug), plus DINOv2-weights and deps/license gaps. None of these is a provenance error or a false 'no code exists' claim, and none was written against a wrong/baseline/different-paper repo. The repo is best characterized as partial_core in completeness terms (core method present; eval/inference/Rtheta/baselines absent), but for repo-provenance purposes it is unambiguously this paper's own core.",
+  "recommended_action": "Keep as source-present / verdict correct. No re-clone needed. Optionally annotate that the released repo is a preliminary partial upload (training-only: missing eval driver, metrics, weights, datasets, and the Stage-2 restoration network Rtheta), consistent with the paper's checklist Q5 ('code upon acceptance') and the existing high-severity 'missing' findings -- but this is a completeness matter, not a wrong-repo contamination."
+}

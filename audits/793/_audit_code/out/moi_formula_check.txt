@@ -1,0 +1,7 @@
+max_abs_weight_diff_code_vs_paper_eq5=3.33e-16
+entropy_trial,H_paper_fullV(logV),H_code_top20(log20)
+0,0.244,0.4827
+1,0.3998,0.7644
+2,0.424,0.8066
+3,0.5307,0.9326
+4,0.3941,0.7053

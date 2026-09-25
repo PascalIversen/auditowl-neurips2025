@@ -1,0 +1,17 @@
+{
+  "paper_id": "1800_Maximizing_the_Value_of_Predictions_in_Control_Accuracy_Is_N",
+  "title": "Maximizing the Value of Predictions in Control: Accuracy Is Not Enough",
+  "repos": [
+    {
+      "name": "yihenglin97__Prediction-Power",
+      "role": "core",
+      "evidence": "README.md L3-9: 'This repo contains code for the following paper: Maximizing the Value of Predictions in Control: Accuracy Is Not Enough' by Lin/Yeh/Chen/Wierman, NeurIPS 2025, arXiv 2506.04497 -- exact title/author/venue match. Repo owner 'yihenglin97' == first author Yiheng Lin (git remote origin https://github.com/yihenglin97/Prediction-Power). Source files implement the paper's own constructs: linear_dynamics.py (LQR setting Sec 3), policy_optimization.py (M-GAPS online policy optimization, Example 3.4), Example_Mismatch_1/2.py (accuracy-vs-power mismatch, Examples 3.3/A.2), prediction_power_intuition.py (Q-function intuition Fig 3). run_prediction_power_exp.sh reproduces the paper's six figures."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "Exactly one repo was cloned, and it is unambiguously the paper's official code: README names this exact paper (title, all four authors, NeurIPS 2025, arXiv 2506.04497), the owner is first author Yiheng Lin, and every script implements the paper's named constructs (prediction power, LQR, M-GAPS) and regenerates its six figures. No baseline/dependency/different-paper/stub repo was mistaken for core.",
+  "audit_impact": "None negative. The audit correctly treated this as the paper's own core implementation: it mapped all six figures to their generating scripts, found no missing-code findings, and raised only two low-severity code-vs-paper difference findings ('mse-fig4-computed-on-train', 'mgaps-lr-formula-mismatch') that do not affect conclusions. Minor metadata glitch: code_links.txt files this repo under 'NOT cloned' and tags it [no-author-signal], but the repo WAS cloned (present in code/) and owner yihenglin97 IS the first author -- the tag is a stale/incorrect prior with no downstream effect on the audit.",
+  "recommended_action": "Keep as source-present/correct. Optionally fix code_links.txt: move yihenglin97/Prediction-Power into the AUTHOR/PRIMARY (cloned) section and retag [author-cue]/[title-match] instead of [no-author-signal]. No finding needs reassignment; both existing findings are correctly written against the genuine core repo."
+}

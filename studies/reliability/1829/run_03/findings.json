@@ -1,0 +1,171 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T06:06:52.146636+00:00",
+  "findings": [
+    {
+      "id": "/requirements-unpinned",
+      "category": "missing",
+      "topic": "dependencies / reproducibility",
+      "title": "requirements.txt lists 13 packages with no version pins (incl. torch)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "requirements.txt",
+      "line_start": 1,
+      "line_end": 13,
+      "quote": "pandas\nscikit-learn\nnumpy\nmatplotlib\ntorch\nfvcore\neinops\nthop\ntimm\nreformer_pytorch\nopenpyxl\nseaborn\npywt\n",
+      "claim": "The dependency specification contains only bare package names with no version constraints for any package, including the deep-learning framework torch.",
+      "concern": "The runtime environment cannot be deterministically rebuilt; future versions of torch / numpy / scikit-learn may change defaults (e.g. StandardScaler behaviour, RNG, eigendecomposition sign conventions) and silently shift results, undermining exact reproduction of the reported metrics.",
+      "resolution": "Authors: pin exact versions (e.g. torch==2.x, numpy==1.26.x, scikit-learn==1.x) used to produce the paper, ideally with a lockfile or the Python version.",
+      "cross_refs": [],
+      "paper_ref": "Appendix D (Implementation details); README 'Usage' step 1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "requirements-unpinned",
+      "audit": "",
+      "audit_md_line": 54
+    },
+    {
+      "id": "/olinear-c-channel-mats-missing",
+      "category": "missing",
+      "topic": "result traceability / OLinear-C",
+      "title": "23 of 24 channel-correlation matrices required by OLinear-C scripts are absent",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "model/OLinear_C.py",
+      "line_start": 42,
+      "line_end": 45,
+      "quote": "assert configs.q_channel_file is not None, 'configs.q_channel_file should not be None in orthoLinear'\nq_channel_file = os.path.join(configs.root_path, configs.q_channel_file)\nif os.path.isfile(q_channel_file):\n    self.channel_corr_mat = torch.from_numpy(np.load(q_channel_file)).to(torch.float32).to(device)\n",
+      "claim": "model/OLinear_C.py loads a precomputed channel-correlation matrix via --q_channel_file (lines 42-45), but only weather_COV_channel_ratio0.70.npy is shipped; the 23 other *_COV_channel_*.npy files named by the OLinear_C scripts (including for datasets whose raw CSV IS in the repo: cars, covid, ILI, power, SP500, etc.) are not present (see _audit_code/out/check_channel_files_present.txt: 'required by OLinear_C scripts: 24 / present in dataset/: 1 / MISSING (23)').",
+      "concern": "The OLinear-C variant (reported in Appendix H) cannot be run out-of-the-box for 23 of 24 datasets; on a missing file OLinear_C.py:47 does not raise (see olinear-c-missing-file-assert), so self.channel_corr_mat is left undefined.",
+      "resolution": "Authors: ship the precomputed *_COV_channel_*.npy matrices for all OLinear-C datasets, or document that Generate_corrmat.ipynb (cell 1) must be re-run first (and provide the raw CSVs it needs).",
+      "cross_refs": [
+        "olinear-c-missing-file-assert"
+      ],
+      "check_script": "_audit_code/check_channel_files_present.py",
+      "paper_ref": "Appendix H (OLinear-C); §E.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "olinear-c-channel-mats-missing",
+      "audit": "",
+      "audit_md_line": 90
+    },
+    {
+      "id": "/plugin-on-baselines-code-missing",
+      "category": "missing",
+      "topic": "result traceability / generality",
+      "title": "Table 5 OrthoTrans-as-plugin (iTransformer/PatchTST/RLinear) has no code in repo",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "paper.pdf",
+      "line_start": null,
+      "line_end": null,
+      "quote": "Table 5: Applying OrthoTrans (O.Trans) to iTransformer, PatchTST and RLinear. Average MSEs are\n",
+      "claim": "The paper reports (Table 5) that adding OrthoTrans to iTransformer, PatchTST and RLinear improves their average MSE; the repo's model/ directory contains only OLinear and its own ablation variants, with no iTransformer / PatchTST / RLinear implementations into which OrthoTrans was inserted.",
+      "concern": "The 'OrthoTrans as a plug-in' generality claim (a headline contribution) cannot be reproduced from this repo because the modified-baseline code that produced Table 5 is not included.",
+      "resolution": "Authors: release the OrthoTrans-augmented iTransformer/PatchTST/RLinear code used for Table 5, or point to the exact branch/commit where the plug-in was applied.",
+      "cross_refs": [],
+      "paper_ref": "Table 5; §5.2 'OrthoTrans as a plug-in'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "plugin-on-baselines-code-missing",
+      "audit": "",
+      "audit_md_line": 118
+    },
+    {
+      "id": "/avail-statement-external-data",
+      "category": "missing",
+      "topic": "data availability",
+      "title": "Headline benchmark datasets (ECL/ETT/Traffic/Solar/PEMS/Exchange/METR) not in repo",
+      "severity": "low",
+      "confidence": "high",
+      "status": "question",
+      "file": "README.md",
+      "line_start": 48,
+      "line_end": 50,
+      "quote": "2. Some datasets can be obtained from [Google Drive](https://drive.google.com/file/d/1l51QsKvQPcqILT3DwfjCgx8Dsg2rpjot/view?usp=drive_link) or [Tsinghua Cloud](https://cloud.tsinghua.edu.cn/f/2ea5ca3d621e4e5ba36a/).  The others can be obtained from the links in Appendix B. \nSome datasets are already in the folder ```./dataset```. \nThe python script ```Generate_corrmat.ipynb``` for generating Pearson correlation matrices and Q matrices is also provided in ```./dataset```.\n",
+      "claim": "The repo ships raw CSVs + Q matrices for only 11 of the 24 datasets; the standard long-term-forecasting benchmarks (ECL/electricity, ETT×4, Traffic, Solar-Energy, PEMS×4, Exchange, METR-LA) are not present and must be fetched from Google Drive / Tsinghua Cloud / Appendix B links, then their Q and channel matrices regenerated via Generate_corrmat.ipynb.",
+      "concern": "Reproducing the main long-term-forecasting tables for the most prominent benchmarks requires external downloads and a manual Q-matrix regeneration step; these are standard public TSLib datasets and the sources are documented, so this is a completeness gap rather than an invalidation (filed as a question since I cannot resolve the external URLs in this sandbox).",
+      "resolution": "Authors: confirm the external links remain live and that Generate_corrmat.ipynb reproduces the exact Q/channel matrices used for the benchmark datasets (the notebook currently only iterates time_lag in {96,192,336,720}, not the {3..60} horizons used by the smaller datasets).",
+      "cross_refs": [],
+      "paper_ref": "Appendix B (datasets); §5 Datasets",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "avail-statement-external-data",
+      "audit": "",
+      "audit_md_line": 142
+    },
+    {
+      "id": "/olinear-c-missing-file-assert",
+      "category": "bug",
+      "topic": "error handling",
+      "title": "OLinear_C.py uses `assert ValueError(...)` which never raises on a missing channel file",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "model/OLinear_C.py",
+      "line_start": 42,
+      "line_end": 47,
+      "quote": "assert configs.q_channel_file is not None, 'configs.q_channel_file should not be None in orthoLinear'\nq_channel_file = os.path.join(configs.root_path, configs.q_channel_file)\nif os.path.isfile(q_channel_file):\n    self.channel_corr_mat = torch.from_numpy(np.load(q_channel_file)).to(torch.float32).to(device)\nelse:\n    assert ValueError('self.channel_corr_mat should not be None in orthoLinear_corr_only')\n",
+      "claim": "When the channel-correlation file is absent, the else branch runs `assert ValueError(...)`; a ValueError instance is always truthy, so the assert passes silently instead of raising, and self.channel_corr_mat is never assigned.",
+      "concern": "Instead of a clear 'file missing' error, the model proceeds and later fails with an obscure AttributeError on self.channel_corr_mat; combined with the 23 missing channel files, this hides the real cause from anyone running OLinear-C.",
+      "resolution": "Replace `assert ValueError(...)` with `raise ValueError(...)` (or `raise FileNotFoundError(q_channel_file)`).",
+      "cross_refs": [
+        "olinear-c-channel-mats-missing"
+      ],
+      "paper_ref": "Appendix H (OLinear-C)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "olinear-c-missing-file-assert",
+      "audit": "",
+      "audit_md_line": 170
+    },
+    {
+      "id": "/corrmat-notebook-hardcoded-windows-path",
+      "category": "difference",
+      "topic": "preprocessing reproducibility",
+      "title": "Q-matrix notebook uses hardcoded Windows paths and only lags {96,192,336,720}",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "question",
+      "file": "dataset/Generate_corrmat.ipynb",
+      "line_start": 182,
+      "line_end": 182,
+      "quote": "\"file_path = r'D:\\\\SystemData\\\\xunn\\\\Desktop\\\\codes\\\\iTransformer-main\\\\dataset\\\\Solar\\\\solar_AL.xlsx'\\n\",\n",
+      "claim": "Generate_corrmat.ipynb (the only artefact that reproduces the OrthoTrans Q and channel matrices) hardcodes per-dataset Windows file paths (cell 2 even points at an absolute D:\\ user-desktop path) and its temporal-Q cell only iterates time_lag in {96,192,336,720}, whereas the shipped small-dataset matrices use lags {3,6,9,12,24,36,48,60}; the notebook must be hand-edited per dataset to regenerate the matrices actually used.",
+      "concern": "The provided regeneration script does not, as committed, reproduce the full set of Q matrices used in the paper without manual edits, so anyone needing to regenerate matrices for a non-shipped dataset must reverse-engineer the lag list and fix the paths.",
+      "resolution": "Authors: parameterise the notebook (or provide a .py) over dataset + lag list, and replace the absolute D:\\ path with a relative one, so all shipped Q/channel matrices can be regenerated as-is.",
+      "cross_refs": [
+        "avail-statement-external-data"
+      ],
+      "paper_ref": "§4.2 OrthoTrans; README step 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "corrmat-notebook-hardcoded-windows-path",
+      "audit": "",
+      "audit_md_line": 201
+    }
+  ]
+}

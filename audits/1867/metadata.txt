@@ -1,0 +1,5 @@
+paper_number: 1867
+title: A Differential and Pointwise Control Approach to Reinforcement Learning
+authors: Minh H. Nguyen, Chandrajit Bajaj
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/5917b49ca312f8cfcba2fd0c08843922-Abstract-Conference.html
+category: empirical

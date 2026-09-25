@@ -1,0 +1,5 @@
+paper_number: 2963
+title: Learning Equilibria from Data: Provably Efficient Multi-Agent Imitation Learning
+authors: Till Freihaut, Luca Viano, Volkan Cevher, Matthieu Geist, Giorgia Ramponi
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/8cb4b41a28043e865b28db17f0a30edd-Abstract-Conference.html
+category: empirical

@@ -1,0 +1,5 @@
+paper_number: 793
+title: Mixture of Inputs: Text Generation Beyond Discrete Token Sampling
+authors: Yufan Zhuang, Liyuan Liu, Chandan Singh, Jingbo Shang, Jianfeng Gao
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/25c61012c845908bff2ea6223cdc6192-Abstract-Conference.html
+category: empirical

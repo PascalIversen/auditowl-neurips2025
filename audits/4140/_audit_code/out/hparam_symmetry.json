@@ -1,0 +1,118 @@
+[
+  {
+    "psi": "QLearning/config/alg/iql.yaml",
+    "base": "QLearning/config/alg/base_marl_iql.yaml",
+    "differing_hparams": {
+      "SEED": [
+        "0",
+        "30"
+      ],
+      "EPS_START": [
+        "0.8",
+        "1.0"
+      ],
+      "EPS_FINISH": [
+        "0.1",
+        "0.05"
+      ],
+      "MAX_GRAD_NORM": [
+        "5",
+        "25"
+      ],
+      "LR": [
+        "0.0035",
+        "0.005"
+      ]
+    }
+  },
+  {
+    "psi": "QLearning/config/alg/vdn.yaml",
+    "base": "QLearning/config/alg/base_marl_vdn.yaml",
+    "differing_hparams": {
+      "SEED": [
+        "0",
+        "30"
+      ],
+      "EPS_FINISH": [
+        "0.1",
+        "0.05"
+      ],
+      "MAX_GRAD_NORM": [
+        "10",
+        "25"
+      ],
+      "LR": [
+        "0.007",
+        "0.005"
+      ]
+    }
+  },
+  {
+    "psi": "QLearning/config/alg/qmix.yaml",
+    "base": "QLearning/config/alg/base_marl_qmix.yaml",
+    "differing_hparams": {
+      "SEED": [
+        "0",
+        "30"
+      ],
+      "EPS_START": [
+        "0.6",
+        "1.0"
+      ],
+      "EPS_FINISH": [
+        "0.1",
+        "0.05"
+      ],
+      "MAX_GRAD_NORM": [
+        "5",
+        "25"
+      ],
+      "LR": [
+        "0.004",
+        "0.005"
+      ]
+    }
+  },
+  {
+    "psi": "QLearning/config/alg/pqn.yaml",
+    "base": "QLearning/config/alg/base_marl_pqn.yaml",
+    "differing_hparams": {
+      "EPS_START": [
+        "0.03",
+        "0.01"
+      ],
+      "EPS_FINISH": [
+        "0.005",
+        "0.001"
+      ],
+      "LR": [
+        "0.0002",
+        "3e-4"
+      ]
+    }
+  },
+  {
+    "psi": "IPPO/config/alg/ippo.yaml",
+    "base": "IPPO/config/alg/base_marl_ippo.yaml",
+    "differing_hparams": {
+      "LR": [
+        "0.0006",
+        "5e-4"
+      ],
+      "ENT_COEF": [
+        "0.02",
+        "0.01"
+      ]
+    }
+  },
+  {
+    "psi": "MAPPO/config/alg/mappo.yaml",
+    "base": "MAPPO/config/alg/base_marl_mappo.yaml",
+    "differing_hparams": {
+      "LR": [
+        "0.0065",
+        "5.0e-4"
+      ]
+    }
+  }
+]

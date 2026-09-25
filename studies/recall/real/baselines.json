@@ -1,0 +1,113 @@
+{
+  "_desc": "Head-to-head on the 10 contamination-safe items (postdate the BASELINES' training cutoffs). Both sides scored under one consistent judge (GPT-5.5, via codex exec) with SciCoQA's matching protocol and prompt; baseline predictions are SciCoQA's own released raw model outputs, re-judged by us against the same references AuditOwl is judged against. Same papers, joined by discrepancy_id.",
+  "_provenance": "trimmed from OLD/headtohead_scicoqa.json (full 33); baseline raw predictions = github.com/UKPLab/scicoqa @ main out/inference_discrepancy_detection_real.tar.gz, real/full/*/eval_v2/generations.jsonl; re-judged with GPT-5.5, see baselines_gpt55_judge.json for every per-pair verdict",
+  "_scoring_note": "AuditOwl values are run_01 (k=1) for like-for-like with the baselines. Both sides emit a list of candidate discrepancies and count as detecting an item if any entry matches. See results.json for the k=2 per-run/union numbers, and judge_verdicts.json / baselines_gpt55_judge.json for every per-pair verdict.",
+  "n": 10,
+  "AuditOwl_run01": [
+    7,
+    10
+  ],
+  "headline": "AuditOwl per-run 60-70% (mean 65%) vs best baseline 50% (gpt-5) on the same 10 papers, under one consistent GPT-5.5 judge; even the worst AuditOwl run (60%) exceeds the best baseline.",
+  "per_item": [
+    {
+      "item": "10 item10",
+      "row_id": "fec5862c",
+      "date": "2025-02",
+      "category": "Data",
+      "AuditOwl_run01": "miss",
+      "gpt-5": 0,
+      "gemini-2.5-pro": 0,
+      "gpt-5-mini": 0
+    },
+    {
+      "item": "08 item08",
+      "row_id": "cb3be166",
+      "date": "2025-04",
+      "category": "Loss",
+      "AuditOwl_run01": "DET",
+      "gpt-5": 1,
+      "gemini-2.5-pro": 1,
+      "gpt-5-mini": 1
+    },
+    {
+      "item": "09 item09",
+      "row_id": "03a374de",
+      "date": "2025-04",
+      "category": "Data",
+      "AuditOwl_run01": "miss",
+      "gpt-5": 0,
+      "gemini-2.5-pro": 0,
+      "gpt-5-mini": 0
+    },
+    {
+      "item": "06 item06",
+      "row_id": "4b9f947a",
+      "date": "2025-05",
+      "category": "Model",
+      "AuditOwl_run01": "DET",
+      "gpt-5": 1,
+      "gemini-2.5-pro": 1,
+      "gpt-5-mini": 1
+    },
+    {
+      "item": "07 item07",
+      "row_id": "41c16fd1",
+      "date": "2025-05",
+      "category": "Loss",
+      "AuditOwl_run01": "miss",
+      "gpt-5": 0,
+      "gemini-2.5-pro": 0,
+      "gpt-5-mini": 0
+    },
+    {
+      "item": "02 item02",
+      "row_id": "183bd763",
+      "date": "2025-06",
+      "category": "Training",
+      "AuditOwl_run01": "DET",
+      "gpt-5": 1,
+      "gemini-2.5-pro": 0,
+      "gpt-5-mini": 0
+    },
+    {
+      "item": "03 item03",
+      "row_id": "f234a0ee",
+      "date": "2025-06",
+      "category": "Evaluation",
+      "AuditOwl_run01": "DET",
+      "gpt-5": 1,
+      "gemini-2.5-pro": 0,
+      "gpt-5-mini": 0
+    },
+    {
+      "item": "04 item04",
+      "row_id": "b1b5cc6e",
+      "date": "2025-06",
+      "category": "Evaluation",
+      "AuditOwl_run01": "DET",
+      "gpt-5": 0,
+      "gemini-2.5-pro": 0,
+      "gpt-5-mini": 0
+    },
+    {
+      "item": "01 item01",
+      "row_id": "8e4dfba9",
+      "date": "2025-07",
+      "category": "Evaluation",
+      "AuditOwl_run01": "DET",
+      "gpt-5": 1,
+      "gemini-2.5-pro": 1,
+      "gpt-5-mini": 1
+    },
+    {
+      "item": "11 item11",
+      "row_id": "1ffbe3cb",
+      "date": "2025-01",
+      "category": "Training",
+      "AuditOwl_run01": "DET",
+      "gpt-5": 0,
+      "gemini-2.5-pro": 0,
+      "gpt-5-mini": 0
+    }
+  ]
+}

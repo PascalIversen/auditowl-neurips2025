@@ -1,0 +1,17 @@
+{
+  "paper_id": "3457_Understanding_and_Rectifying_Safety_Perception_Distortion_in",
+  "title": "Understanding and Rectifying Safety Perception Distortion in VLMs",
+  "repos": [
+    {
+      "name": "Renovamen__ShiftDC",
+      "role": "core",
+      "evidence": "README declares 'This repository contains the code for the paper \"Understanding and Rectifying Safety Perception Distortion in VLMs\"' and links arXiv:2502.13095 and the NeurIPS 2025 poster. Paper text (line 24) gives official URL https://github.com/Renovamen/ShiftDC matching the clone. Repo implements the paper's named method ShiftDC: run_shiftdc.py (Eq. 6-7 calibration), run_safety_shift.py (Eq. 4 safety-shift extraction), shiftdc/utils/hooks.py (activation projection), run_tt_activation.py/run_vl_activation.py (Eq. 5 shift computation). Author 'Renovamen' is Xiaohan Zou (first author at PSU)."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "One repo was cloned, it is unambiguously the paper's own implementation: the paper directly links to https://github.com/Renovamen/ShiftDC, the README claims the paper by exact title with matching arXiv ID and NeurIPS 2025 poster link, and the code implements ShiftDC's key equations. All findings in audit.md were written against this core repo and are legitimate: they identify missing evaluation code (ASR scoring, probing classifiers, baseline application, utility benchmarks) that is genuinely absent from the otherwise-correct inference/steering pipeline. No non-core repo was cloned.",
+  "audit_impact": "No misclassification. Findings are correctly targeted at the paper's own repo. The audit accurately identifies that the core method pipeline is present but the entire evaluation layer (ASR scoring, linear probes, baseline runners, utility benchmarks) is missing, preventing reproduction of any reported quantitative result.",
+  "recommended_action": "No action needed on repo provenance. The missing-code findings (asr-evaluation-code-absent, probing-classifier-code-absent, baselines-not-applied, utility-benchmark-code-absent) are valid and should be retained."
+}

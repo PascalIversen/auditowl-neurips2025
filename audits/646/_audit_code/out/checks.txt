@@ -1,0 +1,13 @@
+=== requirements pins ===
+diffusers==0.34.0 -> pinned
+transformers==4.53.3 -> pinned
+einops==0.8.1 -> pinned
+decord==0.6.0 -> pinned
+accelerate==1.9.0 -> pinned
+ftfy==6.3.1 -> pinned
+imageio==2.37.0 -> pinned
+imageio-ffmpeg==0.6.0 -> pinned
+opencv-python==4.12.0.88 -> pinned
+frechetdist -> UNPINNED
+
+=== syntax OK, file parses ===

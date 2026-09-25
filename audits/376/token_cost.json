@@ -1,0 +1,19 @@
+{
+  "folder": "376_Sparse_Diffusion_Autoencoder_for_Test_time_Adapting_Predicti",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 8709,
+    "output": 16903,
+    "cache_write": 212385,
+    "cache_read": 2792040
+  },
+  "total_tokens": 3030037,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 9.57
+}

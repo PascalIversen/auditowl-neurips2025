@@ -1,0 +1,17 @@
+{
+  "paper_id": "1829_OLinear_A_Linear_Model_for_Time_Series_Forecasting_in_Orthog",
+  "title": "OLinear: A Linear Model for Time Series Forecasting in Orthogonally Transformed Domain",
+  "repos": [
+    {
+      "name": "jackyue1994__OLinear",
+      "role": "core",
+      "evidence": "README.md line 3: 'The repo is the official implementation for the paper: OLinear: A Linear Model for Time Series Forecasting in Orthogonally Transformed Domain.' — exact title match. Repo owner 'jackyue1994' matches lead author Wenzhen Yue (yuewenzhen@stu.pku.edu.cn); paper states official code at https://github.com/jackyue1994/OLinear. Both named core contributions are implemented: NormLin in layers/newLinear.py:27 (F.normalize(F.softplus(weight_mat), p=1, dim=-1) = Softplus + row-wise L1 norm, matching paper's NormLin description), OrthoTrans in model/OLinear.py (orthogonal transformation via precomputed Q matrices) with dataset/Generate_corrmat.ipynb generating Pearson-correlation Q matrices. model/OLinear.py and model/OLinear_C.py are the headline models; scripts/OLinear/* reproduce the experiments."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo is unambiguously THIS paper's own core implementation. README explicitly declares official implementation with the exact paper title; repo owner (jackyue1994) maps to lead author Wenzhen Yue; the paper's own code URL points to this exact repo (github.com/jackyue1994/OLinear). The two distinctive named contributions are present and faithful: NormLin (Softplus + L1 row-normalized weight matrix) in layers/newLinear.py, and OrthoTrans (orthogonal transform from temporal Pearson correlation matrix) in model/OLinear.py + dataset/Generate_corrmat.ipynb. No baseline/dependency/different-paper repos were cloned (the only non-cloned link, liyaguang/DCRNN, was correctly excluded). The code_links.txt [author-cue] prior is confirmed.",
+  "audit_impact": "None. The audit correctly treats this repo as 'the official implementation of OLinear' and writes all five findings against the genuine core (requirements unpinned, Q-matrix regeneration friction, no multi-seed std harness, hardcoded cuda:0 device bug, inactive test-stage/batch-size selection). These are legitimate reproducibility/bug findings against real author code; none are misattributed-clone artifacts and there is no 'no code released' assertion to flip.",
+  "recommended_action": "No change. Source-present is justified and findings are correctly scoped to the author's own OLinear implementation. Keep paper as correctly classified (source-present)."
+}

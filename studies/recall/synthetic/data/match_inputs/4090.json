@@ -1,0 +1,177 @@
+{
+  "paper": "4090",
+  "seeds": [
+    {
+      "sid": "S02",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "wxl1122__URD/Unifying_INN/flow_net/denoise_net.py",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the industrial-image contraction-flow model",
+      "description": "Delete denoise_net.py, the only visual patch-flow implementation: it contains the 768-channel DenoiseFlow, its flow assemblies, inversion path, and sampling path used for spatial feature maps. The tabular vector flow remains, but no code remains for applying the contraction flow to MVTec multi-layer patch embeddings, so the paper's industrial-image pipeline and its classification/localization results have no implementation."
+    },
+    {
+      "sid": "S03",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "wxl1122__URD/Unifying_INN/flow_net/denet.py",
+          "line": 10,
+          "action": "replace"
+        },
+        {
+          "file": "wxl1122__URD/Unifying_INN/flow_net/denet.py",
+          "line": 63,
+          "action": "replace"
+        }
+      ],
+      "title": "Replace contraction units with affine coupling flows",
+      "description": "Replace each implicit i-DenseNet contraction unit in the tabular flow with a RealNVP-style affine coupling transform. The substitute is fully invertible and trainable, has complementary masks, learned scale and translation networks, exact forward/inverse computations, and log-determinant gradients. It is a coherent normalizing-flow method, but it does not implement the paper's Lipschitz contraction mapping or fixed-point mechanism, invalidating the claimed reason for the reported gains."
+    },
+    {
+      "sid": "S05",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "wxl1122__URD/Unifying_INN/utils/utils.py",
+          "line": 24,
+          "action": "replace"
+        }
+      ],
+      "title": "Select anomaly-score transforms on test labels",
+      "description": "Turn final evaluation into test-label model selection by evaluating four anomaly-score transformations and reporting the best AUROC and AP, independently, on the same labels used for the headline metrics. This is direct test-set peeking in the main evaluation path and can materially inflate every Table 1 result without changing training code."
+    },
+    {
+      "sid": "S07",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "wxl1122__URD/Unifying_INN/flow_net/layers/base/activations.py",
+          "line": 112,
+          "action": "replace"
+        }
+      ],
+      "title": "Make every contraction unit non-invertible with ReLU",
+      "description": "Replace the learnable Leaky LipSwish activation used inside every FlowNet with ReLU. Negative preactivations collapse to zero, so the mapping is many-to-one and violates the invertibility and smooth Lipschitz assumptions required by the implicit inverse solver and likelihood calculation. Training still has real gradients on positive activations and the code remains a substantive neural computation, but the central bidirectional method is mathematically invalid."
+    }
+  ],
+  "baseline": [
+    {
+      "id": "4090/image-domain-code-missing",
+      "category": "missing",
+      "file": "Unifying_INN/main.py",
+      "line_start": 52,
+      "line_end": 64,
+      "title": "No CIFAR-10 / MVTec image-AD code; Table 2 and Table 4 unreproducible"
+    },
+    {
+      "id": "4090/datasets-missing",
+      "category": "missing",
+      "file": "Unifying_INN/get_data.sh",
+      "line_start": 4,
+      "line_end": 19,
+      "title": "Only 4 of 20 tabular datasets bundled; fetch script covers 13 with mismatched paths"
+    },
+    {
+      "id": "4090/ablation-harness-missing",
+      "category": "missing",
+      "file": "Unifying_INN/main.py",
+      "line_start": 70,
+      "line_end": 80,
+      "title": "No ablation/hyperparameter-sweep code for Tables 3 and 5"
+    },
+    {
+      "id": "4090/hardcoded-data-path",
+      "category": "bug",
+      "file": "Unifying_INN/utils/loadData.py",
+      "line_start": 5,
+      "line_end": 5,
+      "title": "loadData reads a hardcoded absolute path on the authors' machine"
+    },
+    {
+      "id": "4090/cudnn-determinism-typo",
+      "category": "bug",
+      "file": "Unifying_INN/main.py",
+      "line_start": 21,
+      "line_end": 21,
+      "title": "Typo 'deterministirc' makes cuDNN-determinism flag a silent no-op"
+    },
+    {
+      "id": "4090/test-set-model-selection",
+      "category": "methodology",
+      "file": "Unifying_INN/main.py",
+      "line_start": 82,
+      "line_end": 85,
+      "title": "No validation set; test AUROC evaluated and printed every 5 epochs during training"
+    }
+  ],
+  "unassigned": [
+    {
+      "fid": "/visual-experiments-absent",
+      "run": "run_01",
+      "category": "missing",
+      "loc": "paper.pdf:None",
+      "title": "No code for any image experiment (CIFAR-10, MVTec AD) \u2014 Tables 2, 4, half of 5",
+      "claim": "The paper reports CIFAR-10 per-class AUROC and MVTec image/pixel AUROC (99.5/98.3) in Table 2, a visual ablation in Table 4, and a visual K\u00d7R sweep in Table 5, using a DO2HSC CNN (CIFAR-10) and a frozen WideResNet-50 (MVTec); the repo contains only the tabular MLP+flow pipeline.",
+      "concern": "Roughly half the paper's headline results (all image AD) cannot be reproduced or verified: no Conv2d/WideResNet/CIFAR/MVTec code exists anywhere in the repo (grep over all *.py returns nothing)."
+    },
+    {
+      "fid": "/tabular-data-incomplete",
+      "run": "run_01",
+      "category": "missing",
+      "loc": "out/dataset_coverage.csv:None",
+      "title": "5 of 20 Table-1 datasets have no source in the repo; only 4 committed",
+      "claim": "Of the 20 datasets in Table 1, only 4 (.mat: glass, thyroid, wbc, wine) are committed and 13 are fetched by get_data.sh; arrhythmia, census, cardiotoco, nsl-kdd, and shuttle have neither a committed file nor a download entry.",
+      "concern": "16 of 20 Table-1 rows cannot be produced from the repo as shipped, and 5 have no obtainable source at all, so the reported tabular averages (78.64/91.19) are not reproducible from the artefact."
+    },
+    {
+      "fid": "/readme-repro-instructions",
+      "run": "run_01",
+      "category": "missing",
+      "loc": "README.md:1",
+      "title": "README has only the title \u2014 no dependencies notes, commands, results, or weights",
+      "claim": "The top-level README contains only the paper title; there are no run commands, no results table, no expected numbers, and no pre-trained checkpoints in the repo.",
+      "concern": "A reviewer has no stated entry point or expected output to reproduce any table; combined with the hardcoded data path this makes out-of-the-box reproduction impossible."
+    },
+    {
+      "fid": "run_02/visual-ad-code-absent",
+      "run": "run_02",
+      "category": "missing",
+      "loc": "paper.pdf:None",
+      "title": "No CIFAR-10 or MVTec (visual-AD) code at all \u2014 Tables 2, 4 and visual Table 5 unreproducible",
+      "claim": "The paper reports a full visual-AD track \u2014 CIFAR-10 image-level AUROC (Table 2, 11 classes), MVTec image/pixel-level AUROC 99.5/98.3 (Table 2), a visual ablation (Table 4) and a visual K/R sweep (Table 5) \u2014 using a DO2HSC CNN (CIFAR-10) and a frozen WideResNet-50 (MVTec). The repo contains only the tabular pipeline: a deterministic grep of all 24 .py files finds 0 references to cifar/mvtec/wideresnet/resnet/conv2d/do2hsc/torchvision, and data/ holds only 4 tabular .mat files.",
+      "concern": "Roughly half of the paper's headline experiments (all image results) have no code, no backbones, and no data in the repository, so they cannot be reproduced from the released artefact."
+    },
+    {
+      "fid": "run_02/ablation-sweep-code-missing",
+      "run": "run_02",
+      "category": "missing",
+      "loc": "Unifying_INN/model/INN.py:14",
+      "title": "R hardcoded to 3, K unimplemented, no ablation switches \u2014 Tables 3 (A/B/C) and 5 not reproducible",
+      "claim": "The number of flow modules R is hardcoded to 3 here, there is no argument anywhere for the per-module iteration count K, and each flow_unit is a fixed [AffineCoupling, ActNorm, AffineCoupling] chain (denet.py:63-65) unrelated to K. main.py always trains the full loss reconstruction_loss + 0.5*(prior_loss + post_loss) with no flag to disable RE or DE and no six-layer-MLP baseline model.",
+      "concern": "Table 5's 4\u00d75 K/R sweep and Table 3's ablation variants A (baseline MLP), B (RE-only) and C (DE-only) have no corresponding code path or configuration, so those ablation numbers cannot be reproduced from the released repository."
+    },
+    {
+      "fid": "run_02/density-loglik-not-chained",
+      "run": "run_02",
+      "category": "bug",
+      "loc": "Unifying_INN/flow_net/denet.py:141",
+      "title": "prob_predictor loop does not thread z or accumulate log-det across flow modules",
+      "claim": "The loop iterates over all num_modules (=3) flow modules but passes the SAME z and SAME log_p_prior to every module's inverse and discards the transformed output (`_`). Only the last iteration (i=0) is returned, so log_p_post = log_p_prior + log-det of flow_net[0].inverse(z) \u2014 a single module \u2014 instead of composing F_R\u207b\u00b9\u2218\u2026\u2218F_1\u207b\u00b9 and summing all R log-dets.",
+      "concern": "The density log-likelihood (Eq. 4, and hence the LMLE training term and the \u2212\u03b1\u00b7log p(x) part of the anomaly score, Eq. 8) omits 2 of the 3 flow modules' Jacobian contributions and evaluates them at the wrong point, so the implemented density estimation is not the change-of-variables the code plainly intends."
+    },
+    {
+      "fid": "run_02/test-set-hparam-selection",
+      "run": "run_02",
+      "category": "methodology",
+      "loc": "Unifying_INN/utils/loadData.py:21",
+      "title": "No validation set; K,R (Table 5) and epoch are selected on the test set",
+      "claim": "loadData returns only train and test splits \u2014 no validation set is ever created. main.py evaluates on the test loader every 5 epochs (main.py:82-85), and Table 5 selects the 'best' K,R (K=2,R=3) by their AP/AUROC on the same tabular/MVTec test sets.",
+      "concern": "With no held-out validation data, the reported best K/R (and the epoch at which test AUROC is read) are chosen using test-set performance, which optimistically biases the headline 78.64/91.19; the ambiguity is that the config might instead have been fixed a priori from prior work."
+    }
+  ]
+}

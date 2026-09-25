@@ -1,0 +1,8 @@
+# AUTHOR / PRIMARY repositories (cloned):
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/Stability-AI/sd3.5	[known-org:stability-ai]
+https://github.com/black-forest-labs/flux	[known-org:black-forest-labs]
+
+# RECOVERED author repo (manual; automated URL-miner missed it):
+https://github.com/cvlab-kaist/Seg4Diff	[manual-recovery]

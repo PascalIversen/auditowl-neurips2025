@@ -1,0 +1,17 @@
+{
+  "paper_id": "3715_Diffusion_Models_and_the_Manifold_Hypothesis_Log_Domain_Smoo",
+  "title": "Diffusion Models and the Manifold Hypothesis: Log-Domain Smoothing is Geometry Adaptive",
+  "repos": [
+    {
+      "name": "samuel-howard__log_smoothing",
+      "role": "core",
+      "evidence": "README states: 'Research code for the paper Diffusion Models and the Manifold Hypothesis: Log-Domain Smoothing is Geometry Adaptive (https://arxiv.org/abs/2510.02305), by Tyler Farghly, Peter Potaptchik, Samuel Howard, George Deligiannidis, and Jakiw Pidstrigach.' Repo owner 'samuel-howard' matches paper co-author Samuel Howard. Contains src/diffusion.py, src/smoothing.py implementing VE diffusion and log-domain score smoothing (the paper's core contribution), plus six notebooks generating Figures 1-10 and 16. All three paper signals align: title, arXiv id, and author overlap."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo (samuel-howard/log_smoothing) is unambiguously the paper's own implementation. The README explicitly cites the paper title and arXiv id (2510.02305), the repo owner is a named co-author (Samuel Howard), and the code modules implement the paper's headline method: analytic empirical score via logsumexp (eq. 9), Gaussian and manifold-translated score smoothing (eq. 6), and a VAE for the MNIST latent-manifold experiments. All findings in the audit were written against this correct repo and concern genuine reproducibility gaps (missing VAE checkpoint, missing Figure 3 code, sparse README, one hyperparameter mismatch). No mis-attribution is present.",
+  "audit_impact": "None. The audit correctly identified the paper's own code repo and the findings are legitimately against that repo. No re-classification needed.",
+  "recommended_action": "No action required on repo provenance. The findings (vae-checkpoint-absent high/high; figure3-no-code medium/high; readme-no-repro-instructions medium/high; circle-nll-T-mismatch low/medium) are valid and stand as-is."
+}

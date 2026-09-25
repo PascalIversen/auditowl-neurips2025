@@ -1,0 +1,6 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/brunzema/bayesqp	[author-cue]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/cvxopt/cvxopt	[no-author-signal]
+https://github.com/kayween/local-bo-mpd	[no-author-signal]

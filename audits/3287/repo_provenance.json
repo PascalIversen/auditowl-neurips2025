@@ -1,0 +1,17 @@
+{
+  "paper_id": "3287_Context_Aware_Regularization_with_Markovian_Integration_for_",
+  "title": "Context-Aware Regularization with Markovian Integration for Attention-Based Nucleotide Analysis",
+  "repos": [
+    {
+      "name": "EESI__carmania",
+      "role": "partial_core",
+      "evidence": "README title matches paper exactly: 'Context-Aware Regularization with Markovian Integration for Attention-Based Nucleotide Analysis'. Repo is hosted under github.com/EESI (Drexel EESI lab — Gail Rosen's lab, matching paper affiliation). Citation block in README cites Refahi, Abavisani, Sokhansanj, Brown, Rosen in NeurIPS 2026 — same author list as paper. Hugging Face handles use 'MsAlEhR' (Mohammad Saleh Refahi, first author). The repo implements the paper's core CARMANIA model (carmania/modeling_carmania.py, carmania/loss.py with TM loss, carmania/configuration_carmania.py) and a pretraining loop (train.py). However, all downstream evaluation code (fine-tuning, cross-validation, FAISS retrieval, metric computation), ablation variants (second-order TM), and dataset/figure scripts are absent — hence partial_core rather than core."
+    }
+  ],
+  "core_present": "partial",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo (EESI__carmania) is unambiguously the paper's own code: the README title, author citation, Drexel/EESI affiliation, and HuggingFace account (MsAlEhR = Mohammad Saleh Refahi) all match the paper precisely. The paper itself states 'Code available at https://github.com/EESI/carmania' (paper_text.txt line 34). The repo implements the paper's named core contribution (CARMANIA model, TM loss, sliding-window attention architecture). The audit correctly identified it as the author repo and wrote findings about incomplete evaluation code against it — the findings are legitimate (eval pipeline absent, second-order TM missing, dependency spec missing) and the audit classification as source-present is justified. No non-core repos were cloned.",
+  "audit_impact": "No misclassification. The audit correctly identified this as the author's code and the findings (eval-pipeline-missing, dependency-spec-missing, second-order-tm-missing, figure-table-scripts-missing, train-hparams-mismatch) are all written against the correct repo. The 'partial_core' designation reflects incomplete code release, which the audit faithfully documents via the 'eval-pipeline-missing' high-severity finding.",
+  "recommended_action": "No correction needed. The paper is correctly classified as source-present (partial). Findings stand as-is."
+}

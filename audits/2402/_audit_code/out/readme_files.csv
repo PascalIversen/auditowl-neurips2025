@@ -1,0 +1,7 @@
+referenced_file,exists
+train.sh,False
+train_stage_1.py,False
+train_stage_2.py,False
+train_compress_vq_multicond.py,True
+train_multihead_t2vqpgpt.py,True
+scripts/RWTH-T/3_process_annotation.py,False

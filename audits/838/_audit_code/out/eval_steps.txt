@@ -1,0 +1,6 @@
+configured max_number_of_test_steps = 20
+batch_size = 512
+actual batches executed (incl. metric.update) = 21
+actual test problems evaluated = 10752
+paper claims: 20 test iterations, ~10000 test problems
+20*512 = 10240; 21*512 = 10752

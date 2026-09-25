@@ -1,0 +1,8 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/Xiaohao-Liu/L-MTP	[author-cue]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/Instruction-Tuning-with-GPT-4/GPT-4-LLM	[no-author-signal]
+https://github.com/hendrycks/math	[no-author-signal]
+https://github.com/nickrosh/evol-teacher	[no-author-signal]
+https://github.com/sahil280114/codealpaca	[no-author-signal]

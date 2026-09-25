@@ -1,0 +1,770 @@
+[
+  {
+    "paper": "1829",
+    "clusters": [
+      {
+        "label": "Baseline & OrthoTrans/NormLin plug-in model code absent \u2014 Tables 1/5/6 not reproducible (no iTransformer/PatchTST/RLinear/Timer etc. in repo)",
+        "fids": [
+          "r01#0",
+          "r02#0",
+          "r03#2",
+          "r07#0",
+          "r07#2",
+          "r08#0",
+          "r10#0"
+        ]
+      },
+      {
+        "label": "Headline benchmark datasets (ECL/ETT/Traffic/Solar/PEMS/Exchange/METR) and their precomputed Q-matrices are not shipped",
+        "fids": [
+          "r02#1",
+          "r03#3",
+          "r04#1",
+          "r05#2",
+          "r08#1",
+          "r10#3"
+        ]
+      },
+      {
+        "label": "OLinear-C per-dataset channel-correlation matrices (COV_channel.npy) missing for every dataset except weather",
+        "fids": [
+          "r03#1",
+          "r07#1"
+        ]
+      },
+      {
+        "label": "No code computes the reported std dev / 99% CIs / Student's t-test (Tables 13/14/15/26)",
+        "fids": [
+          "r02#2",
+          "r05#0",
+          "r06#0",
+          "r10#1"
+        ]
+      },
+      {
+        "label": "'Seven random seeds' claimed but code uses a single hardcoded seed / robustness runs never explicitly seeded",
+        "fids": [
+          "r05#1",
+          "r10#5"
+        ]
+      },
+      {
+        "label": "requirements.txt fully unpinned (no versions) and lists 'pywt' \u2014 wrong PyPI name (should be PyWavelets); install fails",
+        "fids": [
+          "r02#3",
+          "r03#0",
+          "r04#0",
+          "r05#3",
+          "r06#1",
+          "r06#2",
+          "r07#3",
+          "r08#2",
+          "r10#2"
+        ]
+      },
+      {
+        "label": "patoolib and tqdm imported at startup but absent from requirements.txt (undeclared dependencies)",
+        "fids": [
+          "r09#0"
+        ]
+      },
+      {
+        "label": "Basis-ablation scripts request an unregistered model key 'OLinear_wavelet_concat' \u2192 KeyError",
+        "fids": [
+          "r01#1",
+          "r07#4",
+          "r10#4"
+        ]
+      },
+      {
+        "label": "OLinear-C missing-channel-file guard uses `assert ValueError(...)` (always truthy; never raises)",
+        "fids": [
+          "r03#4",
+          "r07#5"
+        ]
+      },
+      {
+        "label": "OrthoTrans adds undocumented learnable additive terms delta1/delta2 absent from the paper's transform equations",
+        "fids": [
+          "r04#2",
+          "r09#1"
+        ]
+      },
+      {
+        "label": "Reported metric is selected on the test set (best-of-N runs / min over test-batch-sizes & decoder stages by test MSE+MAE)",
+        "fids": [
+          "r01#2",
+          "r01#3",
+          "r04#4",
+          "r05#4",
+          "r06#4",
+          "r06#5"
+        ]
+      },
+      {
+        "label": "Q-matrix generation notebook is single-file with hardcoded Windows paths, fixed lags, and is not wired into the pipeline",
+        "fids": [
+          "r02#4",
+          "r03#5"
+        ]
+      },
+      {
+        "label": "Early-stopping patience / epoch count in shipped scripts (patience 5\u20138, 30 epochs) disagree with the paper (patience 10, 50 epochs)",
+        "fids": [
+          "r02#5",
+          "r04#3",
+          "r06#3"
+        ]
+      },
+      {
+        "label": "Reported 'MASE' scales by the test-target 1-step naive error, not the in-sample seasonal naive denominator",
+        "fids": [
+          "r02#6"
+        ]
+      },
+      {
+        "label": "Per-dataset hyperparameters are tuned over ranges but the selection criterion is left unstated",
+        "fids": [
+          "r02#7"
+        ]
+      },
+      {
+        "label": "run.py references Exp_Short_Term_Forecast / Exp_Long_Term_Forecast_Partial / Exp_Imputation classes that are never imported",
+        "fids": [
+          "r08#3"
+        ]
+      }
+    ]
+  },
+  {
+    "paper": "1333",
+    "clusters": [
+      {
+        "label": "Latent restoration network R_theta (Stage-2 core, Eq.7/9) is absent \u2014 Stage-2 only auto-encodes via the VAE; L_Res training not implemented",
+        "fids": [
+          "r01#0",
+          "r02#0",
+          "r02#3",
+          "r03#0",
+          "r04#0",
+          "r04#1",
+          "r05#1",
+          "r06#1",
+          "r07#0",
+          "r07#7",
+          "r08#1",
+          "r09#1",
+          "r10#1"
+        ]
+      },
+      {
+        "label": "No evaluation / inference / metric entrypoint \u2014 none of Tables 1\u20135 or Fig. 2 can be computed from the repo",
+        "fids": [
+          "r01#1",
+          "r02#1",
+          "r03#1",
+          "r04#2",
+          "r05#0",
+          "r06#0",
+          "r07#1",
+          "r08#0",
+          "r09#0",
+          "r10#0"
+        ]
+      },
+      {
+        "label": "Datasets and pretrained VAE/DINOv2 weights are referenced by config but not shipped; no fetch script",
+        "fids": [
+          "r01#2",
+          "r02#2",
+          "r05#2",
+          "r07#3",
+          "r09#3"
+        ]
+      },
+      {
+        "label": "No dependency specification (no requirements.txt / environment.yml / setup.py) for a heavy multi-dependency repo",
+        "fids": [
+          "r01#3",
+          "r02#4",
+          "r03#2",
+          "r04#3",
+          "r05#3",
+          "r06#2",
+          "r07#4",
+          "r08#2",
+          "r09#2",
+          "r10#2"
+        ]
+      },
+      {
+        "label": "README is an empty one-line stub (no commands, no results table); code-availability deferred",
+        "fids": [
+          "r05#4",
+          "r08#3",
+          "r10#3"
+        ]
+      },
+      {
+        "label": "Stage-2 config requests VAE arch type 'RAVAE' which is not registered \u2192 KeyError at network build",
+        "fids": [
+          "r01#4",
+          "r02#5",
+          "r03#3",
+          "r04#4",
+          "r05#5",
+          "r06#4",
+          "r07#5",
+          "r08#4",
+          "r09#5",
+          "r10#5"
+        ]
+      },
+      {
+        "label": "experiments_root / training output dir hardcoded to the authors' cluster path \u2014 breaks any other machine",
+        "fids": [
+          "r01#5",
+          "r02#6",
+          "r03#4",
+          "r05#6",
+          "r06#5",
+          "r08#5",
+          "r09#6",
+          "r10#6"
+        ]
+      },
+      {
+        "label": "Hardcoded author-machine absolute paths injected via sys.path.append in core modules (non-existent elsewhere)",
+        "fids": [
+          "r01#6",
+          "r02#7",
+          "r04#5",
+          "r05#7",
+          "r07#6",
+          "r08#6",
+          "r10#7"
+        ]
+      },
+      {
+        "label": "LoRA alpha blending mismatch \u2014 opposite LoRA scaled at runtime by alpha=0.5 instead of frozen at base / weight-delta blending",
+        "fids": [
+          "r01#7",
+          "r09#7",
+          "r10#9"
+        ]
+      },
+      {
+        "label": "Decoder PHF-LoRA step also minimizes the HF-fidelity L1 loss, not the perception-only (GAN) loss of Eq. 9",
+        "fids": [
+          "r05#8",
+          "r06#6",
+          "r10#8"
+        ]
+      },
+      {
+        "label": "LEqv is computed on the latent of the PERTURBED input, not the clean-image latent z_clean as in Eq. 5",
+        "fids": [
+          "r02#8",
+          "r04#6",
+          "r07#8",
+          "r08#7"
+        ]
+      },
+      {
+        "label": "Stage-1 reconstruction encodes the perturbed image, not I_clean as defined in Eq. 2",
+        "fids": [
+          "r06#7"
+        ]
+      },
+      {
+        "label": "Shipped configs are '*_example' placeholders with toy batch sizes and generic (non-paper) hyperparameters",
+        "fids": [
+          "r03#5",
+          "r04#7"
+        ]
+      },
+      {
+        "label": "Key architecture modules are placeholder/substitute stubs (e.g. vgg_arch), not the paper's components",
+        "fids": [
+          "r06#3"
+        ]
+      },
+      {
+        "label": "Backbone-integration experiments absent \u2014 Table 5(c) backbones (Restormer/NAFNet/SFHformer) and Table 3/4 integration/generalization have no code",
+        "fids": [
+          "r07#2",
+          "r10#4"
+        ]
+      },
+      {
+        "label": "basicsr/__init__.py imports `.test` but basicsr/test.py does not exist \u2192 import crashes on load",
+        "fids": [
+          "r09#4"
+        ]
+      },
+      {
+        "label": "LInv adds an undocumented trainable 1x1 conv projector before the DINOv2 alignment",
+        "fids": [
+          "r07#9"
+        ]
+      }
+    ]
+  },
+  {
+    "paper": "2657",
+    "clusters": [
+      {
+        "label": "TCCM's training-epoch count (the paper's only data-dependent hyperparameter) is a hardcoded 47-branch if/elif table (values 1..5000); no code implements the unsupervised CSM / Improved Contrast Score Margin selection the paper claims (some values commented 'Chosen first from \"100 or 1\"')",
+        "fids": [
+          "r01#0",
+          "r02#1",
+          "r03#0",
+          "r03#4",
+          "r04#0",
+          "r05#2",
+          "r06#0",
+          "r07#0",
+          "r08#0",
+          "r09#1",
+          "r10#1"
+        ]
+      },
+      {
+        "label": "Explainability \u2014 a titular contribution (RQ3) \u2014 has no code: no per-feature residual attribution, no MNIST 1-vs-7 figure (Fig 4, AUROC 0.76), no ExactMatch/Jaccard metrics (Table 3); the model returns only a scalar L2 score",
+        "fids": [
+          "r01#2",
+          "r02#0",
+          "r03#1",
+          "r04#2",
+          "r05#0",
+          "r06#2",
+          "r07#1",
+          "r09#0",
+          "r10#0"
+        ]
+      },
+      {
+        "label": "No code for the Friedman + Nemenyi post-hoc significance tests / critical-difference diagrams (Figs 21-22, App D.5); aggregation stops at mean per-detector ranks",
+        "fids": [
+          "r01#1",
+          "r03#2",
+          "r04#1",
+          "r05#1",
+          "r06#1",
+          "r07#2",
+          "r09#2"
+        ]
+      },
+      {
+        "label": "requirements.txt pins torch==1.13.1 while the paper (App B.3) and README state PyTorch 2.0 / Python 3.9.21",
+        "fids": [
+          "r01#5",
+          "r02#4",
+          "r03#5",
+          "r04#7",
+          "r05#5",
+          "r07#4",
+          "r10#6"
+        ]
+      },
+      {
+        "label": "run_knn.sh invokes `python Full_experiments.py` but the driver is `FullExperiments.py` (camelCase) \u2014 file-not-found on every call; model index 50 also maps to INNE_semisup, not KNN",
+        "fids": [
+          "r01#4",
+          "r02#3",
+          "r04#5",
+          "r05#3",
+          "r09#4",
+          "r10#2"
+        ]
+      },
+      {
+        "label": "run_semisupervise.sh loops `for j in {45..50}` (6 indices) but comments '7 models'; the 7th force-inductive model at index 51 is never launched",
+        "fids": [
+          "r05#4",
+          "r06#4",
+          "r07#3",
+          "r08#1",
+          "r09#3",
+          "r10#3"
+        ]
+      },
+      {
+        "label": "Only TCCM gets per-dataset tuned epochs (1..5000) via determine_FMAD_hyperparameters; every baseline runs its source-default config \u2014 fair-comparison concern (paper does state baselines use defaults)",
+        "fids": [
+          "r01#6",
+          "r02#5",
+          "r05#6",
+          "r06#6",
+          "r08#2"
+        ]
+      },
+      {
+        "label": "The CSM epoch criterion compares top-k 'predicted anomalies' vs presumed inliers, but the training split is normal-only \u2014 the criterion needs anomalies, implying it is computed on the test set (leakage)",
+        "fids": [
+          "r04#8",
+          "r05#7",
+          "r09#7"
+        ]
+      },
+      {
+        "label": "README says `AggregateResults.py --semi_only` produces Rank_ROC.pdf / Rank_PR.pdf (Fig 2 box plots), but the script imports no plotting library and writes only CSVs",
+        "fids": [
+          "r03#3",
+          "r09#6",
+          "r10#5"
+        ]
+      },
+      {
+        "label": "AblationStudies.py implements only Figs 12-15; no code for Fig 16 (feature normalization), Fig 17 (time-interpolated inputs z_t=tz), or Fig 18 (TCCM vs AE+TimeEmbedding)",
+        "fids": [
+          "r02#2",
+          "r04#3",
+          "r06#3"
+        ]
+      },
+      {
+        "label": "model_worker enqueues a 2-tuple on out-of-try exceptions (OOM / limit_memory failure), but run_model_with_timeout always unpacks 4 elements \u2192 the real error is masked by a ValueError",
+        "fids": [
+          "r01#3",
+          "r10#4"
+        ]
+      },
+      {
+        "label": "determine_FMAD_hyperparameters is an if/elif chain with no final else; an unmatched dataset name would raise UnboundLocalError (all 47 shipped datasets do resolve)",
+        "fids": [
+          "r04#6"
+        ]
+      },
+      {
+        "label": "FullExperiments.py overrides GOAD's n_epoch to 25 (GOAD's own default is 1), contradicting the paper's 'baselines use default configurations' statement",
+        "fids": [
+          "r09#5"
+        ]
+      },
+      {
+        "label": "ContaminationStudies re-stacks already-StandardScaler'd train+test arrays and applies a fresh 50/50 split \u2014 double-scaling / split inconsistency",
+        "fids": [
+          "r03#6"
+        ]
+      },
+      {
+        "label": "Figure 1 (vector-field visualization), Figure 6 (anomaly-mismatch boxplots validating Props 3-5), and the \u00a7C.3 representation-collapse tracking have no shipping code",
+        "fids": [
+          "r04#4"
+        ]
+      },
+      {
+        "label": "AggregateResults defaults to semi_only=True, dropping the 7 transductive models \u2014 the README's main-result command may not match the paper's figure population",
+        "fids": [
+          "r06#5"
+        ]
+      }
+    ]
+  },
+  {
+    "paper": "2578",
+    "clusters": [
+      {
+        "label": "HQ-VSR video-processing pipeline (Sec 3.3 / Fig 3 / Eq 8: metadata + scene + quality filtering with CLIP-IQA/FasterVQA/DOVER thresholds + optical-flow motion-area bounding-box cropping) absent from the repo \u2014 the dataset-curation contribution and the Tab 1c/1d (+Filter/+Motion) ablations are not reproducible; README \u00a7TODO confirms it is unreleased (only the final dataset blob is linked)",
+        "fids": [
+          "r01#0",
+          "r02#0",
+          "r05#0",
+          "r06#3",
+          "r07#2",
+          "r08#0",
+          "r09#0"
+        ]
+      },
+      {
+        "label": "FasterVQA metric (reported for every Table 2 row and as a Fig 1 axis) has NO computation script anywhere in the repo \u2014 a tree-wide search finds 'fastervqa' only in the README \u00a7TODO line 269, which confirms the script is unreleased",
+        "fids": [
+          "r02#1",
+          "r03#0",
+          "r04#0",
+          "r06#0",
+          "r07#0",
+          "r09#1"
+        ]
+      },
+      {
+        "label": "eval_dover.py imports an external `DOVER` package that is neither vendored in the repo nor listed in requirements.txt \u2014 DOVER (Tab 1, all of Tab 2, the Tab 3 'Performance' column, Fig 1) cannot be computed as shipped; README \u00a7TODO line 269 lists it unreleased",
+        "fids": [
+          "r02#2",
+          "r03#1",
+          "r04#2",
+          "r05#1",
+          "r06#1",
+          "r07#1",
+          "r08#1",
+          "r09#2"
+        ]
+      },
+      {
+        "label": "eval_ewarp.py (the only E*warp temporal-consistency script) imports a nonexistent `ewarp` module and chdir's into a missing `finetune/scripts/RAFT` dir (RAFT actually lives at finetune/utils/RAFT) with a wrong default checkpoint path \u2014 the E*warp column (every Tab 2 row, Fig 1) crashes on chdir/import; README \u00a7TODO confirms it unreleased",
+        "fids": [
+          "r01#1",
+          "r02#3",
+          "r03#4",
+          "r04#1",
+          "r05#4",
+          "r06#2",
+          "r07#6",
+          "r08#5",
+          "r09#4",
+          "r10#0"
+        ]
+      },
+      {
+        "label": "inference.sh (the canonical 'reproduce paper results' runner) hardcodes `--gt datasets/test/UDM10/GT` for ALL six eval blocks, so SPMCS/YouHQ40/RealVSR/MVSR4x/VideoLQ (5/6) are scored against UDM10's ground truth; eval_metrics.py matches by filename stem and silently skips mismatches, so the shipped script does not reproduce the Table-2 full-reference (PSNR/SSIM/LPIPS/DISTS) numbers",
+        "fids": [
+          "r01#3",
+          "r02#4",
+          "r03#5",
+          "r04#3",
+          "r05#3",
+          "r06#5",
+          "r07#4",
+          "r08#3",
+          "r09#7",
+          "r10#3"
+        ]
+      },
+      {
+        "label": "eval_dover.py per-sample off-by-one: scores assigned with `dover_results[i-1]`, so each clip name receives the PREVIOUS clip's DOVER score (i=0 gets the last). Dataset-mean is a cyclic permutation so headline Tab 2/3 averages are unaffected, but per-clip DOVER output written to metrics_dover.json is mislabeled",
+        "fids": [
+          "r01#4",
+          "r02#5",
+          "r03#6",
+          "r04#4",
+          "r05#5",
+          "r06#6",
+          "r07#5",
+          "r08#4",
+          "r09#6",
+          "r10#4"
+        ]
+      },
+      {
+        "label": "No timing/benchmark harness for the headline '~28x faster' efficiency claim / Table 3 running times (e.g. DOVE 14.90s vs MGLD-VSR 425.23s on a 33-frame 720x1280 clip) \u2014 inference_script.py never measures or logs latency, so the central efficiency contribution cannot be reproduced",
+        "fids": [
+          "r03#2",
+          "r06#4",
+          "r08#2",
+          "r10#1"
+        ]
+      },
+      {
+        "label": "requirements.txt omits core dependencies (pyiqa, diffusers, safetensors) imported by inference_script.py / eval_metrics.py / trainer.py for every IQA metric and the CogVideoX backbone; they appear only as ad-hoc unpinned `pip install` lines in the README \u2014 the env is not rebuildable from requirements alone and the version-sensitive diffusers API (scheduler.get_velocity / get_3d_rotary_pos_embed) risks silent drift",
+        "fids": [
+          "r01#2",
+          "r03#3",
+          "r05#2",
+          "r06#7",
+          "r07#3",
+          "r09#3",
+          "r10#2"
+        ]
+      },
+      {
+        "label": "Paper \u00a74.1 states the image training set is DIV2K with 900 images, but the README/official link and the DIV2K_train_HR filelist used by the code are the standard 800-image training split (900 = 800 train + 100 val) \u2014 minor description mismatch in the Stage-2 image data",
+        "fids": [
+          "r02#7",
+          "r03#7",
+          "r05#6",
+          "r09#8"
+        ]
+      },
+      {
+        "label": "Shipped training config (accelerate_config.yaml = 2 GPUs; both train shells set --batch_size 2 / gradient_accumulation_steps 1 -> global batch 4) does not match the paper's '4 NVIDIA A800-80G GPUs, total batch size 8'; the 4-GPU launch topology is not enforced by the scripts, so the default files reproduce batch 4, not 8",
+        "fids": [
+          "r04#5",
+          "r08#6"
+        ]
+      },
+      {
+        "label": "UDM10 is used as BOTH the every-500-step training-time validation monitor AND the Table-1 ablation / Table-2 benchmark set; checkpoints are saved at fixed step intervals (not selected by val metric) and there is no held-out split distinct from the benchmark, so manual design/iteration could be informed by UDM10 (soft leakage/design concern)",
+        "fids": [
+          "r06#8",
+          "r07#8"
+        ]
+      },
+      {
+        "label": "inference_script.py removes the SR-output padding as `pad*args.upscale`-should-be but hardcodes `pad*4` regardless of --upscale, so for the --upscale 1 datasets (RealVSR/MVSR4x) with H/W not divisible by 16 the output is over-cropped on the right/bottom edge, shifting the evaluated region and those FR metrics",
+        "fids": [
+          "r02#6"
+        ]
+      },
+      {
+        "label": "inference.sh runs RealVSR/MVSR4x with `--upscale 1`, whereas \u00a74.1 states 'all experiments use a scaling factor x4'; likely the correct operational choice for already-target-resolution real-world inputs, but the code and the blanket x4 statement differ",
+        "fids": [
+          "r09#9"
+        ]
+      },
+      {
+        "label": "Stage-2 trainer (lora_one_s2_trainer.py / args.py) exposes loss variants the paper never mentions \u2014 edge-aware DISTS (Sobel EdgeDetectionModel), LPIPS / edge-aware LPIPS, GAN losses (gen_cls_loss_weight, diffusion_gan_max_timestep), optical-flow flags; unused by the released defaults but undocumented",
+        "fids": [
+          "r07#7"
+        ]
+      },
+      {
+        "label": "eval_metrics.py computes PSNR/SSIM on full RGB with no border crop by default; neither inference.sh nor the README example passes --test_y_channel/--crop, whereas many VSR papers report Y-channel PSNR/SSIM \u2014 the channel/crop convention is unstated, so reproduced fidelity numbers may differ",
+        "fids": [
+          "r10#5"
+        ]
+      },
+      {
+        "label": "eval_vbench.py chdir's into a nonexistent `finetune/scripts/VBench` dir and imports `from evaluate import calculate_final`; the VBench package is neither vendored nor in requirements (VBench is not a Table-2 metric, so headline impact is low)",
+        "fids": [
+          "r09#5"
+        ]
+      }
+    ]
+  },
+  {
+    "paper": "2371",
+    "clusters": [
+      {
+        "label": "No code for the five generative baselines (TimeVAE/TimeVQVAE/RTSGAN/SDEGAN/LS4) \u2014 the Table 1 & 2 comparison rows (and the normalized-average / rank columns built on them) cannot be reproduced",
+        "fids": [
+          "r01#0",
+          "r02#0",
+          "r03#0",
+          "r04#0",
+          "r05#0",
+          "r06#0",
+          "r07#0",
+          "r08#0",
+          "r09#0",
+          "r10#0"
+        ]
+      },
+      {
+        "label": "Section 6 / Figure 2 text-conditioning kNN-classifier accuracy (0.81) has no classifier or evaluation code in the released package",
+        "fids": [
+          "r01#1",
+          "r02#1",
+          "r03#1",
+          "r04#1",
+          "r05#2",
+          "r06#2",
+          "r07#1",
+          "r08#1",
+          "r09#1",
+          "r10#2"
+        ]
+      },
+      {
+        "label": "ED and DTW pair the i-th real window with the i-th synthetic sample by raw array index (no distributional matching) and only compare min(n) samples, silently discarding surplus generated curves",
+        "fids": [
+          "r01#3",
+          "r02#2",
+          "r02#5",
+          "r03#6",
+          "r04#2",
+          "r05#3",
+          "r06#6",
+          "r07#4",
+          "r09#7"
+        ]
+      },
+      {
+        "label": "Table 2 'WQL' is computed from a single point forecast (~0.5*MAE / un-normalised mean pinball loss), not a true Weighted Quantile Loss over quantile forecasts",
+        "fids": [
+          "r01#4",
+          "r03#5",
+          "r05#4",
+          "r06#7",
+          "r09#5"
+        ]
+      },
+      {
+        "label": "No driver / aggregation script computes the Table 1 & 2 normalized-average and average-rank columns across the 12-dataset benchmark (and no per-dataset configs are shipped)",
+        "fids": [
+          "r05#1",
+          "r06#1",
+          "r08#2",
+          "r09#3",
+          "r10#1"
+        ]
+      },
+      {
+        "label": "SHAP-RE (SHR) reshape collapses the channel axis \u2014 valid only for univariate input; silently wrong / crashes for multivariate (C>1)",
+        "fids": [
+          "r02#3",
+          "r05#6",
+          "r06#3",
+          "r10#3"
+        ]
+      },
+      {
+        "label": "SHAP-RE (SHR) uses an unseeded RNG and is nondeterministic (varies ~13% run-to-run on identical inputs)",
+        "fids": [
+          "r03#7",
+          "r04#3",
+          "r07#3"
+        ]
+      },
+      {
+        "label": "MASE denominator uses the forecast window's own naive error, not the in-sample / training-set (seasonal) naive error of the paper's definition",
+        "fids": [
+          "r02#6",
+          "r06#5",
+          "r07#2",
+          "r09#6"
+        ]
+      },
+      {
+        "label": "ED is computed on StandardScaler (zero-mean/unit-variance) data, but Appendix B.2 defines it on [0,1]-scaled inputs",
+        "fids": [
+          "r01#2",
+          "r02#4",
+          "r06#4"
+        ]
+      },
+      {
+        "label": "Config `seed` is not propagated to the SDForger LLM (RNG hardcoded to 42), undermining the paper's '5 random seeds' averaging",
+        "fids": [
+          "r05#5",
+          "r08#5",
+          "r09#4"
+        ]
+      },
+      {
+        "label": "TTM utility evaluation depends on tsfm_public / granite-tsfm, which is absent from the env files and installed from an unpinned main / moving model revision",
+        "fids": [
+          "r03#2",
+          "r08#3",
+          "r09#2"
+        ]
+      },
+      {
+        "label": "TrainingArguments hardcodes bf16=True, contradicting the float32 config and breaking the documented MPS run path",
+        "fids": [
+          "r03#4",
+          "r08#4"
+        ]
+      },
+      {
+        "label": "TTM RMSE/MASE/WQL are averaged over all forecast channels, not just the stated target channel",
+        "fids": [
+          "r03#8",
+          "r10#5"
+        ]
+      },
+      {
+        "label": "Table D.5 generation-time comparison has no timing / benchmark script",
+        "fids": [
+          "r03#3"
+        ]
+      },
+      {
+        "label": "Shipped univariate config diverges from the paper's reported settings (k=5 and L0=2000 with 1 sample vs the paper's k=3)",
+        "fids": [
+          "r10#4"
+        ]
+      }
+    ]
+  }
+]

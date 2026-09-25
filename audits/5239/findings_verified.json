@@ -1,0 +1,140 @@
+{
+  "schema_version": "1",
+  "audit": "5239_SD_KDE_Score_Debiased_Kernel_Density_Estimation",
+  "audit_md": "audits/5239_SD_KDE_Score_Debiased_Kernel_Density_Estimation/audit.md",
+  "generated_at": "2026-06-02T22:26:34.206992+00:00",
+  "findings": [
+    {
+      "id": "5239_SD_KDE_Score_Debiased_Kernel_Density_Estimation/iterated-sdkde-missing",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No code for the Section 3.3 / Figure 7 iterated SD-KDE experiment",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "As shown in Figure 7, repeated\napplication of SD-KDE yields a closer alignment between the estimated and true probability densities\nand a corresponding reduction in KL divergence and mean integrated squared error (MISE) with each\niteration.\n",
+      "claim": "Section 3.3 and Figure 7 report an iterated/multi-step SD-KDE procedure (recompute score, re-apply SD-KDE, KL and MISE over 1-4 iterations, 200 MC replicates); a grep of both code trees finds zero iteration loops in any .py file and no script that produces the per-iteration KL/MISE curves.",
+      "concern": "A reported experiment and its figure have no code that computes the underlying values in either released tree, so Figure 7 cannot be reproduced.",
+      "resolution": "Authors: please add the iterated-SD-KDE script (score recomputation loop + KL/MISE-vs-iteration aggregation over the 200 replicates) used for Figure 7.",
+      "cross_refs": [
+        "§3.3",
+        "Figure 7"
+      ],
+      "check_script": "_audit_code/check_missing_artifacts.py",
+      "paper_ref": "Section 3.3 'Iterated SD-KDE'; Figure 7",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "iterated-sdkde-missing",
+      "audit": "5239_SD_KDE_Score_Debiased_Kernel_Density_Estimation",
+      "audit_md_line": 52,
+      "line_start": null,
+      "line_end": null,
+      "verdict": "keep",
+      "reason": "Repo-wide grep of both code trees (Elliotepsteino__SD-KDE and SD-KDE__neurips_supplemental) finds zero matches for iteration-loop patterns (for.*iter, n_iter, iteration, recompute, successive) in any .py file; paper quote confirmed at paper_text.txt lines 402-405; Figure 7 has no reproducible code in either tree.",
+      "changed": "nothing"
+    },
+    {
+      "id": "5239_SD_KDE_Score_Debiased_Kernel_Density_Estimation/mnist-density-ranking-missing",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No code ranks MNIST images by SD-KDE density (Section 3.4 / Figure 16)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "Using this score, we apply SD-KDE in latent space to assess the realism of generated images. We ranked generated\nimages from highest to lowest estimated probability density, visualized in Figure 16.\n",
+      "claim": "Section 3.4 / Figure 16 report applying SD-KDE in latent space to score and rank generated MNIST images by estimated density; the released MNIST code (train_mnist.py, superminddpm.py) only trains/samples a DDPM, and a grep of both trees finds no argsort/rank/latent-density/SD-KDE-on-MNIST code that produces the ranking.",
+      "concern": "The MNIST experiment's reported result (density-ordered image grid) has no code computing the per-image SD-KDE density or the ranking in either tree, so Figure 16 / Section 3.4 is not reproducible.",
+      "resolution": "Authors: please add the script that computes the latent-space SD-KDE density per generated MNIST image and produces the ranked grid in Figure 16.",
+      "cross_refs": [
+        "§3.4",
+        "Figure 16"
+      ],
+      "check_script": "_audit_code/check_missing_artifacts.py",
+      "paper_ref": "Section 3.4 'MNIST Dataset'; Figure 16",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "mnist-density-ranking-missing",
+      "audit": "5239_SD_KDE_Score_Debiased_Kernel_Density_Estimation",
+      "audit_md_line": 78,
+      "line_start": null,
+      "line_end": null,
+      "verdict": "keep",
+      "reason": "Repo-wide grep of both code trees finds zero matches for argsort, rank, latent_space, density-ranking, or highest-to-lowest patterns in any .py file; paper quote confirmed at paper_text.txt lines 446-448; no latent-space SD-KDE density or ranking script exists in either released tree.",
+      "changed": "nothing"
+    },
+    {
+      "id": "5239_SD_KDE_Score_Debiased_Kernel_Density_Estimation/hardcoded-model-paths-2d",
+      "category": "bug",
+      "topic": "reproducibility / hardcoded paths",
+      "title": "2D Fig-6 notebook hardcodes /scratch model paths; shipped checkpoints sit elsewhere",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/SD-KDE__neurips_supplemental/minDiffusion/notebooks/2d.py",
+      "line_start": 1132,
+      "line_end": 1137,
+      "quote": "model_paths = {\n    'gaussian': '/scratch/Score_KDE/minDiffusion/notebooks/best_model_gaussian.pth',\n    'moons': '/scratch/Score_KDE/minDiffusion/notebooks/best_model_moons.pth',\n    'spirals': '/scratch/Score_KDE/minDiffusion/notebooks/best_model_spirals.pth'\n}\n",
+      "claim": "The Figure-6 spiral comparison loads the diffusion-score checkpoint from an absolute path '/scratch/Score_KDE/minDiffusion/notebooks/best_model_spirals.pth', but the supplement ships that checkpoint at the relative path minDiffusion/notebooks/best_model_spirals.pth; KDEComparison.__init__ constructs DiffusionScoreEstimator (which torch.load's the path) before computing any MISE, so the whole spiral panel crashes with FileNotFoundError when run as shipped.",
+      "concern": "Figure 6 (the headline 2D diffusion-score result) cannot be reproduced from the released artefact without editing the hardcoded path, even though the needed checkpoint is included.",
+      "resolution": "Authors: derive the checkpoint path from BASE_DIR / a relative path so the included best_model_*.pth files are found out of the box (24 such /scratch|/pscratch paths exist across the diffusion/UCI code).",
+      "cross_refs": [
+        "Figure 6",
+        "§3.2"
+      ],
+      "check_script": "_audit_code/check_missing_artifacts.py",
+      "paper_ref": "Figure 6; Section 3.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "hardcoded-model-paths-2d",
+      "audit": "5239_SD_KDE_Score_Debiased_Kernel_Density_Estimation",
+      "audit_md_line": 104,
+      "verdict": "keep",
+      "reason": "Quote confirmed at 2d.py lines 1133-1137 (__main__ block) and also at module-level lines 907-911; the actual checkpoints exist at code/SD-KDE__neurips_supplemental/minDiffusion/notebooks/best_model_*.pth (relative), while the code hardcodes /scratch/Score_KDE/... absolute paths; grep finds 24 such hardcoded paths across the two trees, matching the auditor's count.",
+      "changed": "nothing"
+    },
+    {
+      "id": "5239_SD_KDE_Score_Debiased_Kernel_Density_Estimation/fig3-sample-size-mismatch",
+      "category": "difference",
+      "topic": "evaluation consistency (paper vs code)",
+      "title": "Figure 3 caption/text say n=100, but the code produces it with n=200",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/SD-KDE__neurips_supplemental/shrinkage_kde_gaussian.py",
+      "line_start": 189,
+      "line_end": 190,
+      "quote": "n_example = 200\nseed_example = 0\n",
+      "claim": "The MISE-difference histograms (Figure 3) are computed with n_example=200 (shrinkage_kde_gaussian.py:189, used at lines 246-259), and my reproduction at n=200 matches the figure's reported statistics (M1 mean 0.015/std 0.002, M2 0.015/0.001, M3 0.009/std~0.005, ~96% of seeds better); at n=100 the statistics differ (M1 mean 0.019, M3 ~84%). The paper's Figure-3 caption and body instead state 'for n = 100 samples' and 'better in 95% of samples'.",
+      "concern": "The reported sample size for Figure 3 (n=100) does not match the n=200 that the code actually used to produce the matching numbers; the qualitative claim ('SD-KDE consistently beats Silverman') holds at both n, so impact is low.",
+      "resolution": "Authors: correct the Figure-3 caption/text to n=200 (or regenerate the figure at n=100), and reconcile the '95%' / 'all 100 samples' wording with the 50 seeds the code uses (n_seeds=50).",
+      "cross_refs": [
+        "Figure 3",
+        "§3.1"
+      ],
+      "check_script": "_audit_code/check_gaussian_1d.py",
+      "paper_ref": "Figure 3 caption and Section 3.1 'SD-KDE consistently beats Silverman baseline'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "fig3-sample-size-mismatch",
+      "audit": "5239_SD_KDE_Score_Debiased_Kernel_Density_Estimation",
+      "audit_md_line": 135,
+      "verdict": "keep",
+      "reason": "Quote confirmed at shrinkage_kde_gaussian.py lines 189-190; n_example=200 used in the Fig-3 MISE loop at lines 246-259; running check_gaussian_1d.py reproduces the paper statistics (M3 frac=0.960, means ~0.015/0.014/0.010) at n=200 but not at n=100 (M3 frac=0.840); paper_text.txt lines 252/315/1049 all state n=100.",
+      "changed": "nothing"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "folder": "713_How_Patterns_Dictate_Learnability_in_Sequential_Data",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 8399,
+    "output": 13092,
+    "cache_write": 327280,
+    "cache_read": 8204950
+  },
+  "total_tokens": 8553721,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 19.55
+}

@@ -1,0 +1,5 @@
+paper_number: 1274
+title: Efficient Adaptive Experimentation with Noncompliance
+authors: Miruna Oprescu, Brian Cho, Nathan Kallus
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/3ca380c5fe9f174a71a230478741169f-Abstract-Conference.html
+category: empirical

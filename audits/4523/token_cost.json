@@ -1,0 +1,19 @@
+{
+  "folder": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 15480,
+    "output": 19286,
+    "cache_write": 221362,
+    "cache_read": 5892830
+  },
+  "total_tokens": 6148958,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 14.67
+}

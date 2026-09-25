@@ -1,0 +1,5 @@
+paper_number: 2021
+title: RESAnything: Attribute Prompting for Arbitrary Referring Segmentation
+authors: Ruiqi Wang, Hao Helen Zhang
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/608fe7e32f7b773545cc1d656a0fdc98-Abstract-Conference.html
+category: empirical

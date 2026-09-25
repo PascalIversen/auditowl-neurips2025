@@ -1,0 +1,28 @@
+=== Backbone model references in code ===
+  config.yaml:2: [qwen2.5-vl] name: "Qwen/Qwen2.5-VL-7B-Instruct"
+  config.yaml:2: [qwen] name: "Qwen/Qwen2.5-VL-7B-Instruct"
+  config.yaml:2: [qwen] name: "Qwen/Qwen2.5-VL-7B-Instruct"
+  demo.py:15: [qwen2_5_vl] from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
+  demo.py:52: [qwen2_5_vl] model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+  demo.py:15: [qwen] from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
+  demo.py:52: [qwen] model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+  demo_batch.py:17: [qwen2_5_vl] from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
+  demo_batch.py:129: [qwen2_5_vl] model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+  demo_batch.py:17: [qwen] from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
+  demo_batch.py:129: [qwen] model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+  generation.py:1: [qwen] from qwen_vl_utils import process_vision_info
+  similarity.py:5: [qwen] from qwen_vl_utils import process_vision_info
+
+PAPER default backbone (paper_text.txt:621): 'We use Pixtral 12B [4] as the MLLM'
+PAPER ablation row (Table 5, paper_text.txt:873): 'Qwen 2-VL[7]' (= Qwen2-VL, NOT Qwen2.5-VL)
+CODE default backbone (config.yaml): Qwen/Qwen2.5-VL-7B-Instruct
+=> code default is neither the paper default (Pixtral 12B) nor the listed ablation (Qwen2-VL)
+
+=== Bounding-box visual prompt generation in code ===
+  prompts.yaml:28: bounding box
+
+PAPER (paper_text.txt:366-367): 'we find using two visual prompts, bounding box (V b)
+  and mask cropped (V m), is sufficient' -- this is the paper's chosen/default config
+PAPER Table 5 (paper_text.txt:855): mask+bbox = best 72.2 gIoU on RefCOCO testA
+CODE: candidate generation (generation.py:53) and text-mask comparison (similarity.py:65)
+  read ONLY from the 'cropped' dir; sam_utils saves only cropped/overlay/txt, no bbox crop.

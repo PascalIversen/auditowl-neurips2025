@@ -1,0 +1,17 @@
+{
+  "paper_id": "2657_Scalable_Explainable_and_Provably_Robust_Anomaly_Detection_w",
+  "title": "Scalable, Explainable and Provably Robust Anomaly Detection with One-Step Flow Matching",
+  "repos": [
+    {
+      "name": "ZhongLIFR__TCCM-NIPS",
+      "role": "core",
+      "evidence": "README: 'This is the official repository for the NeurIPS 2025 paper: Scalable, Explainable and Provably Robust Anomaly Detection with One-Step Flow Matching.' Repo owner ZhongLIFR matches paper first author Zhong Li (LIACS). Paper text states official code at https://github.com/ZhongLIFR/TCCM-NIPS. Contains FMAD/ (TCCM implementation with FlowMatchingAD.py), FullExperiments.py, AblationStudies.py, RobustnessStudy.py, ContaminationStudies.py, and all 47 ADBench datasets shipped."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo ZhongLIFR__TCCM-NIPS is the paper's official implementation. The README names the exact NeurIPS 2025 paper title and links to the correct OpenReview and arXiv IDs. Repo owner ZhongLIFR = first author Zhong Li. The paper itself cites this GitHub URL as the official code. All findings in the audit are correctly written against this repo's actual content: the explainability code is absent (high severity, finding confirmed valid), the CSM epoch-selection script is absent (medium severity, confirmed valid), a helper script references a misnamed file (low severity), and requirements.txt pins an older torch than the paper states. The code_links.txt tagged this repo [no-author-signal] which was a false prior — the repo owner matches the first author surname.",
+  "audit_impact": "None — the correct repo was cloned and all findings were written against it. The [no-author-signal] tag in code_links.txt was inaccurate but did not affect the audit outcome. The two substantive missing-code findings (explainability and CSM) are valid and should be retained.",
+  "recommended_action": "No reclassification needed. The audit verdict and all findings are correct. The code_links.txt [no-author-signal] tag for ZhongLIFR/TCCM-NIPS could be corrected to [author-cue] for future reference but this is cosmetic."
+}

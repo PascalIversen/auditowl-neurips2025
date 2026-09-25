@@ -1,0 +1,29 @@
+Algorithm 1 (opt_linear) vs scipy SLSQP on  min_{w in simplex} ||w||^2 + c(w.lambda)^2
+    n    c     sum(w)     min(w)   supp     obj_alg1    obj_slsqp  alg1<=slsqp
+   20    1 1.00000000  0.000e+00     17 9.413225e-02 9.413225e-02         True
+   20    1 1.00000000  0.000e+00     12 2.013399e-01 2.013399e-01         True
+   20    1 1.00000000  0.000e+00      7 5.866750e-01 5.866750e-01         True
+   20    3 1.00000000  0.000e+00     13 1.247980e-01 1.247980e-01         True
+   20    3 1.00000000  0.000e+00      5 3.512423e-01 3.512423e-01         True
+   20    3 1.00000000  0.000e+00      3 8.287729e-01 8.287729e-01         True
+   50    1 1.00000000  0.000e+00     31 6.268648e-02 6.268648e-02         True
+   50    1 1.00000000  0.000e+00     13 1.395530e-01 1.395530e-01         True
+   50    1 1.00000000  0.000e+00     15 2.756169e-01 2.756169e-01         True
+   50    3 1.00000000  0.000e+00     24 7.588769e-02 7.588769e-02         True
+   50    3 1.00000000  0.000e+00     10 1.872665e-01 1.872665e-01         True
+   50    3 1.00000000  0.000e+00      8 2.713584e-01 2.713584e-01         True
+  200    1 1.00000000  0.000e+00     96 2.014902e-02 2.014902e-02         True
+  200    1 1.00000000  0.000e+00     41 4.876974e-02 4.876974e-02         True
+  200    1 1.00000000  0.000e+00     21 9.771861e-02 9.771861e-02         True
+  200    3 1.00000000  0.000e+00     70 2.982111e-02 2.982111e-02         True
+  200    3 1.00000000  0.000e+00     28 6.638376e-02 6.638376e-02         True
+  200    3 1.00000000  0.000e+00     20 8.225498e-02 8.225498e-02         True
+ALL CHECKS PASS: True
+  (sum(w)=1 exactly, w>=0, and Algorithm 1's objective is <= the numerical optimum
+   => opt_linear implements paper eq. (8)/Algorithm 1 correctly, including the
+   re-parameterisation alpha_code = alpha_paper/c with w = beta - c*alpha_code*lambda.)
+
+depth-map.ipynb threshold loop (.ipynb lines 318-331) balances t^2 vs 1/N(t) (d=1).
+Paper eq. (21)/Theorem 4 for d dimensions balances t^2 vs d/N(t); Figure 1 has d=2.
+  Figure-1 lambda (n=50, seed=42): t(d=1) = 0.31197 -> keeps 10/50 samples   [what the code does]
+                                   t(d=2) = 0.36515 -> keeps 15/50 samples   [d=2, as Figure 1 is 2-D]

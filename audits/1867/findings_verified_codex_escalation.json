@@ -1,0 +1,25 @@
+{
+  "findings": [
+    {
+      "id": "1867_A_Differential_and_Pointwise_Control_Approach_to_Reinforceme/trained-models-off-repo-dropbox",
+      "verdict": "reject",
+      "reason": "The underlying README supports the claim, but the supplied quote is a paraphrase not present at the cited location, which fails the required quote-match check.",
+      "changed": "nothing"
+    },
+    {
+      "id": "1867_A_Differential_and_Pointwise_Control_Approach_to_Reinforceme/deps-unpinned",
+      "verdict": "reject",
+      "reason": "The requirements file supports the unpinned-dependency claim, but the supplied quote omits intervening packages and is not present contiguously at the cited location.",
+      "changed": "nothing"
+    },
+    {
+      "id": "1867_A_Differential_and_Pointwise_Control_Approach_to_Reinforceme/ttest-near-zero-baseline-std",
+      "verdict": "lowered",
+      "reason": "The notebook and reproduction script confirm a 0.001 scale and the stated t-test result, while Table 4 reports values as exactly 0.001 rather than sub-0.001 and does not establish seed non-independence, so a low-severity question is appropriate.",
+      "changed": "nothing",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "question"
+    }
+  ]
+}

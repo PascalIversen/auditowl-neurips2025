@@ -1,0 +1,5 @@
+#names = 100
+name-substring-of-name pairs = 3: [('Gabriel', 'Gabriella'), ('Daniel', 'Danielle'), ('Julia', 'Julian')]
+ToM dataset rows = 13309; columns include: ['idx', 'story_structure', 'infilled_story', 'question', 'expected_answer', 'qprop=params']
+sample rows = 3000; train rows = 374; test rows = 2626
+test-name substrings still present in train stories (repo assertion would FAIL on these): []

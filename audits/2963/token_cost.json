@@ -1,0 +1,19 @@
+{
+  "folder": "2963_Learning_Equilibria_from_Data_Provably_Efficient_Multi_Agent",
+  "model": "claude-opus-4-8",
+  "audit_runs": 2,
+  "tokens": {
+    "input": 34301,
+    "output": 38034,
+    "cache_write": 518520,
+    "cache_read": 7355591
+  },
+  "total_tokens": 7946446,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 24.12
+}

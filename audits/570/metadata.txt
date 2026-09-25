@@ -1,0 +1,5 @@
+paper_number: 570
+title: Exploring Neural Granger Causality with xLSTMs: Unveiling Temporal Dependencies in Complex Data
+authors: Harsh Poonia, Felix Divo, Kristian Kersting, Devendra Singh Dhami
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/1b558190825286a3defcc78d02fa2189-Abstract-Conference.html
+category: empirical

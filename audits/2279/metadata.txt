@@ -1,0 +1,5 @@
+paper_number: 2279
+title: Controlling the Flow: Stability and Convergence for Stochastic Gradient Descent with Decaying Regularization
+authors: Sebastian Kassing, Simon Weissmann, Leif Döring
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/6cf05c14e645df408001fbb669976ec0-Abstract-Conference.html
+category: empirical

@@ -1,0 +1,5 @@
+reported_CW-SSIM_(Average_Non-zero): 0.6
+naive_mean_over_all_(Average_All): 0.36
+compile_ratio_(non_zero_ratio): 0.6
+notebook_divides_by_non_zero_count: True
+wrote /home/author/Projects/neurips_audit/audits/2007_Table2LaTeX_RL_High_Fidelity_LaTeX_Code_Generation_from_Tabl/_verifier_code_codex/out/nonzero_averaging.csv

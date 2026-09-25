@@ -1,0 +1,216 @@
+{
+  "paper": "1717",
+  "seeds": [
+    {
+      "sid": "S01",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "Remove the ResNet50 backbone experiment implementation",
+      "description": "Delete the sole ResNet backbone module. The repository would no longer contain the feature-extraction implementation needed to train or evaluate the ResNet50 versions reported in Table 3, including the claimed replication of the DINOv2 ordering with a fully convolutional backbone.",
+      "expected_reasoning": "The paper reports a complete ResNet50-backbone comparison and interprets it as evidence that TBEn works with convolutional as well as transformer features. In models/backbone.py, every resnet architecture is dispatched to resnet_model imported from models/resnet.py. Deleting that module removes the only ResNet feature pipeline; no remaining path can produce Table 3. The resulting import failure is also direct evidence of absence rather than a runnable but incorrect substitute.",
+      "paper_anchor": "To examine whether our results depend on the specific choice of the transformer backbone architecture, we tested all the encoding models on the ResNet50 backbone features (a fully convolutional network).",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "delete_file",
+            "file": "Hosseinadeli__transformer_brain_encoder/models/resnet.py"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S02",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "Remove the CLIP vision-backbone experiment implementation",
+      "description": "Delete the only CLIP feature-backbone module. This eliminates the code path required for all CLIP ridge, spatial-feature, ROI-transformer, and vertex-transformer results in Table 5.",
+      "expected_reasoning": "The paper uses Table 5 to argue that the result generalizes to CLIP representations. The backbone factory imports clip_model from models/clip.py and selects it for every clip architecture; there is no other OpenCLIP loader or CLIP patch-token extractor in the repository. Once this file is deleted, no code path produces the reported CLIP experiment, so the defect is a genuine missing experiment rather than a stub.",
+      "paper_anchor": "Motivated by previous encoding models of the brain having used CLIP embeddings [41] to represent images [32], we tested the different mapping functions using this feature backbone.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "delete_file",
+            "file": "Hosseinadeli__transformer_brain_encoder/models/clip.py"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S03",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "Use a frozen ConvNeXt feature hierarchy for the claimed DINOv2-query model",
+      "description": "Replace the DINOv2 query-token extractor used by the main dinov2_q configuration with a real pretrained and frozen ConvNeXt-Tiny feature hierarchy. The substitute is fully functional and naturally emits 768-channel convolutional feature maps, but it does not compute DINOv2 patch-query representations.",
+      "expected_reasoning": "The paper specifically says the DINOv2 experiments use patch-level query representations and attributes the main Table 1 results to a self-supervised vision-transformer backbone. The factory routes dinov2_q to dino_model_with_hooks. After this patch that class instantiates torchvision ConvNeXt-Tiny and runs its convolutional features stack. A careful reader can follow the instantiated model and tensor flow and see that the reported DINOv2-query method has been replaced by a genuine pretrained CNN with real downstream gradients, invalidating the backbone-specific conclusion.",
+      "paper_anchor": "For the DINOv2 backbone, inspired by prior work on human attention prediction [1], we did some preliminary analyses and found the patch level query representations (instead of values) to have slightly more predictive power and chose to use them in all our experiment.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "Hosseinadeli__transformer_brain_encoder/models/dino.py",
+            "old_string": "        self.backbone = torch.hub.load('facebookresearch/dinov2', 'dinov2_vitb14')\r\n        self.num_channels = 768\r\n        \r\n        for name, parameter in self.backbone.named_parameters():\r\n            parameter.requires_grad_(False)\r\n            \r\n        self.qkv_feats = {'qkv_feats':torch.empty(0)}\r\n        \r\n        self.backbone._modules[\"blocks\"][enc_output_layer]._modules[\"attn\"]._modules[\"qkv\"].register_forward_hook(self.hook_fn_forward_qkv)  #self.hook_fn_forward_qkv())\r\n        \r\n        self.return_interm_layers = return_interm_layers\r\n        self.return_cls = return_cls",
+            "new_string": "        backbone = torchvision.models.convnext_tiny(pretrained=True)\r\n        self.backbone = backbone.features\r\n        self.num_channels = 768\r\n\r\n        for name, parameter in self.backbone.named_parameters():\r\n            parameter.requires_grad_(False)\r\n\r\n        self.return_interm_layers = return_interm_layers\r\n        self.return_cls = return_cls"
+          },
+          {
+            "action": "replace",
+            "file": "Hosseinadeli__transformer_brain_encoder/models/dino.py",
+            "old_string": "    def forward(self, tensor_list: NestedTensor):\r\n        xs = tensor_list.tensors\r\n        \r\n        #print(xs.shape)\r\n        h, w = int(xs.shape[2]/14), int(xs.shape[3]/14)\r\n        \r\n#         self.qkv_feats = []    \r\n#         qkv_feats = []\r\n            \r\n#         self.backbone._modules[\"blocks\"][-1]._modules[\"attn\"]._modules[\"qkv\"].register_forward_hook(lambda self, input, output: qkv_feats.append(output))\r\n        \r\n        xs = self.backbone.get_intermediate_layers(xs)[0]\r\n\r\n        feats = self.qkv_feats['qkv_feats']\r\n        # Dimensions\r\n        nh = 12 #Number of heads\r\n        \r\n        feats = feats.reshape(xs.shape[0], xs.shape[1]+1, 3, nh, -1 // nh).permute(2, 0, 3, 1, 4)\r\n        q, k, v = feats[0], feats[1], feats[2]\r\n        q = q.transpose(1, 2).reshape(xs.shape[0], xs.shape[1]+1, -1)\r\n        \r\n        xs = q[:,1:,:]\r\n\r\n        if self.return_cls:\r\n            #out['cls_token'] = q[:,0:1,:]\r\n            return q[:,0,:]\r\n\r\n        xs = {'layer_top':xs}\r\n#         xs = self.body(tensor_list.tensors)\r\n\r\n        out: Dict[str, NestedTensor] = {}\r\n        for name, x in xs.items():\r\n            m = tensor_list.mask\r\n            assert m is not None\r\n\r\n            x = torch.reshape(x, (x.shape[0],h,w,self.num_channels)).permute(0,3,1,2)\r\n            \r\n            mask = F.interpolate(m[None].float(), size=x.shape[-2:]).to(torch.bool)[0]\r\n            out[name] = NestedTensor(x, mask)\r\n        return out",
+            "new_string": "    def forward(self, tensor_list: NestedTensor):\r\n        x = self.backbone(tensor_list.tensors)\r\n\r\n        if self.return_cls:\r\n            return F.adaptive_avg_pool2d(x, 1).flatten(1)\r\n\r\n        m = tensor_list.mask\r\n        assert m is not None\r\n        mask = F.interpolate(m[None].float(), size=x.shape[-2:]).to(torch.bool)[0]\r\n        return {'layer_top': NestedTensor(x, mask)}"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S04",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "Replace ROI cross-attention with a convolutional global token mixer",
+      "description": "Replace the decoder's multi-head cross-attention with a trainable two-layer 1D convolution over the rasterized backbone tokens, global average pooling, and a learned query projection. This is a coherent convolutional integration model with real gradients, but it is not the content-dependent ROI cross-attention claimed by the paper.",
+      "expected_reasoning": "The central method requires each ROI query to form attention scores over image tokens and dynamically route a different weighted token set. After the patch, TransformerDecoderLayer contains no multi-head cross-attention. Instead, all ROIs receive the same globally pooled convolutional image summary, combined with fixed learned query projections and a feedforward network. Following the forward_pre path used by the default pre_norm setting reveals a functional alternative architecture whose computation cannot yield the claimed query-key attention routing or interpretable attention maps.",
+      "paper_anchor": "The attention scores are then used to aggregate all the image tokens that are relevant to predict the brain activity in that ROI.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "Hosseinadeli__transformer_brain_encoder/models/transformer.py",
+            "old_string": "        self.self_attn = nn.MultiheadAttention(d_model, nhead, dropout=dropout)\n        self.multihead_attn = nn.MultiheadAttention(d_model, nhead, dropout=dropout)\n        # Implementation of Feedforward model",
+            "new_string": "        self.token_mixer = nn.Sequential(\n            nn.Conv1d(d_model, d_model, kernel_size=3, padding=1),\n            nn.GELU(),\n            nn.Conv1d(d_model, d_model, kernel_size=3, padding=1),\n        )\n        self.query_proj = nn.Linear(d_model, d_model)\n        # Implementation of Feedforward model"
+          },
+          {
+            "action": "replace",
+            "file": "Hosseinadeli__transformer_brain_encoder/models/transformer.py",
+            "old_string": "    def with_pos_embed(self, tensor, pos: Optional[Tensor]):\n        return tensor if pos is None else tensor + pos\n\n    #  default",
+            "new_string": "    def with_pos_embed(self, tensor, pos: Optional[Tensor]):\n        return tensor if pos is None else tensor + pos\n\n    def mix_tokens(self, tgt, memory, pos, query_pos):\n        memory = self.with_pos_embed(memory, pos).permute(1, 2, 0)\n        memory = self.token_mixer(memory).mean(dim=-1)\n        queries = self.query_proj(self.with_pos_embed(tgt, query_pos))\n        return queries + memory.unsqueeze(0)\n\n    #  default"
+          },
+          {
+            "action": "replace",
+            "file": "Hosseinadeli__transformer_brain_encoder/models/transformer.py",
+            "old_string": "        # cross attention\n        tgt = self.norm1(tgt)\n        tgt2 = self.multihead_attn(query=self.with_pos_embed(tgt, query_pos),\n                                   key=self.with_pos_embed(memory, pos),\n                                   value=memory, attn_mask=memory_mask,\n                                   key_padding_mask=memory_key_padding_mask)[0]\n        tgt = tgt + self.dropout2(tgt2)",
+            "new_string": "        tgt = self.norm1(tgt)\n        tgt2 = self.mix_tokens(tgt, memory, pos, query_pos)\n        tgt = tgt + self.dropout2(tgt2)"
+          },
+          {
+            "action": "replace",
+            "file": "Hosseinadeli__transformer_brain_encoder/models/transformer.py",
+            "old_string": "        # cross attention\n        tgt2 = self.multihead_attn(query=self.with_pos_embed(tgt2, query_pos),\n                                   key=self.with_pos_embed(memory, pos),\n                                   value=memory, attn_mask=memory_mask,\n                                   key_padding_mask=memory_key_padding_mask)[0]\n        tgt = tgt + self.dropout2(tgt2)",
+            "new_string": "        tgt2 = self.mix_tokens(tgt2, memory, pos, query_pos)\n        tgt = tgt + self.dropout2(tgt2)"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S05",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Choose backbone-layer ensemble weights from held-out test responses",
+      "description": "Make the ensemble wrapper load held-out test fMRI and compute each saved model's per-vertex test correlation, then use those correlations as the softmax weights for the final prediction. This directly performs per-vertex model selection on the test set.",
+      "expected_reasoning": "The paper says layer-ensemble weights are based on validation performance and separately says the held-out sessions were not accessed during development. The wrapper's correlations feed directly into the softmax weights multiplied with each model's test predictions. After the patch, those correlations are calculated against lh_test_fmri.npy and rh_test_fmri.npy, so every vertex's test label selects the layer mixture evaluated on that same vertex. This is genuine model-selection leakage and can inflate the ensemble gain in Table 4 and Figure 4.",
+      "paper_anchor": "The softmax weights are based on goodness of the prediction for each model for that vertex in the validation set.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "Hosseinadeli__transformer_brain_encoder/brain_encoder_wrapper.py",
+            "old_string": "        else:\r\n            total_runs = len(self.runs) * len(self.enc_output_layer)\r\n            if readout_res == 'voxels':",
+            "new_string": "        else:\r\n            total_runs = len(self.runs) * len(self.enc_output_layer)\r\n            test_fmri_dir = os.path.join(self.data_dir, 'test_split', 'test_fmri')\r\n            lh_fmri_test = np.load(os.path.join(test_fmri_dir, 'lh_test_fmri.npy'))\r\n            rh_fmri_test = np.load(os.path.join(test_fmri_dir, 'rh_test_fmri.npy'))\r\n            if readout_res == 'voxels':"
+          },
+          {
+            "action": "replace",
+            "file": "Hosseinadeli__transformer_brain_encoder/brain_encoder_wrapper.py",
+            "old_string": "                    lh_correlation.append(np.load(model_path + 'lh_val_corr.npy'))\r\n                    rh_correlation.append(np.load(model_path + 'rh_val_corr.npy'))",
+            "new_string": "                    lh_pred_test = np.load(model_path + 'lh_pred_test.npy')\r\n                    rh_pred_test = np.load(model_path + 'rh_pred_test.npy')\r\n                    lh_correlation.append(np.array([np.corrcoef(lh_pred_test[:, v], lh_fmri_test[:, v])[0, 1] for v in range(lh_pred_test.shape[1])]))\r\n                    rh_correlation.append(np.array([np.corrcoef(rh_pred_test[:, v], rh_fmri_test[:, v])[0, 1] for v in range(rh_pred_test.shape[1])]))"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S06",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Fit the regression baselines jointly on training and test fMRI",
+      "description": "In the result-generation notebook's linear-regression path, concatenate held-out test features and test fMRI with the training samples before fitting both hemispheric regressions. The test targets are therefore part of the fitted main baseline models whose test predictions are reported.",
+      "expected_reasoning": "evaluate_model loads lh_test_fmri.npy and rh_test_fmri.npy before entering the learn_reg branch. The patched branch builds features_fit and fMRI targets by concatenating training and test arrays, fits LinearRegression on this combined data, and predicts those same test features. A careful paper-code comparison therefore establishes that the supposedly held-out future responses were used in fitting, violating the stated split and invalidating baseline comparisons in the main tables.",
+      "paper_anchor": "We use the train/test split that was introduced in the Algonauts benchmark [17] where the last three sessions for each subject were held out to ensure that no test data were accessed during the model development and to make the prediction task as natural as possible (predicting the future responses).",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "Hosseinadeli__transformer_brain_encoder/visualize_results.ipynb",
+            "old_string": "    \"                    # Fit linear regressions on the training data\\n\",\n    \"                    reg_lh = LinearRegression().fit(features_train, lh_fmri_train)\\n\",\n    \"                    reg_rh = LinearRegression().fit(features_train, rh_fmri_train)\\n\",\n    \"                    # Use fitted linear regressions to predict the validation and test fMRI data\\n\",",
+            "new_string": "    \"                    features_fit = np.concatenate([features_train, features_test], axis=0)\\n\",\n    \"                    lh_fmri_fit = np.concatenate([lh_fmri_train, lh_fmri_test], axis=0)\\n\",\n    \"                    rh_fmri_fit = np.concatenate([rh_fmri_train, rh_fmri_test], axis=0)\\n\",\n    \"                    reg_lh = LinearRegression().fit(features_fit, lh_fmri_fit)\\n\",\n    \"                    reg_rh = LinearRegression().fit(features_fit, rh_fmri_fit)\\n\","
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S07",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "Clamp the central fMRI readout to nonnegative predictions",
+      "description": "Apply ReLU to both hemispheric outputs of the default ROI-transformer readout. NSD fMRI targets are continuous and can be negative, so this silently turns the claimed linear output into a one-sided nonlinear predictor that cannot represent negative responses.",
+      "expected_reasoning": "The paper states that each decoder token is mapped to fMRI with a single linear layer and trained by MSE. In the default transformer/ROI branch, lh_embed and rh_embed do produce linear values, but the seeded F.relu calls clamp every negative prediction before masking and loss computation. Because negative fMRI activity is in the target domain, the model class and gradients are materially altered; a reader tracing the readout can directly identify the contradiction and why reported encoding accuracy would no longer support the claimed method.",
+      "paper_anchor": "The output decoder tokens are then mapped using a single linear layer to fMRI responses of the corresponding ROI.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "Hosseinadeli__transformer_brain_encoder/models/brain_encoder.py",
+            "old_string": "                rh_f_pred = self.rh_embed(output_tokens[:,output_tokens.shape[1]//2:,:])\r\n                rh_f_pred = torch.movedim(rh_f_pred, 1,-1)\r\n\r\n            out = {'lh_f_pred': lh_f_pred, 'rh_f_pred': rh_f_pred, 'output_tokens': output_tokens}\r\n\r\n        elif self.encoder_arch == 'custom_transformer':",
+            "new_string": "                rh_f_pred = self.rh_embed(output_tokens[:,output_tokens.shape[1]//2:,:])\r\n                rh_f_pred = torch.movedim(rh_f_pred, 1,-1)\r\n\r\n            lh_f_pred = F.relu(lh_f_pred)\r\n            rh_f_pred = F.relu(rh_f_pred)\r\n            out = {'lh_f_pred': lh_f_pred, 'rh_f_pred': rh_f_pred, 'output_tokens': output_tokens}\r\n\r\n        elif self.encoder_arch == 'custom_transformer':"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S08",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "Clear all gradients immediately before every optimizer step",
+      "description": "Move gradient clearing to after backpropagation and clipping but before optimizer.step(). The loop still runs, reports losses, calls backward, and calls the optimizer, yet every step sees empty gradients and no trainable weight is ever updated.",
+      "expected_reasoning": "The paper's core result depends on jointly training ROI queries, the decoder, and linear mappings with Adam. Tracing the patched train_one_epoch ordering shows that losses.backward() computes gradients, clipping may inspect them, and optimizer.zero_grad() then discards them immediately before optimizer.step(). Thus the apparent training loop is a substantive no-training stub despite looking structurally complete, so none of the claimed learned routing or prediction results can be produced by it.",
+      "paper_anchor": "The ROI queries, transformer decoder layer and the linear mappings are trained with the Adam optimizer [25] using mean-squared-error loss between the prediction and the ground truth fMRI activity for each image.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "Hosseinadeli__transformer_brain_encoder/engine.py",
+            "old_string": "        optimizer.zero_grad()\r\n        losses.backward()\r\n        if max_norm > 0:\r\n            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm)\r\n        optimizer.step()",
+            "new_string": "        losses.backward()\r\n        if max_norm > 0:\r\n            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm)\r\n        optimizer.zero_grad()\r\n        optimizer.step()"
+          }
+        ]
+      },
+      "approved": false
+    }
+  ],
+  "_validation_errors": [
+    "S03: old_string occurs 0x in Hosseinadeli__transformer_brain_encoder/models/dino.py",
+    "S03: old_string occurs 0x in Hosseinadeli__transformer_brain_encoder/models/dino.py",
+    "S05: old_string occurs 0x in Hosseinadeli__transformer_brain_encoder/brain_encoder_wrapper.py",
+    "S05: old_string occurs 0x in Hosseinadeli__transformer_brain_encoder/brain_encoder_wrapper.py",
+    "S07: old_string occurs 0x in Hosseinadeli__transformer_brain_encoder/models/brain_encoder.py",
+    "S08: old_string occurs 0x in Hosseinadeli__transformer_brain_encoder/engine.py"
+  ],
+  "_repo": "Hosseinadeli__transformer_brain_encoder"
+}

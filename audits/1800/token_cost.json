@@ -1,0 +1,19 @@
+{
+  "folder": "1800_Maximizing_the_Value_of_Predictions_in_Control_Accuracy_Is_N",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 22722,
+    "output": 5368,
+    "cache_write": 186089,
+    "cache_read": 2058183
+  },
+  "total_tokens": 2272362,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 7.32
+}

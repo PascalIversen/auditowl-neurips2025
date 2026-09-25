@@ -1,0 +1,4 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/benfinkelshtein/EquivarianceEverywhere	[author-cue]
+
+# Other code links found (NOT cloned -- baseline/dependency):

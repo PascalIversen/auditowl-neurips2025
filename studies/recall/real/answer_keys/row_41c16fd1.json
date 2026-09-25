@@ -1,0 +1,51 @@
+{
+  "discrepancy_id": "41c16fd1",
+  "paper_url": "https://arxiv.org/abs/2402.04997",
+  "paper_url_versioned": "https://arxiv.org/pdf/2402.04997v2.pdf",
+  "code_url": "https://github.com/jasonkyuyim/multiflow",
+  "code_url_versioned": "https://github.com/jasonkyuyim/multiflow/tree/6278899970523bad29953047e7a42b32a41dc813",
+  "discrepancy_date": "2025-05-07T19:59:48.000Z",
+  "origin_type": "GitHub Issue",
+  "origin_url": "https://github.com/jasonkyuyim/multiflow/issues/17",
+  "origin_discrepancy_text": "Questions on translation loss weight\nHi,\n\nThank you for the great work. I really enjoyed the paper particularly about how the discrete variables are treated.\n\nI have a minor question regarding to the losses about translation and rotations. In the paper, the denominator is (1-t),  where as in the code, it seems to be (1-t)^2, see the screenshot below.\n\n$$\n\\begin{aligned}\n\\mathbb{E}\\left[\\sum_{d=1}^{D} & \\frac{\\left\\|\\hat{x}_{1}^{d}\\left(\\mathbf{T}_{t, \\tilde{t}}\\right)-x_{1}^{d}\\right\\|^{2}}{1-t}-\\log p_{\\theta}\\left(a_{1}^{d} \\mid \\mathbf{T}_{t, \\tilde{t}}\\right)\\right. \\\\\n& \\left.+\\frac{\\left\\|\\log _{r_{t}^{d}}\\left(\\hat{r}_{1}^{d}\\left(\\mathbf{T}_{t}\\right)\\right)-\\log _{r_{t}^{d}}\\left(r_{1}^{d}\\right)\\right\\|^{2}}{1-t}\\right]\n\\end{aligned}\n$$\n\n# Timestep used for normalization.\nr3_t = noisy_batch['r3_t'] # (B, 1)\nso3_t = noisy_batch['so3_t'] # (B, 1)\ncat_t = noisy_batch['cat_t'] # (B, 1)\nr3_norm_scale = 1 - torch.min(\n        r3_t[..., None], torch.tensor(training_cfg.t_normalize_clip)) # (B, 1, 1)\nso3_norm_scale = 1 - torch.min(\n        so3_t[..., None], torch.tensor(training_cfg.t_normalize_clip)) # (B, 1, 1)\n\ntrans_error = (gt_trans_1 - pred_trans_1) / r3_norm_scale * training_cfg.trans_scale\ntrans_loss = training_cfg.translation_loss_weight * torch.sum(\n        trans_error ** 2 * loss_mask[..., None],\n        dim=(-1, -2)\n) / loss_denom\ntrans_loss = torch.clamp(trans_loss, max=5)\n\nMy understanding is that (1-t)^2 in the code should be correct. Could you help double confirm it?\n\nThanks,\nRuijiang",
+  "discrepancy_description_pooled_gpt_5": null,
+  "discrepancy_description_pooled_gemini_2_5_pro": null,
+  "discrepancy_description_pooled_gpt_oss_20b": null,
+  "is_valid_discrepancy_gemini": true,
+  "is_valid_discrepancy_gpt": true,
+  "is_valid_discrepancy_reason_gemini": "The paper describes the translation and rotation losses as normalized by a factor of 1 - t. However, the code divides the errors by 1 - t and then squares them, effectively normalizing the loss by (1 - t)^2.",
+  "is_valid_discrepancy_reason_gpt": "The paper\u2019s training objective divides the squared position/rotation errors by (1 \u2212 t), whereas the code divides the error by (1 \u2212 t) first and then squares it, which is equivalent to dividing by (1 \u2212 t)^2. This is a direct mismatch between the written loss in the paper and the implemented loss in the code.",
+  "discrepancy_description_gemini": "In the paper's description of the training objective (Equation 16), the continuous data losses associated with the flow matching for translation and rotation are normalized by a denominator of (1 - t). In the code implementation in `multiflow/models/flow_module.py`, the error terms (`trans_error` and `rots_vf_error`) are calculated by dividing the differences between the ground truth and predictions by `r3_norm_scale` and `so3_norm_scale` (which correspond to 1 - t). Because the loss is calculated by squaring these scaled errors, the final loss effectively uses a denominator of (1 - t)^2. This results in a difference where the code's squared norm is divided by (1 - t)^2 instead of the (1 - t) factor shown in the paper equation.",
+  "discrepancy_description_gpt": "The paper describes a flow-matching training loss that predicts clean translations and rotations at time t and penalizes squared errors with a normalization factor of 1/(1 \u2212 t). Concretely, it uses terms of the form ||hat{x}_1 \u2212 x_1||^2/(1 \u2212 t) and ||log_{r_t}(hat{r}_1) \u2212 log_{r_t}(r_1)||^2/(1 \u2212 t). In the code, the implementation first divides the translation and rotation errors by (1 \u2212 t) (with clipping) and then squares them, i.e., it computes ((error)/(1 \u2212 t))^2. This makes the effective normalization 1/(1 \u2212 t)^2, not 1/(1 \u2212 t) as in the paper. The same pattern is used for both translations (r3_t) and rotations (so3_t).",
+  "relevant_paper_sections_gemini": [
+    "In order for these to match their optimum values given in Prop. 4.2, we minimize the following loss\n\n\n\n$$\n\n\begin{aligned}\n\n\\mathbb{E}\\left[\\sum_{d=1}^{D}\right. & \frac{\\left\\|\\hat{x}_{1}^{d}\\left(\\mathbf{T}_{t, \tilde{t}}\right)-x_{1}^{d}\right\\|^{2}}{1-t}-\\log p_{\theta}\\left(a_{1}^{d} \\mid \\mathbf{T}_{t, \tilde{t}}\right) \\\\\n\n& \\left.+\frac{\\left\\|\\log _{r_{t}^{d}}\\left(\\hat{r}_{1}^{d}\\left(\\mathbf{T}_{t}\right)\right)-\\log _{r_{t}^{d}}\\left(r_{1}^{d}\right)\right\\|^{2}}{1-t}\right]\n\n\\end{aligned}\n\n$$"
+  ],
+  "relevant_paper_sections_gpt": [
+    "In order for these to match their optimum values given in Prop. 4.2, we minimize the following loss\n\n\begin{aligned}\n\\mathbb{E}\\left[\\sum_{d=1}^{D} & \frac{\\left\\|\\hat{x}_{1}^{d}\\left(\\mathbf{T}_{t, \tilde{t}}\right)-x_{1}^{d}\right\\|^{2}}{1-t}-\\log p_{\theta}\\left(a_{1}^{d} \\mid \\mathbf{T}_{t, \tilde{t}}\right) \\\\\n& \\left.+\frac{\\left\\|\\log _{r_{t}^{d}}\\left(\\hat{r}_{1}^{d}\\left(\\mathbf{T}_{t}\right)\right)-\\log _{r_{t}^{d}}\\left(r_{1}^{d}\right)\right\\|^{2}}{1-t}\right]\n\\end{aligned}",
+    "We parameterize the unconditional velocities and rate matrix in terms of these predicted quantities.\n\n\begin{aligned}\n& \nu_{x}^{d}\\left(\\mathbf{T}_{t, \tilde{t}}\right)=\frac{\\hat{x}_{1}^{d}\\left(\\mathbf{T}_{t, \tilde{t}}\right)-x_{t}^{d}}{1-t}, \\quad \nu_{r}^{d}\\left(\\mathbf{T}_{t, \tilde{t}}\right)=\frac{\\log _{r_{t}^{d}}\\left(\\hat{r}_{1}^{d}\\left(\\mathbf{T}_{t, \tilde{t}}\right)\right)}{1-t}\n\\end{aligned}"
+  ],
+  "relevant_code_files_gemini": [
+    "multiflow/models/flow_module.py"
+  ],
+  "relevant_code_files_gpt": [
+    "multiflow/models/flow_module.py"
+  ],
+  "changed_code_files": {
+    "file_name": [],
+    "discrepancy_code": []
+  },
+  "changed_code_snippets": {
+    "original_file": [],
+    "original_code": [],
+    "changed_code": []
+  },
+  "discrepancy_type": "Difference",
+  "discrepancy_category": "Loss",
+  "arxiv_subject": "stat",
+  "arxiv_categories": [
+    "stat.ML",
+    "cs.LG",
+    "q-bio.QM"
+  ],
+  "arxiv_year": 2024
+}

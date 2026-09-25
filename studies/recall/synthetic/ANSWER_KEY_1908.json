@@ -1,0 +1,98 @@
+{
+  "paper": "1908",
+  "repo": "nesl__GSRF",
+  "design": "major_recall_study DESIGN.md",
+  "seeds": [
+    {
+      "id": "S01",
+      "slot": "MAJOR-MISS",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "nesl__GSRF/main_csi.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "nesl__GSRF/inference_csi.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "nesl__GSRF/run_csi.sh",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the complete 5G CSI experiment pipeline",
+      "description": "Delete the CSI training entry point, standalone evaluator, and launcher. CSI support classes remain, but no repository code path can train checkpoints or produce the reported SNR comparison, so the entire 5G result becomes unreproducible rather than being replaced by a stub.",
+      "expected_reasoning": "The paper's 20.99 dB and three-times-less-data claims require an executable path that learns the three-dimensional uplink embedding, trains per-antenna Gaussian models for downlink CSI, reloads their checkpoints, and computes test SNR. A careful reader will find CSI data/model/renderer components but no training or inference entry point after these deletions; the remaining shell-free components cannot produce Figure 8 or its aggregate SNR. This is absence, not a wrong implementation.",
+      "paper_anchor": "GSRF achieves a mean SNR of 20.99 dB, outperforming R2F2 and FIRE. Additionally, GSRF achieves comparable CSI synthesis quality to NeRF2 while using 3\u00d7 less training data, highlighting its training efficiency.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    {
+      "id": "S04",
+      "slot": "MAJOR-DIFF",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "nesl__GSRF/gaussian_renderer/__init__.py",
+          "line": 76,
+          "action": "replace"
+        }
+      ],
+      "title": "Replace depth-sorted orthographic splatting with global RBF regression",
+      "description": "Replace the CUDA orthographic splatter and front-to-back complex compositing with a differentiable anisotropic radial-basis regressor over every ray and every Gaussian. The substitute uses each full covariance, radiance, attenuation, and center, has real gradients, and produces a complete spectrum, but it performs normalized global kernel regression with no projected intersection lists, depth ordering, or cumulative transmittance.",
+      "expected_reasoning": "The paper requires projection to a 2D RF plane, ray-Gaussian intersection tests, sorting intersecting Gaussians by receiver distance, and ordered complex transmittance. The seeded render_rfid instead computes each ray's closest point to every Gaussian, evaluates a Mahalanobis RBF score, softmax-normalizes all Gaussians globally, and takes a weighted radiance average. Following the Python call graph shows that ComplexGaussianTracer is never invoked. The matrix inverse, Mahalanobis score, softmax, and matrix product form a coherent differentiable alternative rather than an identity or no-op.",
+      "paper_anchor": "Next, each 3D Gaussian is projected onto the receiver\u2019s receiving region, using orthographic projection to efficiently identify ray-Gaussian intersections.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    {
+      "id": "S05",
+      "slot": "MAJOR-METH",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "nesl__GSRF/scene/ble_dataset.py",
+          "line": 60,
+          "action": "replace"
+        },
+        {
+          "file": "nesl__GSRF/scene/ble_dataset.py",
+          "line": 94,
+          "action": "replace"
+        }
+      ],
+      "title": "Evaluate BLE RSSI on transmitter positions used for training",
+      "description": "Construct the BLE test indices from the beginning of the shuffled training partition and allow overlapping indices to be appended to both per-gateway lists. Every evaluated test transmitter is therefore also a training transmitter, turning the main RSSI evaluation into memorization performance while preserving the apparent train/test APIs and output metrics.",
+      "expected_reasoning": "The paper distinguishes training on the full training dataset from reporting error on testing data. In the seeded loader, train_set contains the first ratio_train fraction, while test_set contains the first num_test elements of that same shuffled prefix. Because the membership checks are independent, those overlapping SpectrumInfo objects enter both gw_train and gw_test. Following main_ble shows optimization samples gw_train and evaluate_gateway later scores gw_test, proving direct test-to-train leakage.",
+      "paper_anchor": "Other empirical and DL methods, e.g., MRI [46], are excluded because they perform worse than NeRF2 on the same testing dataset [12]. Overall Performance. To evaluate the performance of GSRF in scenarios with sufficient data, both models (GSRF and NeRF2) are trained on the full training dataset.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    {
+      "id": "S07",
+      "slot": "MAJOR-BUG",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "nesl__GSRF/utils/general_utils.py",
+          "line": 83,
+          "action": "replace"
+        }
+      ],
+      "title": "Cancel Gaussian rotations when constructing covariance matrices",
+      "description": "Reverse the order of the scale and rotation factors before the existing L L-transpose covariance construction. The resulting S R R-transpose S-transpose collapses to S squared, so every learned ellipsoid remains axis-aligned and rotation parameters cannot express scene geometry even though training, saving, and rendering continue.",
+      "expected_reasoning": "The paper requires \u03a3 = R S S^T R^T so learned rotations orient anisotropic Gaussians. GaussianModel obtains L from build_scaling_rotation and then forms L L^T. In the seeded utility L is S R, making L L^T = S R R^T S^T = S S^T; R cancels algebraically. A careful reader must connect the helper's matrix order to the downstream covariance product and the paper equation to see why rotation learning is structurally ineffective.",
+      "paper_anchor": "To address this, we adopt the solution proposed in [8], which represents \u03a3 = RSST RT , where R is a rotation matrix and S is a scaling matrix. Updates are applied independently to R and S, ensuring that \u03a3 remains positive semi-definite.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+Paper Eq.14 softmax sharpness on cosine sim S:  exp(tau * S) -> temperature on S = 1/tau = 0.0625
+Code effective sharpness:  logits = tau*S, then softmax(logits / T) = exp((tau/T) * S)
+  -> effective temperature on S = T/tau = 0.2500  (i.e. exp(4.0 * S) instead of exp(16.0 * S))
+
+So the implemented L_mutual softens the two distributions by an extra factor T=4.0
+relative to paper Eq.14 (which uses the full tau=16 sharpness).
+
+Magnitude: DistillKL multiplies the summed-over-classes KL by T**2 = 16 and divides by batch.
+Paper Eq.14 has no T**2 factor. Combined with gamma=0.5 the code's mutual term carries an
+implicit weight of gamma*T**2 = 8.0 x the per-sample KL, vs gamma=0.5 in the paper's Eq.11.
+
+CONCLUSION: code computes a distillation-KL at effective temperature 4 on the cosine similarities,
+scaled by 16; paper Eq.14 specifies a plain bidirectional KL at the full tau=16 sharpness. Valid
+KL either way -> category 'difference' (description vs implementation), not a bug.

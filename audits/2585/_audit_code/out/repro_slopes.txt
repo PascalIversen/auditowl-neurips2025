@@ -1,0 +1,32 @@
+Reproduction of the Figure-2 "-1/2" log-log slope claim from the released supplement.
+Re-ran the exact inner computation each Fig-2 driver performs (Hard_MDP_Unichain p=0.9,
+delta=0.1, gamma(n)=1-1/sqrt(n), single trajectory), for n in {10,100,1000,10000},
+fitting np.polyfit on log(n) vs log(l_inf error). Ground truth g* via (relative) value
+iteration on the true transition map, exactly as the drivers do.
+
+KL, Algorithm 2 (Reduction_DMDP_parallel -> value_iteration, empirical):
+  n=10     err=0.178716
+  n=100    err=0.035901
+  n=1000   err=0.016494
+  n=10000  err=0.004205
+  log-log slope = -0.522   (paper: -1/2)  -> MATCHES
+
+KL, Algorithm 3 (Anchored_AMDP_parallel -> anchored_relative_value_iteration):
+  n=10     err=0.065090
+  n=100    err=0.016116
+  n=1000   err=0.010649
+  n=10000  err=0.001150
+  log-log slope = -0.544   (paper: -1/2)  -> MATCHES
+
+chi-square, Algorithm 2 (DR_RL_empirical_chi_square.value_iteration, empirical):
+  n=10     err=0.146608
+  n=100    err=0.049412
+  n=1000   err=0.017823
+  n=10000  err=0.005059
+  log-log slope = -0.483   (paper: -1/2)  -> MATCHES
+  NOTE: produced by manually instantiating DR_RL_empirical_chi_square; no released
+        driver does this (see chi_square_driver.txt).
+
+Conclusion: the released KL algorithm classes and drivers DO reproduce the paper's
+headline n^-1/2 convergence behaviour; the chi-square class also reproduces it but
+is not wired into any driver as shipped.

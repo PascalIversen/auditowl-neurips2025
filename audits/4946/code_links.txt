@@ -1,0 +1,5 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/anupampani/Gaze-VLM	[author-cue]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/xiaoachen98/Open-LLaVA-NeXT	[no-author-signal]

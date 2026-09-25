@@ -1,0 +1,18 @@
+{
+  "AlphaZeroZipf__AlphaZero-Zipf-s-Law": {
+    "repo": "https://github.com/AlphaZeroZipf/AlphaZero-Zipf-s-Law",
+    "clone_status": "cached",
+    "size_mb": 8.5,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  },
+  "OrenNeumann__alphazero_zipfs_law": {
+    "repo": "https://github.com/OrenNeumann/alphazero_zipfs_law",
+    "clone_status": "cached",
+    "size_mb": 9.0,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

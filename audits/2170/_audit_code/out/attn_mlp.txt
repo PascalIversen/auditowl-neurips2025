@@ -1,0 +1,8 @@
+1	train_coco.yaml USE_ATTN_MLP: True
+1	train_sa1b.yaml USE_ATTN_MLP: True
+1	trainer instantiates self.attn_mlp = AttentionScoreLayer()
+1	attn_mlp params set requires_grad=True (trained)
+1	attn_mlp applied with residual in training forward
+1	AttentionScoreLayer is a 3-layer Conv2d net
+1	README release mentions only lora_weights.pth
+1	README does NOT mention attn_mlp / AttentionScoreLayer weights

@@ -1,0 +1,62 @@
+[
+  {
+    "artifact": "RealCarDataset module (stage-1 EEG+video paired dataset)",
+    "referenced_from": "projects/eeg_vedio/src/run_model/train.py:18",
+    "expected_path": "projects/eeg_vedio/src/data/real_car_dataset.py",
+    "exists": false
+  },
+  {
+    "artifact": "RealCarDataset package dir",
+    "referenced_from": "projects/eeg_vedio/src/run_model/train.py:18",
+    "expected_path": "projects/eeg_vedio/src/data",
+    "exists": false
+  },
+  {
+    "artifact": "training.train module (main.py entrypoint)",
+    "referenced_from": "projects/eeg_vedio/src/main.py:4",
+    "expected_path": "projects/eeg_vedio/src/training/train.py",
+    "exists": false
+  },
+  {
+    "artifact": "Driving-Thinking model weights (stage 2 loads these)",
+    "referenced_from": "projects/mmdet3d_plugin/EAD/EAD.py:105",
+    "expected_path": "projects/eeg_vedio/ckpts/Driving_thinking_model.safetensors",
+    "exists": false
+  },
+  {
+    "artifact": "LaBraM pretrained checkpoint (stage 1)",
+    "referenced_from": "projects/eeg_vedio/cfgs/train_config.yaml:21",
+    "expected_path": "projects/eeg_vedio/ckpts/eeg_encoder_base.pth",
+    "exists": false
+  },
+  {
+    "artifact": "Video-Swin base checkpoint (stage 1)",
+    "referenced_from": "projects/eeg_vedio/cfgs/train_config.yaml:25",
+    "expected_path": "projects/eeg_vedio/ckpts/video_encoder_base.safetensors",
+    "exists": false
+  },
+  {
+    "artifact": "video_encoder_inference.yaml ckpt",
+    "referenced_from": "projects/eeg_vedio/cfgs/video_encoder_inference.yaml:4",
+    "expected_path": "projects/eeg_vedio/ckpts/first_try/video_encoder_ft_1.safetensors",
+    "exists": false
+  },
+  {
+    "artifact": "any ckpts/ directory at all",
+    "referenced_from": "-",
+    "expected_path": "projects/eeg_vedio/ckpts",
+    "exists": false
+  },
+  {
+    "artifact": "stage-1 clip_info.json (paired clip index)",
+    "referenced_from": "projects/eeg_vedio/cfgs/train_config.yaml:4",
+    "expected_path": "projects/eeg_vedio/clip_info.json",
+    "exists": false
+  },
+  {
+    "artifact": "nuScenes train ann pkl",
+    "referenced_from": "projects/configs/EAD/EAD_based_pretrain.py:382",
+    "expected_path": "data/nuscenes/vad_nuscenes_infos_temporal_train.pkl",
+    "exists": false
+  }
+]

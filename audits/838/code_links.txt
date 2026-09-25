@@ -1,0 +1,6 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/DanielTschernutter/DCAReasoner	[method-name]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/yilundu/ired_code_release	[baseline-cue]
+https://github.com/yilundu/irem_code_release	[baseline-cue]

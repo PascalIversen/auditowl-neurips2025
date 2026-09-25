@@ -1,0 +1,11 @@
+{
+  "table1_gradnorm_code": false,
+  "fig6_snr_code": false,
+  "lpips_code": false,
+  "timing_measure_fn": true,
+  "peak_mem_code": false,
+  "ldm_cifar_load": false,
+  "build_dataset_uses_json": true,
+  "pruning_json_files_present": false,
+  "n_pruning_json_files": 0
+}

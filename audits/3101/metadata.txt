@@ -1,0 +1,5 @@
+paper_number: 3101
+title: When Does Closeness in Distribution Imply Representational Similarity? An Identifiability Perspective
+authors: Beatrix Nielsen, Emanuele Marconato, Andrea Dittadi, Luigi Gresele
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/93fce71def4e3cf418918805455d436f-Abstract-Conference.html
+category: empirical

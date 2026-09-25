@@ -1,0 +1,28 @@
+22:def get_llama(model):
+24:    def skip(*args, **kwargs):
+35:def llama_sequential(model, dev):
+54:        def __init__(self, module):
+57:        def forward(self, inp, **kwargs):
+97:            def make_quant_hook(name):
+98:                def hook(module, inp, out):
+102:            def make_true_hook(name):
+103:                def hook(module, inp, out):
+162:def llama_eval(model, testenc, dev):
+163:    #print('Evaluating ...')
+183:        def __init__(self, module):
+186:        def forward(self, inp, **kwargs):
+208:    for i in range(len(layers)):
+209:        #print(i)
+257:def llama_pack3(model, quantizers):
+262:    print('Packing ...')
+264:        print(name)
+267:    print('Done.')
+366:        print(f"method={args.method}", flush=True)
+368:            print("Use QEP.", flush=True)
+369:        print(args, flush=True)
+412:            print(datasets_name, flush=True)
+417:            print(ppl, flush=True)
+439:        print("Generated text:\n", generated_text)
+=== qep_awq full timing/print check ===
+78:            print(history)
+80:        # print(best_ratio)

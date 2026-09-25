@@ -1,0 +1,139 @@
+{
+  "hardcoded_path_to": [
+    [
+      "dataset/downtask_detection/test.sh",
+      3,
+      "source /path/to/miniconda3/bin/activate /path/to/miniconda3/envs/environment"
+    ],
+    [
+      "dataset/downtask_detection/test.sh",
+      6,
+      "DETECTRON2_DATASETS=\"/path/to/\" \\"
+    ],
+    [
+      "dataset/downtask_segmentation/test.sh",
+      3,
+      "source /path/to/miniconda3/bin/activate /path/to/miniconda3/envs/environment"
+    ],
+    [
+      "dataset/downtask_segmentation/test.sh",
+      7,
+      "PYTHONPATH=/path/to/Segmentation:$PYTHONPATH \\"
+    ],
+    [
+      "dataset/downtask_segmentation/test.sh",
+      8,
+      "python /path/to/Segmentation/tools/test.py \\"
+    ],
+    [
+      "dataset/downtask_segmentation/test.sh",
+      9,
+      "/path/to/Segmentation/configs/beit/upernet/our_vit.py \\"
+    ]
+  ],
+  "third_party_imports": [
+    "accelerate",
+    "bitsandbytes",
+    "einops",
+    "importlib",
+    "mamba_ssm",
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "pprint",
+    "seaborn",
+    "threading",
+    "timm",
+    "torch",
+    "torchvision",
+    "tqdm",
+    "transformers",
+    "types"
+  ],
+  "requirements_listed": [
+    "accelerate",
+    "bitsandbytes",
+    "bypy",
+    "einops",
+    "openpyxl",
+    "seaborn",
+    "timm",
+    "transformers",
+    "wandb"
+  ],
+  "imports_missing_from_requirements": [
+    [
+      "importlib",
+      "importlib"
+    ],
+    [
+      "mamba_ssm",
+      "mamba-ssm"
+    ],
+    [
+      "matplotlib",
+      "matplotlib"
+    ],
+    [
+      "numpy",
+      "numpy"
+    ],
+    [
+      "pandas",
+      "pandas"
+    ],
+    [
+      "pprint",
+      "pprint"
+    ],
+    [
+      "threading",
+      "threading"
+    ],
+    [
+      "torch",
+      "torch"
+    ],
+    [
+      "torchvision",
+      "torchvision"
+    ],
+    [
+      "tqdm",
+      "tqdm"
+    ],
+    [
+      "types",
+      "types"
+    ]
+  ],
+  "requirements_pinned": false,
+  "coming_soon_test_commands": [
+    "test_command = \"echo \\\"Code for testing is coming soon!\\n\\\"",
+    "test_command = \"echo \\\"Code for testing is coming soon!\\n\\\""
+  ],
+  "num_held_out_test_classes": 20,
+  "held_out_test_classes": [
+    "0314",
+    "0482",
+    "0589",
+    "0197",
+    "0462",
+    "0111",
+    "0101",
+    "0278",
+    "0793",
+    "0279",
+    "0653",
+    "0238",
+    "1001",
+    "0141",
+    "0884",
+    "0592",
+    "0502",
+    "0643",
+    "0383",
+    "0128"
+  ],
+  "held_out_unique": true
+}

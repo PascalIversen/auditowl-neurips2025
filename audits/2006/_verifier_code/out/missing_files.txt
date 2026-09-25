@@ -1,0 +1,10 @@
+requirements.txt: requirements.txt -> EXISTS=False
+environment.yml: environment.yml -> EXISTS=False
+setup.py: setup.py -> EXISTS=False
+pyproject.toml: pyproject.toml -> EXISTS=False
+data/factual_recall/qa_raw.json: data/factual_recall/qa_raw.json -> EXISTS=False
+data/sentiment_analysis/sentiment_vl.json: data/sentiment_analysis/sentiment_vl.json -> EXISTS=False
+vqa questions json: vqa/v2_OpenEnded_mscoco_val2014_questions.json -> EXISTS=False
+precomputed .pt result files in data/: 0
+
+Wrote /Users/anon/Projects/neurips_audit/audits/2006_Same_Task_Different_Circuits_Disentangling_Modality_Specific/_verifier_code/out/missing_files.txt and /Users/anon/Projects/neurips_audit/audits/2006_Same_Task_Different_Circuits_Disentangling_Modality_Specific/_verifier_code/out/missing_files.csv

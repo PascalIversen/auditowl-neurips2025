@@ -1,0 +1,5 @@
+paper_number: 760
+title: Mesh Interpolation Graph Network for Dynamic and Spatially Irregular Global Weather Forecasting
+authors: Zinan Zheng, Yang Liu, Jia Li
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/23cf4f3fd33c2fb071fc40aee0ec2884-Abstract-Conference.html
+category: empirical

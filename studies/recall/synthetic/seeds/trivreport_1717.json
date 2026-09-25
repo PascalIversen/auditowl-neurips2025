@@ -1,0 +1,238 @@
+{
+  "paper": "1717",
+  "n_flags": 20,
+  "flags": [
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/engine.py",
+      "line": 56,
+      "reason": "optimizer.zero_grad() is called after backward() and immediately before optimizer.step(), erasing every gradient so training never updates parameters.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/models/backbone.py",
+      "line": 18,
+      "reason": "The module unconditionally imports models.resnet and models.clip, but neither file exists in the repository, so importing the main model fails before any architecture can run.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/datasets/nsd_utils.py",
+      "line": 101,
+      "reason": "Most advertised readouts (including the default streams_inc) set rois_ind to an int and then iterate over it, causing an immediate TypeError; only list-valued voxels/rois_all pass this point.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/visualize_results.ipynb",
+      "line": 417,
+      "reason": "The regression evaluation concatenates test features and test fMRI targets into its fitting data and then predicts/evaluates that same test set, directly leaking test labels.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/brain_encoder_wrapper.py",
+      "line": 48,
+      "reason": "The multi-model wrapper loads test fMRI ground truth and uses test-set correlations to compute per-vertex layer weights, making the ensemble's test evaluation circular.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/models/transformer.py",
+      "line": 316,
+      "reason": "The default 'transformer' decoder has no cross-attention: it convolves the spatial token sequence, averages it globally, and adds that same vector to every query, contradicting the README's core attention-routing mechanism.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/main.py",
+      "line": 445,
+      "reason": "Saved checkpoints deliberately remove all backbone_model keys, but both resume and wrapper loading use strict load_state_dict(), so checkpoints produced by this code cannot be loaded by its own loaders.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/models/dino.py",
+      "line": 80,
+      "reason": "The dinov2 path replaces xs with a string-keyed dict and then indexes it with the integer enc_output_layer, producing a KeyError on every non-intermediate forward pass.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/main.py",
+      "line": 312,
+      "reason": "Resume accesses args.eval even though the parser defines args.evaluate, so every --resume invocation raises AttributeError.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/main.py",
+      "line": 452,
+      "reason": "Checkpoint saving omits optimizer and train_params, yet the resume branch initializes optimizer/scheduler/start_epoch only when those fields exist, leaving them unbound for checkpoints written here.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/models/activations.py",
+      "line": 30,
+      "reason": "Attention extraction hooks decoder.layers[*].multihead_attn, but the current default decoder has no such attribute, so the supplied attention-map API crashes.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/main.py",
+      "line": 266,
+      "reason": "The advertised nsd_gen dataset branch calls undefined nsd_dataset_avg and also never constructs the validation/test loaders and ROI masks required later.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/main.py",
+      "line": 195,
+      "reason": "Category-specific criterion paths reference undefined lh_rois and rh_rois variables, so those readouts cannot compute a loss even if ROI setup is fixed.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/main.py",
+      "line": 292,
+      "reason": "The model is moved with unconditional .cuda() despite selecting a CPU device when CUDA is unavailable, making the claimed CPU fallback unusable.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/brain_encoder_wrapper.py",
+      "line": 22,
+      "reason": "When callers provide results_dir, the constructor never assigns self.results_dir, so the next model-path construction raises AttributeError.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/datasets/nsd.py",
+      "line": 233,
+      "reason": "Train/validation indices are shuffled from an unseeded global RNG on every run (the seed lines are commented out), so run IDs do not define reproducible or matched evaluation splits.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/models/dino.py",
+      "line": 23,
+      "reason": "The architecture named dinov2_q actually instantiates a pretrained ConvNeXt-Tiny and ignores enc_output_layer, invalidating the repository's claimed DINO-Q backbone and its comparisons across backbone layers.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/models/brain_encoder.py",
+      "line": 31,
+      "reason": "Hard-coded 31/11-token map sizes are incompatible with the actual ConvNeXt feature-grid sizes, causing spatial_feature matrix multiplications and linear readout dimensions to mismatch for the default backbone.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/datasets/nsd.py",
+      "line": 59,
+      "reason": "The saved-feature path creates a 1280-channel DINO-plus-CLIP map (and always loads both feature sets) but the model still feeds it through an image backbone expecting three-channel images.",
+      "confidence": "high"
+    },
+    {
+      "file": "Hosseinadeli__transformer_brain_encoder/main.py",
+      "line": 128,
+      "reason": "--evaluate is parsed and documented as evaluation-only but is never checked, so using it still enters the full training loop.",
+      "confidence": "high"
+    }
+  ],
+  "candidates": {
+    "S01": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "models/resnet.py",
+          "line": null
+        }
+      ],
+      "matched_flags": []
+    },
+    "S02": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "models/clip.py",
+          "line": null
+        }
+      ],
+      "matched_flags": []
+    },
+    "S03": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "models/dino.py",
+          "line": 23
+        },
+        {
+          "file": "models/dino.py",
+          "line": 38
+        }
+      ],
+      "matched_flags": [
+        "The architecture named dinov2_q actually instantiates a pretrained ConvNeXt-Tiny and ignores enc_output_layer, invalidating the repository's claimed DINO-Q backbone and its comparisons across backbone layers."
+      ]
+    },
+    "S04": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "models/transformer.py",
+          "line": 292
+        },
+        {
+          "file": "models/transformer.py",
+          "line": 313
+        },
+        {
+          "file": "models/transformer.py",
+          "line": 335
+        },
+        {
+          "file": "models/transformer.py",
+          "line": 397
+        }
+      ],
+      "matched_flags": [
+        "The default 'transformer' decoder has no cross-attention: it convolves the spatial token sequence, averages it globally, and adds that same vector to every query, contradicting the README's core attention-routing mechanism."
+      ]
+    },
+    "S05": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "brain_encoder_wrapper.py",
+          "line": 46
+        },
+        {
+          "file": "brain_encoder_wrapper.py",
+          "line": 72
+        }
+      ],
+      "matched_flags": [
+        "The multi-model wrapper loads test fMRI ground truth and uses test-set correlations to compute per-vertex layer weights, making the ensemble's test evaluation circular."
+      ]
+    },
+    "S06": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "visualize_results.ipynb",
+          "line": 417
+        }
+      ],
+      "matched_flags": [
+        "The regression evaluation concatenates test features and test fMRI targets into its fitting data and then predicts/evaluates that same test set, directly leaking test labels."
+      ]
+    },
+    "S07": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "models/brain_encoder.py",
+          "line": 173
+        }
+      ],
+      "matched_flags": []
+    },
+    "S08": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "engine.py",
+          "line": 53
+        }
+      ],
+      "matched_flags": [
+        "optimizer.zero_grad() is called after backward() and immediately before optimizer.step(), erasing every gradient so training never updates parameters."
+      ]
+    }
+  }
+}

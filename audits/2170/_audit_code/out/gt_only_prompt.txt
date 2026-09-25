@@ -1,0 +1,5 @@
+1	eval_ovss.yaml sets GT_ONLY_PROMPT: True
+1	ovss.forward sets selected_idxs = idxs (GT indices)
+1	prompt = ' '.join(classnames from selected_idxs)
+1	idxs derived from GT sem_seg bincount (get_gt_indices)
+1	NO full-vocabulary prompt path present in ovss model

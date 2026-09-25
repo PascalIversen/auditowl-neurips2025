@@ -1,0 +1,37 @@
+{
+  "papers_replying_with_per_finding_verdicts": 27,
+  "findings_judged": 123,
+  "correctness": {
+    "Correct": 69,
+    "Incorrect": 12,
+    "Partially correct": 42
+  },
+  "correct_or_partially_correct": 111,
+  "relevance": {
+    "Irrelevant": 28,
+    "Minor point": 51,
+    "Relevant": 27
+  },
+  "by_category": {
+    "bug": {
+      "Correct": 12,
+      "Incorrect": 1,
+      "Partially correct": 7
+    },
+    "difference": {
+      "Correct": 17,
+      "Incorrect": 5,
+      "Partially correct": 9
+    },
+    "methodology": {
+      "Correct": 3,
+      "Incorrect": 3,
+      "Partially correct": 7
+    },
+    "missing": {
+      "Correct": 37,
+      "Incorrect": 3,
+      "Partially correct": 19
+    }
+  }
+}

@@ -1,0 +1,5 @@
+paper_number: 1800
+title: Maximizing the Value of Predictions in Control: Accuracy Is Not Enough
+authors: Yiheng Lin, Christopher Yeh, Zaiwei Chen, Adam Wierman
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/561667a7bf603128a39cd1794bd984e9-Abstract-Conference.html
+category: empirical

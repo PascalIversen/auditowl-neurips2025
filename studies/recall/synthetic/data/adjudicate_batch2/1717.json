@@ -1,0 +1,166 @@
+{
+  "paper": "1717",
+  "seeds": [
+    {
+      "sid": "S01",
+      "slot": "MAJOR-MISS",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/models/resnet.py",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the ResNet50 backbone experiment implementation",
+      "description": "Delete the sole ResNet backbone module. The repository would no longer contain the feature-extraction implementation needed to train or evaluate the ResNet50 versions reported in Table 3, including the claimed replication of the DINOv2 ordering with a fully convolutional backbone.",
+      "paper_anchor": "To examine whether our results depend on the specific choice of the transformer backbone architecture, we tested all the encoding models on the ResNet50 backbone features (a fully convolutional network)."
+    },
+    {
+      "sid": "S04",
+      "slot": "MAJOR-DIFF",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/models/transformer.py",
+          "line": 292,
+          "action": "replace"
+        },
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/models/transformer.py",
+          "line": 313,
+          "action": "replace"
+        },
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/models/transformer.py",
+          "line": 335,
+          "action": "replace"
+        },
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/models/transformer.py",
+          "line": 397,
+          "action": "replace"
+        }
+      ],
+      "title": "Replace ROI cross-attention with a convolutional global token mixer",
+      "description": "Replace the decoder's multi-head cross-attention with a trainable two-layer 1D convolution over the rasterized backbone tokens, global average pooling, and a learned query projection. This is a coherent convolutional integration model with real gradients, but it is not the content-dependent ROI cross-attention claimed by the paper.",
+      "paper_anchor": "The attention scores are then used to aggregate all the image tokens that are relevant to predict the brain activity in that ROI."
+    },
+    {
+      "sid": "S06",
+      "slot": "MAJOR-METH",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/visualize_results.ipynb",
+          "line": 417,
+          "action": "replace"
+        }
+      ],
+      "title": "Fit the regression baselines jointly on training and test fMRI",
+      "description": "In the result-generation notebook's linear-regression path, concatenate held-out test features and test fMRI with the training samples before fitting both hemispheric regressions. The test targets are therefore part of the fitted main baseline models whose test predictions are reported.",
+      "paper_anchor": "We use the train/test split that was introduced in the Algonauts benchmark [17] where the last three sessions for each subject were held out to ensure that no test data were accessed during the model development and to make the prediction task as natural as possible (predicting the future responses)."
+    },
+    {
+      "sid": "S08",
+      "slot": "MAJOR-BUG",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/engine.py",
+          "line": 53,
+          "action": "replace"
+        }
+      ],
+      "title": "Clear all gradients immediately before every optimizer step",
+      "description": "Move gradient clearing to after backpropagation and clipping but before optimizer.step(). The loop still runs, reports losses, calls backward, and calls the optimizer, yet every step sees empty gradients and no trainable weight is ever updated.",
+      "paper_anchor": "The ROI queries, transformer decoder layer and the linear mappings are trained with the Adam optimizer [25] using mean-squared-error loss between the prediction and the ground truth fMRI activity for each image."
+    }
+  ],
+  "candidates": [
+    {
+      "fid": "/optimizer-zero-grad-before-step",
+      "run": "run_01",
+      "anchor_candidate": "seed:S08",
+      "status": "finding",
+      "category": "bug",
+      "file": "engine.py",
+      "line_start": 53,
+      "title": "zero_grad() called after backward() and before step() \u2014 weights never update",
+      "claim": "In the training loop (train_one_epoch, called from main.py:377) gradients are computed by losses.backward(), then optimizer.zero_grad() wipes them, and only then optimizer.step() runs \u2014 so step() always sees zeroed/None gradients.",
+      "concern": "No parameter is ever updated during training; the 'trained' model is the random initialization, so none of the encoding-accuracy numbers (Tables 1-6) can be produced by this code."
+    },
+    {
+      "fid": "/decoder-no-cross-attention",
+      "run": "run_01",
+      "anchor_candidate": "seed:S04",
+      "status": "finding",
+      "category": "methodology",
+      "file": "models/transformer.py",
+      "line_start": 316,
+      "title": "Default transformer decoder uses a query-independent global token pool, not cross-attention",
+      "claim": "The decoder layer used for encoder_arch='transformer' (the default; the arch loaded for every 'Transformer' row in the notebooks) has no attention. It runs the image tokens through a Conv1d token_mixer (defined __init__ lines 292-297) then mean-pools over ALL tokens (.mean(dim=-1)) into one vector that is added identically to every ROI query (memory.unsqueeze(0) broadcast over the query dim).",
+      "concern": "Every ROI query receives the same global image summary (verified cross-query std ~3e-8, no per-query routing), so the paper's central mechanism \u2014 content-based, ROI-specific routing via scaled-dot-product cross-attention (Fig. 1B, \u00a73.2) \u2014 is not implemented, and the interpretable per-ROI attention maps (Fig. 5) and attention category-selectivity (Tables 7-10) cannot be produced; the genuine cross-attention lives only in the unused models/custom_transformer.py (CrossAttention)."
+    },
+    {
+      "fid": "/missing-models-resnet",
+      "run": "run_01",
+      "anchor_candidate": "seed:S01",
+      "status": "finding",
+      "category": "missing",
+      "file": "models/backbone.py",
+      "line_start": 18,
+      "title": "backbone.py imports models.resnet, but models/resnet.py is absent",
+      "claim": "models/backbone.py unconditionally imports resnet_model from models.resnet at module top level, and is used at line 59 for any 'resnet' backbone, but no models/resnet.py exists anywhere in the repo (verified by directory listing).",
+      "concern": "The ResNet50 backbone (Table 3) cannot be built, and because the import is top-level, importing models.backbone (reached via main.py \u2192 models.brain_encoder) raises ModuleNotFoundError, blocking the entrypoint for every backbone as shipped."
+    },
+    {
+      "fid": "run_02/resnet-module-missing",
+      "run": "run_02",
+      "anchor_candidate": "seed:S01",
+      "status": "finding",
+      "category": "missing",
+      "file": "models/backbone.py",
+      "line_start": 18,
+      "title": "backbone.py imports models.resnet, which does not exist in the repo",
+      "claim": "backbone.py unconditionally imports `resnet_model` from `models.resnet` at module top; `models/resnet.py` is absent (the only unresolved intra-repo import, confirmed by `_audit_code/check_seeds.py`), and `resnet_model` is used at models/backbone.py:59 for the ResNet50 backbone.",
+      "concern": "Because the import is unconditional and `models.backbone` is imported by `models.brain_encoder` (imported by main.py), running any experiment with any backbone raises ModuleNotFoundError before training starts; additionally the ResNet50 results (Table 3) cannot be produced at all."
+    },
+    {
+      "fid": "run_02/bert-backbone-missing",
+      "run": "run_02",
+      "anchor_candidate": "unassigned",
+      "status": "finding",
+      "category": "missing",
+      "file": "main.py",
+      "line_start": 76,
+      "title": "Table 6 BERT text-modality experiment has no backbone implementation",
+      "claim": "The `--backbone_arch` choices (main.py:75-79) are only DINOv2/ResNet/CLIP variants; there is no `bert` option, and no BERT feature-extraction path exists anywhere in the `.py` files or notebook code cells (grep for `bert` over code cells returns nothing). Only BLIP caption *generation* exists (test_wrapper.ipynb CELL 24-25).",
+      "concern": "Section 4.4 and Table 6 report a headline 'text modality' result using BERT features as the decoder backbone, but no code in the repo can extract BERT features or run the decoder on them, so Table 6 is not reproducible."
+    },
+    {
+      "fid": "run_02/optimizer-zerograd-discards-grads",
+      "run": "run_02",
+      "anchor_candidate": "seed:S08",
+      "status": "finding",
+      "category": "bug",
+      "file": "engine.py",
+      "line_start": 53,
+      "title": "optimizer.zero_grad() runs after backward() and before step(), erasing gradients",
+      "claim": "Within `train_one_epoch`, gradients are computed by `losses.backward()`, then `optimizer.zero_grad()` is called immediately before `optimizer.step()`. `zero_grad()` clears every parameter's `.grad` (default `set_to_none=True`), so `optimizer.step()` (AdamW) skips all parameters.",
+      "concern": "No parameter is ever updated from the data gradient (only decoupled weight-decay would act), so the trainable ROI queries / decoder / readouts stay at initialisation; the encoding accuracies in every table cannot arise from this training loop as written."
+    },
+    {
+      "fid": "run_02/decoder-token-mixer-not-attention",
+      "run": "run_02",
+      "anchor_candidate": "seed:S04",
+      "status": "finding",
+      "category": "methodology",
+      "file": "models/transformer.py",
+      "line_start": 316,
+      "title": "Decoder uses a Conv1d + global-mean token mixer, not the paper's cross-attention",
+      "claim": "The active decoder path (`TransformerDecoderLayer.forward_pre`/`forward_post`, used because `pre_norm=1`) calls `mix_tokens`, which applies a `Conv1d` `token_mixer` (defined models/transformer.py:292-296) over the image tokens and then `.mean(dim=-1)` \u2014 collapsing all tokens into ONE global vector that is added identically to every ROI query. The layer defines no `multihead_attn`/`self_attn` (confirmed in `_audit_code/check_seeds.txt`), i.e. there is no scaled-dot-product cross-attention and no per-token attention scores.",
+      "concern": "The paper's central claim is that each ROI query dynamically cross-attends to and routes the image tokens relevant to that ROI (\u00a73.2, Fig 1B), and that the resulting attention scores make the model interpretable (abstract; \u00a74.3; Fig 5; Tables 7-10). The implemented decoder gives every ROI the same globally-pooled image vector, so there is no content-based per-ROI routing, and there are no attention maps at all \u2014 indeed `models/activations.py:30` tries to hook the non-existent `decoder.layers[-i].multihead_attn`, so the attention-map / category-selectivity results (Fig 5, Tables 7-10) cannot be produced. The implemented procedure cannot support the paper's mechanistic or interpretability conclusions."
+    }
+  ]
+}

@@ -1,0 +1,197 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T06:06:53.346887+00:00",
+  "findings": [
+    {
+      "id": "/missing-significance-stats-code",
+      "category": "missing",
+      "topic": "statistical integrity / result traceability",
+      "title": "No code computes the per-seed std, 99% CIs, or t-test p-values (Tables 13/14/15/26)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "run.py",
+      "line_start": 582,
+      "line_end": 594,
+      "quote": "# log into txt\nmse_mse_string = (f'mse:{mse:.5f}, mae:{mae:.5f}, lamda1:{lamda1:.2f}, '\n                  f'git_multi_stage:{args.git_multi_stage}, decoder_cat:{args.decoder_cat_num}, '\n                  f'alpha1:{args.alpha}, loss_fun_alpha1:{args.lossfun_alpha}')\nprint(mse_mse_string)\nwith open(log_txt, 'a') as f:\n    f.write(f'------------ {setting} -------------' + '\\n' + '\\n')\n    args_dict = vars(args)\n    for k, v in sorted(args_dict.items()):\n        f.write(f'{k}: {v}, ')\n    f.write('\\n\\n')\n    f.write('\\t' + mse_mse_string + '\\n\\n')\n    f.write('--------------------------------- Ends -----------------------------\\n\\n')\n",
+      "claim": "run.py writes each run's mse/mae to a text log, but no script in the repo aggregates the 7 per-seed runs into a standard deviation, a 99% confidence interval, or a Student's t-test p-value. A whole-repo grep (_audit_code/check_stats_and_selection.py) finds zero genuine std/CI/t-test computations (all keyword hits are filenames like 'model_stats.txt' or LayerNorm/positional-encoding '.std()' calls).",
+      "concern": "Tables 13, 14, 15, and 26 (standard deviations, 99% CIs, and the OLinear-vs-iTransformer Student's t-test with p<0.05) are headline robustness/significance artefacts, yet nothing in the released code produces them, so they cannot be reproduced or checked from the repo.",
+      "resolution": "Authors: please add the script that reads the per-seed logs and computes the standard deviations, the 99% CIs, and the Student's t-test p-values reported in Tables 13/14/15/26, and state whether the per-method central value entering the t-test is the mean over the 7 seeds.",
+      "cross_refs": [
+        "best-of-itr-test-selection"
+      ],
+      "check_script": "_audit_code/check_stats_and_selection.py",
+      "paper_ref": "Tables 13, 14, 15, 26; App F, H.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-significance-stats-code",
+      "audit": "",
+      "audit_md_line": 54,
+      "verdict": "keep",
+      "reason": "Quote confirmed at run.py:582-594; repo-wide search confirms all stat-keyword hits are filename substrings (model_stats.txt, _stats.txt) or tensor-normalization .std() calls, not statistical aggregation code.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/unpinned-dependencies",
+      "category": "missing",
+      "topic": "expected code completeness / dependencies",
+      "title": "requirements.txt is fully unpinned (no versions for torch/numpy/etc.)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "requirements.txt",
+      "line_start": 1,
+      "line_end": 13,
+      "quote": "pandas\nscikit-learn\nnumpy\nmatplotlib\ntorch\nfvcore\neinops\nthop\ntimm\nreformer_pytorch\nopenpyxl\nseaborn\npywt\n",
+      "claim": "Every dependency is listed without a version constraint (no ==, >=, ~=).",
+      "concern": "Numerical results (and even importability, given reformer_pytorch/timm API churn) depend on specific versions of torch/numpy; with no pins the exact environment that produced the tables cannot be rebuilt.",
+      "resolution": "Authors: pin the versions (e.g. a frozen `pip freeze` or `torch==x.y`, `numpy==x.y`) used to produce the reported results.",
+      "cross_refs": [
+        "requirements-pywt-bad-name"
+      ],
+      "check_script": "_audit_code/check_stats_and_selection.py",
+      "paper_ref": "README 'Install Pytorch and necessary dependencies'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "unpinned-dependencies",
+      "audit": "",
+      "audit_md_line": 91,
+      "verdict": "keep",
+      "reason": "requirements.txt confirmed: 13 lines, all without version constraints, exactly matching the quoted content.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/requirements-pywt-bad-name",
+      "category": "bug",
+      "topic": "dependencies / installability",
+      "title": "requirements.txt lists 'pywt' but the PyPI package is 'PyWavelets'; pip install fails",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "requirements.txt",
+      "line_start": 13,
+      "line_end": 13,
+      "quote": "pywt\n",
+      "claim": "The file lists `pywt` as a dependency, but `pywt` is the import name; the installable PyPI package is `PyWavelets`. `pip install pywt` returns 'No matching distribution found for pywt' (verified in this sandbox).",
+      "concern": "The README's documented install step `pip install -r requirements.txt` aborts on this line, so a fresh environment cannot be created as instructed; `pywt` is imported by the wavelet-basis ablation models (model/orthoLinear_basis/OLinear_wavelet*.py).",
+      "resolution": "Replace `pywt` with `PyWavelets` in requirements.txt.",
+      "cross_refs": [
+        "unpinned-dependencies"
+      ],
+      "paper_ref": "README install instructions",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "requirements-pywt-bad-name",
+      "audit": "",
+      "audit_md_line": 130,
+      "verdict": "keep",
+      "reason": "requirements.txt line 13 confirmed as `pywt` with no version; the PyPI installable package is PyWavelets, so the claim is accurate.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/early-stopping-patience-mismatch",
+      "category": "difference",
+      "topic": "evaluation consistency (paper vs code)",
+      "title": "Paper states early-stopping patience 10; scripts use patience 5 / 8",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "scripts/OLinear/robust/ETTh1_orthoLinear.sh",
+      "line_start": 64,
+      "line_end": 64,
+      "quote": "--patience 8 \\\n",
+      "claim": "The paper says training halts 'if the validation performance does not improve for 10 consecutive epochs' (App D), but the released scripts pass --patience 8 (robust ETTh1) or --patience 5 (e.g. scripts/OLinear/ECL_orthoLinear.sh), never 10. Early stopping itself is on validation loss (exp_forecast.py:547), which is sound.",
+      "concern": "A reproducer following the paper's stated patience of 10 would train longer than the scripts and could obtain different numbers; the discrepancy is small but is a concrete paper-vs-code mismatch in a training detail.",
+      "resolution": "Authors: reconcile the stated patience (10) with the per-dataset script values (5/8), or note that patience was tuned per dataset.",
+      "cross_refs": [],
+      "paper_ref": "Appendix D, Implementation details",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "early-stopping-patience-mismatch",
+      "audit": "",
+      "audit_md_line": 156,
+      "verdict": "keep",
+      "reason": "ETTh1 robust script confirmed at line 64 with --patience 8; ECL script confirmed with --patience 5; paper_text.txt confirmed '10 consecutive epochs' in App D; mismatch is real.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/best-of-itr-test-selection",
+      "category": "methodology",
+      "topic": "hyperparameter tuning / model selection on test set",
+      "title": "Multi-run driver reports the single best-on-test run (min MSE+MAE over --itr runs)",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "run.py",
+      "line_start": 578,
+      "line_end": 580,
+      "quote": "if mse + mae <= best_mse + best_mae:\n    best_lamda1 = lamda1\n    best_mse, best_mae, best_ii = mse, mae, ii\n",
+      "claim": "For multi-run experiments (the robust scripts pass --itr 7 --fix_seed 0), run.py evaluates every run on the TEST set and keeps best_mse/best_mae = the minimum-(MSE+MAE) run; this best-of-N value is what is printed and written to best_log_txt / best_log_dataset_txt. (The inner test_batch_size loop is inert in the shipped scripts because test_batch_size_list has one element.)",
+      "concern": "Selecting the run with the lowest test error across 7 seeds is test-set-based model selection; if these best-of-7 values are the central values reported for OLinear in the robustness/significance tables (13/14/15/26), the std would be understated and the t-test against iTransformer (compared on possibly mean values) would be biased. Per-task hyperparameters (lr/D/L/batch) are also chosen from sets (App D) without a stated validation-only criterion.",
+      "concern_2": "Selecting the run with the lowest test error across 7 seeds is test-set-based model selection; if these best-of-7 values are the central values reported for OLinear in the robustness/significance tables (13/14/15/26), the std would be understated and the t-test against iTransformer (compared on possibly mean values) would be biased.",
+      "resolution": "Authors: confirm whether the reported per-seed central values are the mean over the 7 runs or the best-on-test run; if best-on-test, re-report using the mean and recompute the t-test.",
+      "cross_refs": [
+        "missing-significance-stats-code",
+        "seq-inter-test-stage-selection"
+      ],
+      "check_script": "_audit_code/check_stats_and_selection.py",
+      "paper_ref": "Tables 13/14/15/26; App D, F, H.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "best-of-itr-test-selection",
+      "audit": "",
+      "audit_md_line": 182,
+      "verdict": "keep",
+      "reason": "run.py lines 578-580 confirmed exactly; the best-of-itr test selection logic is present as claimed.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/seq-inter-test-stage-selection",
+      "category": "methodology",
+      "topic": "model selection on test set (latent)",
+      "title": "test() selects the intermediate stage with lowest test MSE+MAE (inert for shipped models)",
+      "severity": "low",
+      "confidence": "low",
+      "status": "question",
+      "file": "experiments/exp_forecast.py",
+      "line_start": 849,
+      "line_end": 858,
+      "quote": "mse_list.append(mse)\nmae_list.append(mae)\n\nmse_plus_mae = [a + b for a, b in zip(mse_list, mae_list)]\n\n# print min_mse\n# print(mse_list, mae_list)\nmin_index = mse_plus_mae.index(min(mse_plus_mae))\nmse = mse_list[min_index]\nmae = mae_list[min_index]\n",
+      "claim": "When a model returns multiple intermediate-stage outputs (self.args.seq_inter defaults to 1), test() computes MSE+MAE per stage on the TEST set and reports the argmin stage. For every OLinear model in this repo (OLinear, OLinear_C, all ablation/basis variants) forward() returns a single tensor, so mse_list==[mse] and min_index==0 — the selection is a no-op for the released models.",
+      "concern": "The reported metric is, by construction, the test-set-minimum over decoder stages; it is harmless here only because the shipped models emit one stage, but the same code path would pick the best-on-test stage for any multi-stage model and is a latent test-selection mechanism.",
+      "resolution": "Authors: confirm no reported OLinear number used a multi-stage configuration through this path; consider selecting the stage on validation, not test.",
+      "cross_refs": [
+        "best-of-itr-test-selection"
+      ],
+      "paper_ref": "Tables 2, 3",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "seq-inter-test-stage-selection",
+      "audit": "",
+      "audit_md_line": 209,
+      "verdict": "keep",
+      "reason": "exp_forecast.py lines 849-858 confirmed exactly; the code does select argmin over stages on test set, but as noted the condition (multi-stage output) cannot be triggered by any shipped OLinear model, making this a latent issue appropriately filed as a question with low confidence.",
+      "changed": "nothing"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+paper_number: 2007
+title: Table2LaTeX-RL: High-Fidelity LaTeX Code Generation from Table Images via Reinforced Multimodal Language Models
+authors: Jun Ling, Yao Qi, Tao Huang, Shibo Zhou, Yanqin Huang, Jiang Yang, Ziqi Song, Ying Zhou, Yang Yang, Hengtao Shen, Peng Wang
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/5fcfda9e2a28c62f1ba54bcfa09ebdbc-Abstract-Conference.html
+category: empirical

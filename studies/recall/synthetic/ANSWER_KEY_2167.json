@@ -1,0 +1,88 @@
+{
+  "paper": "2167",
+  "repo": "ofurman__DiCoFlex",
+  "design": "major_recall_study DESIGN.md",
+  "seeds": [
+    {
+      "id": "S01",
+      "slot": "MAJOR-MISS",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "ofurman__DiCoFlex/counterfactuals/generative_models/nice.py",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the NICE arm of the flow-architecture ablation",
+      "description": "Delete the repository's only NICE implementation. Table 5 reports a NICE NLL and uses the four-way architecture comparison to justify choosing MAF; after this deletion there is no executable NICE model in the repository with which to reproduce that arm of the ablation.",
+      "expected_reasoning": "The paper says the architecture-selection ablation compares MAF, NICE, RealNVP, and KDE on Adult. A careful reader enumerates the corresponding implementations, finds NICE only in counterfactuals/generative_models/nice.py, and observes that the patch deletes that file rather than replacing it with a runnable mechanism. Therefore no code path remains that can instantiate and train the reported NICE variant, so this is a missing experiment rather than a buggy substitute.",
+      "paper_anchor": "We conducted an ablation study to select the most suitable normalizing flow architecture for our framework, comparing different models based on negative log-likelihood (NLL) on the Adult dataset.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    {
+      "id": "S03",
+      "slot": "MAJOR-DIFF",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "ofurman__DiCoFlex/counterfactuals/generative_models/maf.py",
+          "line": 9,
+          "action": "replace"
+        },
+        {
+          "file": "ofurman__DiCoFlex/counterfactuals/generative_models/maf.py",
+          "line": 130,
+          "action": "replace"
+        }
+      ],
+      "title": "Implement RealNVP coupling layers inside the claimed MAF model",
+      "description": "Replace the autoregressive transform stack in MaskedAutoregressiveFlow with nflows' full SimpleRealNVP coupling architecture while preserving the public class and training API. The substitute remains an invertible conditional flow with trainable scale/shift networks, exact likelihoods, sampling, and real gradients, but it is RealNVP rather than the autoregressive method the paper says was selected.",
+      "expected_reasoning": "The paper attributes MAF's advantage to each dimension depending autoregressively on previously transformed dimensions. The patched constructor no longer builds any MaskedAffineAutoregressiveTransform; it constructs SimpleRealNVP with non-volume-preserving affine coupling layers and passes that transform into the existing Flow wrapper. Training and sampling still work and optimize a genuine normalizing flow, so the discrepancy is a coherent alternative method, not a no-op or missing implementation.",
+      "paper_anchor": "MAF\u2019s superior performance stems from its autoregressive structure, which enables more expressive transformations by conditioning each dimension on previously transformed dimensions.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    {
+      "id": "S05",
+      "slot": "MAJOR-METH",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "ofurman__DiCoFlex/counterfactuals/datasets/DCENF/bank.py",
+          "line": 34,
+          "action": "replace"
+        }
+      ],
+      "title": "Train the Bank pipeline on its held-out test records",
+      "description": "Append the entire Bank test partition and its predicted labels to the training arrays before preprocessing. The classifier, K-nearest-neighbor counterfactual targets, and conditional flow then train on every example later used for Bank evaluation, while the unchanged test arrays are still reported as held-out results.",
+      "expected_reasoning": "The paper presents counterfactual metrics on test instances, while its algorithm draws neighbors from labeled training data. The Bank loader initially reads distinct train.csv and test.csv arrays, but the patch concatenates X_test and y_test into X_train and y_train before any model or neighbor construction. The evaluator later uses the unchanged X_test again, proving complete train-test overlap in a main Table 1 dataset.",
+      "paper_anchor": "For test instances originally classified as class 0, we generate corresponding counterfactuals targeting class 1 and vice versa.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    {
+      "id": "S07",
+      "slot": "MAJOR-BUG",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "ofurman__DiCoFlex/counterfactuals/discriminative_models/multilayer_perceptron.py",
+          "line": 98,
+          "action": "replace"
+        }
+      ],
+      "title": "Convert classifier logits with normalized ReLU instead of softmax",
+      "description": "Replace the discriminator's probability conversion with normalized rectified logits. Negative class evidence is destroyed before normalization, so outputs can become near-degenerate confidence vectors even though training still uses CrossEntropyLoss on the original logits; these corrupted values drive neighbor filtering and the reported classifier-probability metric.",
+      "expected_reasoning": "The paper defines Classif. prob. as model confidence in the target prediction. In the main pipeline, MultilayerPerceptron.predict_proba feeds both the counterfactual-neighbor probability threshold and evaluation. A careful reader sees that the patch applies ReLU to logits and only then normalizes, rather than using the model's configured softmax. This is not equivalent to softmax because every negative logit is irreversibly clipped, so the values used as probabilities and selection scores are methodologically invalid despite a functioning trained network.",
+      "paper_anchor": "Predictive Performance is assessed via Validity and Classif. prob. (model confidence in target prediction).",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    }
+  ]
+}

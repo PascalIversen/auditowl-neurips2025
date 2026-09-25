@@ -1,0 +1,52 @@
+{
+  "discrepancy_id": "1ffbe3cb",
+  "paper_url": "https://arxiv.org/abs/2104.07359",
+  "paper_url_versioned": "https://arxiv.org/pdf/2104.07359v3.pdf",
+  "code_url": "https://github.com/takuomatsubara/KSD-Bayes",
+  "code_url_versioned": "https://github.com/takuomatsubara/KSD-Bayes/tree/da22c1206edf37f71e4427159ba15a4daf39ad10",
+  "discrepancy_date": "2025-01-07T19:29:27.000Z",
+  "origin_type": "GitHub Issue",
+  "origin_url": "https://github.com/takuomatsubara/KSD-Bayes/issues/1",
+  "origin_discrepancy_text": "Inconsistency in the Computation of out.mx in the M_Liu Function\nI was reviewing the MATLAB implementation of the [M_Liu](https://github.com/takuomatsubara/KSD-Bayes/blob/main/applications/Liu/M_Liu.m) function and noticed something that seems inconsistent in the computation of out.mx (the derivative matrix).\r\n\r\n```matlab\r\nout.mx = [- x' * (1 + x(1)^2 + x(2)^2 + x(3)^2 + x(4)^2 + x(5)^2)^(-3/2); ...\r\n          - [x(1), x(2), 0, 0, 0] * (1 + x(1)^2 + x(2)^2)^(-3/2); ...\r\n          - [x(1), 0, x(3), 0, 0] * (1 + x(1)^2 + x(2)^2)^(-3/2); ...\r\n          - [x(1), 0, 0, x(4), 0] * (1 + x(1)^2 + x(2)^2)^(-3/2); ...\r\n          - [x(1), 0, 0, 0, x(5)] * (1 + x(1)^2 + x(2)^2)^(-3/2)];\r\n ```\r\n\r\n\r\nI noticed that rows 3\u20135 reuse the denominator `(1 + x(1)^2 + x(2)^2)`, which seems inconsistent with the corresponding preconditioner formulas. Shouldn't these rows use their respective pairwise norms? For example:\r\n\r\n- **Row 3**: `(1 + x(1)^2 + x(3)^2)`\r\n- **Row 4**: `(1 + x(1)^2 + x(4)^2)`\r\n- **Row 5**: `(1 + x(1)^2 + x(5)^2)`\r\n\r\nIs this reuse of `(1 + x(1)^2 + x(2)^2)` intentional, or could it be an oversight? If intentional, could you clarify the reasoning behind using this shared denominator for rows 3\u20135?\r\n\r\n\r\n\r\n",
+  "discrepancy_description_pooled_gpt_5": null,
+  "discrepancy_description_pooled_gemini_2_5_pro": null,
+  "discrepancy_description_pooled_gpt_oss_20b": null,
+  "is_valid_discrepancy_gemini": true,
+  "is_valid_discrepancy_gpt": true,
+  "is_valid_discrepancy_reason_gemini": "The paper clearly defines the robust weighting function M(x) which implies specific analytical derivatives for each row. The code implements the function correctly in `out.m`, but for the derivatives `out.mx` it incorrectly reuses the denominator term `(1 + x(1)^2 + x(2)^2)^(-3/2)` in rows 3, 4, and 5 instead of updating the index to 3, 4, and 5 respectively due to a copy-paste error.",
+  "is_valid_discrepancy_reason_gpt": "In M_Liu.m the Jacobian out.mx reuses the denominator (1 + x(1)^2 + x(2)^2) for rows 3\u20135, but the corresponding components of out.m depend on (1 + x(1)^2 + x(3)^2), (1 + x(1)^2 + x(4)^2), and (1 + x(1)^2 + x(5)^2). Therefore, the derivatives in rows 3\u20135 should use their own pairwise denominators; the current code is inconsistent with the defined preconditioner and is almost certainly a copy-paste error.",
+  "discrepancy_description_gemini": "The paper defines the robust weighting function for the Liu et al. model M(x) as a diagonal matrix with diagonal elements (1+x(1)^2+x(i)^2)^{-1/2} for i=2, ..., 5. In the codebase, the preconditioner values themselves in `out.m` are correct, but the derivative matrix `out.mx` incorrectly computes the derivatives for rows 3, 4, and 5. In particular, it reuses the term `(1 + x(1)^2 + x(2)^2)^(-3/2)` instead of properly using `x(3)^2`, `x(4)^2`, and `x(5)^2` respectively. This creates a clear difference between the analytic gradient of the robust preconditioner implied by the paper and the one implemented in the code.",
+  "discrepancy_description_gpt": "The paper specifies a robust weighting function M(x) for the Liu et al. experiment where each diagonal entry is a different function: m1(x) depends on the full norm over all five coordinates; m2(x) on (x1, x2); m3(x) on (x1, x3); m4(x) on (x1, x4); and m5(x) on (x1, x5). In the code, out.m correctly implements these five distinct functions. However, the Jacobian out.mx uses the denominator (1 + x(1)^2 + x(2)^2)^(-3/2) not only for the derivative of m2(x), but also incorrectly for the derivatives of m3(x), m4(x), and m5(x). Mathematically, the gradients of m3, m4, m5 must use (1 + x(1)^2 + x(3)^2)^(-3/2), (1 + x(1)^2 + x(4)^2)^(-3/2), and (1 + x(1)^2 + x(5)^2)^(-3/2), respectively, matching how those components are defined. Thus, the code\u2019s derivative matrix is inconsistent with the preconditioner described in the paper and with the code\u2019s own definition of out.m.",
+  "relevant_paper_sections_gemini": [
+    "Finally, in the right column of Figure 4 we display the robust generalised posterior obtained with weighting function\n\n$$\nM(x)=\\operatorname{diag}\\left(\\left(1+x_{(1)}^{2}+\\cdots+x_{(5)}^{2}\right)^{-1 / 2},\\left(1+x_{(1)}^{2}+x_{(2)}^{2}\right)^{-1 / 2}, \\ldots,\\left(1+x_{(1)}^{2}+x_{(5)}^{2}\right)^{-1 / 2}\right)\n$$\n\nwhich ensures the criteria for bias-robustness in Theorem 3 are satisfied."
+  ],
+  "relevant_paper_sections_gpt": [
+    "Finally, in the right column of Figure 4 we display the robust generalised posterior obtained with weighting function\n\nM(x)=diag((1 + x_{(1)}^{2} + \\cdots + x_{(5)}^{2})^{-1/2}, (1 + x_{(1)}^{2} + x_{(2)}^{2})^{-1/2}, \\ldots,(1 + x_{(1)}^{2} + x_{(5)}^{2})^{-1/2))\n\nwhich ensures the criteria for bias-robustness in Theorem 3."
+  ],
+  "relevant_code_files_gemini": [
+    "applications/Liu/M_Liu.m"
+  ],
+  "relevant_code_files_gpt": [
+    "applications/Liu/M_Liu.m",
+    "KSD_Bayes.m"
+  ],
+  "changed_code_files": {
+    "file_name": [],
+    "discrepancy_code": []
+  },
+  "changed_code_snippets": {
+    "original_file": [],
+    "original_code": [],
+    "changed_code": []
+  },
+  "discrepancy_type": "Difference",
+  "discrepancy_category": "Training",
+  "arxiv_subject": "stat",
+  "arxiv_categories": [
+    "stat.ME",
+    "math.ST",
+    "stat.CO",
+    "stat.ML"
+  ],
+  "arxiv_year": 2021.0
+}

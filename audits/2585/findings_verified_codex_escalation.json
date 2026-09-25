@@ -1,0 +1,13 @@
+{
+  "findings": [
+    {
+      "id": "/no-deps-no-readme-no-results",
+      "verdict": "lowered",
+      "reason": "The cited plot load, the absence of dependency documentation, a README, and committed result artifacts, and the failing save-directory check support the core concern, but the supplement also contains a workspace file and compiled .pyc files, so the claim that it contains only .py source is false.",
+      "changed": "nothing",
+      "severity": "low",
+      "confidence": "low",
+      "status": "question"
+    }
+  ]
+}

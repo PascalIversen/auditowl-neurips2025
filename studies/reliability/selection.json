@@ -1,0 +1,72 @@
+{
+  "seed": 42,
+  "k": 5,
+  "min_src_files": 5,
+  "frame_size": 78,
+  "selected": [
+    {
+      "paper": "1829",
+      "src_files": 169,
+      "code_kb": 30199,
+      "has_verified": true,
+      "n_findings": 5,
+      "n_high": 0,
+      "categories": {
+        "missing": 3,
+        "bug": 1,
+        "difference": 1
+      }
+    },
+    {
+      "paper": "1333",
+      "src_files": 49,
+      "code_kb": 543,
+      "has_verified": true,
+      "n_findings": 9,
+      "n_high": 4,
+      "categories": {
+        "missing": 4,
+        "bug": 3,
+        "difference": 2
+      }
+    },
+    {
+      "paper": "2657",
+      "src_files": 28,
+      "code_kb": 171906,
+      "has_verified": true,
+      "n_findings": 5,
+      "n_high": 1,
+      "categories": {
+        "missing": 2,
+        "bug": 1,
+        "difference": 1,
+        "methodology": 1
+      }
+    },
+    {
+      "paper": "2578",
+      "src_files": 56,
+      "code_kb": 189464,
+      "has_verified": true,
+      "n_findings": 5,
+      "n_high": 0,
+      "categories": {
+        "missing": 2,
+        "bug": 3
+      }
+    },
+    {
+      "paper": "2371",
+      "src_files": 303,
+      "code_kb": 69617,
+      "has_verified": true,
+      "n_findings": 7,
+      "n_high": 3,
+      "categories": {
+        "missing": 6,
+        "methodology": 1
+      }
+    }
+  ]
+}

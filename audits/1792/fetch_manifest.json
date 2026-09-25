@@ -1,0 +1,16 @@
+{
+  "StarDewXXX__AdaR1": {
+    "repo": "https://github.com/StarDewXXX/AdaR1",
+    "clone_status": "cached",
+    "size_mb": 5.2,
+    "lfs_pointer_stubs": 86,
+    "lfs_examples": [
+      "mergekit/mergekit/_data/architectures/baichuan.json",
+      "mergekit/mergekit/_data/architectures/distilbert.json",
+      "mergekit/mergekit/_data/architectures/exaone.json",
+      "mergekit/mergekit/_data/architectures/roberta.json",
+      "mergekit/mergekit/_data/architectures/phi2-old.json"
+    ],
+    "empty_submodules": []
+  }
+}

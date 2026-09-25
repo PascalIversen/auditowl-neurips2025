@@ -1,0 +1,19 @@
+{
+  "folder": "5067_Learning_to_Better_Search_with_Language_Models_via_Guided_Re",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 8538,
+    "output": 12772,
+    "cache_write": 314197,
+    "cache_read": 6850704
+  },
+  "total_tokens": 7186211,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 17.25
+}

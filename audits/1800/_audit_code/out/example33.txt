@@ -1,0 +1,12 @@
+transform_mat (code theta):
+ [[1.         0.99      ]
+ [0.         0.14106736]]
+transform_mat^T @ transform_mat (theta^T theta):
+ [[1.   0.99]
+ [0.99 1.  ]]
+paper theta = [[1,0.99],[0,0.141]]; paper theta^T theta:
+[[1.       0.99    ]
+ [0.99     0.999981]]
+diag of theta^T theta (must equal Vt(I) diag=1 for same per-entry MSE): [1. 1.]
+dim0: train MSE=0.749928  test MSE=0.750792  abs diff=8.634667e-04
+dim1: train MSE=0.749260  test MSE=0.750178  abs diff=9.182117e-04

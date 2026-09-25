@@ -1,0 +1,13 @@
+{
+  "findings": [
+    {
+      "id": "1764_AlphaZero_Neural_Scaling_and_Zipf_s_Law_a_Tale_of_Board_Game/value-label-player-perspective",
+      "verdict": "lowered",
+      "reason": "The cited code proves that player-0 labels are compared without a local sign correction, but the audited repository does not contain the pinned OpenSpiel 1.5 training implementation needed to prove the model output's player perspective.",
+      "changed": "nothing",
+      "severity": "low",
+      "confidence": "low",
+      "status": "question"
+    }
+  ]
+}

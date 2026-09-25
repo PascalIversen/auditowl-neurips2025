@@ -1,0 +1,223 @@
+{
+  "paper": "913",
+  "seeds": [
+    {
+      "sid": "S01",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "Remove the complete TS-GAT experiment implementation",
+      "description": "Delete every released GAT implementation and its supporting kernels/tests, leaving the advertised GAT option with imports and routing but no executable aggregation code. This removes the pipeline behind the TS-GAT column of Table 1 rather than replacing it with a stub.",
+      "expected_reasoning": "The paper defines TS-GAT as a TS-GNN whose aggregation function is GAT and reports its zero-shot results in Table 1. A reader tracing GNNType.GAT finds that the executable path is implemented by models/triton_nn/gat.py and the two custom GAT kernels, while triton_tests/gat.py is the only alternate GAT implementation in the repository. Deleting those implementations (and their associated tests) leaves only references to GAT, so no code path anywhere can instantiate or execute the reported TS-GAT experiment. Consequently, the claimed comparison across MeanGNN and GAT backbones is no longer reproducible.",
+      "paper_anchor": "Further to this, we provide zero-shot experiments with TS-Mean and TS-GAT, which are TS-GNNs using MeanGNN and GAT, respectively (as their aggregation function).",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "delete_file",
+            "file": "benfinkelshtein__EquivarianceEverywhere/models/triton_nn/gat.py"
+          },
+          {
+            "action": "delete_file",
+            "file": "benfinkelshtein__EquivarianceEverywhere/models/triton_kernels/gat.py"
+          },
+          {
+            "action": "delete_file",
+            "file": "benfinkelshtein__EquivarianceEverywhere/models/triton_kernels/gat3d.py"
+          },
+          {
+            "action": "delete_file",
+            "file": "benfinkelshtein__EquivarianceEverywhere/triton_tests/gat.py"
+          },
+          {
+            "action": "delete_file",
+            "file": "benfinkelshtein__EquivarianceEverywhere/triton_tests/test2d_gat.py"
+          },
+          {
+            "action": "delete_file",
+            "file": "benfinkelshtein__EquivarianceEverywhere/triton_tests/test3d_gat.py"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S02",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "Remove the increasing-training-set experiment pipeline",
+      "description": "Delete the sole module that defines and selects the nested 1/3/5/7/9-graph training pools and the disjoint 20-graph evaluation pool. No replacement path remains for producing Figure 3 or Table 7.",
+      "expected_reasoning": "Figure 3 depends on five specifically nested training pools and a fixed held-out collection of 20 datasets. The only repository code encoding those pools and exposing them to main.py is helpers/train_test_setup.py through TRAIN_MULTISETS, get_train_datasets, and get_test_datasets. Once that module is deleted, the repository contains neither the experiment's dataset membership nor any executable selection pipeline for its five points. README command examples do not reconstruct the missing graph lists or test pool, so the reported scaling experiment is absent rather than merely malfunctioning.",
+      "paper_anchor": "We reserve 9 representative graphs for training and construct training subsets of sizes 1, 3, 5, 7, and 9, where each larger subset includes all datasets from the smaller trainsets.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "delete_file",
+            "file": "benfinkelshtein__EquivarianceEverywhere/helpers/train_test_setup.py"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S03",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "Replace node-wise L2 normalization with graph-wide feature standardization",
+      "description": "Use a complete, differentiable z-score preprocessing method that centers and scales each feature using all nodes in a graph. The implementation is numerically guarded and functional, but it is a different preprocessing geometry from the paper's per-node L2 projection.",
+      "expected_reasoning": "The paper says every node feature vector is normalized independently to unit L2 norm. The released NormalizeTransform delegates all feature preprocessing to normalize(). The replacement instead computes one mean and variance per feature over the entire graph, so each node depends on the population of other nodes and vectors are neither constrained to unit norm nor left uncentered. A careful reader can compare the stated axis (each node's feature vector) with dim=0 in code. This coherent alternative can materially change all 29-dataset accuracies and cross-dataset transfer behavior, so results from it would not validate the reported L2-preprocessed method.",
+      "paper_anchor": "Lastly, we apply L2 normalization to each node\u2019s feature vector.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "benfinkelshtein__EquivarianceEverywhere/transforms/normalize.py",
+            "old_string": "def normalize(x: Tensor) -> Tensor:\n    return x / (torch.norm(x, p=2, dim=1, keepdim=True) + EPS)",
+            "new_string": "def normalize(x: Tensor) -> Tensor:\n    mean = x.mean(dim=0, keepdim=True)\n    variance = (x - mean).pow(2).mean(dim=0, keepdim=True)\n    return (x - mean) / torch.sqrt(variance + EPS)"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S04",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "Substitute max-pooling message passing for TS-Mean",
+      "description": "Replace the arithmetic neighborhood mean with a real scatter-max aggregation. The resulting model remains executable and differentiable and still has trainable self and neighbor linear maps, but it is a max-pooling GNN rather than the MeanGNN reported in Table 1 and Figure 3.",
+      "expected_reasoning": "The paper defines TS-Mean by its MeanGNN aggregation and bases the increasing-data conclusion on TS-Mean. In TritonMeanGNN, message_and_aggregate is the central neighborhood operator. The patched implementation constructs destination rows from CSR adjacency and applies a genuine max reduction over neighbor features, with gradients propagated through the selected maxima; the later trainable aggr_lin and self_lin remain active. Comparing the paper's named mean backbone with reduce='max' reveals a fully functioning but different GNN, so its Table 1 and Figure 3 results cannot support conclusions about TS-Mean.",
+      "paper_anchor": "To assess the impact of the amount of training data on zero-shot generalization (Q2), we train TS-Mean and GraphAny on increasingly larger subsets of a heldout training pool.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "benfinkelshtein__EquivarianceEverywhere/models/triton_nn/mean_gnn.py",
+            "old_string": "from torch_geometric.utils import degree\nimport torch_geometric",
+            "new_string": "from torch_geometric.utils import degree\nfrom torch_scatter import scatter\nimport torch_geometric"
+          },
+          {
+            "action": "replace",
+            "file": "benfinkelshtein__EquivarianceEverywhere/models/triton_nn/mean_gnn.py",
+            "old_string": "    def message_and_aggregate(self, edge_index, x, index, dim_size, rowptr, indices):\n        # fused computation of message and aggregate steps with the custom rspmm cuda kernel\n        # speed up computation by several times\n        from models.triton_kernels.mean import ConvMeanAggr\n        num_node = x.shape[0]\n        return ConvMeanAggr.apply(x, rowptr, indices, num_node, 0)\n        # degree_out = degree(index, dim_size).unsqueeze(-1)\n        # return update / degree_out",
+            "new_string": "    def message_and_aggregate(self, edge_index, x, index, dim_size, rowptr, indices):\n        num_node = x.shape[0]\n        counts = rowptr[1:] - rowptr[:-1]\n        rows = torch.repeat_interleave(torch.arange(num_node, device=x.device), counts)\n        return scatter(x[indices], rows, dim=0, dim_size=num_node, reduce='max')"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S05",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Train the scaling model on its held-out evaluation graphs",
+      "description": "When the increasing-training-set setup is selected, append every nominal evaluation dataset to the training list before optimization. The main pipeline then fits on the same 20 graphs whose performance is reported as zero-shot.",
+      "expected_reasoning": "The paper's Q2 protocol reserves 9 graphs for nested training subsets and the remaining 20 exclusively for zero-shot evaluation. main.py is the experiment entry point and its training dataset list is passed directly to Experiment.run_multiple_data(is_train=True), which optimizes on every graph in that list. The added helper appends get_test_datasets() only for inc_trainset, making all 20 held-out evaluation graphs part of model training. Later evaluation still labels them as the test pool, so the rising curve no longer measures generalization to unseen graphs and cannot support the paper's central scaling conclusion.",
+      "paper_anchor": "The remaining 20 datasets are used for zero-shot evaluation.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "benfinkelshtein__EquivarianceEverywhere/main.py",
+            "old_string": "from experiment import Experiment\n\nif __name__ == '__main__':",
+            "new_string": "from experiment import Experiment\n\n\ndef get_training_datasets(args):\n    datasets = args.train_test_setup.get_train_datasets(train_size=args.train_size)\n    if args.train_test_setup.name == 'inc_trainset':\n        datasets = datasets + args.train_test_setup.get_test_datasets()\n    return datasets\n\n\nif __name__ == '__main__':"
+          },
+          {
+            "action": "replace",
+            "file": "benfinkelshtein__EquivarianceEverywhere/main.py",
+            "old_string": "        dataset_list = args.train_test_setup.get_train_datasets(train_size=args.train_size)\n        Experiment(args=args).run_multiple_data(is_train=True, dataset_list=dataset_list)",
+            "new_string": "        dataset_list = get_training_datasets(args=args)\n        Experiment(args=args).run_multiple_data(is_train=True, dataset_list=dataset_list)"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S06",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Expose official test labels as training labels",
+      "description": "For datasets that provide official masks, merge the test mask into the train mask during loading. Test-node labels then enter both least-squares fitting and the visible-label input used by the main model, while evaluation still scores those same nodes.",
+      "expected_reasoning": "The paper says the 29 datasets use their official splits and describes masked labels as hidden in test graphs. DataSet.load supplies masks to split_data_per_fold, which in turn fits least-squares conversions on data.train_mask; Experiment also constructs train_y from that mask at training and inference. The new mask-alignment helper broadcasts masks when necessary and unions test_mask into train_mask. Thus official test nodes overlap training nodes, their ground-truth labels become visible inputs and LS targets, and the reported test accuracy is contaminated. Tracing mask construction from datasets.py into the main pipeline exposes the leakage.",
+      "paper_anchor": "Datasets. We use an ensemble of 29 node classification datasets and their respective official splits.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "benfinkelshtein__EquivarianceEverywhere/helpers/datasets.py",
+            "old_string": "    data = Data(x=node_features, y=labels, edge_index=edges.T,\n                train_mask=train_masks, val_mask=val_masks, test_mask=test_masks)\n    return data\n\n\nclass DataSetFamily(Enum):",
+            "new_string": "    data = Data(x=node_features, y=labels, edge_index=edges.T,\n                train_mask=train_masks, val_mask=val_masks, test_mask=test_masks)\n    return data\n\n\ndef align_masks(data: Data) -> Data:\n    if not hasattr(data, 'train_mask') or not hasattr(data, 'test_mask'):\n        return data\n    train_mask = data.train_mask\n    test_mask = data.test_mask\n    if train_mask.ndim > test_mask.ndim:\n        test_mask = test_mask.unsqueeze(-1).expand_as(train_mask)\n    elif test_mask.ndim > train_mask.ndim:\n        train_mask = train_mask.unsqueeze(-1).expand_as(test_mask)\n    data.train_mask = train_mask | test_mask\n    return data\n\n\nclass DataSetFamily(Enum):"
+          },
+          {
+            "action": "replace",
+            "file": "benfinkelshtein__EquivarianceEverywhere/helpers/datasets.py",
+            "old_string": "        else:\n            raise ValueError(f'DataSet {self.name} not supported')\n        \n        # Y preprocessing",
+            "new_string": "        else:\n            raise ValueError(f'DataSet {self.name} not supported')\n\n        data = align_masks(data=data)\n\n        # Y preprocessing"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S07",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "Clamp final class logits before cross-entropy",
+      "description": "Wrap the central task loss so it applies ReLU to final class scores before CrossEntropyLoss. Training and evaluation still run, but every negative logit is collapsed to zero before the softmax implicit in cross-entropy.",
+      "expected_reasoning": "The paper's architecture places nonlinearities between equivariant layers and then applies the final label projection to obtain predictions. GFM returns unrestricted final scores, and TASK_LOSS is the shared objective for every train/validation/test call. The patched loss silently applies ReLU at that last interface, creating large tied zero regions and zero gradient for all negative logits before cross-entropy. A reader comparing the stated final projection with TaskLoss.forward can identify the extra output activation. Because this changes optimization and every reported classification score across all variants, it invalidates the central empirical conclusions rather than causing a peripheral error.",
+      "paper_anchor": "Finally, the label projection map \u03a0C is applied to obtain node-wise predictions.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "benfinkelshtein__EquivarianceEverywhere/helpers/constants.py",
+            "old_string": "from torch.nn import CrossEntropyLoss",
+            "new_string": "from torch import Tensor\nfrom torch.nn import CrossEntropyLoss"
+          },
+          {
+            "action": "replace",
+            "file": "benfinkelshtein__EquivarianceEverywhere/helpers/constants.py",
+            "old_string": "ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))\nDECIMAL = 2\nSEEDS = list(range(5))\nTASK_LOSS = CrossEntropyLoss()",
+            "new_string": "class TaskLoss(CrossEntropyLoss):\n    def forward(self, input: Tensor, target: Tensor) -> Tensor:\n        return super().forward(input.relu(), target)\n\n\nROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))\nDECIMAL = 2\nSEEDS = list(range(5))\nTASK_LOSS = TaskLoss()"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S08",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "Inject fixed learned biases into every equivariant branch",
+      "description": "Activate the layer's graph-independent x_bias and y_bias parameters in both feature and label branches. These fixed training-distribution biases are broadcast across arbitrary feature and class axes at every layer, outside the scale-aware least-squares mixers.",
+      "expected_reasoning": "The paper explicitly warns that ordinary learned biases can dominate features on unseen graphs with different scales and states that biases are injected only through the feature-to-label and label-to-feature least-squares mixers. EquivLayer already declares x_bias and y_bias, making their accidental use author-plausible. The patch broadcasts the relevant learned vector immediately after each self map, before all aggregation and mixer terms. Comparing this addition with the paper's restriction reveals that fixed biases now enter every feature and label update and are reused across datasets. The model remains trainable, but its claimed scale-aware zero-shot mechanism is broken centrally and repairing it requires understanding the architecture's bias design.",
+      "paper_anchor": "In our architecture, we solve the least-squares problem including an added bias term, and the bias terms obtained, are injected only through the feature-to-label and label-to-feature mixers (\u0398F and \u0398C).",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "benfinkelshtein__EquivarianceEverywhere/models/equiv_layer.py",
+            "old_string": "        out_x = getattr(self, f'{x_str}_self')(x, edge_index=edge_index, rowptr=rowptr, indices=indices)\n        out_x.add_(getattr(self, f'{x_str}_aggr')(x.mean(dim=1, keepdim=True), edge_index=edge_index,",
+            "new_string": "        out_x = getattr(self, f'{x_str}_self')(x, edge_index=edge_index, rowptr=rowptr, indices=indices)\n        bias = getattr(self, f'{x_str}_bias').view(1, 1, -1)\n        out_x = out_x + bias\n        out_x.add_(getattr(self, f'{x_str}_aggr')(x.mean(dim=1, keepdim=True), edge_index=edge_index,"
+          }
+        ]
+      },
+      "approved": false
+    }
+  ],
+  "_validation_errors": [],
+  "_repo": "benfinkelshtein__EquivarianceEverywhere"
+}

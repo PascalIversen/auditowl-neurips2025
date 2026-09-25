@@ -1,0 +1,10 @@
+{
+  "EESI__carmania": {
+    "repo": "https://github.com/EESI/carmania",
+    "clone_status": "cached",
+    "size_mb": 1.7,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

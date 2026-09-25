@@ -1,0 +1,5 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/Brian-Moser/prune_and_distill	[author-cue; abstract footnote URL — fetch missed it, cloned manually]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/fastai/imagenette	[dataset]

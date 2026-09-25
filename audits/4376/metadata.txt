@@ -1,0 +1,5 @@
+paper_number: 4376
+title: HiFlow: Training-free High-Resolution Image Generation with Flow-Aligned Guidance
+authors: Jiazi Bu, Pengyang Ling, Yujie Zhou, Pan Zhang, Tong Wu, Xiaoyi Dong, Yuhang Zang, Yuhang Cao, Dahua Lin, Jiaqi Wang
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/d4ecde5d18d36150c529d1b9c5f0d727-Abstract-Conference.html
+category: empirical

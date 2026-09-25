@@ -1,0 +1,35 @@
+{
+  "train_entrypoint (training_loop)": [],
+  "train.py file exists": [],
+  "calc_metrics driver (argparse/click main calling calc_metric)": [
+    "metrics/metric_main.py:44"
+  ],
+  "dataset class / ImageFolderDataset": [
+    "metrics/metric_utils.py:69"
+  ],
+  "FID-random 'mode' plumbing in metric_utils": [
+    "metrics/metric_utils.py:274",
+    "metrics/metric_utils.py:282",
+    "metrics/metric_main.py:68"
+  ],
+  "config files (*.json/*.yaml in repo root)": [],
+  "generator classes": [
+    "training/networks_stylegan3.py:492",
+    "training/triplane.py:53",
+    "training/networks_stylegan2.py:533"
+  ],
+  "area-bias / elongated split impl (renderer only)": [],
+  "unify-split impl (always even H//2)": [
+    "training/volumetric_rendering/renderer.py:435",
+    "training/volumetric_rendering/renderer.py:454"
+  ],
+  "2+2 (two spherical) generator": [],
+  "VERDICT": {
+    "training_code_present": false,
+    "metric_driver_present": true,
+    "dataset_code_present": true,
+    "config_files_present": false,
+    "area_bias_split_impl_present": false,
+    "two_plus_two_generator_present": false
+  }
+}

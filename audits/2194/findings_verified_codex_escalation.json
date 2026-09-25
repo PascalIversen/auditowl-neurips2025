@@ -1,0 +1,13 @@
+{
+  "findings": [
+    {
+      "id": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models/trace-timing-missing",
+      "verdict": "lowered",
+      "reason": "The paper values and Fig. 4 producer are absent and ldm_time_measurement only times image generation, but bundled upstream components contain generic peak-memory hooks, so the literal repository-wide absence claim remains overstated.",
+      "changed": "nothing",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding"
+    }
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "schema_version": "1",
+  "audit": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_",
+  "audit_md": "audits/3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_/audit.md",
+  "generated_at": "2026-05-30T05:13:33.180512+00:00",
+  "findings": [
+    {
+      "id": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_/channel-discard-missing",
+      "category": "missing",
+      "topic": "core method / channel discard",
+      "title": "Channel-discard strategy (a headline contribution) is absent from the code",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "eval_spair.py",
+      "line_start": 180,
+      "line_end": 190,
+      "quote": "src_ft = rearrange(src_ft_raw, \"b c h w -> b (h w) c\")\nsrc_ft = pre_norm(src_ft)\nsrc_ft = rearrange(src_ft, \"b (h w) c -> b c h w\", h=H, w=W)\n\n\n# src_shift_raw, src_scale_raw = src_ada[1][0].unsqueeze(0).unsqueeze(2).unsqueeze(3), src_ada[1][1].unsqueeze(0).unsqueeze(2).unsqueeze(3)\n\nsrc_shift = src_ada[0][0].unsqueeze(0).unsqueeze(2).unsqueeze(3)\nsrc_scale = src_ada[0][1].unsqueeze(0).unsqueeze(2).unsqueeze(3)\n\nsrc_ft = (1 + src_scale) * src_ft + src_shift\n",
+      "claim": "The eval applies AdaLN modulation but performs no channel-discard (no dimension is ever zeroed); grep over the whole repo finds 0 occurrences of 'discard' and no channel-zeroing in the feature path.",
+      "concern": "Channel discard is listed as one of the paper's contributions and is the Table-4 ablation row that adds +1.8 PCK@0.10 on SPair (65.3 to 67.1), so the released code cannot reproduce the reported DiTFflux 67.1 number nor the ablation.",
+      "resolution": "Provide the channel-discard implementation: which dimensions are zeroed, how they are selected (fixed indices vs per-image), and at which point in eval_spair.py it runs.",
+      "cross_refs": [
+        "ablation-toggles-missing"
+      ],
+      "check_script": "_audit_code/check_missing_pieces.py",
+      "paper_ref": "Sec 4.3 'Channel discard'; Table 4 row '+ Channel discard'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "channel-discard-missing",
+      "audit": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_",
+      "audit_md_line": 57
+    },
+    {
+      "id": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_/dinov2-pca-fusion-missing",
+      "category": "missing",
+      "topic": "result traceability / SOTA rows",
+      "title": "DINOv2 integration + PCA fusion absent; every '†' SOTA row not reproducible",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "eval_spair.py",
+      "line_start": 32,
+      "line_end": 61,
+      "quote": "def pca_feature_pair(feat1, feat2, q=1024):\n    \n    \n    B, C, H, W = feat1.shape\n    # data = data.float().permute(0,2,3,1).squeeze(0).reshape((-1, C))\n    feat1 = rearrange(feat1, \"b c h w -> b (h w) c\")\n    feat1 = feat1.float().squeeze(0)\n    \n    feat2 = rearrange(feat2, \"b c h w -> b (h w) c\")\n    feat2 = feat2.float().squeeze(0)\n    \n    cat_desc_dino = torch.cat((feat1, feat2), dim=0) # (1, 1, num_patches**2, dim)\n    mean = torch.mean(cat_desc_dino, dim=0, keepdim=True)\n    centered_features = cat_desc_dino - mean\n    U, S, V = torch.pca_lowrank(centered_features, q=q)\n    reduced_features = torch.matmul(centered_features, V[:, :q]) # (t_x+t_y)x(d)\n    processed_co_features = reduced_features\n    feat1 = processed_co_features[:H*W, :]\n    feat2 = processed_co_features[H*W:, :]\n    \n    \n    feat1 = rearrange(feat1, \"(h w) c -> c h w\", h=H, w=W)\n    \n    feat1 = feat1.unsqueeze(0)\n    \n    feat2 = rearrange(feat2, \"(h w) c -> c h w\", h=H, w=W)\n    \n    feat2 = feat2.unsqueeze(0)\n    \n    return feat1, feat2\n",
+      "claim": "There is no DINOv2 feature extraction or concatenation anywhere in the released code (0 DINOv2 identifiers), and the only PCA helper, pca_feature_pair, is defined with q=1024 but never called (0 call sites).",
+      "concern": "Every '†' (DiTF+DINOv2) row in Tables 2-3 — which are the paper's state-of-the-art numbers (e.g. SPair 72.2, AP-10K-C.S. 69.4) — depends on DINOv2 concatenation and the Eq.14 PCA fusion (paper says output dim 1280, code's dead helper uses q=1024); none of this is implemented.",
+      "resolution": "Release the DINOv2 extraction (11th-layer token facet), the concatenation, and a PCA-fusion call site at output dim 1280; clarify the 1024-vs-1280 discrepancy.",
+      "cross_refs": [
+        "channel-discard-missing"
+      ],
+      "check_script": "_audit_code/check_missing_pieces.py",
+      "paper_ref": "Tables 2-3 '†' rows; Appendix Eq. 14 (PCA, dim 1280)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "dinov2-pca-fusion-missing",
+      "audit": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_",
+      "audit_md_line": 93
+    },
+    {
+      "id": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_/nonflux-and-otherdataset-evals-missing",
+      "category": "missing",
+      "topic": "experimental protocol coverage",
+      "title": "Only Flux-on-SPair eval shipped; SD3/SD3-5/Pixart and all other benchmarks absent",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "eval_spair.py",
+      "line_start": 100,
+      "line_end": 103,
+      "quote": "if args.dift_model == 'flux':\n    dift = Featurizer4Eval(cat_list=all_cats, ensemble_size=args.ensemble_size)\nelse:\n    raise Exception(\"model must be in [flux] \")\n",
+      "claim": "eval_spair.py only supports --dift_model flux and only the SPair-71k benchmark; there is no script for SD3/SD3-5/Pixart-alpha features nor for PF-Pascal, AP-10K, ADE20K segmentation, HPatches geometric, or the temporal task.",
+      "concern": "The DiTFsd3-5 / DiTFSD3 / DiTFpixart rows (Tables 2-3, Fig. 6), all AP-10K / PF-Pascal / ADE20K / HPatches / temporal results, and the per-model ablations have no code that produces them, so most reported tables are unreproducible from this submission.",
+      "resolution": "Provide the feature extractors for SD3, SD3-5, Pixart-alpha and the evaluation harnesses for each non-SPair benchmark.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_missing_pieces.py",
+      "paper_ref": "Tables 2-6, 8; Figs 6, 12",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "nonflux-and-otherdataset-evals-missing",
+      "audit": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_",
+      "audit_md_line": 148
+    },
+    {
+      "id": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_/ablation-toggles-missing",
+      "category": "missing",
+      "topic": "ablations",
+      "title": "No toggle for Original / +AdaLN / +discard or condition (t,c) ablations",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "eval_spair.py",
+      "line_start": 310,
+      "line_end": 322,
+      "quote": "parser.add_argument('--dataset_path', type=str, default='./dataset/SPair-71k', help='path to spair dataset')\nparser.add_argument('--dataset', type=str, default='SPair', help='path to spair dataset')\nparser.add_argument('--save_path', type=str, default='./spair_ft/', help='path to save features')\nparser.add_argument('--dift_model', choices=['flux'], default='flux', help=\"which dift version to use\")\nparser.add_argument('--img_size', nargs='+', type=int, default=[512, 512],\n                    help='''in the order of [width, height], resize input image\n                        to [w, h] before fed into diffusion model, if set to 0, will\n                        stick to the original input size. by default is 768x768.''')\nparser.add_argument('--t', default=261, type=int, help='t for diffusion')\nparser.add_argument('--ft_index', nargs='+', type=int, default=[12, 14], help='which upsampling block to extract the ft map') ###调参[0,57]\nparser.add_argument('--ensemble_size', default=8, type=int, help='ensemble size for getting an image ft map')\nparser.add_argument('--guidance_scale', default=1, type=float, help='ensemble size for getting an image ft map')\n",
+      "claim": "The CLI exposes no flag to disable AdaLN, disable channel discard, or vary the AdaLN condition (t only / c only / t&c); AdaLN is applied unconditionally and the text prompt 'a photo of a {cat}' is always built, so the Table-4 (Original/+AdaLN/+discard) and Table-5 (condition) ablations cannot be produced without code changes the authors did not ship.",
+      "concern": "Ablation rows central to the paper's central claim (AdaLN alone gives +20% absolute) have no reproducible path in the code.",
+      "resolution": "Add flags to run the Original (no AdaLN) and condition variants, or release the scripts used for Tables 4-5.",
+      "cross_refs": [
+        "channel-discard-missing"
+      ],
+      "paper_ref": "Tables 4, 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ablation-toggles-missing",
+      "audit": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_",
+      "audit_md_line": 177
+    },
+    {
+      "id": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_/no-readme-no-deps",
+      "category": "missing",
+      "topic": "expected code completeness / environment",
+      "title": "No README, no dependency/environment specification for the eval scripts",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "eval_spair.py",
+      "line_start": 13,
+      "line_end": 29,
+      "quote": "import cv2\nimport matplotlib.pyplot as plt\nimport gc\nimport copy\nfrom sklearn.decomposition import PCA\nfrom torchvision import transforms as T\nfrom math import sqrt\nimport seaborn as sns\nimport base64\nfrom io import BytesIO\n\nimport warnings\n\nwarnings.filterwarnings('ignore')\n\nimport numpy as np\nfrom scipy.spatial.distance import cosine\n",
+      "claim": "The repo has no README and no environment/requirements file for the audited scripts; eval_spair.py imports cv2, sklearn, scipy, seaborn, matplotlib, diffusers, einops, etc., none of which are pinned. The only requires.txt present (src/flux.egg-info/requires.txt) is the upstream Flux package list and omits these.",
+      "concern": "Without a dependency spec or run instructions beyond a single hard-wired shell line, the environment that produced the numbers cannot be rebuilt; the NeurIPS checklist claims 'exact command and environment' are provided.",
+      "resolution": "Add a README with reproduce commands and a pinned environment (requirements.txt/conda) covering cv2, scikit-learn, scipy, seaborn, diffusers versions.",
+      "cross_refs": [],
+      "paper_ref": "NeurIPS checklist Q5 (open access to code, 'exact command and environment')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-readme-no-deps",
+      "audit": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_",
+      "audit_md_line": 213
+    },
+    {
+      "id": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_/chunk2-cfg-crash",
+      "category": "bug",
+      "topic": "evaluation entry point",
+      "title": "Shipped command crashes: chunk(2) over size-1 batch when --ensemble_size 1",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "eval_spair.py",
+      "line_start": 170,
+      "line_end": 177,
+      "quote": "src_ft_raw = output_dict[data['src_imname']].cuda()\nB,C,H,W = src_ft_raw.shape\nsrc_ada = ada_dict[data['src_imname']].cuda()\n\n\nfeat_pred_uncond, feat_pred_text = src_ft_raw.chunk(2)\n# src_ft_raw = feat_pred_uncond + guidance_scale * (feat_pred_text - feat_pred_uncond)\nsrc_ft_raw = feat_pred_text\n",
+      "claim": "The saved feature tensor has batch dim equal to ensemble_size (Featurizer4Eval.forward, feat_flux.py:149, no mean over the ensemble). test_spair.sh sets --ensemble_size 1, so src_ft_raw is [1, C, H, W]; src_ft_raw.chunk(2) over dim 0 returns ONE chunk, and 'feat_pred_uncond, feat_pred_text = src_ft_raw.chunk(2)' raises ValueError (verified in _audit_code/check_chunk_crash.py).",
+      "concern": "Running the exact provided command (test_spair.sh, --ensemble_size 1) crashes before any PCK is computed, so the released code does not reproduce its own headline number as shipped.",
+      "resolution": "Either remove the chunk(2)/CFG split (it is vestigial — the guidance line is commented out) or document that ensemble_size must be an even number >= 2; clarify what the two halves are meant to represent given the forward does no uncond/cond batch construction.",
+      "cross_refs": [
+        "ensemble-not-averaged"
+      ],
+      "check_script": "_audit_code/check_chunk_crash.py",
+      "paper_ref": "test_spair.sh (--ensemble_size 1)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "chunk2-cfg-crash",
+      "audit": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_",
+      "audit_md_line": 256
+    },
+    {
+      "id": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_/ensemble-not-averaged",
+      "category": "bug",
+      "topic": "feature ensembling",
+      "title": "Ensemble dimension never averaged; treated as CFG halves then only index 0 used",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "src/flux/feat_flux.py",
+      "line_start": 195,
+      "line_end": 199,
+      "quote": "unet_ft = torch.cat(model_output_copy, dim=1)\n# print(unet_ft.shape)\n# unet_ft = unet_ft.mean(0, keepdim=True) # 1,c,h,w\n\nreturn unet_ft.cpu(), torch.cat((mod.shift, mod.scale), dim=1).cpu()\n",
+      "claim": "The mean over the ensemble dimension (unet_ft.mean(0)) is commented out, so the saved feature keeps batch=ensemble_size. In eval, src_ft_raw.chunk(2) splits this batch into two halves, keeps the second half (feat_pred_text), then F.normalize/indexing uses only src_ft[0,...] (eval_spair.py:241), so the remaining ensemble copies are discarded rather than averaged.",
+      "concern": "The 'ensemble_size' described as averaging repeated noisy passes does not average anything in the released code; the effective feature is from a single (noise-specific) forward, which both changes the method and makes results sensitive to the unseeded torch.randn noise (feat_flux.py:160).",
+      "resolution": "Confirm whether ensemble averaging was used for the reported numbers; if so, restore unet_ft.mean(0) and remove the chunk(2) split. Also seed the per-image noise for determinism.",
+      "cross_refs": [
+        "chunk2-cfg-crash"
+      ],
+      "paper_ref": "Sec 5.1 / test_spair.sh '--ensemble_size'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ensemble-not-averaged",
+      "audit": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_",
+      "audit_md_line": 289
+    },
+    {
+      "id": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_/imgsize-768-vs-960",
+      "category": "difference",
+      "topic": "evaluation config",
+      "title": "Released command uses 768x768 input; paper App. Table 7 specifies 960x960 for DiTs",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "test_spair.sh",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "CUDA_VISIBLE_DEVICES=1 python eval_spair.py --dataset spair --dataset_path spair-71k_path --save_path dfm_feats/spair_flux_img768 --dift_model flux --img_size 768 768 --t 260 --ft_index 28 --ensemble_size 1\n",
+      "claim": "The provided run command sets --img_size 768 768 (and save dir 'spair_flux_img768'), whereas the paper Appendix Table 7 / text states the DiT input image size is 960x960 (t=260, block k=28 match).",
+      "concern": "Input resolution materially affects PCK; the shipped command does not match the paper's stated 960x960 setting, so a reviewer following the script would evaluate a different configuration than the one reported.",
+      "resolution": "Confirm the input size used for the reported DiTFflux SPair numbers (768 vs 960) and align the script/paper.",
+      "cross_refs": [],
+      "paper_ref": "Appendix Table 7; text 'input image size as 960x960 for DiTs'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "imgsize-768-vs-960",
+      "audit": "3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_",
+      "audit_md_line": 320
+    }
+  ]
+}

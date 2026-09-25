@@ -1,0 +1,165 @@
+{
+  "schema_version": "1",
+  "audit": "2963_Learning_Equilibria_from_Data_Provably_Efficient_Multi_Agent",
+  "audit_md": "audits/2963_Learning_Equilibria_from_Data_Provably_Efficient_Multi_Agent/audit.md",
+  "generated_at": "2026-05-30T23:11:40.168243+00:00",
+  "findings": [
+    {
+      "id": "2963_Learning_Equilibria_from_Data_Provably_Efficient_Multi_Agent/no-seeding-not-reproducible",
+      "category": "missing",
+      "topic": "reproducibility / seeding",
+      "title": "No random seeding anywhere; Fig. 2 curves not exactly reproducible",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "experiment.ipynb",
+      "line_start": 337,
+      "line_end": 337,
+      "quote": "\"num_runs = 10\\n\",\n",
+      "claim": "BC, MURMAIL, the UCBVI inner loop, and expert sampling all call np.random.* (behavior_cloning.py:113-122, murmail.py:204-216, 305-312, 369-372, innerloop_rl.py:75,81), but no np.random.seed / default_rng is set in any module or in experiment.ipynb (grep for 'seed' over *.py and the notebook returns 0 hits), while each panel runs num_runs=10 unseeded repetitions.",
+      "concern": "With num_runs=10 and no seeding, the exact Fig. 2 curves and their error bands cannot be regenerated and the run-to-run variability is undocumented.",
+      "resolution": "Add a seed (or per-run seed list) before each run and report it, so the committed figures can be reproduced.",
+      "cross_refs": [
+        "tuned-lr-and-runs-vs-paper"
+      ],
+      "paper_ref": "Figure 2; Appendix J.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-seeding-not-reproducible",
+      "audit": "2963_Learning_Equilibria_from_Data_Provably_Efficient_Multi_Agent",
+      "audit_md_line": 67,
+      "verdict": "keep",
+      "reason": "Cited line 337 actually contains 'initial_state_dist=initial_dist', but 'num_runs = 10' appears at many lines (e.g., 185, 210, 266, 342) and a repo-wide grep for 'seed' returns zero hits across all .py and .ipynb files, confirming no seeding is set anywhere.",
+      "changed": "nothing"
+    },
+    {
+      "id": "2963_Learning_Equilibria_from_Data_Provably_Efficient_Multi_Agent/random-env-missing",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "Random |S|=10 environment (App. J.1/J.4 plot) has no generating code",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "For this we consider two environments. For the first environment, we generate a random Zero-Sum Markov Game with |S| = 10, |A| = |B| = 3 and a\nreward between −1 and 1.\n",
+      "claim": "Appendix J.1 describes a randomly generated |S|=10 zero-sum Markov Game whose results are shown in the App. J.4 'additional plot'; the only environment built in the repo is the |S|=7 lower-bound game (experiment.ipynb cell e2cab221, num_states=7), and no code generates a random |S|=10 game or its expert policies.",
+      "concern": "The App. J.4 result has no traceable computation in the repo, so that plot cannot be reproduced from the provided code.",
+      "resolution": "Authors: please add the script that generates the random |S|=10 Markov Game, its expert policies, and the App. J.4 plot.",
+      "cross_refs": [
+        "experts-hardcoded-not-solver"
+      ],
+      "paper_ref": "Appendix J.1 (Environments with C<∞) and J.4 (Additional plots)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "random-env-missing",
+      "audit": "2963_Learning_Equilibria_from_Data_Provably_Efficient_Multi_Agent",
+      "audit_md_line": 92,
+      "line_start": null,
+      "line_end": null,
+      "verdict": "keep",
+      "reason": "Repo listing confirms only 9 files (behavior_cloning.py, experiment.ipynb, game_solver.py, innerloop_rl.py, murmail.py, utils.py, setup.sh, requirements.txt, README.md); no script generates a random |S|=10 Markov Game.",
+      "changed": "nothing"
+    },
+    {
+      "id": "2963_Learning_Equilibria_from_Data_Provably_Efficient_Multi_Agent/single-sample-md-update-one-action",
+      "category": "bug",
+      "topic": "mirror descent update",
+      "title": "batch_size=1 update exponentiates only the sampled action, not the full action vector",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "murmail.py",
+      "line_start": 390,
+      "line_end": 397,
+      "quote": "new_policy = policy.copy()\n# Following the gradient formula in the algorithm\ng = policy[s, a] - (1 if a == a else 0)  # Indicator is 1 when a equals the sampled action\n# Apply the exponentiated gradient update\nnew_policy[s, a] = policy[s, a] * np.exp(-self.eta * g)\n# Re-normalize\nnew_policy[s] /= new_policy[s].sum()\nreturn new_policy\n",
+      "claim": "_exp_grad_update (the batch_size=1 path taken by every Fig. 2 run, murmail.py:144-149) updates only the sampled action a via policy[s,a]*exp(-eta*(policy[s,a]-1)) and leaves all other actions a'!=a unchanged before renormalising; Algorithm 2's update mu_{k+1}(a|s) ∝ mu_k(a|s) exp(-eta g(s,a)) with g(s,a)=mu_k(a|S_k)1{S_k=s}-1{A_k=a} multiplies every action a' in the sampled state by exp(-eta*mu_k(a'|s)) (the indicator is 0 for a'!=a). _audit_code/check_exp_grad_update.py confirms single != paper while the repo's own _batch_exp_grad_update == paper.",
+      "concern": "The mirror-descent step that drives every MURMAIL curve in Fig. 2 does not implement the paper's Algorithm 2 update and disagrees with the repo's own correct batch update, so the displayed MURMAIL behaviour reflects a different update rule than the one analysed.",
+      "resolution": "Replace _exp_grad_update with the full-row update (g = policy[s,:]; g[a]-=1; new_policy[s] = policy[s]*exp(-eta*g); renormalise), matching _batch_exp_grad_update, and re-generate Fig. 2.",
+      "cross_refs": [
+        "tuned-lr-and-runs-vs-paper"
+      ],
+      "check_script": "_audit_code/check_exp_grad_update.py",
+      "paper_ref": "Algorithm 2, 'Update policies' block; gradient g^mu_k(s,a)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "single-sample-md-update-one-action",
+      "audit": "2963_Learning_Equilibria_from_Data_Provably_Efficient_Multi_Agent",
+      "audit_md_line": 118,
+      "verdict": "keep",
+      "reason": "murmail.py:390-397 matches the quoted code exactly; batch_size=1 path at lines 144-149 is confirmed; check_exp_grad_update.py (copied to _verifier_code/, output saved to _verifier_code/out/) produces 'single == paper ? False' and 'batch == paper ? True', directly confirming the divergence from Algorithm 2.",
+      "changed": "nothing"
+    },
+    {
+      "id": "2963_Learning_Equilibria_from_Data_Provably_Efficient_Multi_Agent/tuned-lr-and-runs-vs-paper",
+      "category": "difference",
+      "topic": "hyperparameters / experimental setup",
+      "title": "Driver uses tuned eta=50 and 10 runs; paper states optimal eta and 1000 seeds",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "experiment.ipynb",
+      "line_start": 300,
+      "line_end": 300,
+      "quote": "\"# Note that we have tuned the learning rate and MURMAIL performs better with this setting (compared to plots in the paper)\\n\",\n",
+      "claim": "The notebook hard-codes learning_rate=50.0 and num_runs=10 (experiment.ipynb:357-369, repeated for all four panels) and a comment states the learning rate was tuned and 'MURMAIL performs better with this setting (compared to plots in the paper)'; Appendix J.2 instead states 'We run the experiments for each environments 1000 times over different seeds' and 'we compute the optimal learning rate eta' (theory sets eta = 2|S|log|Amax|/K ~ 0.015 for |S|=7, K=1000).",
+      "concern": "The committed code reproduces curves the authors themselves note differ from the paper's Fig. 2, at a far smaller run count (10 vs 1000) and an un-derived hand-tuned step size, so the repo does not regenerate the published figures as plotted.",
+      "resolution": "Authors: please commit the exact eta and seed/run configuration used for the published Fig. 2 (and App. J.4), or update the figures to match the committed configuration.",
+      "cross_refs": [
+        "single-sample-md-update-one-action",
+        "no-seeding-not-reproducible"
+      ],
+      "paper_ref": "Appendix J.2 (Experimental Setup); Theorem 4.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "tuned-lr-and-runs-vs-paper",
+      "audit": "2963_Learning_Equilibria_from_Data_Provably_Efficient_Multi_Agent",
+      "audit_md_line": 153,
+      "verdict": "keep",
+      "reason": "Cited line 300 is the final plot_results call of the C_2 cell, not the tuned-LR comment; however the quoted comment exists at line 148 in the C=inf cell and every panel uses learning_rate=50.0 and num_runs=10 — the substance of the claim is fully confirmed.",
+      "changed": "nothing"
+    },
+    {
+      "id": "2963_Learning_Equilibria_from_Data_Provably_Efficient_Multi_Agent/experts-hardcoded-not-solver",
+      "category": "difference",
+      "topic": "expert generation",
+      "title": "Expert policies hardcoded in notebook; described value-iteration solver unused",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "experiment.ipynb",
+      "line_start": 311,
+      "line_end": 320,
+      "quote": "\"expert1 = np.array([\\n\",\n\"    # s0, s1, s2, s3, Sxplt1, Sxplt2, Scopy\\n\",\n\"    [0, 0, 1],  # s0\\n\",\n\"    [0, 0, 1],  # s1\\n\",\n\"    [0, 0, 1],  # s2\\n\",\n\"    [0, 0, 1],  # s3\\n\",\n\"    [0, 0, 1],  # Sxplt1\\n\",\n\"    [0, 0, 1],  # Sxplt2\\n\",\n\"    [0, 0, 1],  # Scopy\\n\",\n\"])\\n\",\n",
+      "claim": "Appendix J.2 says expert distributions are generated 'using a Value Iteration algorithm for Two Player Zero-Sum Games' (game_solver.MarkovGameValueIteration), but the notebook hardcodes each expert policy as a constant np.array (one block per panel) and never imports or calls game_solver; for the |S|=7 game the hardcoded mixtures (a3 prob 0.5 / 0.999 / 0.9999 / 1.0) equal the NE mixtures the paper describes, so the values are individually valid.",
+      "concern": "The committed experts bypass the described NE solver, so the only link between the paper's 'value-iteration-generated experts' and the figures is the notebook's hardcoded constants; the solver path is exercised by no committed code.",
+      "resolution": "Authors: confirm the hardcoded |S|=7 experts equal the value-iteration NE mixtures, and provide the solver-driven expert generation used for the random |S|=10 environment.",
+      "cross_refs": [
+        "random-env-missing"
+      ],
+      "paper_ref": "Appendix J.2, 'To generate the expert distributions, we use a Value Iteration algorithm ...'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "experts-hardcoded-not-solver",
+      "audit": "2963_Learning_Equilibria_from_Data_Provably_Efficient_Multi_Agent",
+      "audit_md_line": 178,
+      "verdict": "keep",
+      "reason": "Cited lines 311-320 are slightly off (expert1 np.array block for C<=1000 starts at line 308), but the quoted hardcoded expert1 array with all-action-3 entries is present and the C=inf cell expert1 (lines 151-160) matches the quoted content exactly; game_solver is never imported in the notebook.",
+      "changed": "nothing"
+    }
+  ]
+}

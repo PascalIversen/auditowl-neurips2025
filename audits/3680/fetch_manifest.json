@@ -1,0 +1,10 @@
+{
+  "neurips2025-las__LAS-implementation": {
+    "repo": "https://github.com/neurips2025-las/LAS-implementation",
+    "clone_status": "cached",
+    "size_mb": 4.8,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

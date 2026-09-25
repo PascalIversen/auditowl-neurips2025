@@ -1,0 +1,200 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T10:23:54.474199+00:00",
+  "findings": [
+    {
+      "id": "/csm-epoch-selection-protocol-missing",
+      "category": "missing",
+      "topic": "hyperparameter selection / reproducibility",
+      "title": "Paper's label-free (CSM) epoch-selection protocol is absent from the code",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "FMAD/functions.py",
+      "line_start": 73,
+      "line_end": 80,
+      "quote": "def determine_FMAD_hyperparameters(dataset_name_raw):\n    dataset_name = dataset_name_raw.lower()\n    if \"census\" in dataset_name:\n        epoch_size = 5\n        batch_size = 1024\n        learning_rate = 0.005\n    elif \"backdoor\" in dataset_name:\n        epoch_size = 200\n",
+      "claim": "The only data-dependent hyperparameter (#epochs, ranging 1–5000 across datasets) is selected by a long hardcoded if/elif chain; no code computes the Improved Contrast Score Margin (CSM) criterion the paper says was used (App. B.6: 'we apply the unsupervised hyperparameter tuning method ... based on the Improved Contrast Score Margin (CSM) criterion ... For each candidate epoch, we compute T(f) and select the configuration maximizing this criterion').",
+      "concern": "Because the selection step is not in the repo, a reviewer cannot verify the per-dataset epoch counts were chosen label-free as claimed (App. B.6); the values could equally have been chosen by inspecting test AUROC — and the code comments at FMAD/functions.py:128 and :133 ('Chosen first from \"100 or 1\"') hint at manual trial rather than the described automated criterion.",
+      "resolution": "Authors: please add the CSM-based epoch-search script (over the candidate space, using only model outputs / no labels) that produced the Table 5 epoch values, so the label-free claim is reproducible.",
+      "cross_refs": [
+        "asymmetric-per-dataset-epoch-tuning"
+      ],
+      "check_script": "_audit_code/check_table5_epochs.py",
+      "paper_ref": "Appendix B.6 'Unsupervised Epoch Selection Strategy'; Table 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "csm-epoch-selection-protocol-missing",
+      "audit": "",
+      "audit_md_line": 57
+    },
+    {
+      "id": "/statistical-tests-missing",
+      "category": "missing",
+      "topic": "result traceability / statistical integrity",
+      "title": "Friedman/Nemenyi significance tests and CD diagrams (App. D.5) have no code",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "\"We report the results using critical difference diagrams (see Figure 21 and 22). For AUPRC, the Nemenyi test indicates that there are no statistically significant differences among the top-performing group\"\n",
+      "claim": "The paper performs Friedman and Nemenyi post-hoc tests and renders critical-difference diagrams (Figures 21–22), but no script in the repo computes Friedman/Nemenyi/CD; a repo-wide grep finds only an unrelated scipy.stats.invgamma import in a baseline.",
+      "concern": "The reported significance verdicts (and the CD diagrams) cannot be reproduced from the released code.",
+      "resolution": "Authors: please add the script that runs the Friedman + Nemenyi tests on the per-dataset rank matrix and draws the CD diagrams.",
+      "cross_refs": [],
+      "paper_ref": "Appendix D.5 'Statistical Tests', Figures 21–22",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "statistical-tests-missing",
+      "audit": "",
+      "audit_md_line": 89,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/explanation-accuracy-table3-missing",
+      "category": "missing",
+      "topic": "result traceability / explainability",
+      "title": "Table 3 explanation-accuracy and Figure 4 MNIST explanation have no code",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "Table 3: Quantitative evaluation of explanation accuracy on synthetic GMM anomalies.\n",
+      "claim": "Table 3 reports ExactMatch/Jaccard of feature attributions on synthetic GMM data (5D–25D), and Figure 4 shows MNIST digit-1-vs-7 explanations, but no script computes per-feature attributions, ExactMatch, Jaccard, or the MNIST explanation (grep for 'jaccard', 'exactmatch', 'importance', 'mnist' explanation code returns nothing relevant).",
+      "concern": "The explainability claims (a headline contribution) are not reproducible from the released code; the per-feature residual decomposition is described but not implemented as a runnable artefact.",
+      "resolution": "Authors: please add the script computing the per-feature residual attribution and the ExactMatch/Jaccard metrics in Table 3, plus the MNIST explanation in Figure 4.",
+      "cross_refs": [],
+      "paper_ref": "Table 3; Figure 4; Appendix D.4.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "explanation-accuracy-table3-missing",
+      "audit": "",
+      "audit_md_line": 111,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/ablation-figs-16-17-missing",
+      "category": "missing",
+      "topic": "ablations",
+      "title": "Feature-normalization (Fig 16) and time-interpolated-inputs (Fig 17) ablations have no code",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "\"(4) Feature normalization (Figure 16): z-score normalization is generally beneficial and improves robustness; (5) Time-interpolated inputs (Figure 17): interpolation offers no gain and may add noise\"\n",
+      "claim": "AblationStudies.py implements the time-embedding (Fig 12), fixed-t (Fig 13), noise-injection (Fig 14) and contamination ablations, but contains no routine for the feature-normalization ablation (Fig 16) or the time-interpolated-inputs ablation (Fig 17); a grep for normalization/interpolation ablation code finds none.",
+      "concern": "Two of the six reported ablation studies cannot be reproduced from the released code.",
+      "resolution": "Authors: please add the Figure 16 (normalization variants) and Figure 17 (time-interpolated inputs) ablation scripts.",
+      "cross_refs": [],
+      "paper_ref": "Section 'Ablation Studies and Sensitivity Analysis'; Figures 16, 17 (App. D.3)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ablation-figs-16-17-missing",
+      "audit": "",
+      "audit_md_line": 133,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/semisup-knn-not-run",
+      "category": "bug",
+      "topic": "experiment driver / reproducibility",
+      "title": "run_semisupervise.sh runs only 6 of 7 force-inductive models, dropping KNN_semisup (a top-ranked detector)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "bash_files/run_semisupervise.sh",
+      "line_start": 23,
+      "line_end": 23,
+      "quote": "for j in {45..50}; do # 7 models\n",
+      "claim": "The loop `for j in {45..50}` iterates indices 45..50 (6 values) but the comment says '7 models'; the 7 force_inductive models occupy MODEL_NAMES indices 45..51, so index 51 = KNN_semisup is never launched. This is repeated in all four dataset blocks (lines 23, 58, 98, 138).",
+      "concern": "App. E / Figure 23 report KNN_semisup as a top detector (AUROC rank ~3rd, AUPRC rank ~4th — TCCM's closest competitor in the inductive setting), yet the provided script cannot produce its result files, so the inductive-setting figure is not reproducible as released.",
+      "resolution": "Change the loop bound to `{45..51}` (or `for j in $(seq 45 51)`) so KNN_semisup (index 51) is included; confirm whether the published Figure 23 KNN_semisup numbers were produced by a different invocation.",
+      "cross_refs": [
+        "semi-only-default-vs-figure2-mode"
+      ],
+      "check_script": "_audit_code/check_semisup_model_count.py",
+      "paper_ref": "Appendix E, Figure 23 (KNN_semisup ranked ~3rd/4th)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "semisup-knn-not-run",
+      "audit": "",
+      "audit_md_line": 157
+    },
+    {
+      "id": "/semi-only-default-vs-figure2-mode",
+      "category": "difference",
+      "topic": "evaluation consistency (README vs paper figure)",
+      "title": "Documented aggregation command (--semi_only) reproduces App. E Fig 23, not main-text Fig 2",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "AggregateResults.py",
+      "line_start": 102,
+      "line_end": 103,
+      "quote": "argp.add_argument(\"--semi_only\", action=\"store_true\", help=\"If true, only semi-supervised models are considered.\")\nargp.set_defaults(semi_only=True)\n",
+      "claim": "AggregateResults defaults to semi_only=True, which drops the 7 transductive models and includes the 7 force_inductive (_semisup) variants. The README's reproduction roadmap lists `python AggregateResults.py --semi_only` for the main Rank_ROC.pdf / Rank_PR.pdf. But the main-text Figure 2 leaderboard lists the transductive detectors (KNN, ABOD, LOF, PCA, COF, KPCA, INNE) and labels them 'Classical (Transductive)', i.e. it corresponds to the NON-semi_only (default-mode) aggregation; the _semisup variants only appear in App. E Figure 23.",
+      "concern": "A user following the README's documented `--semi_only` command obtains the appendix inductive-setting ranking (Fig 23), not the headline Figure 2; the mapping from command to figure is ambiguous (the README does note removing the flag, but does not say which figure each mode yields).",
+      "resolution": "Authors: please state explicitly which command/flag reproduces Figure 2 vs Figure 23 (Figure 2 appears to require running AggregateResults WITHOUT --semi_only after run_main.sh).",
+      "cross_refs": [
+        "semisup-knn-not-run"
+      ],
+      "paper_ref": "Figure 2 (transductive detectors shown) vs Appendix E Figure 23 (_semisup variants)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "semi-only-default-vs-figure2-mode",
+      "audit": "",
+      "audit_md_line": 184
+    },
+    {
+      "id": "/asymmetric-per-dataset-epoch-tuning",
+      "category": "methodology",
+      "topic": "baselines / fair comparison",
+      "title": "TCCM gets per-dataset epoch tuning (1–5000) while all baselines use single fixed defaults",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "question",
+      "file": "FullExperiments.py",
+      "line_start": 254,
+      "line_end": 258,
+      "quote": "elif mname == \"TCCM\":\n    from FMAD.functions import determine_FMAD_hyperparameters\n    hyparam = determine_FMAD_hyperparameters(dataset_name)\n    parameters.update({\"n_features\": X_train.shape[1]})\n    parameters.update(hyparam)\n",
+      "claim": "For TCCM the code selects a dataset-specific epoch count (per FMAD/functions.py, ranging from 1 to 5000 across the 47 datasets); for every baseline the code passes no per-dataset hyperparameters (parameters={} or a single fixed value such as GOAD n_epoch=25), matching the paper's statement 'For all baseline detectors, we use their default configurations and hyperparameters as provided by their source implementations.'",
+      "concern": "TCCM's principal training hyperparameter is adapted per dataset while baselines' analogous hyperparameters are not, which can advantage TCCM in the head-to-head ranking; even if the adaptation is label-free as claimed, no baseline is given an equivalent per-dataset adaptation budget.",
+      "resolution": "Authors: either apply the same label-free per-dataset selection budget to the deep baselines' key hyperparameters, or report TCCM under a single fixed epoch count to confirm the ranking advantage is not an artefact of asymmetric tuning. Filed as a question because the epoch-selection code is absent (see csm-epoch-selection-protocol-missing) so the leakage-vs-fair question cannot be settled from the repo.",
+      "cross_refs": [
+        "csm-epoch-selection-protocol-missing"
+      ],
+      "paper_ref": "Appendix B.3 (TCCM tuning) vs 'For all baseline detectors, we use their default configurations'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "asymmetric-per-dataset-epoch-tuning",
+      "audit": "",
+      "audit_md_line": 211
+    }
+  ]
+}

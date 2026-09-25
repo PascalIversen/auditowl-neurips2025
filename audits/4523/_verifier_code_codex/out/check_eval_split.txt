@@ -1,0 +1,27 @@
+{
+  "ted_no_trainer.py": {
+    "deletes_test_split": true,
+    "eval_on_validation": true,
+    "save_best_takes_max": true
+  },
+  "ted_no_trainer_qwen.py": {
+    "deletes_test_split": true,
+    "eval_on_validation": true,
+    "save_best_takes_max": true
+  },
+  "learn_filters_glue_no_trainer.py": {
+    "deletes_test_split": true,
+    "eval_on_validation": true,
+    "save_best_takes_max": false
+  },
+  "teacher_trainer.py": {
+    "deletes_test_split": false,
+    "eval_on_validation": true,
+    "save_best_takes_max": true
+  },
+  "teacher_trainer_qwen.py": {
+    "deletes_test_split": false,
+    "eval_on_validation": true,
+    "save_best_takes_max": true
+  }
+}

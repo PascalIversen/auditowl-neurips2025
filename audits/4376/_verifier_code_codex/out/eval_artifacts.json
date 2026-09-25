@@ -1,0 +1,25 @@
+{
+  "repo_python_files": [
+    "flux_pipeline_hiflow.py",
+    "run_hiflow.py",
+    "transformer_flux.py",
+    "utils.py"
+  ],
+  "n_python_files": 4,
+  "eval_artifact_presence": {
+    "FID computation": "ABSENT",
+    "Inception Score": [
+      "flux_pipeline_hiflow.py",
+      "transformer_flux.py"
+    ],
+    "CLIP score": "ABSENT",
+    "patch metric": "ABSENT",
+    "prompt/caption set": "ABSENT",
+    "LAION-High-Res data": "ABSENT",
+    "baseline DemoFusion": "ABSENT",
+    "baseline DiffuseHigh": "ABSENT",
+    "baseline I-Max": "ABSENT",
+    "baseline BSRGAN": "ABSENT",
+    "latency timing": "ABSENT"
+  }
+}

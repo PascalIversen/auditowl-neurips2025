@@ -1,0 +1,202 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-01T10:43:32.721573+00:00",
+  "findings": [
+    {
+      "id": "/results-aggregation-and-figures-missing",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No code aggregates judge/FLOPs outputs into the ASR tables or any figure",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "evaluate_completions.py",
+      "line_start": 94,
+      "line_end": 97,
+      "quote": "df[\"judge_output\"] = results\ndf[\"filter_passed\"] = results_PPL_filter\n\ndf.to_csv(df_path, index=False)\n",
+      "claim": "The four-stage pipeline terminates here, writing a per-behavior CSV of judge_output and filter_passed. A repo-wide grep for ASR/mean/reduction aggregation, dataset-attribution, or any plotting library (matplotlib/pyplot/seaborn/savefig) returns nothing outside CrossEntropyLoss(reduction=...), i.e. there is no script that turns these per-behavior labels into the reported Attack Success Rates, the 'Rel. Avg. ASR Red.' rows (Tables 3-4), or any of Figures 4-13 (ASR-vs-FLOPs curves, the utility-robustness TPR sweep, the bigram rank/attribution analyses).",
+      "concern": "The paper's headline quantitative artefacts — Tables 3 and 4 and every numbered figure — cannot be reproduced from the provided code; only the raw per-behavior inputs are produced.",
+      "resolution": "Provide the aggregation/plotting scripts that convert the per-behavior judge_output+FLOPs CSVs into the ASR tables and Figures 4-13 (including the train-dataset-attribution and rank-distribution code for Figs 6/7/10/11).",
+      "cross_refs": [
+        "eval-filter-applied-to-behavior",
+        "ppl-threshold-derivation-missing"
+      ],
+      "paper_ref": "Tables 3-4; Figures 4-13",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "results-aggregation-and-figures-missing",
+      "audit": "",
+      "audit_md_line": 52
+    },
+    {
+      "id": "/ngram-model-construction-missing",
+      "category": "missing",
+      "topic": "repository completeness / N-gram model",
+      "title": "Bigram LM on 1T Dolma tokens is downloaded, not built — construction code absent",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "download_unpack_ngrams.sh",
+      "line_start": 6,
+      "line_end": 8,
+      "quote": "pip install gdown\ngdown 1HOhjxkjwi-gLG2-gAZ2u5ZxNrpCt3RU7\ngdown 17Y2QJzDrsb5yUxLrY313ArAxTzM_s4dS\n",
+      "claim": "The N-gram model (the paper's first stated contribution, 'we construct a lightweight bigram LM from the Dolma dataset based on 1T tokens', §3.2) is obtained only by downloading two pre-built Google-Drive artefacts (unigrams/bigrams parquet). No code in the repo tokenises the Dolma subset (MegaWika, Gutenberg, StackExchange, arXiv, Reddit, StarCoder, RefinedWeb), counts N-grams, or produces the hardcoded totals (total_unigrams=951,049,362,432; total_bigrams=955,312,057,204 in ppl_filter.py:171-172).",
+      "concern": "The construction of the bigram LM — a headline contribution — is not reproducible, and the '1T tokens' / dataset-subset / Llama2-tokenizer claims cannot be verified from the code (the shipped totals are ~0.95T, not independently checkable).",
+      "resolution": "Release the N-gram construction pipeline (Dolma ingestion, tokenisation, counting) or document how the downloaded parquet files were generated and how the token totals were obtained.",
+      "cross_refs": [
+        "ppl-threshold-derivation-missing"
+      ],
+      "paper_ref": "§3.2 'Construction of the N-gram model'; contributions bullet, p.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ngram-model-construction-missing",
+      "audit": "",
+      "audit_md_line": 79
+    },
+    {
+      "id": "/ppl-threshold-derivation-missing",
+      "category": "missing",
+      "topic": "perplexity filter calibration",
+      "title": "PPL threshold gamma=38,276 is hardcoded; window/metric/N ablations have no code",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "configs/method_configs/GCG.yaml",
+      "line_start": 20,
+      "line_end": 23,
+      "quote": "#== Filter Config ==#\njb_filter_window_size: 8\njb_filter_metric_name: perplexity\njb_filter_threshold: -38276.122748721245\n",
+      "claim": "The filter threshold gamma_0.999 = 38,276 (paper §3.2) appears in the repo only as this hardcoded constant (identically in every method config and evaluate_completions.py:88). No script selects it — i.e. computes the 99.9%-TPR threshold on D_val, the FPR on the 95 GCG adversarial suffixes (A_W), the window-size ablation (Fig 2b/Fig 8), the metric comparison (median cond/uncond vs N-LM), or the N-gram-depth ablation (Fig 9).",
+      "concern": "The calibration that defines the threat model's condition 1 (Figs 2a/2b, 8, 9 and the value 38,276) is not reproducible; a reviewer cannot check how the operating point was chosen.",
+      "resolution": "Provide the threshold/metric/window selection code that produces gamma_0.999 and Figures 2a/2b, 8 and 9 from D_val and the adversarial-suffix set.",
+      "cross_refs": [
+        "ngram-model-construction-missing",
+        "results-aggregation-and-figures-missing"
+      ],
+      "paper_ref": "§3.2; Appendix C; Figures 2a/2b, 8, 9",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ppl-threshold-derivation-missing",
+      "audit": "",
+      "audit_md_line": 105
+    },
+    {
+      "id": "/human-eval-judge-study-missing",
+      "category": "missing",
+      "topic": "result traceability / human evaluation",
+      "title": "Appendix B human-eval study (2,000 labels, Table 5 judge metrics) has no code or data",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "To further investigate the effectiveness of different judges, we manually labeled 2,000 responses generated by Vicuna-13B, Llama2-7B, Llama2-13B, and Gemma-7B for all considered attacks on the first 50 queries of HarmBench.\n",
+      "claim": "The paper reports a 2,000-response human-labeled dataset and a six-judge comparison (Table 5: Accuracy/FPR/FNR for Llama3-70B x2, Llama2-13B HarmBench, Gemma2-9B, LlamaGuard2-8B, LlamaGuard-7B). The repo contains the custom judge template (ppl_filter.py:USER_PROMPT_added_info_final) but neither the 2,000 human labels nor any script that computes the Table 5 accuracy/FPR/FNR figures.",
+      "concern": "Table 5 — which is the stated justification for using the Llama2-13B HarmBench judge for every ASR in the paper — cannot be reproduced or checked; the human labels underpinning it are not shared.",
+      "resolution": "Release the 2,000 human-labeled responses and the script that computes each judge's Accuracy/FPR/FNR in Table 5.",
+      "cross_refs": [],
+      "paper_ref": "Appendix B; Table 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "human-eval-judge-study-missing",
+      "audit": "",
+      "audit_md_line": 132,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/eval-filter-applied-to-behavior-not-jailbreak",
+      "category": "bug",
+      "topic": "perplexity filter / evaluation",
+      "title": "evaluate_completions.py runs the PPL filter on the raw behavior, not the jailbreak",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "evaluate_completions.py",
+      "line_start": 87,
+      "line_end": 89,
+      "quote": "filter_passed = local_filter.apply_filter(\n    user_message, 8, \"perplexity\", -38276.122748721245\n)\n",
+      "claim": "In the loop, user_message is the raw HarmBench behavior (evaluate_completions.py:50 `requests = df[\"behavior\"]`), not the optimized jailbreak prompt (`best_msg`, the string actually sent to the target and fed to the judge via final_completion). apply_filter is therefore evaluated on the fixed natural-language request, so the resulting `filter_passed` column does not implement threat-model condition 1 (§3.3), which constrains the perplexity of x_jailbreak. By contrast the attack-time filtering is correct: gcg.py:394 and PRS main_adaptive_attack.py apply the filter to behavior+suffix.",
+      "concern": "A natural-language behavior almost always passes the filter, so this post-hoc `filter_passed` is near-constant True and does not reflect whether the jailbreak satisfies the threat model; if this column feeds the Table 3 '+F' / Table 4 columns the filtered ASRs would be wrong (the downstream aggregation script that would confirm this is itself absent — see results-aggregation-and-figures-missing).",
+      "resolution": "Apply the filter to the jailbreak string (`df['best_msg']`) rather than `df['behavior']`, or confirm which string the reported '+F' columns were computed on.",
+      "cross_refs": [
+        "results-aggregation-and-figures-missing"
+      ],
+      "paper_ref": "§3.3 threat-model condition 1; Tables 3-4 '+F' columns",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "eval-filter-applied-to-behavior-not-jailbreak",
+      "audit": "",
+      "audit_md_line": 156
+    },
+    {
+      "id": "/perplexity-extra-unigram-term",
+      "category": "difference",
+      "topic": "perplexity formula",
+      "title": "Window perplexity includes an initial-unigram factor absent from paper Eq. 3",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "baselines/ppl_filter.py",
+      "line_start": 502,
+      "line_end": 505,
+      "quote": "total_log_prob = np.sum(np.log(conditional_probs))\n# Add the log probability of the first unigram to start the chain properly\ntotal_log_prob += np.log(unigram_probs[0])\nperplexity = np.exp(-total_log_prob / len(bigrams))\n",
+      "claim": "The implemented per-window perplexity is exp(-[log P(w1) + sum_i log P(wi|wi-1)] / (W-1)), i.e. it multiplies in the marginal probability of the first token P(w1). Paper Eq. 3 defines PPL as the (W-N+1)-th root of the product of conditional probabilities only, with no P(w1) factor.",
+      "concern": "Code and paper compute slightly different quantities for the same symbol PPL2(S8); the discrepancy is real but almost certainly immaterial because the threshold 38,276 was (presumably) calibrated with this same code, absorbing the constant-ish shift.",
+      "resolution": "Either drop the `+ np.log(unigram_probs[0])` term to match Eq. 3, or update Eq. 3 to include the initial-unigram factor and confirm the threshold was calibrated with the shipped formula.",
+      "cross_refs": [
+        "ppl-threshold-derivation-missing"
+      ],
+      "paper_ref": "Eq. (3), §3.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "perplexity-extra-unigram-term",
+      "audit": "",
+      "audit_md_line": 184
+    },
+    {
+      "id": "/mixtral-flops-total-params",
+      "category": "methodology",
+      "topic": "FLOPs accounting",
+      "title": "Mixtral-based attacks charged total (46.7B) not active (~12.9B) params in FLOPs",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "aggregate_csv.py",
+      "line_start": 132,
+      "line_end": 136,
+      "quote": "runs_df[\"FLOPs\"] = (\n    target_tokens * model_size_dict[model] * 2\n    + attacker_tokens * model_size_dict[\"mixtral_8x7b\"] * 2\n    + judge_tokens * model_size_dict[\"mixtral_8x7b\"] * 2\n)\n",
+      "claim": "FLOPs use the estimate 2*d*tokens with d = model_size_dict['mixtral_8x7b'] = 46,702,792,704 (the full MoE parameter count, aggregate_csv.py:12). Mixtral-8x7B activates only 2 of 8 experts per token (~12.9B active params), so the per-token forward cost is ~2*12.9B, not ~2*46.7B. The attacker/judge FLOPs for the two Mixtral-based attacks (PAIR here, AutoDan at lines 123-126) are therefore over-counted by ~3.6x.",
+      "concern": "This inflates the compute attributed to the LLM-based attacks (PAIR, AutoDan) relative to the discrete-optimization attacks (GCG, PRS, which do not use Mixtral) in the FLOPs comparison of Figure 4 — a bias in the direction of the paper's compute-efficiency conclusion, though modest on a log-FLOPs axis and independent of the large raw-ASR gap.",
+      "resolution": "For MoE attackers/judges use active-parameter count (or measured FLOPs) rather than total parameters, or state that total-parameter FLOPs are an intentional upper bound.",
+      "cross_refs": [],
+      "paper_ref": "Appendix E; Figure 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "mixtral-flops-total-params",
+      "audit": "",
+      "audit_md_line": 213
+    }
+  ]
+}

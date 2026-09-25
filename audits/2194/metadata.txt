@@ -1,0 +1,5 @@
+paper_number: 2194
+title: Unlocking Dataset Distillation with Diffusion Models
+authors: Brian Moser, Federico Raue, Sebastian Palacio, Stanislav Frolov, Andreas Dengel
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/69413f87e5a34897cd010ca698097d0a-Abstract-Conference.html
+category: empirical

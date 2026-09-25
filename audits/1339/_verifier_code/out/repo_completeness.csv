@@ -1,0 +1,12 @@
+check,result,detail
+stage1_dataset_loader_present,False,imported at train.py:18 & train_ddp.py:23; src/data absent
+driving_thinking_weight_present,False,required by EAD.py:105 / video_encoder.py:41 assert
+committed_weight_files,0,no .pth/.safetensors/.ckpt/.pt/.pkl/.bin tracked
+uniad_integration_hits,0,E3AD(UniAD) rows in Table 1 & Table 2
+genad_integration_hits,0,E3AD(GenAD) row in Table 1
+law_integration_hits,0,E3AD(LAW) row in Table 1
+closedloop_carla_bench2drive_code_hits,0,"Table 2 / A.6 closed-loop DS,SR; carla only pinned in requirements.txt"
+crossdataset_geo_split_code,map-metadata-only,singapore/boston only in nuscenes_vad_dataset.py map list; no train-on-one/test-on-other split (Table A.7)
+ead_config_files,projects/configs/EAD/EAD_based_pretrain.py,only VAD-Base EAD config present
+framework1_attngate_tokenlearner_present,False,Framework 1 'Attach to Spatio-temporal' (Eq.5-6); head only wires eeg_decoder (Framework 3)
+stage1_split_logic_hits,0,80:10:10 split from paper §3.1 not implemented

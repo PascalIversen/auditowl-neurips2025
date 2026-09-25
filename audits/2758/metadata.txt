@@ -1,0 +1,5 @@
+paper_number: 2758
+title: Enhancing Visual Prompting through Expanded Transformation Space and Overfitting Mitigation
+authors: Shohei Enomoto
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/8337b176767d948275d0b6d17cf4221e-Abstract-Conference.html
+category: empirical

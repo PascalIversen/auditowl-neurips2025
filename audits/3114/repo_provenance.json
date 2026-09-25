@@ -1,0 +1,17 @@
+{
+  "paper_id": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput",
+  "title": "Accelerated Evolving Set Processes for Local PageRank Computation",
+  "repos": [
+    {
+      "name": "Rick7117__aesp-local-pagerank",
+      "role": "core",
+      "evidence": "README states 'implementation and experimental code for our paper \"Accelerated Evolving Set Processes for Local PageRank Computation\" submitted to NIPS 2025' and cites arXiv:2510.08010; repo owner 'Rick7117' matches first author Binbin Huang (bbhuang24@m.fudan.edu.cn, 'Rick' is a plausible handle); ppr_solver.py implements the paper's named algorithms aespAPPR and aespLocGD alongside baselines appr/locGD; plot scripts match paper figures (convergence, vol/gamma, R-vs-alpha); the audit smoke-tested aespAPPR/aespLocGD on as-skitter and confirmed operation counts match paper Table 3 order-of-magnitude."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo (Rick7117/aesp-local-pagerank) is unambiguously this paper's own implementation: the README explicitly names the paper title and NeurIPS 2025 venue, links to arXiv:2510.08010, and the codebase implements the paper's headline AESP methods (aespAPPR, aespLocGD) in ppr_solver.py. The audit's findings (missing datasets, no results/*.npz, dead /mnt paths, generic README template, no dependency spec) are all legitimate reproducibility defects written against the correct repo. No non-core repo was cloned. The audit correctly classified this paper as source-present.",
+  "audit_impact": "None — all findings were written against the correct core repo. The verdict and finding set require no correction.",
+  "recommended_action": "No action needed on repo provenance. Findings stand as legitimate reproducibility defects."
+}

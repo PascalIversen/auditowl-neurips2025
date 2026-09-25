@@ -1,0 +1,244 @@
+{
+  "paper": "913",
+  "n_flags": 18,
+  "flags": [
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/helpers/datasets.py",
+      "line": 92,
+      "reason": "align_masks unions test_mask into train_mask, so evaluation feeds each test node's ground-truth label through train_y (and also fits least-squares transforms on test labels).",
+      "confidence": "high"
+    },
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/models/gfm.py",
+      "line": 27,
+      "reason": "Class indices are computed relative to label[visible_nodes] but written directly into full-length masks, so propagation/loss masks point at the wrong nodes and can include validation/test targets.",
+      "confidence": "high"
+    },
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/main.py",
+      "line": 8,
+      "reason": "For inc_trainset, every purportedly held-out test dataset is appended to dataset_list and passed through the supervised training loop, contradicting the README's held-out-graph protocol.",
+      "confidence": "high"
+    },
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/models/triton_nn/mean_gnn.py",
+      "line": 71,
+      "reason": "The MEAN_GNN implementation aggregates with scatter(..., reduce='max'), contradicting its name, the reference GraphConv(mean), and its own comparison test.",
+      "confidence": "high"
+    },
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/helpers/split_data.py",
+      "line": 64,
+      "reason": "The split index is reduced modulo train_mask.ndim (always 2 here) instead of the number of split columns, so five seeds repeatedly use only splits 0 and 1.",
+      "confidence": "high"
+    },
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/helpers/train_test_setup.py",
+      "line": null,
+      "reason": "This required module is absent even though helpers/arguments.py imports TrainTestSetup from it, so main.py cannot start.",
+      "confidence": "high"
+    },
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/helpers/gnn_type.py",
+      "line": 14,
+      "reason": "The module unconditionally imports absent triton_tests/gat.py and models/triton_nn/gat.py, causing import failure even when MEAN_GNN is selected.",
+      "confidence": "high"
+    },
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/README.md",
+      "line": 44,
+      "reason": "All best-config commands use unsupported --hidden_dim (the parser defines --hid_channel), omit required --project, and wrap onto a new shell command without a continuation.",
+      "confidence": "high"
+    },
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/helpers/utils.py",
+      "line": 52,
+      "reason": "metric_mean has only [val,test], but str_print zips it with ['train','val','test'], so printed validation is labeled train, test is labeled val, and no test field is printed.",
+      "confidence": "high"
+    },
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/helpers/arguments.py",
+      "line": 38,
+      "reason": "The exposed --gpu argument is never used; Experiment always selects the generic 'cuda' device, so requested GPU selection has no effect.",
+      "confidence": "high"
+    },
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/helpers/datasets.py",
+      "line": 301,
+      "reason": "y_mat is normalized using labels from every node before masks are applied, leaking held-out label frequencies into the label representation used for training and inference.",
+      "confidence": "medium"
+    },
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/experiment.py",
+      "line": 62,
+      "reason": "The reported final uncertainty averages per-dataset seed standard deviations instead of computing the standard deviation of the per-seed aggregate metric.",
+      "confidence": "medium"
+    },
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/helpers/constants.py",
+      "line": 7,
+      "reason": "CrossEntropyLoss is applied to input.relu() rather than raw logits, clamping all negative scores and their gradients and changing the intended multiclass objective.",
+      "confidence": "medium"
+    },
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/models/gfm.py",
+      "line": 25,
+      "reason": "A single k is derived from the average class count and sliced from every class, so imbalanced classes can contribute all labels to propagation and none to supervision while the actual LP ratio differs from lp_ratio.",
+      "confidence": "medium"
+    },
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/transforms/least_squares.py",
+      "line": 36,
+      "reason": "Ridge augmentation uses lambda*I, which produces a lambda-squared penalty; standard L2 regularization with candidate lambda requires sqrt(lambda)*I.",
+      "confidence": "medium"
+    },
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/experiment.py",
+      "line": 186,
+      "reason": "Test loss and accuracy are computed and logged after every training epoch, exposing the test set throughout model/config development instead of reserving it for final evaluation.",
+      "confidence": "medium"
+    },
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/README.md",
+      "line": 8,
+      "reason": "The installation instructions omit imported runtime dependencies including ogb and scikit-learn, and the repository provides no requirements/lock file to supply them.",
+      "confidence": "medium"
+    },
+    {
+      "file": "benfinkelshtein__EquivarianceEverywhere/helpers/constants.py",
+      "line": 15,
+      "reason": "The only Neptune API token is the literal placeholder '...' and Experiment always initializes an online run, so the documented commands cannot run as shipped without source editing and credentials.",
+      "confidence": "medium"
+    }
+  ],
+  "candidates": {
+    "S01": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "models/triton_nn/gat.py",
+          "line": null
+        },
+        {
+          "file": "models/triton_kernels/gat.py",
+          "line": null
+        },
+        {
+          "file": "models/triton_kernels/gat3d.py",
+          "line": null
+        },
+        {
+          "file": "triton_tests/gat.py",
+          "line": null
+        },
+        {
+          "file": "triton_tests/test2d_gat.py",
+          "line": null
+        },
+        {
+          "file": "triton_tests/test3d_gat.py",
+          "line": null
+        }
+      ],
+      "matched_flags": []
+    },
+    "S02": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "helpers/train_test_setup.py",
+          "line": null
+        }
+      ],
+      "matched_flags": [
+        "This required module is absent even though helpers/arguments.py imports TrainTestSetup from it, so main.py cannot start."
+      ]
+    },
+    "S03": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "transforms/normalize.py",
+          "line": 13
+        }
+      ],
+      "matched_flags": []
+    },
+    "S04": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "models/triton_nn/mean_gnn.py",
+          "line": 5
+        },
+        {
+          "file": "models/triton_nn/mean_gnn.py",
+          "line": 67
+        }
+      ],
+      "matched_flags": [
+        "The MEAN_GNN implementation aggregates with scatter(..., reduce='max'), contradicting its name, the reference GraphConv(mean), and its own comparison test."
+      ]
+    },
+    "S05": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "main.py",
+          "line": 2
+        },
+        {
+          "file": "main.py",
+          "line": 15
+        }
+      ],
+      "matched_flags": [
+        "For inc_trainset, every purportedly held-out test dataset is appended to dataset_list and passed through the supervised training loop, contradicting the README's held-out-graph protocol."
+      ]
+    },
+    "S06": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "helpers/datasets.py",
+          "line": 78
+        },
+        {
+          "file": "helpers/datasets.py",
+          "line": 294
+        }
+      ],
+      "matched_flags": [
+        "align_masks unions test_mask into train_mask, so evaluation feeds each test node's ground-truth label through train_y (and also fits least-squares transforms on test labels).",
+        "y_mat is normalized using labels from every node before masks are applied, leaking held-out label frequencies into the label representation used for training and inference."
+      ]
+    },
+    "S07": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "helpers/constants.py",
+          "line": 2
+        },
+        {
+          "file": "helpers/constants.py",
+          "line": 5
+        }
+      ],
+      "matched_flags": [
+        "CrossEntropyLoss is applied to input.relu() rather than raw logits, clamping all negative scores and their gradients and changing the intended multiclass objective.",
+        "The only Neptune API token is the literal placeholder '...' and Experiment always initializes an online run, so the documented commands cannot run as shipped without source editing and credentials."
+      ]
+    },
+    "S08": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "models/equiv_layer.py",
+          "line": 64
+        }
+      ],
+      "matched_flags": []
+    }
+  }
+}

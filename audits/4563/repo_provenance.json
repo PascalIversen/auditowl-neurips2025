@@ -1,0 +1,17 @@
+{
+  "paper_id": "4563_Automated_Model_Discovery_via_Multi_modal_Multi_step_Pipelin",
+  "title": "Automated Model Discovery via Multi-modal & Multi-step Pipeline",
+  "repos": [
+    {
+      "name": "kaist-ami__Automated-Model-Discovery",
+      "role": "core",
+      "evidence": "README states '[NeurIPS'25] Official Repository for Automated Model Discovery via Multi-modal & Multi-step Pipeline', lists all five paper authors (Lee Jung-Mok, Nam Hyeon-Woo, Moon Ye-Bin, Junhyun Nam, Tae-Hyun Oh), links arXiv 2509.25946 and OpenReview id qGFvTIMS3W — all matching paper metadata. Repo owner is kaist-ami (KAIST AMI lab, Tae-Hyun Oh's group). Code implements the paper's core pipeline: AnalyzerVLM (utils/analyzer_utils.py), EvaluatorVLM / VIC scoring (utils/vision_score_utils.py), GP fitting (gpy_fit_func.py), kernel parsing (utils/cfg_utils.py), main_gp.py + main_sr.py entrypoints, and the gpss-research time-series CSVs used in experiments."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "There is exactly one cloned repo and it is unambiguously the paper's own official implementation: the README names the NeurIPS 2025 paper title, all five authors, the KAIST AMI lab (corresponding author Tae-Hyun Oh's group), arXiv 2509.25946, and OpenReview qGFvTIMS3W. All audit findings were correctly written against this repo. The findings are legitimate reproducibility defects (missing modules parse_functools/cfgs.asmd_cfg/vision_score_gpt2_0105_func that prevent import, hardcoded private paths /home/mok/..., absent RMSE computation, no baseline code) — none of them arise from confusing a non-core repo for the paper's code. The auditor correctly identified the official repo and wrote findings against it.",
+  "audit_impact": "None. The single cloned repo is the correct core implementation. All 13 findings were written against the right code. The audit's source-present classification is correct. The findings themselves are valid and unaffected by any repo-identity error.",
+  "recommended_action": "No reclassification needed. The audit is correctly scoped. Findings stand as written."
+}

@@ -1,0 +1,154 @@
+{
+  "_desc": "SciCoQA contamination-safe recall (real arm): 10 post-baseline-cutoff items, k=2 confirmatory runs. Verifier-kept only, SciCoQA's matching protocol. Scoped claim = 'discrepancies postdating the BASELINES' training cutoffs'.",
+  "_provenance": "run_01/run_02 = two independent audit+verify passes; see judge_verdicts.json for every per-pair verdict and compute_recall.py for how these numbers are derived.",
+  "n": 10,
+  "per_run": {
+    "run_01": {
+      "k": 7,
+      "n": 10,
+      "recall": 0.7,
+      "wilson95": [
+        0.397,
+        0.892
+      ]
+    },
+    "run_02": {
+      "k": 6,
+      "n": 10,
+      "recall": 0.6,
+      "wilson95": [
+        0.313,
+        0.832
+      ]
+    }
+  },
+  "mean_per_run": {
+    "k": 13,
+    "n": 20,
+    "recall": 0.65,
+    "wilson95": [
+      0.433,
+      0.819
+    ],
+    "note": "per-run vs their single-shot is the like-for-like comparison"
+  },
+  "union_at_2": {
+    "k": 7,
+    "n": 10,
+    "recall": 0.7,
+    "wilson95": [
+      0.397,
+      0.892
+    ]
+  },
+  "reliable_core_both_runs": {
+    "k": 6,
+    "n": 10,
+    "recall": 0.6
+  },
+  "stability_agree": {
+    "k": 9,
+    "n": 10,
+    "rate": 0.9
+  },
+  "vs_baselines_same_10_full_condition": {
+    "gpt-5": "5/10=0.5",
+    "gemini-2.5-pro": "3/10=0.3",
+    "gpt-5-mini": "3/10=0.3",
+    "note": "single-shot; their raw predictions re-judged by us with the same GPT-5.5 judge and protocol used for AuditOwl (see baselines_gpt55_judge.json). Our worst run (0.60) still exceeds their best (0.50)."
+  },
+  "per_item": [
+    {
+      "item": "01_ualign",
+      "category": "Difference/Evaluation",
+      "run_01": "DET",
+      "run_02": "DET",
+      "union": "DET",
+      "stable": true
+    },
+    {
+      "item": "02_bp-benchmark",
+      "category": "Difference/Training",
+      "run_01": "DET",
+      "run_02": "DET",
+      "union": "DET",
+      "stable": true
+    },
+    {
+      "item": "03_llm-deliberation",
+      "category": "Difference/Evaluation",
+      "run_01": "DET",
+      "run_02": "DET",
+      "union": "DET",
+      "stable": true
+    },
+    {
+      "item": "04_arxiv-rec",
+      "category": "Difference/Evaluation",
+      "run_01": "DET",
+      "run_02": "DET",
+      "union": "DET",
+      "stable": true
+    },
+    {
+      "item": "06_detector",
+      "category": "Difference/Model",
+      "run_01": "DET",
+      "run_02": "DET",
+      "union": "DET",
+      "stable": true
+    },
+    {
+      "item": "07_multiflow",
+      "category": "Difference/Loss",
+      "run_01": "miss",
+      "run_02": "miss",
+      "union": "miss",
+      "stable": true
+    },
+    {
+      "item": "08_consistency-fm",
+      "category": "Difference/Loss",
+      "run_01": "DET",
+      "run_02": "DET",
+      "union": "DET",
+      "stable": true
+    },
+    {
+      "item": "09_uia",
+      "category": "PaperOmission/Data",
+      "run_01": "miss",
+      "run_02": "miss",
+      "union": "miss",
+      "stable": true
+    },
+    {
+      "item": "10_llm-adapters",
+      "category": "PaperOmission/Data",
+      "run_01": "miss",
+      "run_02": "miss",
+      "union": "miss",
+      "stable": true
+    },
+    {
+      "item": "11_ksd-bayes",
+      "category": "Difference/Training",
+      "run_01": "DET",
+      "run_02": "miss",
+      "union": "DET",
+      "stable": false
+    }
+  ],
+  "flags": {
+    "variance_flips": [
+      "item11 (M_Liu preconditioner derivative, DET->miss)"
+    ],
+    "stable_misses": [
+      "item07 multiflow (1-t) loss-norm",
+      "item09 uia data downsampling",
+      "item10 llm-adapters prompt-wrap"
+    ],
+    "interpretation": "Variance concentrated in concrete-but-BURIED defects (need auditor to open one specific file); reliable-core = surfaced concrete differences; stable-miss = deep-math/omission blind spot. Precision high throughout (every run flagged the repo non-clean; emergent real findings both runs).",
+    "item11_ksd-bayes": "gemini-only-valid (flagged per design)"
+  }
+}

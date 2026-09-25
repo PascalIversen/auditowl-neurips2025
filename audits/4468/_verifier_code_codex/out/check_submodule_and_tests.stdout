@@ -1,0 +1,11 @@
+transformers fork generation/utils.py exists: True
+  _eg_cfg_sample defined: True
+  EG-CFG markers count: 5
+  apply_guidance call present: True
+submodule xpython: dir_exists=True file_count=51
+submodule trepan: dir_exists=True file_count=206
+submodule trepan-xpy: dir_exists=True file_count=43
+submodule transformers: dir_exists=True file_count=1754
+MBPP guidance test source line present (test_cases_to_prompt = problem["test_list"]): True
+MBPP eval test source present (DATASET__MBPP -> test_cases_to_eval = eval_problem["test_list"]): True
+CFG eq13 equivalence (probs-domain == log-domain): True (lhs=2.400000 rhs=2.400000)

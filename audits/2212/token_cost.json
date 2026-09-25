@@ -1,0 +1,19 @@
+{
+  "folder": "2212_Best_of_N_Jailbreaking",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 10415,
+    "output": 21583,
+    "cache_write": 225269,
+    "cache_read": 6352062
+  },
+  "total_tokens": 6609329,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 15.53
+}

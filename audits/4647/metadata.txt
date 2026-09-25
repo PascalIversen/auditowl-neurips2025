@@ -1,0 +1,5 @@
+paper_number: 4647
+title: Dynam3D: Dynamic Layered 3D Tokens Empower VLM for Vision-and-Language Navigation
+authors: Zihan Wang, Seungjun Lee, Gim Hee Lee
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/e1a1847e39a7b79b41199176b152f0e6-Abstract-Conference.html
+category: empirical

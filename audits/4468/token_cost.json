@@ -1,0 +1,19 @@
+{
+  "folder": "4468_Execution_Guided_Line_by_Line_Code_Generation",
+  "model": "claude-opus-4-8",
+  "audit_runs": 2,
+  "tokens": {
+    "input": 18411,
+    "output": 20247,
+    "cache_write": 740580,
+    "cache_read": 12182694
+  },
+  "total_tokens": 12961932,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 33.95
+}

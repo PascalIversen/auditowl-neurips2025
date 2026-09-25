@@ -1,0 +1,170 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T15:17:34.242389+00:00",
+  "findings": [
+    {
+      "id": "/hq-vsr-pipeline-missing",
+      "category": "missing",
+      "topic": "data construction / video processing pipeline",
+      "title": "Video processing pipeline that builds HQ-VSR (Sec 3.3, Fig 3) absent from repo",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 80,
+      "line_end": 80,
+      "quote": "- [ ] Release the video processing pipeline.\n",
+      "claim": "The paper's four-step video processing pipeline (metadata/scene/quality filtering + optical-flow motion-mask bounding-box cropping, Sec 3.3 & Fig 3) — a stated contribution used to build the HQ-VSR dataset and ablated in Tables 1c and 1d — has no implementation in the repo; the README TODO marks it unreleased, and a repo-wide grep for scene detection, aesthetic/CLIP-IQA/FasterVQA/DOVER quality filtering, or motion-mask/bounding-box code finds nothing under finetune/datasets or finetune/scripts.",
+      "concern": "A core contribution and the +Filter/+Motion ablation rows (Table 1d) cannot be reproduced or audited; the released HQ-VSR.txt/dataset is the only artefact, with no code showing how 2,055 videos were curated from OpenVid-1M.",
+      "resolution": "Authors: release the curation pipeline code (scene detection, quality scoring with the four metrics, and the optical-flow motion-area cropping), or confirm the Table 1c/1d ablations were produced by code that is not in this repo.",
+      "cross_refs": [
+        "§3.3",
+        "Table 1c",
+        "Table 1d",
+        "Fig 3"
+      ],
+      "check_script": "_audit_code/check_missing_eval_modules.py",
+      "paper_ref": "Section 3.3 'Video Processing Pipeline'; Table 1c/1d",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "hq-vsr-pipeline-missing",
+      "audit": "",
+      "audit_md_line": 57,
+      "verdict": "keep",
+      "reason": "README.md line 80 contains exactly '- [ ] Release the video processing pipeline.' confirming the pipeline is unreleased.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/ewarp-module-missing",
+      "category": "missing",
+      "topic": "evaluation / temporal-consistency metric",
+      "title": "eval_ewarp.py imports nonexistent `ewarp` module; E*warp (Table 2) not computable",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "finetune/scripts/eval_ewarp.py",
+      "line_start": 149,
+      "line_end": 149,
+      "quote": "from ewarp import Ewarp as Ewarp\n",
+      "claim": "eval_ewarp.py — the only script for the flow-warping error E*warp reported in every row of Table 2 — does `os.chdir(RAFT)` then `from ewarp import Ewarp`, but there is no `ewarp.py` anywhere in the repo (verified by find); the script therefore raises ImportError and cannot produce any E*warp value.",
+      "concern": "One of the eight Table-2 metric columns (temporal consistency, a headline claim for a VSR method) has no working computation in the repo, so that column is not reproducible from the released code.",
+      "resolution": "Authors: add the missing `ewarp.py` (the Ewarp implementation), as already flagged in the README testing TODO ('Add metric computation scripts for FasterVQA, DOVER, and E*warp').",
+      "cross_refs": [
+        "readme-eval-todo",
+        "Table 2 E*warp"
+      ],
+      "check_script": "_audit_code/check_missing_eval_modules.py",
+      "paper_ref": "Table 2, E*warp column; Section 4.1 Evaluation Metrics",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ewarp-module-missing",
+      "audit": "",
+      "audit_md_line": 82,
+      "verdict": "keep",
+      "reason": "finetune/scripts/eval_ewarp.py line 149 contains exactly 'from ewarp import Ewarp as Ewarp' confirming the import of the missing module.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/pyiqa-deps-unlisted",
+      "category": "missing",
+      "topic": "dependencies / environment",
+      "title": "pyiqa (and DOVER/VBench) required for metrics but absent from requirements.txt",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "requirements.txt",
+      "line_start": 1,
+      "line_end": 20,
+      "quote": "accelerate>=1.1.1\ntransformers>=4.46.2\nnumpy==1.26.0\ntorch>=2.5.0\ntorchvision>=0.20.0\nsentencepiece>=0.2.0\nSwissArmyTransformer>=0.4.12\ngradio>=5.5.0\nimageio>=2.35.1\nimageio-ffmpeg>=0.5.1\nopenai>=1.54.0\nmoviepy>=2.0.0\nscikit-video>=1.1.11\npydantic>=2.10.3\nwandb\npeft\nopencv-python\ndecord\nav\ntorchdiffeq\n",
+      "claim": "eval_metrics.py and inference_script.py both `import pyiqa` (the library that computes PSNR/SSIM/LPIPS/DISTS/CLIP-IQA/FasterVQA for Table 2), and eval_dover.py / eval_vbench.py import external `DOVER` / `VBench` packages, but none of pyiqa, DOVER, or VBench appears in requirements.txt; `pip install -r requirements.txt` yields an environment that cannot run the evaluation.",
+      "concern": "The reproduction environment is under-specified: a fresh install per requirements.txt fails on the metric scripts; the README mentions `pip install pyiqa` only in prose, and DOVER/VBench have no install instructions or pinned versions.",
+      "resolution": "Authors: add pyiqa (pinned) to requirements.txt and document the exact DOVER / VBench versions and install steps used for Table 2.",
+      "cross_refs": [
+        "ewarp-module-missing"
+      ],
+      "check_script": "_audit_code/check_missing_eval_modules.py",
+      "paper_ref": "Section 4.1 Evaluation Metrics; Table 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "pyiqa-deps-unlisted",
+      "audit": "",
+      "audit_md_line": 107,
+      "verdict": "keep",
+      "reason": "requirements.txt lines 1-20 match the quoted content exactly and contain no mention of pyiqa, DOVER, or VBench.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/inference-sh-wrong-gt-path",
+      "category": "bug",
+      "topic": "evaluation driver script",
+      "title": "inference.sh evaluates SPMCS/YouHQ40/RealVSR/MVSR4x against UDM10 ground truth",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "inference.sh",
+      "line_start": 21,
+      "line_end": 25,
+      "quote": "python eval_metrics.py \\\n    --gt datasets/test/UDM10/GT \\\n    --pred results/DOVE/SPMCS \\\n    --metrics psnr,ssim,lpips,dists,clipiqa\n",
+      "claim": "The provided reproduction script hardcodes `--gt datasets/test/UDM10/GT` for the SPMCS block (line 23) and identically for YouHQ40 (line 35), RealVSR (line 48), and MVSR4x (line 61), instead of each dataset's own GT folder; eval_metrics.py matches predictions to GT by filename stem and skips any pred with no matching GT name, so this either evaluates against the wrong reference or processes zero samples.",
+      "concern": "Running inference.sh as shipped does not reproduce the Table-2 full-reference metrics (PSNR/SSIM/LPIPS/DISTS) for four of the five FR datasets — the eval points at UDM10's GT for all of them.",
+      "resolution": "Authors: fix each eval block's `--gt` to point at the corresponding dataset's GT directory (e.g. `datasets/test/SPMCS/GT`).",
+      "cross_refs": [
+        "Table 2"
+      ],
+      "paper_ref": "Table 2 (SPMCS, YouHQ40, RealVSR, MVSR4x rows)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "inference-sh-wrong-gt-path",
+      "audit": "",
+      "audit_md_line": 153,
+      "verdict": "keep",
+      "reason": "inference.sh lines 21-25 match the quote exactly, and lines for YouHQ40, RealVSR, and MVSR4x all also use '--gt datasets/test/UDM10/GT' confirming the systemic wrong-path bug.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/dover-per-sample-offset",
+      "category": "bug",
+      "topic": "evaluation / DOVER aggregation",
+      "title": "eval_dover.py off-by-one maps each clip name to the previous clip's DOVER score",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "finetune/scripts/eval_dover.py",
+      "line_start": 158,
+      "line_end": 159,
+      "quote": "for i, name in enumerate(pred_names):\n    results[name] = dover_results[i-1]\n",
+      "claim": "When assembling per-sample DOVER results, the loop indexes `dover_results[i-1]`, so for i=0 the first clip name receives `dover_results[-1]` (the last score) and every other name receives the preceding clip's score — a cyclic shift of the name→score mapping.",
+      "concern": "Per-sample DOVER values are mislabeled; the overall average over `results` (np.mean) is unaffected because it sums the same set of values, so the reported Table-2 DOVER averages are not changed, but any per-clip DOVER use would be wrong.",
+      "resolution": "Authors: change `dover_results[i-1]` to `dover_results[i]`.",
+      "cross_refs": [
+        "Table 2 DOVER column"
+      ],
+      "paper_ref": "Table 2, DOVER column",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "dover-per-sample-offset",
+      "audit": "",
+      "audit_md_line": 180,
+      "verdict": "keep",
+      "reason": "finetune/scripts/eval_dover.py lines 158-159 show exactly 'results[name] = dover_results[i-1]' confirming the cyclic off-by-one index bug.",
+      "changed": "nothing"
+    }
+  ]
+}

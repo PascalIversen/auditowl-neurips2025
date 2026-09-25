@@ -1,0 +1,157 @@
+{
+  "paper": "2167",
+  "seeds": [
+    {
+      "sid": "S01",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "ofurman__DiCoFlex/counterfactuals/generative_models/nice.py",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the NICE arm of the flow-architecture ablation",
+      "description": "Delete the repository's only NICE implementation. Table 5 reports a NICE NLL and uses the four-way architecture comparison to justify choosing MAF; after this deletion there is no executable NICE model in the repository with which to reproduce that arm of the ablation."
+    },
+    {
+      "sid": "S03",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "ofurman__DiCoFlex/counterfactuals/generative_models/maf.py",
+          "line": 9,
+          "action": "replace"
+        },
+        {
+          "file": "ofurman__DiCoFlex/counterfactuals/generative_models/maf.py",
+          "line": 130,
+          "action": "replace"
+        }
+      ],
+      "title": "Implement RealNVP coupling layers inside the claimed MAF model",
+      "description": "Replace the autoregressive transform stack in MaskedAutoregressiveFlow with nflows' full SimpleRealNVP coupling architecture while preserving the public class and training API. The substitute remains an invertible conditional flow with trainable scale/shift networks, exact likelihoods, sampling, and real gradients, but it is RealNVP rather than the autoregressive method the paper says was selected."
+    },
+    {
+      "sid": "S05",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "ofurman__DiCoFlex/counterfactuals/datasets/DCENF/bank.py",
+          "line": 34,
+          "action": "replace"
+        }
+      ],
+      "title": "Train the Bank pipeline on its held-out test records",
+      "description": "Append the entire Bank test partition and its predicted labels to the training arrays before preprocessing. The classifier, K-nearest-neighbor counterfactual targets, and conditional flow then train on every example later used for Bank evaluation, while the unchanged test arrays are still reported as held-out results."
+    },
+    {
+      "sid": "S07",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "ofurman__DiCoFlex/counterfactuals/discriminative_models/multilayer_perceptron.py",
+          "line": 98,
+          "action": "replace"
+        }
+      ],
+      "title": "Convert classifier logits with normalized ReLU instead of softmax",
+      "description": "Replace the discriminator's probability conversion with normalized rectified logits. Negative class evidence is destroyed before normalization, so outputs can become near-degenerate confidence vectors even though training still uses CrossEntropyLoss on the original logits; these corrupted values drive neighbor filtering and the reported classifier-probability metric."
+    }
+  ],
+  "baseline": [
+    {
+      "id": "2167/hypervolume-not-computed",
+      "category": "missing",
+      "file": "counterfactuals/metrics/metrics.py",
+      "line_start": 352,
+      "line_end": 396,
+      "title": "No code computes Hypervolume, the diversity metric in every results table"
+    },
+    {
+      "id": "2167/baselines-and-tables-missing",
+      "category": "missing",
+      "file": "counterfactuals/dicoflex/train_generic_counterfactual.py",
+      "line_start": 363,
+      "line_end": 374,
+      "title": "No baseline code and no drivers for Tables 3/5/7/8 or runtime Figs 2/3"
+    },
+    {
+      "id": "2167/deps-unpinned",
+      "category": "missing",
+      "file": "requirements.txt",
+      "line_start": 1,
+      "line_end": 12,
+      "title": "Dependencies unpinned; environment not reconstructible"
+    },
+    {
+      "id": "2167/readme-conf-and-instructions-broken",
+      "category": "missing",
+      "file": "README.md",
+      "line_start": 46,
+      "line_end": 57,
+      "title": "README points to a non-existent conf/ dir and gives no per-table commands"
+    },
+    {
+      "id": "2167/hardcoded-abs-syspath",
+      "category": "bug",
+      "file": "counterfactuals/dicoflex/train_generic_counterfactual.py",
+      "line_start": 5,
+      "line_end": 6,
+      "title": "Driver hardcodes two absolute machine-specific sys.path entries"
+    },
+    {
+      "id": "2167/sparsity-metric-mismatch",
+      "category": "difference",
+      "file": "counterfactuals/metrics/metrics.py",
+      "line_start": 175,
+      "line_end": 193,
+      "title": "Code sparsity is one all-feature count, not the paper's cat/num split or relative \u03f5-sparsity"
+    },
+    {
+      "id": "2167/adult-subsample-2000-unseeded",
+      "category": "difference",
+      "file": "counterfactuals/datasets/DCENF/adult.py",
+      "line_start": 80,
+      "line_end": 81,
+      "title": "Adult loader subsamples 2000 rows (unseeded); paper Table 4 says 32,000"
+    },
+    {
+      "id": "2167/training-epochs-mismatch",
+      "category": "difference",
+      "file": "counterfactuals/dicoflex/train_generic_counterfactual.py",
+      "line_start": 191,
+      "line_end": 192,
+      "title": "Driver hardcodes 10 epochs / patience 50; paper states 1000 epochs / patience 300"
+    }
+  ],
+  "unassigned": [
+    {
+      "fid": "/baselines-not-in-repo",
+      "run": "run_01",
+      "category": "missing",
+      "loc": "README.md:68",
+      "title": "No implementation of any baseline (DiCE, CCHVAE, ReViSE, TABCF, Wachter)",
+      "claim": "The only documented reproduction command trains and evaluates DiCoFlex alone; a whole-word repo grep for cchvae/dice/revise/tabcf/wachter/carla finds zero non-comment hits, and there is no baseline module, wrapper, or CARLA-style dependency in the tree.",
+      "concern": "Table 1's central comparison (and Fig 2's runtime comparison) is against five baseline methods whose code is entirely absent, so the headline 'outperforms existing methods' claim cannot be reproduced from this repository."
+    },
+    {
+      "fid": "/classification-probability-not-computed",
+      "run": "run_01",
+      "category": "missing",
+      "loc": "counterfactuals/metrics/metrics.py:205",
+      "title": "Table 1 'Classif. prob.' column has no producing code",
+      "claim": "The only probability-named metric, prob_plausibility(), thresholds the generative flow's log-density; no metric queries the discriminator's confidence in the target class (disc_model.predict_proba), and calc_all_metrics() returns no such key.",
+      "concern": "Every row of Table 1 reports a 'Classif. prob.' (model confidence in the target prediction), but the evaluation code computes no classifier-confidence metric, so that column is not traceable."
+    },
+    {
+      "fid": "/actionability-masks-absent",
+      "run": "run_01",
+      "category": "missing",
+      "loc": "counterfactuals/dicoflex/train_generic_counterfactual.py:152",
+      "title": "The four actionability masks of Tables 2/6 are not defined anywhere",
+      "claim": "The driver constructs exactly one mask \u2014 a uniform 1e-3 weight vector that protects no feature \u2014 so the actionability mechanism is never exercised on any specific feature in the committed configuration.",
+      "concern": "Tables 2 and 6 report DiCoFlex trained with four masks blocking Capital Gain, Capital Loss, Age, Race/Sex, and Native Country, but those mask patterns exist nowhere in the code, so the actionability experiments cannot be reproduced as run."
+    }
+  ]
+}

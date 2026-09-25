@@ -1,0 +1,230 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-01T08:02:17.401785+00:00",
+  "findings": [
+    {
+      "id": "/tuning-selects-on-test",
+      "category": "methodology",
+      "topic": "hyperparameter tuning / test-set leakage",
+      "title": "Optuna tuning minimises the TEST-set MAE, not validation MAE, for all 11 models",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/train/tune_ml.py",
+      "line_start": 97,
+      "line_end": 97,
+      "quote": "return cv_metrics[f\"ts/{target}_mae\"]\n",
+      "claim": "Both tuning entrypoints return the held-out test-fold MAE as the value Hydra-Optuna minimises: tune_ml.py returns `cv_metrics['ts/{target}_mae']` (line 97; cached path line 60) and tune.py returns `cv_metrics['test/sbp_mae']` (line 100; cached path line 61). The Optuna sweepers are configured `direction: minimize` (e.g. core/config/tune/ml/lgb_sensors_SP.yaml:22), so hyperparameters are chosen to minimise performance on the test fold. A per-fold validation metric (`val/{target}_mae`) is computed in the same run but is not used as the objective.",
+      "concern": "This makes model selection depend on the test set, contradicting the paper's Methods claim that tuning used nested CV 'monitoring the MAE performance of validation sets'; every Table 2 / Fig. 2 number is optimistically biased by selecting hyperparameters on the reported test data.",
+      "resolution": "Confirm which objective produced the reported hyperparameters; change both tuning scripts to return `val/{target}_mae` / `val/sbp_mae` and re-run, reporting the change in the benchmark numbers.",
+      "cross_refs": [
+        "tuning-method-grid-vs-optuna"
+      ],
+      "check_script": "_audit_code/check_tune_objective.py",
+      "paper_ref": "Methods, 'Hyperparameter tuning' (p.13): 'monitoring the MAE performance of validation sets'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "tuning-selects-on-test",
+      "audit": "",
+      "audit_md_line": 51
+    },
+    {
+      "id": "/feature-selection-global-not-nested",
+      "category": "methodology",
+      "topic": "feature selection / data splitting",
+      "title": "One dataset-wide feature-importance ranking is applied to every CV fold (not refit per fold)",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "code/train/core/loaders/feat_loader.py",
+      "line_start": 102,
+      "line_end": 104,
+      "quote": "sorted_feat = df_imp.features.values\nlen_features = len(sorted_feat)\nfeatures = sorted_feat[:int(len_features*self.config.param_loader['rate_features'])]\n",
+      "claim": "For Feat2Lab models the top-`rate_features` fraction is selected from a single precomputed importance ranking (`featImportance-{SP,DP}.pkl`, one file per dataset), and the same file is used for the train, validation AND test folds of every one of the 5 CV folds; the ranking is never recomputed inside the outer CV loop. `rate_features` is 0.05–0.7 for most reported configs (code/train/core/config/ml/**), so selection is active.",
+      "concern": "If that ranking was computed over the full dataset (all folds, including each fold's test subjects) — which the single-file-per-dataset structure implies — then feature selection saw test-fold labels, leaking into every fold's evaluation; even under a charitable reading it is not nested within the CV the paper claims.",
+      "resolution": "State the data used to fit the RF/Extra-Trees importances; if computed on the full dataset, refit the importance ranking inside each outer training fold and re-report.",
+      "cross_refs": [
+        "feat-importance-generator-missing"
+      ],
+      "check_script": "_audit_code/inspect_feat_importance.py",
+      "paper_ref": "Methods, 'Feat2Lab' feature selection; 'Hyperparameter tuning' (nested 5-fold CV)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "feature-selection-global-not-nested",
+      "audit": "",
+      "audit_md_line": 76
+    },
+    {
+      "id": "/stratified-split-code-missing",
+      "category": "missing",
+      "topic": "data splitting / core methodology",
+      "title": "Distribution-preserving iterative-stratification split (the paper's contribution) is not in the repo",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/process/data_splitting.py",
+      "line_start": 32,
+      "line_end": 37,
+      "quote": "subs = data.patient.unique()\nksplitter = KFold(n_splits=config.param_split.fold, shuffle=True, random_state=config.param_split.random_state)\nall_split_df = []\nfor train, test in ksplitter.split(subs):\n    test_df = data[data.patient.isin(subs[test])].reset_index(drop=True)\n    all_split_df.append(test_df)\n",
+      "claim": "The only splitter in the repo is `data_splitting.py`. Its CV branch does a plain `KFold(shuffle=True)` over unique subjects and its own warning (lines 28-30) states it 'does not preserve the BP distributions between the folds' and refers users to Figshare/the paper 'for self-implementation'. A repo-wide grep finds no iterative-stratification / 16-class-encoding / skmultilearn code anywhere (check_missing_artifacts.py). `process.py:5,88-92` wires this splitter into the end-to-end pipeline.",
+      "concern": "The paper's headline methodological contribution — a subject-aware split that also preserves the skewed SBP/DBP distribution via iterative stratification for multi-label data (Methods, 'Validation strategies') — cannot be reproduced from the released code; the shipped pipeline produces different, non-stratified folds than those used for the reported results (which came from Figshare), and Figs. 4–5 depend on this absent procedure.",
+      "resolution": "Release the iterative-stratification splitting code (encoding into 16 BP-class combinations + Sechidis/Szymański stratification) that produced the Figshare folds, or clearly state that the released splitter is a non-stratified fallback.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_missing_artifacts.py",
+      "paper_ref": "Methods, 'Validation strategies' (p.13); Data availability (Figshare split datasets)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "stratified-split-code-missing",
+      "audit": "",
+      "audit_md_line": 105
+    },
+    {
+      "id": "/feat-importance-generator-missing",
+      "category": "missing",
+      "topic": "feature importance / result traceability",
+      "title": "No code computes the RF/Extra-Trees Gini feature importances; only precomputed pkls shipped",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/train/core/config/ml/svr/svr_bcg_SP.yaml",
+      "line_start": 12,
+      "line_end": 12,
+      "quote": "feat_importance: ../../feat_importance/${exp.data_name}_dataset/featImportance-SP.pkl\n",
+      "claim": "Every Feat2Lab config points at a precomputed `featImportance-*.pkl` (8 files, 218 features each, columns [features, importance]); a repo-wide grep for the generator (ExtraTrees, RandomForestRegressor(...), feature_importances_, 'gini', 500 trees) returns zero hits (check_missing_artifacts.py).",
+      "concern": "The paper's Methods describe training fully-grown RF + Extra-Trees with 500 trees to derive the normalized Gini importance, and Fig. 3 / the 'top features' analysis rest on it; none of that computation is in the repo, so the feature-selection step and Fig. 3 are not reproducible and cannot be checked for leakage.",
+      "resolution": "Add the script that trains the RF/Extra-Trees ensembles and writes the featImportance pkls, documenting which data split it was fit on.",
+      "cross_refs": [
+        "feature-selection-global-not-nested"
+      ],
+      "check_script": "_audit_code/check_missing_artifacts.py",
+      "paper_ref": "Methods, 'Feat2Lab' (p.11): 'We train fully-grown RF and Extra-Trees with 500 trees'; Fig. 3",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "feat-importance-generator-missing",
+      "audit": "",
+      "audit_md_line": 135
+    },
+    {
+      "id": "/figures-stats-code-missing",
+      "category": "missing",
+      "topic": "result traceability / statistical analysis",
+      "title": "Bootstrap CIs, Bonferroni significance (Fig. 2) and the leak/distribution experiments (Figs. 4–5) have no code",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "The custom code used for data visualization is available from the corresponding authors upon request.\n",
+      "claim": "The repo contains no code that computes the bootstrap confidence intervals or the Bonferroni-corrected pairwise significance lines of Fig. 2, the subject-overlap leak experiment of Fig. 4 (the '100%/99.5%/94.6% share subject' numbers), or the before/after-distribution experiment of Fig. 5; the paper's Code-availability statement acknowledges the visualization code is only 'available … upon request'.",
+      "concern": "The statistical claims that underpin the benchmark's conclusions (which model 'significantly outperforms' which, and the empirical leakage/skew demonstrations) are not reproducible from the released code and rely on an unspecified request process.",
+      "resolution": "Release the analysis code that computes the Fig. 2 bootstrap CIs and significance tests and the Fig. 4/5 experiments, not only the plotting.",
+      "cross_refs": [
+        "stratified-split-code-missing"
+      ],
+      "paper_ref": "Code availability; Figs. 2, 4, 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "figures-stats-code-missing",
+      "audit": "",
+      "audit_md_line": 160,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/tuning-method-grid-vs-optuna",
+      "category": "difference",
+      "topic": "hyperparameter tuning",
+      "title": "ML tuning is Optuna-TPE over wider ranges, not the grid search of Table 4",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "code/train/core/config/tune/ml/lgb_sensors_SP.yaml",
+      "line_start": 13,
+      "line_end": 13,
+      "quote": "_target_: optuna.samplers.TPESampler\n",
+      "claim": "For the Feat2Lab (ML) models the tuning config uses a Bayesian Optuna TPE sampler with 100 trials over ranges that differ from Table 4 (e.g. n_estimators up to 1000 vs Table 4's max 400; max_depth as int 1–100 vs the discrete {1,3,5,8,None}; lr as float 0.0001–1).",
+      "concern": "The paper states ML models were tuned by 'grid searching the parameter-search-space shown in Table 4'; the code performs a different search (TPE, wider/continuous ranges), so Table 4 does not describe the actual ML search.",
+      "resolution": "Reconcile Table 4 with the Optuna search spaces, or state that Table 4 lists representative values rather than the executed grid.",
+      "cross_refs": [
+        "tuning-selects-on-test"
+      ],
+      "paper_ref": "Methods, 'Hyperparameter tuning'; Table 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "tuning-method-grid-vs-optuna",
+      "audit": "",
+      "audit_md_line": 184
+    },
+    {
+      "id": "/sd-population-vs-sample",
+      "category": "difference",
+      "topic": "evaluation metrics",
+      "title": "SD computed with ddof=0 (1/n); paper Eq. 2 defines it with 1/(n-1)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/train/core/utils.py",
+      "line_start": 334,
+      "line_end": 334,
+      "quote": "metric[f'{k}_std'] = np.std(v)\n",
+      "claim": "The reported ME ± SD uses `np.std` (default ddof=0, i.e. divides by n), whereas Eq. 2 in the paper defines SD as the sample standard deviation of differences with a 1/(n-1) factor.",
+      "concern": "The SD column of Table 2 uses the population, not sample, standard deviation; the numerical difference is negligible at the reported sample sizes but the formula does not match the paper.",
+      "resolution": "Use `np.std(v, ddof=1)` to match Eq. 2, or note that the population SD is intended.",
+      "cross_refs": [],
+      "paper_ref": "Evaluation metrics, Eq. 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "sd-population-vs-sample",
+      "audit": "",
+      "audit_md_line": 208
+    },
+    {
+      "id": "/tune-default-config-missing",
+      "category": "bug",
+      "topic": "reproducibility / entrypoint",
+      "title": "tune.py default config_name points to a non-existent file",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/train/tune.py",
+      "line_start": 24,
+      "line_end": 24,
+      "quote": "@hydra.main(config_path='./core/config/tune/dl', config_name=\"unet_uci_tune\")\n",
+      "claim": "`tune.py` is decorated with `config_name=\"unet_uci_tune\"`, but `core/config/tune/dl/` contains only `unet_bcg_tune.yaml` and `resnet_bcg_tune.yaml` (no `unet_uci_tune.yaml`), so `python tune.py -m` as shipped raises a Hydra 'config not found' error.",
+      "concern": "The DL tuning entrypoint does not run out of the box; a user must know to edit the decorator (the README mentions editing the path, but the shipped default is broken).",
+      "resolution": "Point the default `config_name` at a config that exists, or add `unet_uci_tune.yaml`.",
+      "cross_refs": [],
+      "paper_ref": "n/a",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "tune-default-config-missing",
+      "audit": "",
+      "audit_md_line": 234
+    }
+  ]
+}

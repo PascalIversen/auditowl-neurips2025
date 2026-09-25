@@ -1,0 +1,11 @@
+All tier1-3 penalty values match paper Appendix A.1.2: True
+('arith', 3, 0, 0, 25, -0.451188, -0.451188, True)
+('arith', 3, 2, 0, 35, -0.617107, -0.617107, True)
+('arith', 5, 4, 6, 60, -0.931437, -0.931437, True)
+('arith', 0, 0, 0, 60, -0.0, -0.0, True)
+('coin', 2, 0, 0, 7, -0.139292, -0.139292, True)
+('coin', 2, 1, 0, 12, -0.195472, -0.195472, True)
+('coin', 1, 1, 3, 35, -0.275664, -0.275664, True)
+
+NOTE: coin-flip code (coin_flip_illegal_strings_lvl_4_dense_log.py:13) defines a 4th tier
+illegal_strings_tier_4 = ['Diff','Same','Flip','1'..'6'] with weight 0.7, NOT present in the paper.

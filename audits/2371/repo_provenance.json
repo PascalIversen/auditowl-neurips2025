@@ -1,0 +1,22 @@
+{
+  "paper_id": "2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App",
+  "title": "Forging Time Series with Language: A Large Language Model Approach to Synthetic Data Generation",
+  "repos": [
+    {
+      "name": "SDForger__neurips_supplemental",
+      "role": "core",
+      "evidence": "README header: 'SDForger is a versatile methodology designed to enable the generation of time series using LLMs.' Describes the full SDForger pipeline (FPC/FastICA embedding, LLM fine-tuning, guided inference, decoding, filtering) matching paper §3 exactly. Contains all three entry points cited in the paper's repro checklist: run_data_augmentation.py, run_TSG_evaluation.py, run_TTM_evaluation.py. All 12 benchmark datasets from Appendix C bundled under data/. Environment YAMLs reference the paper's A100 setup. Paper's NeurIPS checklist cites 'code as supplemental material at submission time'. Authors: Rousseau/Boschi et al. from IBM Research Europe."
+    },
+    {
+      "name": "IBM__fms-dgt",
+      "role": "partial_core",
+      "evidence": "Paper explicitly states: 'The model is open-sourced at https://github.com/IBM/fms-dgt/tree/main/fms_dgt/public/databuilders/time_series.' The time_series databuilder subdirectory exists on disk at fms_dgt/public/databuilders/time_series/. However, fms-dgt is a large general 'Data Generation and Transformation' framework (many other databuilders: magpie, rag, instructlab, safety), and the time_series module is only the SDForger *generation* piece; evaluation code (metrics, TTM harness, datasets) lives only in the supplemental. README maintained by IBM but different team members (Crouse/Fadnis/Patel/Kapanipathi, not Rousseau/Boschi et al.)."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "contaminated_extra_repos",
+  "confidence": "high",
+  "rationale": "The NeurIPS supplemental (SDForger__neurips_supplemental) is unambiguously the paper's core implementation: its README names SDForger explicitly, describes the paper's exact three-step pipeline, and contains all entry points cited in the paper's reproducibility checklist. The IBM fms-dgt repo (IBM__fms-dgt) is an additional partial-core clone: the paper itself points to it as the public open-source release, but only the generation databuilder (fms_dgt/public/databuilders/time_series/) lives there — the full evaluation harness and benchmark datasets are only in the supplemental. All audit findings were correctly written against the supplemental, which is the correct target. No finding was misattributed to a non-core repo.",
+  "audit_impact": "Low. The audit correctly identified and used the supplemental as the primary analysis target. The IBM fms-dgt clone is a legitimate partial release of the same contribution (explicitly cited in the paper) and no finding was written against it incorrectly. The contamination is benign: the extra repo is the paper's own public release, just without the evaluation stack.",
+  "recommended_action": "No verdict change required. Optionally clarify in the audit summary that IBM__fms-dgt hosts only the generation databuilder (partial open-source release) while the full reproduction package is in the supplemental, so readers understand why the audit focused on the supplemental."
+}

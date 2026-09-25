@@ -1,0 +1,27 @@
+=== Table 2: paper min vs JSON value_adv (rtypes mid/maxent/rmdp) ===
+TOY*             paper=(37.48, 37.48, 32.49) json=(37.48, 37.46, 32.46) reldiff=(0.0, 0.0, 0.001)
+ECHO             paper=(19.31, 19.3, 21.12) json=(19.31, 19.31, 21.12) reldiff=(0.0, 0.001, 0.0)
+PARITY(inf)      paper=(9.25, 9.07, 13.65) json=(7.02, 7.05, 12.58) reldiff=(0.241, 0.223, 0.078)
+PARITY(10)       paper=(59.92, 62.4, 55.19) json=(59.89, 62.4, 54.93) reldiff=(0.0, 0.0, 0.005)
+TIGER            paper=(19.35, 19.35, 13.12) json=(19.36, 19.38, 13.15) reldiff=(0.001, 0.002, 0.002)
+HoH(5)           paper=(-24.04, -21.55, -24.04) json=(-24.04, -21.55, -24.04) reldiff=(0.0, 0.0, 0.0)
+HoH(10)          paper=(-37.35, -36.71, -37.36) json=(-37.35, -36.69, -37.35) reldiff=(0.0, 0.0, 0.0)
+MINIHALLWAY      paper=(0.76, 0.76, 0.76) json=(0.76, 0.76, 0.76) reldiff=(0.001, 0.001, 0.001)
+ALOHA(10)        paper=(62.41, 59.7, 56.49) json=(63.53, 59.97, 57.41) reldiff=(0.018, 0.004, 0.016)
+REPLACEMENT      paper=(-47.64, -46.69, -46.58) json=(-46.92, -46.84, -46.35) reldiff=(0.015, 0.003, 0.005)
+HEALTHDETECTION  paper=(-5718.42, -5661.49, -5554.34) json=(-5777.84, -5596.82, -5660.43) reldiff=(0.01, 0.011, 0.019)
+max rel diff (T2) = 0.241
+
+=== Table 3: paper min vs JSON value_adv (RHSVI/RQMDP/RFIB, full) ===
+TOY*             paper=(69.99, 32.49, 62.47) json=(69.99, 32.48, 62.45) reldiff=(0.0, 0.0, 0.0)
+ECHO             paper=(31.1, 25.45, 25.44) json=(31.1, 25.46, 25.45) reldiff=(0.0, 0.0, 0.0)
+PARITY(inf)      paper=(20.0, 7.98, 20.0) json=(20.0, 7.21, 20.0) reldiff=(0.0, 0.096, 0.0)
+PARITY(10)       paper=(62.71, 38.89, 62.71) json=(62.71, 26.51, 62.71) reldiff=(0.0, 0.318, 0.0)
+TIGER            paper=(19.36, -20.04, 14.49) json=(19.33, -26.21, 14.53) reldiff=(0.001, 0.308, 0.003)
+HoH(5)           paper=(-21.55, -63.76, -63.76) json=(-21.55, -63.76, -63.76) reldiff=(0.0, 0.0, 0.0)
+HoH(10)          paper=(-36.71, -63.76, -63.76) json=(-36.71, -63.76, -63.76) reldiff=(0.0, 0.0, 0.0)
+MINIHALLWAY      paper=(0.76, 0.25, 0.25) json=(0.76, 0.24, 0.25) reldiff=(0.001, 0.03, 0.019)
+ALOHA(10)        paper=(46.96, 57.32, 53.39) json=(44.9, 58.16, 53.99) reldiff=(0.044, 0.015, 0.011)
+REPLACEMENT      paper=(-46.16, -51.96, -70.87) json=(-46.81, -51.83, -70.72) reldiff=(0.014, 0.002, 0.002)
+HEALTHDETECTION  paper=(-5596.72, -5671.29, -5660.6) json=(-5574.23, -5652.73, -5780.11) reldiff=(0.004, 0.003, 0.021)
+max rel diff (T3) = 0.318

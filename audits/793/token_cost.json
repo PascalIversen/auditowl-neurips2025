@@ -1,0 +1,19 @@
+{
+  "folder": "793_Mixture_of_Inputs_Text_Generation_Beyond_Discrete_Token_Samp",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 8476,
+    "output": 7111,
+    "cache_write": 261307,
+    "cache_read": 3531301
+  },
+  "total_tokens": 3808195,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 10.86
+}

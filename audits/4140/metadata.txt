@@ -1,0 +1,5 @@
+paper_number: 4140
+title: A Principle of Targeted Intervention for Multi-Agent Reinforcement Learning
+authors: Anjie Liu, Jianhong Wang, Samuel Kaski, Jun Wang, Mengyue Yang
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/c7f812431607ac5a17973bbf79733013-Abstract-Conference.html
+category: empirical

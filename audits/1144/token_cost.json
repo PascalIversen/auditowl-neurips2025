@@ -1,0 +1,19 @@
+{
+  "folder": "1144_Graph_Your_Own_Prompt",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 10930,
+    "output": 14337,
+    "cache_write": 238265,
+    "cache_read": 3148583
+  },
+  "total_tokens": 3412115,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 10.43
+}

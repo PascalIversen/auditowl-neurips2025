@@ -1,0 +1,22 @@
+# Python dependencies for the AuditOwl pipeline and analysis.
+# Pinned to the versions this study was run and verified on (Python 3.10.13;
+# 3.9+ supported). Install with:  pip install -r requirements.txt
+#
+# Scope: this covers the *meta-pipeline* only -- sampling, input fetch, finding
+# extraction, aggregation, the validation studies, and the paper figures. The
+# per-paper deterministic checks under audits/*/_audit_code/ and
+# audits/*/_verifier_code/ depend on each audited repo's own stack (torch,
+# scipy, sklearn, pandas, ...) and are intentionally NOT pinned here; install
+# those ad hoc when re-running a specific paper's check.
+
+requests==2.32.5         # fetching paper PDFs and the accepted-paper listing
+beautifulsoup4==4.14.3   # parsing the accepted-paper listing
+PyMuPDF==1.27.2.2        # paper.pdf -> paper_text.txt sidecar (imported as `fitz`)
+PyYAML==6.0.1            # parsing the YAML finding blocks out of audit.md
+numpy==1.26.4            # used throughout the analysis and figure code
+matplotlib==3.9.0        # every figure script
+pandas==2.2.2            # the expert-review analysis
+openpyxl==3.1.5          # reading the .xlsx rating workbooks
+krippendorff==0.8.2      # inter-rater alpha for the expert-review study
+scipy==1.13.1            # Wilson intervals / significance tests in the expert-review study
+scikit-learn==1.7.2      # TF-IDF finding matcher in the reliability study

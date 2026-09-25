@@ -1,0 +1,22 @@
+{
+  "paper_id": "828_Large_language_models_can_learn_and_generalize_steganographi",
+  "title": "Large language models can learn and generalize steganographic chain-of-thought under process supervision",
+  "repos": [
+    {
+      "name": "RobertMcCarthy97__neurips_encoded_rl",
+      "role": "core",
+      "evidence": "Owner is Robert McCarthy (paper first author). README says 'Our encoded reasoning experiments are built upon the TinyZero repository' — i.e., an author fork. Contains coin_flip_illegal_strings_lvl_1/2/3/4 and arithmetic_illegal_strings_lvl_1/2/3 CoT-reward modules in verl/utils/cot_reward_score/, coin_6_flip synthetic data in verl/synthetic_trajectories_data/coin_6_flip/, and PPO trainer (main_ppo.py) that selects coin_flip and arithmetic reward functions. This directly implements the Arithmetic and Coin Flip experiments (§3.1) with the multi-tier illegal-strings curriculum described in the paper."
+    },
+    {
+      "name": "GeodesicResearch__mars-steg",
+      "role": "core",
+      "evidence": "Owner is GeodesicResearch; README references git clone https://github.com/puria-radmard/mars-steg.git — Puria Radmard is a paper co-author (last author group, email puria@geodesicresearch.org). Contains mars_steg/task/tasks/theory_of_mind_task.py, mars_steg/language/language_aspects/theory_of_mind_aspect.py, mars_steg/train_generalisation.py (explicitly for 'ToMTokenBanTask'), and experiments/d_generalisation/. This implements the Theory of Mind generalization experiments (§3.3, Fig. 3), the headline contribution of the paper."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "stale_no_code_finding",
+  "confidence": "high",
+  "rationale": "Both cloned repos are genuine author implementations: RobertMcCarthy97__neurips_encoded_rl (owner = first author Robert McCarthy) covers Arithmetic and Coin Flip experiments with the paper's multi-tier illegal-strings CoT reward; GeodesicResearch__mars-steg (owner = org of co-authors Radmard/Tice/Young, who signed off with @geodesicresearch.org) covers the Theory of Mind generalization experiments. The audit.md (written at 01:17 on May 31) correctly noted the code was not present at audit time and filed three high/medium 'missing' findings, but the code/ directory was populated at 17:20 the same day (after the audit and verifier ran). The stale audit findings — 'Both author code repos cited in footnote 3 are expired (HTTP 410); no code in workspace' — are now factually incorrect: the author core IS present in the workspace and covers all three paper experiments.",
+  "audit_impact": "The high-severity finding 'code-repos-expired' and the medium finding 'checklist-q5-overclaims-code' were accurate at audit time but are now stale: both author repos have been successfully cloned and are present in the workspace. The finding 'data-tom-split-and-genprm-missing' may still be partially valid (the exact name-disjoint split artefact should be verified in the mars-steg experiments/d_generalisation directory). The two methodology findings (meth-manual-label, meth-tom-loadbearing-confound) remain valid regardless of code presence.",
+  "recommended_action": "Re-run the audit against the now-present code: (1) check experiments/d_generalisation in mars-steg for the name-disjoint train/test split artefact; (2) trace Table 1 Coin Flip prefill accuracies and the arithmetic '>90%' claim against the neurips_encoded_rl scripts; (3) downgrade or close code-repos-expired and checklist-q5-overclaims-code if the repos fully cover the claimed experiments. Update findings_verified.json accordingly."
+}

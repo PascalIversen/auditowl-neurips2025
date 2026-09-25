@@ -1,0 +1,50 @@
+1: % Code for the ODE example
+2: clear;
+3: close all;
+4: 
+5: % mesh size
+6: ell = 8;
+7: % number of observation points
+8: K = 2^6-1;
+9: 
+10: % dimension of the discretized system
+11: I = 2^ell;            
+12: % dimension of parameters
+13: n = I-1;
+14: 
+15: % domain with boundary
+16: xx_b = linspace(0,1,I+1); 
+17: % domain without boundary
+18: xx = xx_b(2:end-1);            
+19: 
+20: % generating random function using KL Basis
+21: N_x = 100;
+22: V_basis = zeros(I-1,N_x);
+23: for j = 1:N_x
+24:     V_basis(:,j) = sqrt(2*pi)*sin(j*pi*xx)';
+25: end
+26: V_basis_b = zeros(I+1,N_x);
+27: for j = 1:N_x
+28:     V_basis_b(:,j) = sqrt(2*pi)*sin(j*pi*xx_b)';
+29: end
+30: 
+31: D = zeros(N_x,N_x);
+32: for j = 1:N_x
+33:     D(j,j) = (j^2)^(-4/2);
+34: end
+35: 
+36: %%% generate reference rhs: uncomment for new references
+37: % m_ref = V_basis*sqrt(D)*randn(N_x,1);
+38: % save('m_ref.mat','m_ref');
+39: 
+40: % load reference rhs
+41: load('m_ref.mat','m_ref');
+42: 
+43: % forward model
+44: A = observation_matrix(K,I)*(A_ellipticPDE(I-1)\eye(I-1));
+45: y = A*m_ref;
+46: 
+47: % objective function and gradient
+48: f = @(x) 1/2*(A*x-y)'*(A*x-y);
+49: gradf = @(x) A'*(A*x-y);
+50: 

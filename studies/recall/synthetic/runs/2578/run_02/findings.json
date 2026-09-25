@@ -1,0 +1,172 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-03T01:02:53.433964+00:00",
+  "findings": [
+    {
+      "id": "/sft-predict-sample-wrong-target",
+      "category": "bug",
+      "topic": "training objective / diffusion parameterization",
+      "title": "Stage-1 SFT trainer regresses raw velocity to HQ latent, not x0",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "finetune/models/dove/sft_one_s1_trainer.py",
+      "line_start": 13,
+      "line_end": 25,
+      "quote": "def predict_sample(*args, **kwargs):\n    output = forward(*args, **kwargs)\n    sample = output[0]\n    hidden_states = kwargs[\"hidden_states\"]\n    timesteps = kwargs[\"timestep\"]\n    alpha = scheduler.alphas_cumprod.to(\n        device=hidden_states.device, dtype=hidden_states.dtype\n    )[timesteps].sqrt()\n    while alpha.ndim < hidden_states.ndim:\n        alpha = alpha.unsqueeze(-1)\n    sigma = (1.0 - alpha.square()).sqrt()\n    prediction = (alpha * hidden_states - sample) / sigma\n    return (prediction,) + output[1:]\n",
+      "claim": "The SFT trainer wraps transformer.forward so it returns prediction=(alpha*z_t - v)/sigma. The inherited compute_loss then applies get_velocity(prediction, z_t) = alpha*z_t - sigma*prediction, which algebraically collapses to the RAW velocity v; the MSE loss therefore compares v to the HQ latent, not x0 = alpha*z_t - sigma*v (Eq. 2).",
+      "concern": "Inference (inference_script.py:491) and the LoRA trainer (lora_one_s1_trainer.py:200-207) both decode x0 = alpha*z_t - sigma*v, but the SFT trainer (the documented main path, --training_type sft) optimizes v -> HQ latent, a different and inconsistent objective — so a model trained with the released SFT code would not match what the pipeline decodes at test time.",
+      "resolution": "Confirm the intended Stage-1 SFT target: predict_sample should either be the identity (let get_velocity produce x0, matching the LoRA path) or the get_velocity call should be dropped for SFT. Verify with _audit_code/check_sft_target.py which reproduces the collapse to v.",
+      "cross_refs": [
+        "paired-crop-temporal-misalign"
+      ],
+      "check_script": "_audit_code/check_sft_target.py",
+      "paper_ref": "Eq. (2)-(3), Sec. 3.1-3.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "sft-predict-sample-wrong-target",
+      "audit": "",
+      "audit_md_line": 46
+    },
+    {
+      "id": "/paired-crop-temporal-misalign",
+      "category": "bug",
+      "topic": "data pairing / training pairs",
+      "title": "paired_random_crop_video draws independent LQ temporal index, misaligning HR/LR pairs",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "finetune/datasets/utils.py",
+      "line_start": 480,
+      "line_end": 492,
+      "quote": "# Randomly sample temporal index\nstart_idx = random.randint(0, len(hq_frames) - num_frames)\nlq_start_idx = random.randint(0, len(lq_frames) - num_frames)\n\n# Crop frames\ncropped_hq = [\n    f[top_hq:top_hq + hq_crop_h, left_hq:left_hq + hq_crop_w, :]\n    for f in hq_frames[start_idx:start_idx + num_frames]\n]\ncropped_lq = [\n    f[top:top + lq_crop_h, left:left + lq_crop_w, :]\n    for f in lq_frames[lq_start_idx:lq_start_idx + num_frames]\n]\n",
+      "claim": "The temporal crop uses two INDEPENDENT random start indices (start_idx for HQ, lq_start_idx for LQ) even though len(hq_frames)==len(lq_frames) is asserted and LQ is the per-frame degradation of HQ; the spatial crop is correctly scale-aligned but the temporal window is not.",
+      "concern": "The HR target clip and LR input clip come from different temporal offsets of the same video (~91% of the time, mean 3.6-frame offset for the Stage-1 25/35 config), so the model is trained to map LR frames to non-corresponding HR frames — directly corrupting the one-step LR->HR regression the method depends on; the function's own docstring says frames are 'aligned'.",
+      "resolution": "Use a single shared start index (cropped_lq should index lq_frames[start_idx:start_idx+num_frames]). Confirm with _audit_code/check_temporal_misalign.py. This routine is used by both Stage-1 (real_sr_dataset.py:261) and Stage-2 (real_sr_image_video_dataset.py:256).",
+      "cross_refs": [
+        "sft-predict-sample-wrong-target"
+      ],
+      "check_script": "_audit_code/check_temporal_misalign.py",
+      "paper_ref": "Sec. 3.2 (LR-to-HR mapping); Sec. 4.1 degradation",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "paired-crop-temporal-misalign",
+      "audit": "",
+      "audit_md_line": 83
+    },
+    {
+      "id": "/dover-eval-off-by-one",
+      "category": "bug",
+      "topic": "evaluation / metric bookkeeping",
+      "title": "eval_dover.py assigns dover_results[i-1], shifting per-sample DOVER by one",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "finetune/scripts/eval_dover.py",
+      "line_start": 158,
+      "line_end": 159,
+      "quote": "for i, name in enumerate(pred_names):\n    results[name] = dover_results[i-1]\n",
+      "claim": "Per-sample DOVER scores are keyed by name using index i-1 instead of i, so the first video name receives the LAST video's score and every name is shifted by one position.",
+      "concern": "Per-video DOVER attribution is wrong; the reported dataset AVERAGE (np.mean over all results) is unaffected because the assignment is a cyclic permutation of the same value set, so Table 2/Table 3 averages are not changed, but any per-sample analysis/logging is corrupted.",
+      "resolution": "Change dover_results[i-1] to dover_results[i]. See _audit_code/check_dover_offbyone.py (10/10 per-sample mismatches, average preserved).",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_dover_offbyone.py",
+      "paper_ref": "Table 2 (DOVER), Table 3",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "dover-eval-off-by-one",
+      "audit": "",
+      "audit_md_line": 120
+    },
+    {
+      "id": "/stage2-refinement-trainer-missing",
+      "category": "missing",
+      "topic": "training strategy / Stage-2 refinement",
+      "title": "Stage-2 (pixel-space) trainer and its DISTS/frame losses are absent",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "finetune/train_ddp_one_s2.sh",
+      "line_start": 9,
+      "line_end": 9,
+      "quote": "--model_name \"dove-s2\"\n",
+      "claim": "The Stage-2 launcher requests model_name 'dove-s2', but only 'dove-s1' is registered (lora_one_s1_trainer.py:384, sft_one_s1_trainer.py:31); train.py:13 get_model_cls('dove-s2','sft') therefore raises 'Model dove-s2 is not supported'. No trainer implements compute_loss(batch, mode): the only concrete compute_loss (lora_one_s1_trainer.py:116) is pure latent MSE. self.dists_loss is created in prepare_for_training (trainer.py:424-426) but never consumed by any loss, and frame_diff_weight (args.py:118, passed =1.0 by the launcher) is referenced nowhere in Python.",
+      "concern": "Stage-2 'Refinement' — pixel-space mixed image/video training with the perceptual DISTS loss (Eq. 4) and the frame-difference loss L_frame (Eq. 6-7) — is half of the paper's 'latent–pixel training strategy' contribution and underlies Table 1a (rows S1+S2-I, S1+S2-I/V) and the Table 1b image-ratio ablation; none of it can be run or reproduced from the released code, and `bash train_ddp_one_s2.sh` crashes at startup.",
+      "resolution": "Release the dove-s2 trainer that registers under model_name 'dove-s2', implements compute_loss(batch, mode), and applies MSE + λ1·DISTS + λ2·L_frame. See _audit_code/check_stage2_missing.py (dove-s2 registered nowhere; frame_diff_weight unused; dists_loss never consumed).",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_stage2_missing.py",
+      "paper_ref": "Sec. 3.2 Stage-2, Eq. (4),(6),(7); Table 1a/1b",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "stage2-refinement-trainer-missing",
+      "audit": "",
+      "audit_md_line": 148
+    },
+    {
+      "id": "/ewarp-fastervqa-metric-missing",
+      "category": "missing",
+      "topic": "evaluation metrics",
+      "title": "E*warp and FasterVQA computation not runnable / absent",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "finetune/scripts/eval_ewarp.py",
+      "line_start": 146,
+      "line_end": 149,
+      "quote": "original_dir = os.getcwd()\nraft_dir = os.path.join(original_dir, \"RAFT\")\nos.chdir(raft_dir)\nfrom ewarp import Ewarp as Ewarp\n",
+      "claim": "eval_ewarp.py chdir's into '<script_dir>/RAFT' (which does not exist — RAFT lives at finetune/utils/RAFT) and imports module 'ewarp', which is present nowhere in the repo; the script cannot run. There is no script anywhere that computes FasterVQA (only referenced in README).",
+      "concern": "The E*warp (temporal-consistency, 6 datasets) and FasterVQA (7 datasets) columns of the main comparison Table 2 have no runnable computation in the repo, so those reported numbers cannot be reproduced from the released code.",
+      "resolution": "Provide the missing ewarp.py (and correct the RAFT path) and a FasterVQA script. Note: the README already lists 'Add metric computation scripts for FasterVQA, DOVER, and Ewarp' as a TODO, so this is partly acknowledged.",
+      "cross_refs": [],
+      "paper_ref": "Table 2 (E*warp, FasterVQA columns)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ewarp-fastervqa-metric-missing",
+      "audit": "",
+      "audit_md_line": 173
+    },
+    {
+      "id": "/stage1-launcher-trains-on-udm10-testset",
+      "category": "methodology",
+      "topic": "data splitting / potential train-on-test",
+      "title": "Only Stage-1 launcher points training data at the UDM10 evaluation set",
+      "severity": "medium",
+      "confidence": "low",
+      "status": "question",
+      "file": "finetune/train_ddp_one_s1.sh",
+      "line_start": 27,
+      "line_end": 28,
+      "quote": "--data_root \"../datasets/test/UDM10\"\n--video_column \"../datasets/test/UDM10/GT-Video.txt\"\n",
+      "claim": "The only provided Stage-1 launcher sets the training data_root/video_column to the UDM10 test set — the same dataset used to report every Table 1 ablation number and the UDM10 rows of Table 2.",
+      "concern": "If taken literally this trains Stage-1 on the evaluation set (leakage); however it is more likely a leftover template default (the README's workflow trains on HQ-VSR via prepare_dataset.py, and the Stage-2 launcher correctly uses ../datasets/train/HQ-VSR.txt).",
+      "resolution": "Authors: confirm the actual Stage-1 training corpus (HQ-VSR per Sec. 4.1) and that UDM10 here is only a placeholder, i.e. that no reported model was trained on a benchmark it is evaluated on.",
+      "cross_refs": [],
+      "paper_ref": "Sec. 4.1 (train=HQ-VSR, eval incl. UDM10); Table 1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "stage1-launcher-trains-on-udm10-testset",
+      "audit": "",
+      "audit_md_line": 202
+    }
+  ]
+}

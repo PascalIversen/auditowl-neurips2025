@@ -1,0 +1,5 @@
+paper_number: 713
+title: How Patterns Dictate Learnability in Sequential Data
+authors: Mario Morawski, Anaïs Després, Remi Rehm
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/2200571efe8d04361a0db245b4cdef73-Abstract-Conference.html
+category: empirical

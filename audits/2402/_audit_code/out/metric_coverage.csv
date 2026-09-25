@@ -1,0 +1,15 @@
+metric,found_in_files,files
+FID (Table 3),2,metrics/calculate_fid.py;train_stage1_multi_cond.py
+CLIP-FID (Table 3),0,
+"FVD (Tables 3,4)",5,metrics/calculate_fvd.py;metrics/fvd/tensorflow/fvd.py;metrics/fvd/videogpt/fvd.py;metrics/fvd/styleganv/fvd.py;train_stage2_multi_cond.py
+IDS / identity sim (Table 3),0,
+PSNR (Table 4),0,
+SSIM (Table 4),2,metrics/calculate_ssim.py;train_stage1_multi_cond.py
+LPIPS (Table 4),0,
+Hand SSIM (Table 4),0,
+"BLEU (Tables 1,2,7)",0,
+"ROUGE (Tables 1,2,7)",0,
+"COMET (Tables 1,2)",0,
+Back-translation SLT model (App. C),0,
+"Norm. DTW (Tables 10,11)",3,eval_compress_video_from_origin.py;eval_compress_vq_video.py;train_multihead_t2vqpgpt.py
+Token accuracy (not in paper tables),2,eval_multihead_t2vqpgpt.py;train_multihead_t2vqpgpt.py

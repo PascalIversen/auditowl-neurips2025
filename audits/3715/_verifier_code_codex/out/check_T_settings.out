@@ -1,0 +1,10 @@
+bump_compare_smoothing.ipynb        cell 9   sigma_max=3.0            T=9.0
+circle2d_log_likelihood.ipynb       cell 3   sigma_max=3.0            T=9.0
+circle2d_log_likelihood.ipynb       cell 9   sigma_max=sigma_max      T=varies
+low_dim_plots.ipynb                 cell 5   sigma_max=2.0            T=4.0
+low_dim_plots.ipynb                 cell 7   sigma_max=2.0            T=4.0
+mnist_KDE_vs_gaussian.ipynb         cell 16  sigma_max=3.0            T=9.0
+mnist_compare_smoothing.ipynb       cell 15  sigma_max=3.0            T=9.0
+
+Paper App. G.1 states T=9 for the circle experiment.
+Wrote /home/author/Projects/neurips_audit/audits/3715_Diffusion_Models_and_the_Manifold_Hypothesis_Log_Domain_Smoo/_verifier_code_codex/out/T_settings.json

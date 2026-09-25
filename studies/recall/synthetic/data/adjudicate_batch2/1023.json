@@ -1,0 +1,152 @@
+{
+  "paper": "1023",
+  "seeds": [
+    {
+      "sid": "S01",
+      "slot": "MAJOR-MISS",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "marshka__spatiotemporal-oversquashing/lib/datasets/__init__.py",
+          "line": 1,
+          "action": "replace"
+        },
+        {
+          "file": "marshka__spatiotemporal-oversquashing/lib/datasets/__init__.py",
+          "line": 8,
+          "action": "replace"
+        },
+        {
+          "file": "marshka__spatiotemporal-oversquashing/lib/datasets/memory.py",
+          "line": 99,
+          "action": "replace"
+        },
+        {
+          "file": "marshka__spatiotemporal-oversquashing/config/dataset/rocketman.yaml",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "marshka__spatiotemporal-oversquashing/config/run_space_vs_time.yaml",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "ROCKETMAN experiment pipeline absent",
+      "description": "Remove the ROCKETMAN dataset implementation, its registration and dataset configuration, and the only sweep that generates the Ring/Lollipop distance grids in Figures 4 and 7. The remaining synthetic pipeline still supports the COPY tasks, but there is no executable dataset or experiment path for the paper's central joint space-time validation.",
+      "paper_anchor": "We design a synthetic memory task named ROCKETMAN where, given a graph and a time window of random values, the model must retrieve the average value at time step t \u2212i for nodes exactly k hops away from a target node."
+    },
+    {
+      "sid": "S03",
+      "slot": "MAJOR-DIFF",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "marshka__spatiotemporal-oversquashing/lib/nn/models/gnn_mixin.py",
+          "line": 26,
+          "action": "replace"
+        },
+        {
+          "file": "marshka__spatiotemporal-oversquashing/config/model/gnn/diffconv.yaml",
+          "line": 7,
+          "action": "replace"
+        }
+      ],
+      "title": "GCN replaces the claimed diffusion convolution",
+      "description": "Keep the public mptcn_diff model path and all experiment sweeps intact, but make that path instantiate a normalized one-hop GCN with matching GCN hyperparameters instead of the bidirectional two-hop diffusion convolution claimed by the paper. This is a fully trainable graph convolution with real gradients, but its propagation operator and receptive field are materially different.",
+      "paper_anchor": "The reference MPTCN architecture used in the experiments features the Diffusion Convolution (DCNN) operator [54] as the MP layer."
+    },
+    {
+      "sid": "S06",
+      "slot": "MAJOR-METH",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "marshka__spatiotemporal-oversquashing/experiments/run_realworld.py",
+          "line": 200,
+          "action": "replace"
+        }
+      ],
+      "title": "Real-world checkpoint selection reads the test set",
+      "description": "Feed the real-world test loader to Lightning as the validation loader during fitting. Early stopping and save-top-k still monitor val_MAE, but those validation-step metrics are now computed on METR-LA, PEMS-BAY, or EngRAD test windows; the selected checkpoint is then evaluated on the same test loader.",
+      "paper_anchor": "We sequentially split the windows into 70%/10%/20% partitions for training, validation, and testing, respectively."
+    },
+    {
+      "sid": "S07",
+      "slot": "MAJOR-BUG",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "marshka__spatiotemporal-oversquashing/lib/nn/models/stgnn_base.py",
+          "line": 146,
+          "action": "replace"
+        }
+      ],
+      "title": "Regression readout clamps all negative outputs",
+      "description": "Apply ReLU after the shared decoder in the base STGNN readout. Every MPTCN prediction is forced nonnegative even though the paper specifies a linear regression projection and the traffic targets are standardized around zero during optimization, so negative normalized forecasts become impossible and receive zero gradient through the clamp.",
+      "paper_anchor": "As the READOUT, we use different linear projections for each time step in the forecasting horizon."
+    }
+  ],
+  "candidates": [
+    {
+      "fid": "run_02/test-set-model-selection",
+      "run": "run_02",
+      "anchor_candidate": "seed:S06",
+      "status": "finding",
+      "category": "methodology",
+      "file": "experiments/run_realworld.py",
+      "line_start": 200,
+      "title": "Real-world experiments early-stop and pick the checkpoint on the TEST set",
+      "claim": "In the real-world runner, `trainer.fit` receives the TEST dataloader as `val_dataloaders`; the `EarlyStopping` and `ModelCheckpoint` callbacks both monitor `val_{loss}` (run_realworld.py:170,178), so the reported checkpoint is the epoch that minimises the loss on the test set, which is then re-used as the final test metric (line 212).",
+      "concern": "Every real-world number (Tab. 1 and Tab. 2) is an optimistic best-epoch-on-test estimate \u2014 model selection is performed on the same data used for evaluation \u2014 even though the configs define a separate validation split (la/bay `val_len: 0.1`, engrad `val_len: 2016`) that `dm.val_dataloader()` exposes but the code never uses."
+    },
+    {
+      "fid": "run_02/diffconv-is-actually-gcn",
+      "run": "run_02",
+      "anchor_candidate": "seed:S03",
+      "status": "finding",
+      "category": "bug",
+      "file": "lib/nn/models/gnn_mixin.py",
+      "line_start": 26,
+      "title": "mptcn_diff (the real-world model) binds GCNConv, not the Diffusion Convolution",
+      "claim": "`DiffConvMixin` (mixed into `MPTCN_DiffConvModel`, i.e. model name `mptcn_diff`, the default MP model for every real-world run per `config/realworld.yaml`) sets `gnn_class = GCNConv`, byte-identical to `GCNMixin`; the `DiffConv` symbol imported on line 3 is never used as a value (`_audit_code/out/diffconv_is_gcn.json`: `DiffConv_used_as_value=false`).",
+      "concern": "The paper states the MP layer is 'the Diffusion Convolution operator from [54] ... different weights from both incoming and outgoing neighbors up to 2 hops' (Sec. 5.1 / Appendix B), but the executed operator is a symmetric, self-looped, 1-hop GCN, so Tab. 1/Tab. 2 MPTCN numbers and Tab. 2's 'w/ DCNN' column were not produced by the described architecture."
+    },
+    {
+      "fid": "run_02/fosr-rgcn-rewiring-absent",
+      "run": "run_02",
+      "anchor_candidate": "unassigned",
+      "status": "finding",
+      "category": "missing",
+      "file": "lib/nn/models/__init__.py",
+      "line_start": 9,
+      "title": "No FOSR rewiring and no RGCN model anywhere in the repo (Table 2 unreproducible)",
+      "claim": "The model registry offers only GCN/GraphConv/DiffConv-named MPTCNs and GWNet; there is no RGCN model, and a repo-wide search finds zero occurrences of `fosr`, `rewir`, or `rgcn` (`_audit_code/out/missing_components.json`).",
+      "concern": "Table 2 ('FOSR rewiring' \u00d7 {RGCN, DCNN}, with/without row-normalization on EngRAD) \u2014 which supports the paper's contribution that combining spatial and temporal rewiring mitigates over-squashing \u2014 cannot be reproduced because neither the FOSR rewiring step nor the RGCN model exists in the code."
+    },
+    {
+      "fid": "run_02/tree-neighboursmatch-absent",
+      "run": "run_02",
+      "anchor_candidate": "unassigned",
+      "status": "finding",
+      "category": "missing",
+      "file": "lib/datasets/syntethic.py",
+      "line_start": 196,
+      "title": "No tree graph generator and no NeighboursMatch classification task (Table 5 unreproducible)",
+      "claim": "`generate_graph` enumerates identity/ring/crossed_ring/path/lollipop/*_reg/*barbell/community and raises for anything else; there is no 'tree' generator (`_audit_code/out/missing_components.json`: `tree_generator_present=false`). `MemoryTestDataset.generate_y` implements only regression targets (memorize/dump averaging); no classification target, `cross_entropy`, or `accuracy` metric exists anywhere (all counts 0).",
+      "concern": "Appendix D / Table 5 (TEMPORALTREENEIGHBOURSMATCH: test accuracy on a fixed TREE topology with a match-and-route classification target) cannot be generated or evaluated from the repo \u2014 the tree topology and the classification task/metric are both absent."
+    },
+    {
+      "fid": "run_02/rocketman-config-missing",
+      "run": "run_02",
+      "anchor_candidate": "seed:S01",
+      "status": "question",
+      "category": "missing",
+      "file": "paper.pdf",
+      "line_start": null,
+      "title": "No committed config/command reproduces the ROCKETMAN (k,i) success grid",
+      "claim": "The ROCKETMAN building blocks exist (ring/lollipop generators; `MemoryTestDataset` memorize=neighbors), but the config directory contains only `run_copy_time` (Fig. 3) and `run_realworld*` (Tab. 1) drivers, and the word 'rocketman' appears nowhere in the repo (`_audit_code/out/missing_components.json`). The exact configuration that sweeps spatial distance k and temporal distance i to produce the Fig. 4/7 per-cell success rates is not committed.",
+      "concern": "Figures 4 and 7 (a labelled empirical result central to the T&S vs TTS synthetic validation) are not reproducible from a released command, and how k and i map onto the dataset parameters is left implicit."
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "readme_mentions_environment.yml": true,
+  "environment.yml_exists": false,
+  "blind_localization.yml_exists": true,
+  "readme_mentions_pip_requirements": false,
+  "readme_mentions_dataset_preprocessing_dir": true,
+  "dataset_preprocessing_dir_exists": false,
+  "data_pickle_files_count": 0,
+  "data/Allen/lfp_dir_exists": false,
+  "data/Allen/raw_dir_exists": false,
+  "data/Allen/spectrogram_dir_exists": false,
+  "data/ibl/lfp_dir_exists": false,
+  "data/ibl/raw_dir_exists": false,
+  "data/ibl/spectrogram_dir_exists": false,
+  "data/Neuronexus/lfp_dir_exists": false,
+  "data/Neuronexus/raw_dir_exists": false,
+  "data/Neuronexus/spectrogram_dir_exists": false,
+  "pretrained_weight_files_count": 0,
+  "yml_has_transformers": false,
+  "yml_has_evaluate": false,
+  "yml_has_datasets": false,
+  "yml_has_accelerate": false
+}

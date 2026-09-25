@@ -1,0 +1,5 @@
+paper_number: 2585
+title: Sample Complexity of Distributionally Robust Average-Reward Reinforcement Learning
+authors: Zijun Chen, Shengbo Wang, Nian Si
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/7b75da9b61eda40fa35453ee5d077df6-Abstract-Conference.html
+category: empirical

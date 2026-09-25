@@ -1,0 +1,4 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/alesnow97/Spectral_Learning_POMDP	[author-cue]
+
+# Other code links found (NOT cloned -- baseline/dependency):

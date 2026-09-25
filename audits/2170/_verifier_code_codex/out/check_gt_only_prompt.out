@@ -1,0 +1,19 @@
+=== GT-only-prompt evidence (open-vocab eval) ===
+  [PASS] eval_ovss.yaml sets GT_ONLY_PROMPT: True
+  [PASS] ovss.forward sets selected_idxs = idxs (GT indices)
+  [PASS] prompt = ' '.join(classnames from selected_idxs)
+  [PASS] idxs derived from GT sem_seg bincount (get_gt_indices)
+  [PASS] NO full-vocabulary prompt path present in ovss model
+
+--- decisive window (seg4diff_model_ovss.py) ---
+      assert not self.training
+
+        selected_idxs = idxs
+        # if "background" in self.test_class_texts:
+        #     selected_idxs = [i for i in selected_idxs if self.test_class_texts[i] != "background"]
+        
+        # Ensure indices are Python ints for list indexing
+        classnames= [self.test_class_texts[int(i)].split("-")[0] for i in selected_idxs]
+        prompt = " ".join(cla
+
+wrote out/gt_only_prompt.txt

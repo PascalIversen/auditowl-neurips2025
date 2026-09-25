@@ -1,0 +1,5 @@
+paper_number: 2278
+title: VITA-1.5: Towards GPT-4o Level Real-Time Vision and Speech Interaction
+authors: Chaoyou Fu, Haojia Lin, Xiong Wang, yifan zhang, Yunhang Shen, Xiaoyu Liu, Haoyu Cao, Zuwei Long, Heting Gao, Ke Li, Long MA, Xiawu Zheng, Rongrong Ji, Xing Sun, Caifeng Shan, Ran He
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/6ce9d51dded7dac82b3b4d3dbb1d73bc-Abstract-Conference.html
+category: empirical

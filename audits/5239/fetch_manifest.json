@@ -1,0 +1,18 @@
+{
+  "Elliotepsteino__SD-KDE": {
+    "repo": "https://github.com/Elliotepsteino/SD-KDE",
+    "clone_status": "cached",
+    "size_mb": 2.3,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  },
+  "SD-KDE__neurips_supplemental": {
+    "repo": "https://papers.nips.cc/paper_files/paper/2025/file/fd8548947a14f68375d7e6235ab493ec-Supplemental-Conference.zip",
+    "clone_status": "extracted-from-supplemental-zip",
+    "size_mb": 26.9,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

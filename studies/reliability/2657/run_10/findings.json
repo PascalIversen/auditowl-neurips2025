@@ -1,0 +1,204 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T10:21:42.419382+00:00",
+  "findings": [
+    {
+      "id": "/explainability-experiments-no-code",
+      "category": "missing",
+      "topic": "explainability / result traceability",
+      "title": "No code for the feature-level explanation results (Fig 4, Table 3) — a headline contribution",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "Table 3: Quantitative evaluation of explanation accuracy on synthetic GMM anomalies.\nSetting ExactMatch Jaccard AUROC AUPRC\n5D 1.000 1.000 1.000 1.000\n",
+      "claim": "Explainability is one of the paper's three titular contributions; §5 (Fig 4, MNIST digit explanations) and Appendix D.4.2 (Table 3: ExactMatch=Jaccard=1.000 across 5D-25D synthetic GMM) report quantitative feature-attribution accuracy, but no script, function, or notebook in the repo computes per-feature importance, the Exact-Match/Jaccard metrics, or the MNIST explanation figure (grep for 'explain|feature.?wise|attribution|imshow|exactmatch|jaccard' returns no implementation).",
+      "concern": "A headline quantitative result (Table 3) and the qualitative Fig 4 cannot be reproduced or checked because the explanation-generation and evaluation code is entirely absent from the repository.",
+      "resolution": "Authors: please add the script that (i) computes the per-feature residual-velocity importance scores, (ii) produces the MNIST explanations of Fig 4, and (iii) computes the Exact-Match / Jaccard numbers of Table 3 on the synthetic GMM data.",
+      "cross_refs": [
+        "§5 (Explainability)",
+        "Appendix D.4.2"
+      ],
+      "check_script": "_audit_code/check_scripts.py",
+      "paper_ref": "Figure 4; Table 3 (Appendix D.4.2)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "explainability-experiments-no-code",
+      "audit": "",
+      "audit_md_line": 55,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/unsupervised-epoch-selection-missing",
+      "category": "missing",
+      "topic": "hyperparameter tuning",
+      "title": "CSM unsupervised epoch-selection procedure described in paper is not implemented; epochs hardcoded",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/ZhongLIFR__TCCM-NIPS/FMAD/functions.py",
+      "line_start": 73,
+      "line_end": 134,
+      "quote": "def determine_FMAD_hyperparameters(dataset_name_raw):\n    dataset_name = dataset_name_raw.lower()\n    if \"census\" in dataset_name:\n        epoch_size = 5\n        batch_size = 1024\n        learning_rate = 0.005\n...\n    elif \"skin\" in dataset_name:\n        epoch_size = 110  # Chosen first from \"100 or 1\"\n        batch_size = 1024\n        learning_rate = 0.005\n    elif \"celeba\" in dataset_name:\n        epoch_size = 2  # Chosen first from \"100 or 1\"\n        batch_size = 1024\n        learning_rate = 0.005\n",
+      "claim": "The number of training epochs — the paper's only data-dependent hyperparameter — is returned by a hardcoded per-dataset if/elif ladder. The values match Table 5 exactly (verified: _audit_code/out/check_epochs.txt), but the 'unsupervised hyperparameter selection method ... based on the Improved Contrast Score Margin (CSM)' that the paper (Appendix B.6) says generated them is nowhere in the repo (grep for 'CSM|contrast.?score|margin|epoch.?select|unsupervised' finds no implementation).",
+      "concern": "The paper presents the per-dataset epoch counts as the output of a principled label-agnostic CSM protocol, but only the final hardcoded numbers are shipped, so the claim that the epochs were chosen without using labels (and the whole tuning protocol) is unverifiable; in-code comments like 'Chosen first from \"100 or 1\"' suggest manual rather than automated selection.",
+      "resolution": "Authors: please release the CSM-based epoch-search script (candidate-epoch grid + T(f) criterion + selection) so reviewers can reproduce the Table 5 epoch values and confirm no labels were used.",
+      "cross_refs": [
+        "§B.6",
+        "Table 5"
+      ],
+      "check_script": "_audit_code/check_epochs.py",
+      "paper_ref": "Appendix B.6 'Unsupervised Epoch Selection Strategy'; Table 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "unsupervised-epoch-selection-missing",
+      "audit": "",
+      "audit_md_line": 80
+    },
+    {
+      "id": "/run-knn-wrong-script-name",
+      "category": "bug",
+      "topic": "reproduction scripts",
+      "title": "run_knn.sh calls non-existent Full_experiments.py and the wrong model index (50≠KNN)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/ZhongLIFR__TCCM-NIPS/bash_files/run_knn.sh",
+      "line_start": 23,
+      "line_end": 25,
+      "quote": "for j in {50..50}; do # 1 models\n    core_id=$(( (i * 1 + j) % MAX_CORES ))\n\n    # Run the process\n    echo \"$core_id $dname $RANDOM_SEED\" >> ./logs/All_log.log\n    nohup taskset -c \"$core_id\" python Full_experiments.py -d \"$dname\" -i \"$j\" -r \"$RANDOM_SEED\" -t \"$TIME_LIMIT\" -m \"$MEMORY_LIMIT\" >> \"./logs/seed_${RANDOM_SEED}/run_${dname}_model_${j}.log\" 2>&1 &\n",
+      "claim": "run_knn.sh invokes `python Full_experiments.py`, but the file is named `FullExperiments.py` (camelCase, no underscore); the call fails with 'can't open file Full_experiments.py'. Moreover model index 50 maps to INNE_semisup, not KNN/KNN_semisup (KNN_semisup is index 51). Verified in _audit_code/out/check_scripts.txt.",
+      "concern": "The 'run KNN' helper script crashes immediately and, even if the filename were fixed, would run INNE rather than KNN, so the inductive-KNN benchmark row cannot be produced as written.",
+      "resolution": "Authors: rename the call to `FullExperiments.py` and change the model index to 51 (KNN_semisup) / 5 (transductive KNN) as intended.",
+      "cross_refs": [
+        "semisup-missing-knn-index"
+      ],
+      "check_script": "_audit_code/check_scripts.py",
+      "paper_ref": "README 'Inductive-mode reviewer check'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "run-knn-wrong-script-name",
+      "audit": "",
+      "audit_md_line": 121
+    },
+    {
+      "id": "/semisup-missing-knn-index",
+      "category": "bug",
+      "topic": "reproduction scripts",
+      "title": "run_semisupervise.sh range {45..50} omits KNN_semisup (index 51)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/ZhongLIFR__TCCM-NIPS/bash_files/run_semisupervise.sh",
+      "line_start": 28,
+      "line_end": 28,
+      "quote": "for j in {45..50}; do # 7 models\n",
+      "claim": "The loop comment says '7 models' but {45..50} is only six indices (ABOD/COF/LOF/PCA/KPCA/INNE _semisup). force_inductive index 51 = KNN_semisup is never launched, and run_knn.sh (the helper meant to cover KNN) runs index 50 (INNE_semisup) instead. So the force-inductive KNN result is produced by no provided script. Verified in _audit_code/out/check_scripts.txt.",
+      "concern": "One of the reviewer-requested inductive-mode rows (force-inductive KNN) cannot be reproduced from the shipped scripts because no driver ever runs model index 51.",
+      "resolution": "Authors: change the range to {45..51}, or confirm KNN_semisup was intentionally excluded.",
+      "cross_refs": [
+        "run-knn-wrong-script-name"
+      ],
+      "check_script": "_audit_code/check_scripts.py",
+      "paper_ref": "README 'Additional Inductive-Mode Experiments'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "semisup-missing-knn-index",
+      "audit": "",
+      "audit_md_line": 151
+    },
+    {
+      "id": "/worker-error-tuple-arity",
+      "category": "bug",
+      "topic": "error handling",
+      "title": "model_worker error path puts a 2-tuple but consumer unpacks 4 values",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "question",
+      "file": "code/ZhongLIFR__TCCM-NIPS/FullExperiments.py",
+      "line_start": 119,
+      "line_end": 121,
+      "quote": "except Exception as e:\n    print(\"ERROR!\")\n    queue.put((\"ModERROR\", str(e)))\n",
+      "claim": "If `model_worker` itself raises (e.g. `limit_memory` fails) it enqueues a 2-element tuple here, but the consumer `run_model_with_timeout` always unpacks 4 elements (`status, result, train_time, test_time = queue.get()`, FullExperiments.py:134), which would raise ValueError. In normal operation `train_and_eval` catches its own exceptions and returns a 4-tuple, so this path is only reached if memory-limit setup throws.",
+      "concern": "A failure during worker setup would crash the parent with an unhandled ValueError instead of recording a clean error row, but the trigger is narrow and does not affect successful runs.",
+      "resolution": "Authors: make the error enqueue a 4-tuple (e.g. `('ModERROR', str(e), None, None)`) to match the consumer arity.",
+      "cross_refs": [],
+      "paper_ref": "n/a (engineering)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "worker-error-tuple-arity",
+      "audit": "",
+      "audit_md_line": 176
+    },
+    {
+      "id": "/aggregate-no-figure-plots",
+      "category": "difference",
+      "topic": "result figures",
+      "title": "README claims AggregateResults.py produces Rank_ROC.pdf/Rank_PR.pdf, but it only writes CSVs",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/ZhongLIFR__TCCM-NIPS/AggregateResults.py",
+      "line_start": 270,
+      "line_end": 273,
+      "quote": "order_roc = df_aggregated.groupby(\"Detector\")[\"Rank_ROC\"].mean().sort_values()\norder_roc.to_csv(os.path.join(f\"{base_metric_path}/{split}\", f\"Results_{split}_rank.csv\"))\norder_pr = df_aggregated.groupby(\"Detector\")[\"Rank_PR\"].mean().sort_values()\norder_pr.to_csv(os.path.join(f\"{base_metric_path}/{split}\", f\"Results_{split}_rank_PR.csv\"))\n",
+      "claim": "The README 'Reproduction Roadmap' and 'Result Aggregation' sections state that `python AggregateResults.py --semi_only` produces the AUROC/AUPRC box-plot PDFs `Rank_ROC.pdf` and `Rank_PR.pdf` (Figure 2), but the script ends at line 273 having written only CSVs; it imports no matplotlib/seaborn and contains no savefig/boxplot call (confirmed by grep).",
+      "concern": "The Figure-2 box plots cannot be regenerated by the documented command; only the underlying ranking values (which Fig 2 visualizes) are produced, so the figure-generation step is undocumented/absent (the values themselves remain traceable).",
+      "resolution": "Authors: add the box-plot plotting code to AggregateResults.py (or ship the plotting script), or correct the README to state that only CSVs are produced.",
+      "cross_refs": [],
+      "paper_ref": "Figure 2; README 'Result Aggregation and Visualization'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "aggregate-no-figure-plots",
+      "audit": "",
+      "audit_md_line": 204
+    },
+    {
+      "id": "/torch-version-paper-vs-repo",
+      "category": "difference",
+      "topic": "environment / dependencies",
+      "title": "Paper states PyTorch 2.0; requirements.txt pins torch==1.13.1",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/ZhongLIFR__TCCM-NIPS/requirements.txt",
+      "line_start": 7,
+      "line_end": 7,
+      "quote": "torch==1.13.1\n",
+      "claim": "Appendix B.3 (Hardware and Software) states 'Our implementation is based on Python 3.9.21 with PyTorch 2.0', but the shipped requirements.txt pins torch==1.13.1 (and the README badge says Python 3.9).",
+      "concern": "The reported software environment does not match the one needed to rebuild the repo's environment; both are individually valid but a reviewer following the paper would install a different PyTorch than the code was pinned against.",
+      "resolution": "Authors: reconcile the PyTorch version between the paper text and requirements.txt.",
+      "cross_refs": [],
+      "paper_ref": "Appendix B.3 'Hardware and Software'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "torch-version-paper-vs-repo",
+      "audit": "",
+      "audit_md_line": 231
+    }
+  ]
+}

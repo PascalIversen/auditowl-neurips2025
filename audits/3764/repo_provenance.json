@@ -1,0 +1,17 @@
+{
+  "paper_id": "3764_DNAEdit_Direct_Noise_Alignment_for_Text_Guided_Rectified_Flo",
+  "title": "DNAEdit: Direct Noise Alignment for Text-Guided Rectified Flow Editing",
+  "repos": [
+    {
+      "name": "xiechenxi99__DNAEdit_code",
+      "role": "core",
+      "evidence": "README states exact paper title and NeurIPS 2025 Spotlight acceptance, lists all six paper authors (Chenxi Xie et al.), cites arXiv:2506.01430, and owner 'xiechenxi99' matches first author Chenxi Xie. Contains scripts/DNAEdit_utils.py with DNAEdit_SD3 and DNAEdit_FLUX implementing the paper's Algorithms 1+2 (DNA + MVG), configs/DNAEdit_SD3_exp.yaml and configs/DNAEdit_FLUX_exp.yaml, DNA-Bench/long_mapping_file.json (700 records, avg 33.1 words matching paper's 33.17), and Gradio demo app.py."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo is the paper's own official implementation: repo owner matches first author, README names the exact paper title, NeurIPS 2025 Spotlight, and all six co-authors. The core method code (DNAEdit_SD3, DNAEdit_FLUX in scripts/DNAEdit_utils.py) implements Algorithms 1+2 as described in the paper. The audit correctly identifies this as the author code and writes findings about missing evaluation/metric code, missing ablation harness, missing benchmark data, and missing dependency specification — all legitimate reproducibility gaps rather than misclassifications.",
+  "audit_impact": "No misclassification. All findings (no-metric-computation-code [high], no-ablation-harness [medium], pie-bench-data-and-path-missing [medium], no-dependency-specification [medium], app-undefined-name-and-missing-import [low], readme-mvg-recommendation-vs-paper [low]) were written against the correct author repo and are accurate. The high-severity finding correctly identifies that no metric computation code exists for Tables 1-4 and Fig. 1(c).",
+  "recommended_action": "No action needed — the audit correctly classified this paper as source-present and all findings are accurate and well-evidenced."
+}

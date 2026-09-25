@@ -1,0 +1,10 @@
+{
+  "nesl__GSRF": {
+    "repo": "https://github.com/nesl/GSRF",
+    "clone_status": "cached",
+    "size_mb": 40.1,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

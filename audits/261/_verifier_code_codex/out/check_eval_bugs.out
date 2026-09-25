@@ -1,0 +1,14 @@
+{
+  "evaluate_traj_by_step_imports": [
+    "argparse",
+    "json"
+  ],
+  "uses_os_dot": true,
+  "uses_glob_dot": true,
+  "os_imported": false,
+  "glob_imported": false,
+  "check_folder_results_will_NameError": true,
+  "writes_yes_no": true,
+  "resume_compares_safe_unsafe": true,
+  "resume_branch_dead_for_real_flags": true
+}

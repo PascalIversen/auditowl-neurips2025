@@ -1,0 +1,19 @@
+{
+  "folder": "4563_Automated_Model_Discovery_via_Multi_modal_Multi_step_Pipelin",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 8813,
+    "output": 10087,
+    "cache_write": 164965,
+    "cache_read": 1095578
+  },
+  "total_tokens": 1279443,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 5.63
+}

@@ -1,0 +1,17 @@
+{
+  "paper_id": "570_Exploring_Neural_Granger_Causality_with_xLSTMs_Unveiling_Tem",
+  "title": "Exploring Neural Granger Causality with xLSTMs: Unveiling Temporal Dependencies in Complex Data",
+  "repos": [
+    {
+      "name": "harpoonix__GC-xLSTM",
+      "role": "core",
+      "evidence": "README explicitly states 'Accepted to the 39th Conference on Neural Information Processing Systems (NeurIPS 2025)' and lists all four paper authors (Harsh Poonia, Felix Divo, Kristian Kersting, Devendra Singh Dhami). Repo owner 'harpoonix' matches author Harsh Poonia (hpoonia@cs.cmu.edu). Paper text line 99 states 'Code available at github.com/harpoonix/GC-xLSTM'. Repo contains core model file GC-xLSTM/models/clstm.py (componentXLSTM, train_model_ista), main driver GC-xLSTM/xlstm_neural_gc.py, synthetic data generators, per-dataset configs, and datasets — directly implementing the paper's GC-xLSTM method."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "One repo was cloned: harpoonix/GC-xLSTM. It is unambiguously the paper's own core implementation: the paper explicitly links to it (paper_text.txt line 99), the README names the exact NeurIPS 2025 venue and all four matching authors, and the repo contains the GC-xLSTM model, training driver, datasets, and configs. The audit correctly identified this as author code and wrote substantive reproducibility findings (missing AUROC aggregation script, missing ablation configs, broken top-level imports, hardcoded absolute paths) rather than any 'no code' claim. No non-core repos were cloned.",
+  "audit_impact": "None. The audit correctly classified the repo as core author code and all findings are written against it appropriately. No misclassification or contamination issues exist.",
+  "recommended_action": "No action needed. The clone is correct and the findings are valid reproducibility issues written against the right codebase."
+}

@@ -1,0 +1,17 @@
+{
+  "paper_id": "1806_BayeSQP_Bayesian_Optimization_through_Sequential_Quadratic_P",
+  "title": "BayeSQP: Bayesian Optimization through Sequential Quadratic Programming",
+  "repos": [
+    {
+      "name": "brunzema__bayesqp",
+      "role": "core",
+      "evidence": "README L9: 'The repository contains a plug-and-play implementation of BayeSQP (NeurIPS 2025)'. Citation block names exactly this paper: 'BayeSQP: Bayesian Optimization through Sequential Quadratic Programming', author Brunzema, Paul and Trimpe, Sebastian, NeurIPS 2025. pyproject author 'Paul Brunzema' = first author; git remote github.com/brunzema/bayesqp (owner=first-author surname). src/bayesqp/ modules implement the paper's named contributions: subproblems.py (solve_bayesqp_subproblem = C1/C2 SQP-in-BO cone subproblem), models.py (RBFDerivativeGPModel/RBFHessianGPModel = second-order GP surrogates for value/gradient/Hessian), bayesqp.py (BayeSQP class with constrained Thompson-sampling line search)."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The sole cloned repo (github.com/brunzema/bayesqp) is the paper's own core-method implementation. Multiple decisive identity signals align: README explicitly states it is the implementation of BayeSQP (NeurIPS 2025); the BibTeX citation reproduces this exact paper title, both authors (Brunzema, Trimpe), and venue; pyproject.toml lists author 'Paul Brunzema' (first author); the repo owner surname matches; and the package modules directly realize the paper's three contributions (the uncertainty-aware second-order cone SQP subproblem, the second-order/Hessian GP surrogates, and the constrained Thompson-sampling line search). Not a baseline, dependency, mirror, different paper, or stub.",
+  "audit_impact": "No misclassification. The audit correctly treats this as the paper's own implementation and verified the core algorithm (B-SUB subproblem, RBF Hessian GP, constrained-posterior line search) as faithful to the paper. Its high-severity 'experiment-harness-missing' finding is NOT a 'no code exists' or 'wrong repo' claim against a non-core repo; it is a correctly-scoped observation that this method library ships no baseline implementations, benchmark functions, seed driver, or table/figure scripts to reproduce paper Figs 4-6 / Tables 1-2. The two bug findings (reset-path undefined attrs; unconstrained-subproblem returns bare None) target the genuine core source. No findings were written against a non-core repo and no stale 'no code' claim exists.",
+  "recommended_action": "No change to source-present classification. The provenance is sound: keep the paper as source-present (correct). The existing 'missing experiment harness' / reproducibility-statement findings remain valid and need no provenance correction; they concern completeness of the released artifact, not repo identity."
+}

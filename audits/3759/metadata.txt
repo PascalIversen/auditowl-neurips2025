@@ -1,0 +1,5 @@
+paper_number: 3759
+title: Self supervised learning for in vivo localization of microelectrode arrays using raw local field potential
+authors: Tianxiao He, Malhar Patel, Chenyi Li, Anna Maslarova, Mihály Vöröslakos, Nalini Ramanathan, Wei-Lun Hung, Gyorgy Buzsaki, Erdem Varol
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/b408053531ce6fd66a96bc3a86527bb9-Abstract-Conference.html
+category: empirical

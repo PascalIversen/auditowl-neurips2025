@@ -1,0 +1,17 @@
+{
+  "paper_id": "376_Sparse_Diffusion_Autoencoder_for_Test_time_Adapting_Predicti",
+  "title": "Sparse Diffusion Autoencoder for Test-time Adapting Prediction of Complex Systems",
+  "repos": [
+    {
+      "name": "tsinghua-fib-lab__SparseDiff",
+      "role": "core",
+      "evidence": "README states 'Official implement of our Neurips 2025 manuscript: Sparse Diffusion Autoencoder for Test-time Adapting Prediction of Spatiotemporal Dynamics'; repo owner tsinghua-fib-lab matches all four authors' Tsinghua University affiliation; paper_text.txt lines 100-101 cite this exact URL (https://github.com/tsinghua-fib-lab/SparseDiff); repo contains model/vq_vae.py (codebook-based sparse encoder), model/grand_predictor.py (GRAND probe-graph predictor), model/DDPM.py + model/cUnet.py (unconditional diffusion decoder) — the three core modules described in the paper."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo is unambiguously the paper's official implementation: the README names the exact NeurIPS 2025 paper title and calls itself 'official implement'; the GitHub URL matches the one cited in the paper itself; the org (tsinghua-fib-lab) corresponds to all authors' institution; and the model files directly implement the three paper components (VQ-VAE sparse encoder, GRAND predictor, DDPM decoder). All audit findings were written against this correct repo and concern legitimate code-completeness shortfalls (missing VQ-VAE/predictor training scripts, single-system demo only, missing dynamic adaptation logic), not wrong-repo attribution.",
+  "audit_impact": "No provenance problem. All findings are validly scoped to the correct repo. The high-severity findings (vqvae-grand-training-missing, headline-results-no-driver, dynamic-adaptation-not-implemented) accurately describe genuine reproducibility gaps in the official codebase.",
+  "recommended_action": "No action needed on repo attribution. Findings stand as written."
+}

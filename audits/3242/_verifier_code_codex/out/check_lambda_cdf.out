@@ -1,0 +1,33 @@
+{'q': 0.1, 'emp_mean_lambda': 0.0908, 'emp_F_at_0p5': 0.999, 'paper_F_at_0p5': 0.067, 'code_analytic_F_at_0p5': 0.999, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 0.1229, 'emp_mean_lambda': 0.1095, 'emp_F_at_0p5': 0.9963, 'paper_F_at_0p5': 0.0816, 'code_analytic_F_at_0p5': 0.9965, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 0.151, 'emp_mean_lambda': 0.1308, 'emp_F_at_0p5': 0.9898, 'paper_F_at_0p5': 0.0993, 'code_analytic_F_at_0p5': 0.9899, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 0.1855, 'emp_mean_lambda': 0.1564, 'emp_F_at_0p5': 0.976, 'paper_F_at_0p5': 0.1206, 'code_analytic_F_at_0p5': 0.9762, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 0.2279, 'emp_mean_lambda': 0.1858, 'emp_F_at_0p5': 0.9521, 'paper_F_at_0p5': 0.1461, 'code_analytic_F_at_0p5': 0.9523, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 0.28, 'emp_mean_lambda': 0.2192, 'emp_F_at_0p5': 0.9152, 'paper_F_at_0p5': 0.1764, 'code_analytic_F_at_0p5': 0.9159, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 0.344, 'emp_mean_lambda': 0.2555, 'emp_F_at_0p5': 0.8677, 'paper_F_at_0p5': 0.2121, 'code_analytic_F_at_0p5': 0.8667, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 0.4226, 'emp_mean_lambda': 0.2972, 'emp_F_at_0p5': 0.8058, 'paper_F_at_0p5': 0.2539, 'code_analytic_F_at_0p5': 0.8061, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 0.5192, 'emp_mean_lambda': 0.3412, 'emp_F_at_0p5': 0.7375, 'paper_F_at_0p5': 0.3023, 'code_analytic_F_at_0p5': 0.7368, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 0.6379, 'emp_mean_lambda': 0.39, 'emp_F_at_0p5': 0.6629, 'paper_F_at_0p5': 0.3574, 'code_analytic_F_at_0p5': 0.6626, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 0.7838, 'emp_mean_lambda': 0.4392, 'emp_F_at_0p5': 0.5876, 'paper_F_at_0p5': 0.4192, 'code_analytic_F_at_0p5': 0.587, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 0.963, 'emp_mean_lambda': 0.4905, 'emp_F_at_0p5': 0.5128, 'paper_F_at_0p5': 0.487, 'code_analytic_F_at_0p5': 0.5131, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 1.1831, 'emp_mean_lambda': 0.542, 'emp_F_at_0p5': 0.4419, 'paper_F_at_0p5': 0.5596, 'code_analytic_F_at_0p5': 0.4434, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 1.4536, 'emp_mean_lambda': 0.5927, 'emp_F_at_0p5': 0.3783, 'paper_F_at_0p5': 0.6349, 'code_analytic_F_at_0p5': 0.3793, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 1.786, 'emp_mean_lambda': 0.6404, 'emp_F_at_0p5': 0.3223, 'paper_F_at_0p5': 0.71, 'code_analytic_F_at_0p5': 0.3217, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 2.1943, 'emp_mean_lambda': 0.6869, 'emp_F_at_0p5': 0.271, 'paper_F_at_0p5': 0.7815, 'code_analytic_F_at_0p5': 0.2709, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 2.6959, 'emp_mean_lambda': 0.7292, 'emp_F_at_0p5': 0.2262, 'paper_F_at_0p5': 0.8457, 'code_analytic_F_at_0p5': 0.2267, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 3.3123, 'emp_mean_lambda': 0.7684, 'emp_F_at_0p5': 0.1887, 'paper_F_at_0p5': 0.8993, 'code_analytic_F_at_0p5': 0.1888, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 4.0696, 'emp_mean_lambda': 0.803, 'emp_F_at_0p5': 0.1565, 'paper_F_at_0p5': 0.9404, 'code_analytic_F_at_0p5': 0.1566, 'matches_paper': False, 'matches_1_over_q': True}
+{'q': 5.0, 'emp_mean_lambda': 0.8328, 'emp_F_at_0p5': 0.1298, 'paper_F_at_0p5': 0.9688, 'code_analytic_F_at_0p5': 0.1294, 'matches_paper': False, 'matches_1_over_q': True}
+
+q grid swept: [0.1, 0.123, 0.151, 0.185, 0.228, 0.28, 0.344, 0.423, 0.519, 0.638, 0.784, 0.963, 1.183, 1.454, 1.786, 2.194, 2.696, 3.312, 4.07, 5.0]
+mean(lambda) at q=0.1  : 0.0908
+mean(lambda) at q=5.0  : 0.8328
+=> corruption INCREASES with q in the code: True
+
+Under the paper's stated F(t)=1-(1-t)^q, E[lambda] = 1/(q+1):
+  q=0.1 -> E[lambda] = 0.9091  ; q=5.0 -> E[lambda] = 0.1667
+=> corruption DECREASES with q under the paper's stated CDF.
+
+rows matching paper CDF   : 0 / 20
+rows matching 1-(1-t)^(1/q): 20 / 20
+wrote /home/author/Projects/neurips_audit/audits/3242_Robust_Estimation_Under_Heterogeneous_Corruption_Rates/_verifier_code_codex/out/check_lambda_cdf.csv

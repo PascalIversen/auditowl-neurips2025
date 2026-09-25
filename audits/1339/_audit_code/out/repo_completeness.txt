@@ -1,0 +1,52 @@
+REPO = /private/tmp/claude-816569043/-Users-author-Projects-neurips-audit/455de1dd-de75-4442-8046-2bb719a6b12f/scratchpad/onspec_1339/audits/1339_Embodied_Cognition_Augmented_End2End_Autonomous_Driving/code/AIR-DISCOVER__E-cubed-AD__E-VAD
+exists = True
+
+== 1. Stage-1 dataset loader (RealCarDataset / data.real_car_dataset) ==
+  src/data dir exists          : False
+  real_car_dataset.py exists   : False
+  import sites of RealCarDataset: 2
+     projects/eeg_vedio/src/run_model/train_ddp.py:23: from data.real_car_dataset import RealCarDataset
+     projects/eeg_vedio/src/run_model/train.py:18: from data.real_car_dataset import RealCarDataset
+
+== 2. Stage-1 entrypoint main.py import target ==
+  'from training.train import' sites: 1
+     projects/eeg_vedio/src/main.py:4: from training.train import train_model
+  src/training dir exists      : False
+
+== 3. Committed weights / checkpoints ==
+  weight files found: 0
+  referenced weight present? ckpts/Driving_thinking_model.safetensors: False
+  referenced weight present? ckpts/eeg_encoder_base.pth: False
+  referenced weight present? ckpts/video_encoder_base.safetensors: False
+
+== 4. Non-VAD-Base integrations referenced by Table 1 ==
+  pattern '\\buniad\\b'                      : 0 hits
+  pattern '\\bgenad\\b'                      : 0 hits
+  pattern 'latent world model|\\bLAW\\b'     : 0 hits
+  pattern 'vad[-_ ]?tiny|tiny'               : 0 hits
+
+== 5. Closed-loop simulation code (Table 2, A.6) ==
+  pattern 'bench2drive'                      : 0 hits
+  pattern '\\bcarla\\b'                      : 0 hits
+  pattern 'leaderboard'                      : 0 hits
+  pattern 'driving[_ ]?score|\\bDS\\b'       : 4 hits
+  pattern 'route completion|success rate|\\bSR\\b': 0 hits
+  NOTE: carla appears only as a pinned line in requirements.txt (dependency), not as code:
+     requirements.txt:21: carla=0.9.12=pypi_0
+
+== 6. Cross-dataset geographic split (Table A.7) ==
+  pattern 'singapore'    : 4 hits
+  pattern 'boston'       : 1 hits
+  pattern 'location'     : 103 hits
+
+== 7. EAD configs present ==
+  EAD config files: ['projects/configs/EAD/EAD_based_pretrain.py']
+  head references eeg_decoder(  : True
+  head references AttnGate/TokenLearner (framework 1): False
+
+== 8. Stage-1 train/val/test split logic ==
+  pattern 'train_test_split'       : 0 hits (in eeg_vedio scope shown below)
+  pattern 'val(idation)?_set|test_set': 16 hits (in eeg_vedio scope shown below)
+  pattern '0\\.8\\b|80:10:10'      : 32 hits (in eeg_vedio scope shown below)
+  pattern 'random_split'           : 0 hits (in eeg_vedio scope shown below)
+

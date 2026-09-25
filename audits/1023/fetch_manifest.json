@@ -1,0 +1,10 @@
+{
+  "marshka__spatiotemporal-oversquashing": {
+    "repo": "https://github.com/marshka/spatiotemporal-oversquashing",
+    "clone_status": "cached",
+    "size_mb": 1.0,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

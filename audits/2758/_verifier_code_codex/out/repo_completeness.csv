@@ -1,0 +1,23 @@
+key,value
+prompter_classes_defined,ACAVP
+config_files_present,ACAVP.yaml
+dep_requirements.txt_present,False
+dep_environment.yml_present,False
+dep_pyproject.toml_present,False
+dep_setup.py_present,False
+dep_Pipfile_present,False
+dep_poetry.lock_present,False
+dep_conda.yml_present,False
+paper_methods_compared,VP;EVP;AutoVP;Coordinator;ACAVP
+paper_ablation_variants,Affine;Color;Affine+Color;Resize+Additive+Color;Affine+Additive
+paper_overfit_techniques,Dropout;MSE Loss;Weight decay;TrivialAugment;RandAugment;IPMix
+prompter_class_for_VP,False
+prompter_class_for_EVP,False
+prompter_class_for_AutoVP,False
+prompter_class_for_Coordinator,False
+prompter_class_for_ACAVP,True
+config_for_VP,False
+config_for_EVP,False
+config_for_AutoVP,False
+config_for_Coordinator,False
+config_for_ACAVP,True

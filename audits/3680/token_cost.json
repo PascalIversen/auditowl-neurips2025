@@ -1,0 +1,19 @@
+{
+  "folder": "3680_Mitigating_Instability_in_High_Residual_Adaptive_Sampling_fo",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 7698,
+    "output": 12376,
+    "cache_write": 149285,
+    "cache_read": 2432292
+  },
+  "total_tokens": 2601651,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 7.49
+}

@@ -1,0 +1,22 @@
+{
+  "paper_id": "2006_Same_Task_Different_Circuits_Disentangling_Modality_Specific",
+  "title": "Same Task, Different Circuits: Disentangling Modality-Specific Mechanisms in VLMs",
+  "repos": [
+    {
+      "name": "technion-cs-nlp__vlm-circuits-analysis",
+      "role": "core",
+      "evidence": "README title is verbatim the paper title and links arXiv 2506.09047 + project site technion-cs-nlp.github.io/vlm-circuits-analysis; paper line 32 names exactly this repo as official code. Owner 'technion-cs-nlp' matches authors' Technion affiliation (Nikankin/Arad/Belinkov). Modules implement the named methods: attr_patching.py (AP-IG Eq.1), script_node_circuit_discovery_and_eval.py (circuit discovery+faithfulness), script_node_cross_modality_analysis.py (sub-circuit swapping), script_backpatching_experiment.py / script_backpatch_vqav2.py (back-patching intervention), plus per-task utils for all five tasks (counting/arithmetic/CLEVR color ordering/sentiment/factual recall)."
+    },
+    {
+      "name": "third_party/TransformerLens (vendored)",
+      "role": "dependency",
+      "evidence": "README §third_party: 'a fork of the TransformerLens library with edits we made to make it support VLMs'. Lives under third_party/ inside the core repo; correctly NOT cloned as a separate repo. code_links.txt tags the upstream TransformerLensOrg/TransformerLens as [no-author-signal] and did not clone it."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo is the authors' own official implementation: README states the exact paper title and arXiv id, the repo owner (technion-cs-nlp) matches the Technion author affiliation, the paper itself cites this URL as its code, and the source files implement every named contribution (circuit discovery, cross-modal sub-circuit swapping, back-patching). TransformerLens is only a vendored fork dependency. No baseline/different-paper/stub was misclassified as core.",
+  "audit_impact": "None to source-present classification. All 7 verified findings are written against this correct core repo and concern method-internal reproducibility (missing bootstrap/significance code, back-patching config selected on the eval set, random-baseline off-by-one, missing requirements, missing qa_raw.json/sentiment_vl.json, undocumented VQAv2 path) — they presuppose the core code IS present and are consistent with that. No 'no code exists' claim was made, so there is no stale or misclassification artifact.",
+  "recommended_action": "Keep paper_verdict=correct (source-present justified). No reclassification needed. Findings stand as written against the genuine author core; optionally note that TransformerLens is a vendored dependency so the missing-dependency-spec finding's reference to its 'unstated transitive requirements' is accurate."
+}

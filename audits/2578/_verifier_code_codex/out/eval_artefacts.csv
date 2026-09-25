@@ -1,0 +1,9 @@
+check,location,result,detail
+external_dep_present,finetune/scripts/eval_dover.py->DOVER,False,DOVER/evaluate_a_set_of_videos.py
+external_dep_present,finetune/scripts/eval_vbench.py->VBench,False,VBench/evaluate.py
+external_dep_present,finetune/scripts/eval_ewarp.py->ewarp,False,finetune/scripts/ewarp.py or RAFT/ewarp.py
+eval_ewarp_default_model_exists,finetune/scripts/models/raft-things.pth,False,RAFT weight actually at finetune/utils/RAFT/raft-things.pth
+inference_sh_gt_total,inference.sh,6,"['datasets/test/UDM10/GT', 'datasets/test/UDM10/GT', 'datasets/test/UDM10/GT', 'datasets/test/UDM10/GT', 'datasets/test/UDM10/GT', 'datasets/test/UDM10/GT']"
+inference_sh_gt_all_udm10,inference.sh,True,6/6 --gt point to UDM10/GT (should differ per dataset)
+eval_dover_off_by_one_line,finetune/scripts/eval_dover.py,True,lines=[159] (uses i-1 inside enumerate loop)
+pipeline_code_hallmarks_found,repo-wide,True,"{'CLIPIQA': ['eval_metrics.py', 'inference_script.py', 'finetune/utils/metric_utils.py', 'finetune/schemas/args.py', 'finetune/scripts/eval_metrics.py']}"

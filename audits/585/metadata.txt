@@ -1,0 +1,5 @@
+paper_number: 585
+title: ReplaceMe: Network Simplification via Depth Pruning and Transformer Block Linearization
+authors: Dmitriy Shopkhoev, Ammar Ali, Magauiya Zhussip, Valentin Malykh, Stamatios Lefkimmiatis, Nikos Komodakis, Sergey Zagoruyko
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/1c10d0c087c14689628124bbc8fa69f6-Abstract-Conference.html
+category: empirical

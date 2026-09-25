@@ -1,0 +1,5 @@
+paper_number: 4946
+title: Gaze-VLM: Bridging Gaze and VLMs through Attention Regularization for Egocentric Understanding
+authors: Anupam Pani, Yanchao Yang
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/ef72fa6579401ffff9da246a5014f055-Abstract-Conference.html
+category: empirical

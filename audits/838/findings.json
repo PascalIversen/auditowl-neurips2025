@@ -1,0 +1,217 @@
+{
+  "schema_version": "1",
+  "audit": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It",
+  "audit_md": "audits/838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It/audit.md",
+  "generated_at": "2026-05-30T06:23:43.011538+00:00",
+  "findings": [
+    {
+      "id": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It/baselines-irem-ired-absent",
+      "category": "missing",
+      "topic": "baselines",
+      "title": "Table 1 and Table 2 baselines (IRED, IREM) have no code in the repository",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/DanielTschernutter__DCAReasoner/main.py",
+      "quote": "from model import DCAReasoner, DCAReasonerSettings\nfrom trainer import DCAReasonerTrainer, DCAReasonerTrainerSettings\nfrom data import MatrixInverse, MatrixCompletion, Parity, QRDecomposition, MatrixMultiplication\nfrom evaluation import DCAReasonerEvaluatorSettings, DCAReasonerEvaluator\n",
+      "line_start": 1,
+      "line_end": 4,
+      "claim": "The only driver, main.py, imports and runs DCAReasoner exclusively; a full-repo grep for \"IREM\", \"IRED\", \"diffusion\", or any baseline model/training code returns nothing. The two baselines whose MSE and inference-time columns dominate Tables 1 and 2 are entirely absent.",
+      "concern": "The central empirical claim (\"superior or on par but significantly faster than state-of-the-art IRED/IREM\") cannot be reproduced or checked, and the baseline numbers (network-size scaling, training budget, fair tuning) cannot be verified from this repository.",
+      "resolution": "Provide the baseline training/evaluation code (or the exact forks/commits of irem_code_release and ired_code_release with the wrapper used), the network-size scaling used to match parameter counts, and the scripts that produced the baseline columns.",
+      "cross_refs": [
+        "inference-time-no-timing-code",
+        "multi-run-se-absent"
+      ],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "baselines-irem-ired-absent",
+      "audit": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It",
+      "audit_md_line": 52
+    },
+    {
+      "id": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It/inference-time-no-timing-code",
+      "category": "missing",
+      "topic": "timing / efficiency claim",
+      "title": "Reported inference times (Table 1, Table 2; \"3-27x faster\" headline) have no timing code",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/DanielTschernutter__DCAReasoner/evaluation/evaluator.py",
+      "quote": "def _eval(self) -> float:\n    total_number_of_test_steps = 0\n    if self.settings.max_number_of_test_steps:\n        tqdm_total = self.settings.max_number_of_test_steps\n    else:\n        tqdm_total = len(self.loader)\n    mse_metric = AverageMeter()\n",
+      "line_start": 31,
+      "line_end": 37,
+      "claim": "The evaluator computes only MSE (AverageMeter over MSELoss). A full-repo grep for \"time\", \"perf_counter\", \"timeit\", or any wall-clock measurement returns nothing, yet Table 1 reports an \"Inference-Time [s]\" column for every cell and the abstract/results claim speedups of factors 3-27.",
+      "concern": "The headline efficiency advantage — the paper's main selling point over IRED/IREM — is not produced by any code in the repository, so the timing numbers and the speedup factors are unverifiable and non-reproducible.",
+      "resolution": "Add the timing harness (which device, warmup, batching, what is included in the measured region) used to generate the inference-time columns and the relative percentages in Table 2.",
+      "cross_refs": [
+        "baselines-irem-ired-absent"
+      ],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "inference-time-no-timing-code",
+      "audit": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It",
+      "audit_md_line": 78
+    },
+    {
+      "id": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It/text-classification-task-absent",
+      "category": "missing",
+      "topic": "experiment coverage",
+      "title": "Section 5.3 / Table 2 / Figure 1 text-classification experiment has no code",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/DanielTschernutter__DCAReasoner/data/datasets.py",
+      "quote": "from data.datasets import MatrixInverse, MatrixCompletion, Parity, QRDecomposition, MatrixMultiplication\n",
+      "line_start": 1,
+      "line_end": 1,
+      "claim": "The repo exposes only the five synthetic algorithmic-reasoning generators. A full-repo grep for \"distilbert\", \"bert\", \"embedding\", \"huggingface\", \"symptom\", or \"diagnosis\" returns nothing. The entire Section 5.3 pipeline (DistilBERT fine-tuning, CLS-token embedding extraction, symptom_to_diagnosis data loading, training DCAReasoner in embedding space) that produces Table 2 and Figure 1 is absent.",
+      "concern": "Table 2 (MSE/accuracy/inference time) and Figure 1 (energy landscape) — a full reported experiment — cannot be reproduced from this repository.",
+      "resolution": "Provide the DistilBERT fine-tuning script, embedding-extraction code, the symptom_to_diagnosis loader, and the training/eval driver for the embedding-space experiment.",
+      "cross_refs": [],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "text-classification-task-absent",
+      "audit": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It",
+      "audit_md_line": 107
+    },
+    {
+      "id": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It/multi-run-se-absent",
+      "category": "missing",
+      "topic": "statistical reporting / reproducibility",
+      "title": "No multi-run or standard-error aggregation; main runs each dataset exactly once",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/DanielTschernutter__DCAReasoner/main.py",
+      "quote": "evaluator = DCAReasonerEvaluator(model, dataset, evaluator_settings)\nscore = evaluator.eval()\nevaluator = DCAReasonerEvaluator(model, ood_datasets[dataset_name], evaluator_settings)\nood_score = evaluator.eval()\n\nprint(f\"Score for {dataset_name}: {score}\", flush=True)\nprint(f\"Score for {dataset_name} (ood): {ood_score}\", flush=True)\n",
+      "line_start": 56,
+      "line_end": 62,
+      "claim": "main.py trains one model per dataset and evaluates once, printing a single scalar MSE per difficulty. There is no loop over runs/seeds and no computation of a mean or standard error anywhere in the repo (grep for \"std\"/\"standard error\"/\"stderr\" returns nothing), yet Table 1 reports \"mean ± standard error\" over \"five evaluation runs\".",
+      "concern": "The reported error bars (and therefore any implied stability/significance of the comparisons) are not produced by the repository, and the single-run point estimates cannot be matched to the table without the multi-run protocol.",
+      "resolution": "Provide the script that performs the five evaluation runs and computes the per-cell mean and standard error reported in Table 1 (and the analogous procedure for Table 2).",
+      "cross_refs": [
+        "no-seeding-nondeterministic"
+      ],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "multi-run-se-absent",
+      "audit": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It",
+      "audit_md_line": 130
+    },
+    {
+      "id": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It/no-seeding-nondeterministic",
+      "category": "missing",
+      "topic": "reproducibility / determinism",
+      "title": "No random seeding anywhere; datasets and starting points are nondeterministic",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/DanielTschernutter__DCAReasoner/data/datasets.py",
+      "quote": "def __getitem__(self, index):\n    R_corrupt = np.random.uniform(-1, 1, (self.h, self.w))\n    R_corrupt = R_corrupt.dot(R_corrupt.transpose())\n",
+      "line_start": 19,
+      "line_end": 22,
+      "claim": "Every dataset's __getitem__ ignores `index` and freshly samples np.random each call (and DCAReasoner._sample_starting_point also calls np.random.uniform). A full-repo grep for \"seed\"/\"manual_seed\" returns nothing, so neither training data, test problems, nor DCA starting points are seeded.",
+      "concern": "Results (Table 1 point estimates and the standard errors) are not reproducible to fixed values, and there is no fixed held-out test set — each evaluation draws fresh random problems — so reported numbers cannot be regenerated deterministically.",
+      "resolution": "Add seeding (numpy + torch) for data generation, starting-point sampling, and the multi-run loop, and state which seeds produced the reported tables.",
+      "cross_refs": [
+        "multi-run-se-absent"
+      ],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-seeding-nondeterministic",
+      "audit": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It",
+      "audit_md_line": 159
+    },
+    {
+      "id": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It/noise-robustness-absent",
+      "category": "missing",
+      "topic": "experiment coverage",
+      "title": "Appendix B.4 / Figure 3 noise-robustness experiment has no code",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/DanielTschernutter__DCAReasoner/evaluation/evaluator.py",
+      "quote": "def _init_loss_function(self):\n    self.loss_function = torch.nn.MSELoss()\n",
+      "line_start": 28,
+      "line_end": 29,
+      "claim": "The evaluator applies the model to clean inputs only; a full-repo grep for \"noise\"/\"gaussian\" returns nothing. The QR noise-injection sweep over scales {1e-4 … 10} that produces Figure 3 / Appendix B.4 is absent.",
+      "concern": "The noise-robustness claim (\"our predictions are robust to noisy input data\") cannot be reproduced from this repository.",
+      "resolution": "Provide the noise-injection evaluation script used for Figure 3.",
+      "cross_refs": [],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "noise-robustness-absent",
+      "audit": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It",
+      "audit_md_line": 184
+    },
+    {
+      "id": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It/eval-step-off-by-one",
+      "category": "bug",
+      "topic": "evaluation loop",
+      "title": "Evaluator runs 21 test batches instead of the configured 20 (off-by-one break)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/DanielTschernutter__DCAReasoner/evaluation/evaluator.py",
+      "quote": "total_number_of_test_steps += 1\nif self.settings.max_number_of_test_steps and total_number_of_test_steps >= self.settings.max_number_of_test_steps + 1:\n    break\n",
+      "line_start": 44,
+      "line_end": 46,
+      "claim": "The break condition uses `>= max_number_of_test_steps + 1`, so with max=20 (set in main.py) the loop executes 21 batches (the metric is updated on each), evaluating 21*512 = 10752 problems rather than the intended 20 batches / 10240. Verified by `_audit_code/check_eval_steps.py` (out/eval_steps.txt).",
+      "concern": "The code evaluates one more batch than the configured `max_number_of_test_steps`, contradicting the code's own intent; impact is small because the metric is an average over many problems and the paper states \"roughly 10000\".",
+      "resolution": "Confirm whether 20 or 21 batches were used for the reported numbers, and fix the break to `>= max_number_of_test_steps` if 20 was intended.",
+      "cross_refs": [],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "eval-step-off-by-one",
+      "audit": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It",
+      "audit_md_line": 210
+    },
+    {
+      "id": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It/matmul-divide-by-five",
+      "category": "difference",
+      "topic": "dataset definition",
+      "title": "Matrix Multiplication target is scaled by 1/5 in code but described as M^2 in the paper",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "code/DanielTschernutter__DCAReasoner/data/datasets.py",
+      "quote": "R = np.matmul(R_corrupt, R_corrupt).flatten() / 5.\nreturn R_corrupt.flatten(), R.flatten()\n",
+      "line_start": 128,
+      "line_end": 129,
+      "claim": "The Matrix Multiplication generator returns matmul(A, A)/5, i.e. the target is A^2 divided by 5. Appendix B.3 and Section 5.2 describe the target as \"the square, i.e., M^2\" with no scaling factor mentioned.",
+      "concern": "The scaling changes the magnitude of the regression target and therefore the absolute MSE reported for this task, so the paper's stated target definition does not exactly match the code (the divide-by-5 is plausibly inherited from the original IREM dataset and is itself valid, just undocumented).",
+      "resolution": "State the 1/5 scaling in the dataset description, or confirm it matches the baseline (IREM/IRED) target scaling so the comparison is on identical targets.",
+      "cross_refs": [],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "matmul-divide-by-five",
+      "audit": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It",
+      "audit_md_line": 237
+    }
+  ]
+}

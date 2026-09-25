@@ -1,0 +1,19 @@
+{
+  "folder": "4598_Quantization_Error_Propagation_Revisiting_Layer_Wise_Post_Tr",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 8228,
+    "output": 16030,
+    "cache_write": 243992,
+    "cache_read": 4212105
+  },
+  "total_tokens": 4480355,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 12.22
+}

@@ -1,0 +1,5 @@
+artefact,description,n_matching_files,files
+coin_table1_prefill_harness,files w/ Table-1 prefill-condition logic,0,
+tom_table4_intervention_harness,files w/ Table-4 name-intervention logic,1,GeodesicResearch__mars-steg/mars_steg/dataset/theory_of_mind.csv
+tom_fig3_plot_or_label_pipeline,files w/ Fig-3 encoded-name aggregation/label pipeline,12,GeodesicResearch__mars-steg/index.html; GeodesicResearch__mars-steg/docs/build/html/mars_steg.task.html; GeodesicResearch__mars-steg/docs/build/html/searchindex.js; GeodesicResearch__mars-steg/README.md; GeodesicResearch__mars-steg/mars_steg/accelerate_training.py; GeodesicResearch__mars-steg/mars_steg/task/base_task.py; GeodesicResearch__mars-steg/mars_steg/task/README.md; GeodesicResearch__mars-steg/mars_steg/model/base_model.py; GeodesicResearch__mars-steg/mars_steg/model/README.md; GeodesicResearch__mars-steg/mars_steg/train.py; GeodesicResearch__mars-steg/mars_steg/prompts/README.md; GeodesicResearch__mars-steg/mars_steg/train_shortening.py
+headline_7b_run_config,override yaml used by run_..._7b_with_penalise.sh,config_override.yaml,"nouns_penalisation_type=objects, mode=unseen_object"

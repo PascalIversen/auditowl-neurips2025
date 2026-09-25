@@ -1,0 +1,19 @@
+{
+  "folder": "3715_Diffusion_Models_and_the_Manifold_Hypothesis_Log_Domain_Smoo",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 19873,
+    "output": 19731,
+    "cache_write": 335715,
+    "cache_read": 7461536
+  },
+  "total_tokens": 7836855,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 19.26
+}

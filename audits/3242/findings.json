@@ -1,0 +1,91 @@
+{
+  "schema_version": "1",
+  "audit": "3242_Robust_Estimation_Under_Heterogeneous_Corruption_Rates",
+  "audit_md": "audits/3242_Robust_Estimation_Under_Heterogeneous_Corruption_Rates/audit.md",
+  "generated_at": "2026-08-05T14:04:33.302726+00:00",
+  "findings": [
+    {
+      "id": "3242_Robust_Estimation_Under_Heterogeneous_Corruption_Rates/no-dependency-or-run-instructions",
+      "category": "missing",
+      "topic": "code completeness / environment",
+      "title": "No dependency spec, README, or run instructions in the repo",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/supplement/experiments.ipynb",
+      "line_start": 1,
+      "line_end": 2,
+      "quote": "import numpy as np\nimport matplotlib.pyplot as plt\n",
+      "claim": "The repo is three files (experiments.ipynb, depth-map.ipynb, appendix.pdf) with no requirements.txt / environment.yml, no README, and no stated commands or library versions; depth-map.ipynb additionally imports scipy.spatial and sklearn.neighbors.",
+      "concern": "The 'complete submission' baseline (dependency specification + README with the exact commands to reproduce each figure) is absent, so the environment must be reconstructed by inspection; impact is small because the dependencies are standard and the notebooks are self-contained.",
+      "resolution": "Add a requirements.txt (pin numpy/scipy/scikit-learn/matplotlib versions) and a short README stating which notebook produces which figure and how to run it.",
+      "cross_refs": [],
+      "paper_ref": "Checklist item 5 (paper.pdf): 'Attached Jupyter notebooks allow reviewers to verify the plots without writing any extra code.'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-dependency-or-run-instructions",
+      "audit": "3242_Robust_Estimation_Under_Heterogeneous_Corruption_Rates",
+      "audit_md_line": 65
+    },
+    {
+      "id": "3242_Robust_Estimation_Under_Heterogeneous_Corruption_Rates/lambda-cdf-exponent-mismatch",
+      "category": "difference",
+      "topic": "experimental setup / data generation",
+      "title": "Paper states λ~CDF 1−(1−t)^q; code actually samples 1−(1−t)^(1/q)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/supplement/experiments.ipynb",
+      "line_start": 131,
+      "line_end": 131,
+      "quote": "lambd = 1 - np.exp(-np.random.exponential(x,N))\n",
+      "claim": "λ is drawn as 1−exp(−E) with E~Exponential(scale=x) and x equal to the figure's x-axis value q; this yields CDF F(t)=1−(1−t)^(1/q), whereas Appendix A states 'cdf given by F(t)=1−(1−t)^q'. Empirically (out/cdf_check.csv) the sampled CDF at t=0.5 for q=5 is 0.13, matching 1−(1−t)^(1/q)=0.129 and not the paper's 1−(1−t)^q=0.969 (max |emp−paper| = 0.93). The same line recurs at line 337 for the Gaussian experiment.",
+      "concern": "The written formula is the reciprocal-exponent of what is sampled and even contradicts the paper's own adjacent sentence 'As q increases we can expect a higher corruption rate' (true only for the 1/q form, which the code implements), so the figure axis is mislabeled relative to the stated distribution — a description error, not a computational one; the estimator receives the true λ vector regardless, so no result changes.",
+      "resolution": "Confirm the intended sampling law: the code and the qualitative statement agree on F(t)=1−(1−t)^(1/q); update the Appendix A formula accordingly (or change the sampling if 1−(1−t)^q was intended).",
+      "cross_refs": [
+        "depth-map-threshold-dimension"
+      ],
+      "check_script": "_audit_code/check_cdf.py",
+      "paper_ref": "Appendix A, paper.pdf: 'we sample the corruption rates λ i.i.d. from the distribution with cdf given by F(t) = 1 − (1 − t)^q. As q increases we can expect a higher corruption rate.'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "lambda-cdf-exponent-mismatch",
+      "audit": "3242_Robust_Estimation_Under_Heterogeneous_Corruption_Rates",
+      "audit_md_line": 102
+    },
+    {
+      "id": "3242_Robust_Estimation_Under_Heterogeneous_Corruption_Rates/depth-map-threshold-dimension",
+      "category": "difference",
+      "topic": "figure generation",
+      "title": "Fig. 1 panel (B) threshold uses 1/N (d=1) though the figure is 2-D and (21) uses d/N(t)",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "code/supplement/depth-map.ipynb",
+      "line_start": 321,
+      "line_end": 323,
+      "quote": "N = np.sum(lambd <= t)\nE = t**2\nif E > (1/N):\n",
+      "claim": "The threshold that defines panel (B)'s weights is chosen by balancing t² against 1/N(t), i.e. the univariate (d=1) optimum, but the depth map is 2-D (d=2) and the caption says these weights use 'the value of t from (21)', whose balance term is d/N(t)=2/N(t).",
+      "concern": "For a 2-D illustration the code selects a slightly different threshold than eq. (21) with d=2 would give; both are valid thresholds and this only shifts which low-corruption samples panel (B) averages, so it does not change the qualitative point of the figure.",
+      "resolution": "Either use d/N(t) with d=2 to match eq. (21), or clarify in the caption that panel (B) uses the univariate balance t²=1/N(t).",
+      "cross_refs": [
+        "lambda-cdf-exponent-mismatch"
+      ],
+      "paper_ref": "Figure 1 caption and Eq. (21), paper.pdf",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "depth-map-threshold-dimension",
+      "audit": "3242_Robust_Estimation_Under_Heterogeneous_Corruption_Rates",
+      "audit_md_line": 127
+    }
+  ]
+}

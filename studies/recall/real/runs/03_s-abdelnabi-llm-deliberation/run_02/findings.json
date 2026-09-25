@@ -1,0 +1,252 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-02T09:51:56.540873+00:00",
+  "findings": [
+    {
+      "id": "/eval-code-incompatible-with-shared-logs",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "Shipped evaluation code cannot consume the logs of most reported experiments",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 206,
+      "line_end": 207,
+      "quote": "- We share logs of most of our experiments under `logs`.\n- Please note that some logs were generated with our previous code base and the logs were saved in a slightly different scheme. Please refer to `old_code` branch (we will add more details TBD).\n",
+      "claim": "The only evaluation entrypoints (evaluate_deals.ipynb, score_leakage.py) select logs with filename.startswith('history') and call eval_utils.load_setup(), which opens config.txt and scores_files/ inside the log dir (eval_utils.py:7-8). But all 23 zipped archives in logs/ are old-format: answers*.json / full_conversation*.json with list-valued 'rounds' and no config.txt or scores_files/ (verified via `unzip -l` + JSON inspection); README Logs section (quoted) admits these came from a 'previous code base' and defers the compatible parser to an absent 'old_code' branch.",
+      "concern": "Most headline numbers cannot be recomputed from the repo as shipped, including the primary base-game GPT-4 result (Table 1 row 5 / Table 3 / Table 8 temp=0: 81/33/100/1.4), all of Table 3's per-model rows, Table 2 (mixed population), Table 4's Base/rewrite/new-games/difficulty rows, Table 6 variants, and Table 9 — contradicting checklist 3(a) ('code needed to reproduce the main experimental results [Yes]'); only the two new-format logs (7-player extended and temp=1) are runnable, and those I reproduced (see check script).",
+      "resolution": "Please add the 'old_code' evaluation parser (or convert the shared answers*.json logs, plus their config.txt/scores_files, into the current history* schema) so the main-table numbers can be recomputed end-to-end.",
+      "cross_refs": [
+        "ablation-variants-no-code",
+        "heuristic-baseline-no-code"
+      ],
+      "check_script": "_audit_code/reproduce_metrics.py",
+      "paper_ref": "Tables 1-3, 8, 9; NeurIPS checklist 3(a)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "eval-code-incompatible-with-shared-logs",
+      "audit": "",
+      "audit_md_line": 68
+    },
+    {
+      "id": "/heuristic-baseline-no-code",
+      "category": "missing",
+      "topic": "baselines",
+      "title": "Heuristic rule-based baseline (Table 5) has no implementation in the repo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "we start with a random deal and select one agent at a time to improve over the last proposed deal by changing one option at a time until its corresponding minimum threshold is met or no more changes can be made\n",
+      "claim": "Table 5 reports 5/6-way and 6-way success for a repeated rule-based (LLM-free) baseline over base and new games; the described procedure (greedy per-issue improvement over randomized starts/orders) is a concrete algorithm.",
+      "concern": "No script in the repo implements this baseline (grep over all .py/.ipynb finds no such routine, and there is no baseline log), so the Table 5 numbers cannot be reproduced or checked.",
+      "resolution": "Please add the rule-based baseline generator used for Table 5, or the deals it produced.",
+      "cross_refs": [
+        "eval-code-incompatible-with-shared-logs"
+      ],
+      "paper_ref": "Section 4.7, Table 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "heuristic-baseline-no-code",
+      "audit": "",
+      "audit_md_line": 94,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/tom-bestguess-no-code",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "ToM 'best guess' preference-matching experiment (61% / 42%) has no code or ground truth",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "GPT-4 models scored 61% in correctly matching the ground truth preferences of sub-options, vs. 42% by GPT-3.5\n",
+      "claim": "Section 4.2 reports a headline capability result: agents are separately prompted to guess each party's preferred sub-option per issue and scored against ground-truth preferences.",
+      "concern": "The repo contains no preference-elicitation prompt/driver, no ground-truth preference labels, and no scoring script for this experiment, so 61%/42% cannot be traced or reproduced.",
+      "resolution": "Please add the preference-elicitation prompt, the ground-truth sub-option preference file, and the matching/scoring script.",
+      "cross_refs": [],
+      "paper_ref": "Section 4.2 (ToM paragraph)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "tom-bestguess-no-code",
+      "audit": "",
+      "audit_md_line": 116,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/ablation-variants-no-code",
+      "category": "missing",
+      "topic": "ablations",
+      "title": "Prompt-structure ablation (Table 1) not reproducible: scratchpad is fixed, no toggles",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "rounds.py",
+      "line_start": 29,
+      "line_end": 38,
+      "quote": "        if self.incentive == 'cooperative':\n            scratch_pad = self.cooperative_scratch_pad()\n        elif self.incentive == 'greedy':\n            scratch_pad = self.greedy_scratch_pad()\n        elif self.incentive == 'untargeted_adv':\n            scratch_pad = self.untargeted_adv_scratch_pad()\n        elif self.incentive == 'targeted_adv':\n            scratch_pad = self.targeted_adv_scratch_pad(self.target_agent)\n        elif self.scratch_pad_function:\n            scratch_pad = self.scratch_pad_function(other_args)\n",
+      "claim": "The round prompt's scratchpad is chosen solely by incentive and each *_scratch_pad() returns a single hardcoded string; the CLI (main.py) exposes no switches to remove the five ablated CoT components (previous-deal calculation, inferring others' preferences, candidate generation, selection, planning).",
+      "concern": "Table 1 systematically ablates five prompt components across 12 rows (the paper's core 'prompt structure matters' result), but the code ships only the final prompt per incentive and there are no per-row logs, so none of the ablation rows except the 'best' one can be regenerated.",
+      "resolution": "Please add the prompt variants (or flags) used to produce each Table 1 row, or the logs for the ablated configurations.",
+      "cross_refs": [
+        "eval-code-incompatible-with-shared-logs"
+      ],
+      "paper_ref": "Table 1, Section 4.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ablation-variants-no-code",
+      "audit": "",
+      "audit_md_line": 138
+    },
+    {
+      "id": "/random-deal-baseline-no-code",
+      "category": "missing",
+      "topic": "baselines",
+      "title": "Interactive random-deal baseline (10%/3%) has no incentive/mode in the code",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "We add a baseline where we prompt GPT-4 agents to give a random deal at each round\n",
+      "claim": "Section 4.7 reports final success 10%/3% (5/6-way) over 120 sessions for a variant where agents propose random deals each round.",
+      "concern": "rounds.py / initial_prompts.py support only cooperative, greedy, untargeted_adv, targeted_adv incentives; there is no 'random' proposal mode and no log for it, so this baseline is not reproducible.",
+      "resolution": "Please add the random-deal prompting mode (or its logs) used for this baseline.",
+      "cross_refs": [
+        "heuristic-baseline-no-code"
+      ],
+      "paper_ref": "Section 4.7 (Interactive baselines)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "random-deal-baseline-no-code",
+      "audit": "",
+      "audit_md_line": 171,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/openai-nonazure-returns-message-object",
+      "category": "bug",
+      "topic": "model API wiring",
+      "title": "Non-Azure OpenAI path returns the Message object, not its .content string",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "agent.py",
+      "line_start": 56,
+      "line_end": 60,
+      "quote": "        if 'gpt' in self.model and not self.azure:        \n            messages = self.messages + [ {\"role\": role, \"content\": msg} ]\n            response = self.client.chat.completions.create(model=self.model, messages=messages,temperature=self.temperature)\n            content = response.choices[0].message\n            return content \n",
+      "claim": "In the non-Azure OpenAI branch, prompt() returns response.choices[0].message (a ChatCompletionMessage object); every other branch (Azure, Gemini, HF) returns a string (the Azure branch on line 69 returns response.choices[0].message.content).",
+      "concern": "The returned value flows to save_conversation -> process_answer -> extract_answer, which calls answer.split('<ANSWER>') and json.dump; a Message object has no .split and is not JSON-serializable, so the documented OpenAI-API (non-Azure) run path crashes — .content is missing on this branch only.",
+      "resolution": "Return response.choices[0].message.content on line 59, matching the Azure branch.",
+      "cross_refs": [],
+      "paper_ref": "README 'Setting the game and simulation configuration' (OpenAI API support)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "openai-nonazure-returns-message-object",
+      "audit": "",
+      "audit_md_line": 195
+    },
+    {
+      "id": "/extract-answer-constant-and",
+      "category": "bug",
+      "topic": "log parsing",
+      "title": "Constant-truthy `and` in answer/plan tag guards (benign but incorrect)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "save_utils.py",
+      "line_start": 35,
+      "line_end": 38,
+      "quote": "def extract_answer(answer):\n    #extract final answer by removing scratchpad \n    if \"<ANSWER>\" and \"</ANSWER>\" in answer: \n        answer = answer.split('<ANSWER>')[-1].split(\"</ANSWER>\")[0]\n",
+      "claim": "`if \"<ANSWER>\" and \"</ANSWER>\" in answer:` (and the identical pattern in extract_plan) always evaluates only the right operand because the non-empty string literal is truthy; the intended condition is `\"<ANSWER>\" in answer and \"</ANSWER>\" in answer`.",
+      "concern": "The parsing happens to stay correct because of the second `if \"<ANSWER>\" in answer:` fallback below it, so results are unaffected — but the guard does not do what it plainly intends and would mislead any future edit.",
+      "resolution": "Rewrite as `if \"<ANSWER>\" in answer and \"</ANSWER>\" in answer:` (same for the PLAN tags).",
+      "cross_refs": [],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "extract-answer-constant-and",
+      "audit": "",
+      "audit_md_line": 223
+    },
+    {
+      "id": "/base-game-dimensions-mismatch",
+      "category": "difference",
+      "topic": "game specification",
+      "title": "Paper says base game is '5 parties, 6 issues'; repo base game is 6 players, 5 issues",
+      "severity": "low",
+      "confidence": "low",
+      "status": "question",
+      "file": "paper.pdf",
+      "quote": "Our base game adopts the setup of the initial game [44] (5 parties, 6 issues, and the values of scores and thresholds)\n",
+      "claim": "The prose attributes '5 parties, 6 issues' to the base game's setup, but games_descriptions/base/config.txt lists 6 agents and each scores_files/*.txt has 5 issue rows + 1 threshold row (6 players, 5 issues); the README/eval defaults also use AGENTS_NUM=6, ISSUES_NUM=5 for base.",
+      "concern": "Reader-facing dimension counts for the base game are inverted vs the shipped game; likely a description artefact (possibly describing reference [44]) rather than a result-affecting error, hence filed as a question.",
+      "resolution": "Please confirm the base game is 6 players / 5 issues and clarify whether '5 parties, 6 issues' refers to reference [44] rather than your base game.",
+      "cross_refs": [],
+      "paper_ref": "Section 2 (New games)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "base-game-dimensions-mismatch",
+      "audit": "",
+      "audit_md_line": 251,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/inconsistent-acceptance-operator",
+      "category": "methodology",
+      "topic": "evaluation metric definition",
+      "title": "Feasible-set/random-baseline use `>=` while agent success uses strict `>` (differ ~2x)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "_audit_code/out/threshold_operator.txt",
+      "line_start": 1,
+      "line_end": 4,
+      "quote": "base (paper: 55 (n-1) / 12 (n) out of 720)\n  '>'  (evaluate_deals / eqn4): n-1-way=37  n-way=6  total=720\n  '>=' (adjust_games)         : n-1-way=55  n-way=12  total=720\n  DIFFERS(n-1)=True  DIFFERS(n)=True\n",
+      "claim": "A party 'accepts' a deal iff its score exceeds its min threshold, but this is coded two ways: evaluate_deals.ipynb (loop_all_parties) uses strict `party_score > min` — which produced the paper's success rates (I reproduced 7-player 63.8/18.8/96.2 and temp1 68.8/6.2/96.9 with `>`) — whereas adjust_games.ipynb uses `deal_score >= min`, which produces the paper's feasible-deal counts (base 55 / 12 of 720, extended 204). With strict `>` the base feasible set is only 37 / 6.",
+      "concern": "The reported feasibility statistics and the random-chance baseline (55/720, used to argue 'agents' reasoning is crucial') are computed under a more lenient acceptance rule than the agents themselves are scored by; at the exact-threshold boundary the definitions differ nearly 2x for all-agree deals (12 vs 6), so Table 4's difficulty counts and the §4.7 baseline are not on the same footing as the success metrics, and neither the success metric (`>`) nor the count (`>=`) is consistent with both eqn. 4 (`>`) and the agents' own instructions ('cannot accept any deal with a score less than min', i.e. `>=`).",
+      "resolution": "Please pick one acceptance operator (matching eqn. 4 and the agent instruction) and recompute both the feasible-set/baseline counts and the success rates with it; report how much the headline rates and the 55/720 baseline move.",
+      "cross_refs": [],
+      "check_script": "_audit_code/threshold_operator.py",
+      "paper_ref": "Section 2 (Feasible solutions), eqn. 4, Section 4.7, Table 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "inconsistent-acceptance-operator",
+      "audit": "",
+      "audit_md_line": 275
+    }
+  ]
+}

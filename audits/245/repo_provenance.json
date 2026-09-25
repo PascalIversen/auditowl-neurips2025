@@ -1,0 +1,17 @@
+{
+  "paper_id": "245_Adaptive_Data_Borrowing_for_Improving_Treatment_Effect_Estim",
+  "title": "Adaptive Data-Borrowing for Improving Treatment Effect Estimation using External Controls",
+  "repos": [
+    {
+      "name": "openreview-supplementary__NIPS25_code_submit",
+      "role": "core",
+      "evidence": "readme.txt states 'This is the code of our paper \"Adaptive Data-Borrowing for Improving Causal Effect Estimation using External Controls\".' Two top-level dirs: example/ (Section 7 / Figure 1 synthetic illustration) and application/ (Section 8 experiments, Tables 3 and Figures 2-3). Key files implement the paper's own methods: influence_selector.py (proposed influence-function borrowing selector), lasso_selector.py (Gao et al. baseline selector), estimator.py (AIPW borrowing estimator aipw_borrow), simulate_data.py, main.py. Source is the OpenReview/NeurIPS supplementary ZIP submitted by the authors."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned artefact is the authors' own OpenReview supplementary ZIP for NeurIPS 2025 paper #245. readme.txt explicitly names this paper (matching title), and the code structure (influence_selector.py, lasso_selector.py, estimator.py, simulate_data.py, main.py) implements the paper's influence-based adaptive borrowing method and all Section 8 experiments. Table 3 numbers reproduce exactly from the shipped artefacts. No non-core repo was cloned. Audit findings are all written against this correct core repo.",
+  "audit_impact": "None — the core code is correctly identified. All 7 findings are written against genuine issues in the authors' own code. No finding falsely claims 'no code released'; the only 'missing' finding (optimal-k-selection-absent) correctly notes that the data-driven K* selection step has no implementation, which is a valid partial-core observation. The audit is internally consistent.",
+  "recommended_action": "No corrective action needed on repo provenance. The 'optimal-k-selection-absent' (missing) finding is legitimate and should be kept. All other findings are valid."
+}

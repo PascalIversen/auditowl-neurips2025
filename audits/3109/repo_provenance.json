@@ -1,0 +1,17 @@
+{
+  "paper_id": "3109_LeVo_High_Quality_Song_Generation_with_Multi_Preference_Alig",
+  "title": "LeVo: High-Quality Song Generation with Multi-Preference Alignment",
+  "repos": [
+    {
+      "name": "tencent-ailab__songgeneration",
+      "role": "partial_core",
+      "evidence": "Repo owner (tencent-ailab) matches paper's Tencent AI Lab authors (Hangting Chen, Wei Tan, Yixuan Zhang, Dong Yu). README citation block quotes the exact paper title and author list: '@article{lei2025levo, title={LeVo: High-Quality Song Generation with Multi-Preference Alignment}}'. The URL https://github.com/tencent-ailab/songgeneration is the one cited in the paper abstract. LeLM model architecture (codeclm/models/) and Music Codec (codeclm/tokenizer/) implement the paper's described components. However, the audited main branch (commit b1b03ec) is 'SongGeneration 2 / LeVo 2' — a later, architecturally different 4B system released 2026-03-01. README line 9 explicitly labels the NeurIPS LeVo as 'SongGeneration (old version)'. The paper-producing inference artefact is on this repo but on an earlier untagged commit; training, DPO, and eval code are absent from the repo entirely."
+    }
+  ],
+  "core_present": "partial",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The cloned repo is unambiguously the correct author repo for this paper: same GitHub org (tencent-ailab), same URL as cited in the paper abstract, and the README citation block names this exact NeurIPS paper and its full author list. The architectural modules (LeLM in codeclm/models/, Music Codec in codeclm/tokenizer/) implement the paper's described core system. The audit correctly identified the repo as the paper's source (not a baseline, dependency, or different paper). The complicating factor is that the checked-out main branch is the evolved successor 'SongGeneration 2 / LeVo 2' (released 2026-03-01), and the README itself calls the original LeVo system 'old version'. This is a stale-commit/version-drift issue, not a wrong-repo issue. No non-core repo was cloned alongside it. The audit's 'repo-is-songgeneration2-not-levo' finding is a valid and important observation about the audited commit not matching the paper's submission, but it does not make the repo classification wrong — the paper IS source-present at this repo, just not at the current main tip. The 'missing' findings (no DPO code, no training code, no eval metrics) are also valid concerns about what is absent from any commit of this repo.",
+  "audit_impact": "The audit is largely correct. The 'repo-is-songgeneration2-not-levo' finding is valid: the audited commit (main, b1b03ec) is LeVo 2, not the paper's LeVo. The other missing-code findings (no DPO/training/eval code) are also valid. No findings were written against a wrong or non-core repo. The overall 'source-present' classification is justified because the paper's correct repo was cloned, but the missing findings are correctly flagged. Audit quality is high; no misclassification occurred.",
+  "recommended_action": "No reclassification needed. The audit correctly cloned the paper's own repo and correctly identified that (a) the checked-out main is a later version (LeVo 2), and (b) training/DPO/eval code is absent from the repo. Authors should be asked to provide a submission-tagged commit and release the missing code components. The 'source-present' status should remain, but the paper should be flagged as having inference-only code with the paper-producing commit unavailable."
+}

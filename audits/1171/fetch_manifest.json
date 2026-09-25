@@ -1,0 +1,16 @@
+{
+  "__supplement__": {
+    "status": "absent-404",
+    "url": "https://papers.nips.cc/paper_files/paper/2025/file/376b1b131609e764f687afca832e62b3-Supplemental-Conference.zip"
+  },
+  "Legenddddd__MEL": {
+    "repo": "https://github.com/Legenddddd/MEL",
+    "clone_status": "ok",
+    "clone_error": "",
+    "source": "manual-recovery: automated miner missed (project-page / github.io / non-title repo name)",
+    "size_mb": 3.9,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

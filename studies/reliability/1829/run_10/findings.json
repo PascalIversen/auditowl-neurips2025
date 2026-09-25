@@ -1,0 +1,175 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T06:05:59.504987+00:00",
+  "findings": [
+    {
+      "id": "/plugin-generality-models-missing",
+      "category": "missing",
+      "topic": "result traceability / generality experiments",
+      "title": "Plug-in/generality baselines (iTransformer, PatchTST, RLinear, Timer) absent from repo",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "experiments/exp_basic.py",
+      "line_start": 3,
+      "line_end": 7,
+      "quote": "from model import OLinear, OLinear_C, OLinear_attn_var, OLinear_ablation_var_temp, OLinear_ablation_lin_design, \\\n    OLinear_no_Q_neither\n\nfrom model.orthoLinear_basis import OLinear_FFT, OLinear_wavelet, OLinear_wavelet2, OLinear_Legendre, OLinear_Laguerre, \\\n    OLinear_cheby\n",
+      "claim": "The model registry (model_dict) and the model/ directory contain only OLinear variants and basis ablations; there is no iTransformer, PatchTST, RLinear, DLinear or Timer implementation, and no script invokes one (verified by _audit_code/check_plugin_baselines.py).",
+      "concern": "The paper's generality claims — Table 5 (OrthoTrans plugged into iTransformer/PatchTST/RLinear), Table 9 (NormLin replacing self-attention in iTransformer/PatchTST), and Table 10 (NormLin in Timer) — are headline contributions stated in the abstract ('consistently enhances Transformer-based forecasters') but cannot be reproduced because the baseline model code with OrthoTrans/NormLin integrated is not in the repository.",
+      "resolution": "Authors: please add the iTransformer/PatchTST/RLinear/DLinear/Timer model files (with the OrthoTrans and NormLin variants) and the driver scripts that produce Tables 5, 9 and 10.",
+      "cross_refs": [
+        "§Model analysis (Table 5)",
+        "§NormLin as a plug-in (Table 9)",
+        "§Table 10"
+      ],
+      "check_script": "_audit_code/check_plugin_baselines.py",
+      "paper_ref": "Table 5, Table 9, Table 10; abstract",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "plugin-generality-models-missing",
+      "audit": "",
+      "audit_md_line": 63
+    },
+    {
+      "id": "/no-stat-test-or-std-code",
+      "category": "missing",
+      "topic": "statistical integrity / result traceability",
+      "title": "No code for the reported t-test, 99% CIs, or 7-seed standard deviations",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "\"We perform a significance test with 7 random seeds using Student's t-test to compare OLinear and\"\n",
+      "claim": "The paper reports standard deviations over seven random seeds (Tables 13, 26), 99% confidence intervals (Table 14), and a Student's t-test between OLinear and the second-best method, but the repository contains no script that computes any of these (no scipy/ttest/std-aggregation code; grep over the repo finds none).",
+      "concern": "Per result-traceability, every reported statistical test should trace to a script that computes it; here the significance test, CIs and per-seed std are produced off-repo and cannot be verified or reproduced.",
+      "resolution": "Authors: please provide the script that aggregates the 7-seed runs into the reported std / 99% CIs and computes the Student's t-test.",
+      "cross_refs": [
+        "multi-seed-unseeded"
+      ],
+      "paper_ref": "Tables 13, 14, 26; 'significance test with 7 random seeds using Student's t-test'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-stat-test-or-std-code",
+      "audit": "",
+      "audit_md_line": 92,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/unpinned-dependencies",
+      "category": "missing",
+      "topic": "expected code completeness / dependencies",
+      "title": "requirements.txt has zero version pins; 'pywt' is the wrong PyPI package name",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "requirements.txt",
+      "line_start": 1,
+      "line_end": 13,
+      "quote": "pandas\nscikit-learn\nnumpy\nmatplotlib\ntorch\nfvcore\neinops\nthop\ntimm\nreformer_pytorch\nopenpyxl\nseaborn\npywt\n",
+      "claim": "None of the 13 dependencies carries a version constraint (0 lines contain '=='), and line 13 lists 'pywt' although the importable module 'pywt' is distributed on PyPI as 'PyWavelets' (so `pip install -r requirements.txt` fails on that line).",
+      "concern": "Unpinned versions make the environment non-rebuildable (numpy/torch/timm API drift can change results or break the code), and the wrong package name causes the documented install command to error out.",
+      "resolution": "Authors: pin tested versions (e.g. torch==X, numpy==Y, …) and replace 'pywt' with 'PyWavelets'.",
+      "cross_refs": [],
+      "check_script": "_audit_code/out/requirements_check.txt",
+      "paper_ref": "README 'pip install -r requirements.txt'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "unpinned-dependencies",
+      "audit": "",
+      "audit_md_line": 114
+    },
+    {
+      "id": "/benchmark-datasets-and-qmats-not-shipped",
+      "category": "missing",
+      "topic": "data availability",
+      "title": "Major benchmark datasets and their Q-matrices not in repo (behind external links)",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "question",
+      "file": "README.md",
+      "line_start": 47,
+      "line_end": 51,
+      "quote": "2. Some datasets can be obtained from [Google Drive](https://drive.google.com/file/d/1l51QsKvQPcqILT3DwfjCgx8Dsg2rpjot/view?usp=drive_link) or [Tsinghua Cloud](https://cloud.tsinghua.edu.cn/f/2ea5ca3d621e4e5ba36a/).  The others can be obtained from the links in Appendix B. \nSome datasets are already in the folder ```./dataset```. \nThe python script ```Generate_corrmat.ipynb``` for generating Pearson correlation matrices and Q matrices is also provided in ```./dataset```.\n",
+      "claim": "Only the 'more datasets' (power, nasdaq, website, DowJones, wiki, ILI, SP500, cars, weather, covid, unemployment) and their precomputed Q-matrices ship in ./dataset; the main benchmarks reported in Table 2 (ECL/electricity, Traffic, Solar, PEMS03/04/07/08, ETT*, Exchange, METR) and their Q-matrix .npy files are not present and must be downloaded plus regenerated via the notebook (which requires per-dataset manual edits of file_path/train_ratio).",
+      "concern": "The abstract states 'code and datasets are available'; for the headline-table datasets the user must fetch data from external drives and hand-edit/run the notebook to regenerate every Q-matrix, so the headline runs are not turnkey-reproducible from the repo alone.",
+      "resolution": "Authors: confirm the Google-Drive/Tsinghua links resolve and include all benchmark datasets, and consider shipping (or scripting non-interactively) the Q-matrix generation for the main benchmarks.",
+      "cross_refs": [],
+      "paper_ref": "Abstract ('code and datasets are available'); Table 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "benchmark-datasets-and-qmats-not-shipped",
+      "audit": "",
+      "audit_md_line": 151
+    },
+    {
+      "id": "/basis-script-unregistered-model",
+      "category": "bug",
+      "topic": "ablation scripts",
+      "title": "Basis-ablation scripts pass unregistered model name 'OLinear_wavelet_concat' → KeyError",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "scripts/ablation/basis/ECL_orthoLinear_basis.sh",
+      "line_start": 6,
+      "line_end": 21,
+      "quote": "model_names=(OLinear_FFT OLinear_wavelet_concat OLinear_wavelet2 OLinear_cheby OLinear_Laguerre OLinear_Legendre)\n",
+      "claim": "The active model_names array lists 'OLinear_wavelet_concat' (and 'OLinear_wavelet2_concat' in the Solar/PEMS03 basis scripts), and the loop `for ((l = 1; l < 3; l++))` passes index 1 = 'OLinear_wavelet_concat' to `--model`; that key is not in experiments/exp_basic.py model_dict (verified by _audit_code/check_model_registry.py), so `self.model_dict[self.args.model]` raises KeyError and the run crashes.",
+      "concern": "Three of the basis-ablation driver scripts (ECL, Solar, PEMS03) will crash as written; additionally the loop bounds skip OLinear_FFT and the three polynomial bases, so this script does not reproduce the full Table 4 row set.",
+      "resolution": "Authors: change the model names to the registered 'OLinear_wavelet'/'OLinear_wavelet2' (or register the *_concat variants) and fix the loop bounds to cover all six bases.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_model_registry.py",
+      "paper_ref": "Table 4 (transformation-basis ablation)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "basis-script-unregistered-model",
+      "audit": "",
+      "audit_md_line": 179
+    },
+    {
+      "id": "/multi-seed-unseeded",
+      "category": "difference",
+      "topic": "reproducibility / seeding",
+      "title": "Multi-seed robustness runs are never explicitly seeded (fix_seed must be 0)",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "run.py",
+      "line_start": 467,
+      "line_end": 471,
+      "quote": "if args.fix_seed:\n    fix_seed = 2023  # 2023  # if args.task_name == 'forecasting' else 2021\n    random.seed(fix_seed)\n    torch.manual_seed(fix_seed)\n    np.random.seed(fix_seed)\n",
+      "claim": "Seeding only happens once when fix_seed is truthy, and run.py:414 requires fix_seed=0 whenever itr>1; the `for ii in range(args.itr)` loop (run.py:512) never re-seeds per iteration, so the 7-seed robustness runs (Tables 13/14/26) use whatever non-deterministic global RNG state exists rather than a fixed, recorded sequence of seeds.",
+      "concern": "The paper reports std/CIs 'over seven random seeds', but the code does not set or record those seeds, so the exact reported dispersion cannot be reproduced and the single-seed main results use a fixed seed=2023 rather than being averaged over seeds.",
+      "resolution": "Authors: set and log an explicit per-run seed inside the itr loop (e.g. seed = base+ii) so the 7-seed statistics are reproducible.",
+      "cross_refs": [
+        "no-stat-test-or-std-code"
+      ],
+      "paper_ref": "Tables 13, 14, 26 ('seven random seeds')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "multi-seed-unseeded",
+      "audit": "",
+      "audit_md_line": 206
+    }
+  ]
+}

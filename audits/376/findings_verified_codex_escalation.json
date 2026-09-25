@@ -1,0 +1,28 @@
+{
+  "findings": [
+    {
+      "id": "376_Sparse_Diffusion_Autoencoder_for_Test_time_Adapting_Predicti/headline-results-no-driver",
+      "verdict": "keep",
+      "reason": "The quote is present at raw notebook lines 437-441, and the repository contains only the SH demo notebook plus a diffusion-training script, with no driver or references for the five-system, baseline, multi-run, table, or ablation evaluations.",
+      "changed": "reverted the first-pass reject to keep because the line-number drift is clerical and the underlying absence claim is supported"
+    },
+    {
+      "id": "376_Sparse_Diffusion_Autoencoder_for_Test_time_Adapting_Predicti/dynamic-adaptation-not-implemented",
+      "verdict": "keep",
+      "reason": "The notebook uses config change_step=5 in a fixed-stride range loop at raw lines 441 and 449, while repo-wide search finds no latent-consistency score or threshold trigger and the lone cosine token is only the VQ option use_cosine_sim=False.",
+      "changed": "reverted the first-pass reject to keep because the shifted quote exists and the cosine checker hit does not implement the claimed adaptation mechanism"
+    },
+    {
+      "id": "376_Sparse_Diffusion_Autoencoder_for_Test_time_Adapting_Predicti/pde-guidance-disabled-in-notebook",
+      "verdict": "reject",
+      "reason": "Although the quoted calls occur at raw notebook lines 519-520, the active ddim_sample_from_reconstructed_sh method explicitly computes and applies observation and PDE gradients with nonzero configured zeta_obs and zeta_pde, so it is not a no-guidance sampler.",
+      "changed": "kept the reject but replaced the line-offset rationale with the substantive contradiction in the active sampler implementation"
+    },
+    {
+      "id": "376_Sparse_Diffusion_Autoencoder_for_Test_time_Adapting_Predicti/single-trajectory-eval-no-std",
+      "verdict": "keep",
+      "reason": "Raw notebook lines 437-448 set test_tra=1 and pred_steps=80 and loop over that single trajectory, whereas the paper states standard deviations from 10 runs and predictions longer than 100 steps.",
+      "changed": "reverted the first-pass reject to keep because the citation offset is clerical and the evaluation mismatch is directly supported"
+    }
+  ]
+}

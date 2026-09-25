@@ -1,0 +1,11 @@
+{
+  "open-thought__reasoning-gym": {
+    "repo": "https://github.com/open-thought/reasoning-gym",
+    "clone_status": "ok",
+    "clone_error": "",
+    "size_mb": 21.3,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

@@ -1,0 +1,65 @@
+REPO = /home/author/Projects/neurips_audit/audits/1339_Embodied_Cognition_Augmented_End2End_Autonomous_Driving/code/AIR-DISCOVER__E-cubed-AD__E-VAD
+(searching all tracked files except .git/, vision15/ (vendored torchvision), __pycache__/)
+
+### Tab.1/2  UniAD variant
+    regex: uniad|UniAD|track_head|occ_head|motion_head
+    hits : 0
+
+### Tab.1    GenAD variant
+    regex: genad|GenAD
+    hits : 0
+
+### Tab.1    LAW variant
+    regex: \bLAW\b|latent_world|law_model
+    hits : 0
+
+### Tab.1    VAD-Tiny variant
+    regex: tiny|Tiny
+    hits : 1
+       requirements.txt:181:tinycss2=1.2.1=pypi_0
+
+### Tab.2/A.6 CARLA closed loop
+    regex: carla|CARLA|leaderboard|Bench2Drive|bench2drive
+    hits : 1
+       requirements.txt:21:carla=0.9.12=pypi_0
+
+### Tab.A.7  Singapore/Boston split
+    regex: singapore|Singapore|SINGAPORE|boston|Boston|BOSTON
+    hits : 4
+       tools/data_converter/vad_nuscenes_converter.py:497:                # flip x axis if in left-hand traffic (singapore)
+       tools/data_converter/vad_nuscenes_converter.py:498:                flip_flag = True if map_location.startswith('singapore') else False
+       projects/mmdet3d_plugin/datasets/nuscenes_vad_dataset.py:501:        self.MAPS = ['boston-seaport', 'singapore-hollandvillage',
+       projects/mmdet3d_plugin/datasets/nuscenes_vad_dataset.py:502:                     'singapore-onenorth', 'singapore-queenstown']
+
+### Tab.1    UniAD-style L2 (endpoint)
+    regex: l2_endpoint|final_L2|uniad_metric
+    hits : 0
+
+### Tab.3    expert/novice EEG ablation
+    regex: expert|novice|Expert|Novice
+    hits : 0
+
+### Tab.4/A.5 framework-1 AttentionGate
+    regex: AttnGate|attention_gate|AttentionGate|TokenLearner|tokenlearner
+    hits : 0
+
+### Tab.4/A.3 framework-2 ego-query xattn
+    regex: ego_query_eeg|brain_ego_query|q_ego_brain
+    hits : 0
+
+### Tab.A.2  doubled L2 loss run
+    regex: loss_plan_reg.*2\.0|double.*l2|l2.*double
+    hits : 0
+
+projects/configs/EAD/ contains 1 config(s): ['EAD_based_pretrain.py']
+
+.gitignore contents (note the excluded baseline config dir):
+*pycache*
+*.py[cod]
+VADv2/
+test/
+config/
+data
+docs/
+projects/configs/VAD
+wrote /home/author/Projects/neurips_audit/audits/1339_Embodied_Cognition_Augmented_End2End_Autonomous_Driving/_verifier_code_codex/out/absent_experiments.json

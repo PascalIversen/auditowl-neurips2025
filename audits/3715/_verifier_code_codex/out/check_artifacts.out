@@ -1,0 +1,8 @@
+Top-level repo entries: ['.git', '.gitignore', 'README.md', 'bump_compare_smoothing.ipynb', 'circle2d_log_likelihood.ipynb', 'data', 'environment.yml', 'low_dim_plots.ipynb', 'mnist_KDE_vs_gaussian.ipynb', 'mnist_compare_smoothing.ipynb', 'mnist_fid_computations.ipynb', 'src']
+
+  exists=False  params/vae_params.pkl   (loaded by mnist_KDE_vs_gaussian + mnist_compare_smoothing (VAE checkpoint))
+  exists=False  figures/   (every notebook savefig target)
+  exists=False  samples/digit_4/gaussian_samples_mnist_digit_4.npy   (saved by mnist_compare, read by mnist_fid_computations)
+  exists=False  samples/digit_4/fid_images.npy   (saved by mnist_compare, read by mnist_fid_computations)
+
+Wrote /home/author/Projects/neurips_audit/audits/3715_Diffusion_Models_and_the_Manifold_Hypothesis_Log_Domain_Smoo/_verifier_code_codex/out/artifacts.json

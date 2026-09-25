@@ -1,0 +1,19 @@
+{
+  "folder": "4376_HiFlow_Training_free_High_Resolution_Image_Generation_with_F",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 8479,
+    "output": 12989,
+    "cache_write": 201227,
+    "cache_read": 2324644
+  },
+  "total_tokens": 2547339,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 8.36
+}

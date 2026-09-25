@@ -1,0 +1,290 @@
+{
+  "schema_version": "1",
+  "audit": "2212_Best_of_N_Jailbreaking",
+  "audit_md": "audits/2212_Best_of_N_Jailbreaking/audit.md",
+  "generated_at": "2026-05-31T11:50:53.689097+00:00",
+  "findings": [
+    {
+      "id": "2212_Best_of_N_Jailbreaking/forecasting-code-absent",
+      "category": "missing",
+      "topic": "result traceability / forecasting",
+      "title": "No code computes the power-law forecasting error (Fig. 4 / abstract 4.6%)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "We verify these power-law trends by forecasting the ASR after 10,000 samples, having observed 1,000, and find an error of 4.6% ASR, averaged across models and modalities.\n",
+      "claim": "The repo ships fitting utilities (power_law_simple.py) and a power-law plot for the GPT-4o-Mini/Gemini-Flash subset, but no script or notebook fits a power law on small-N data, extrapolates to large N, and computes the 4.6%/4.4%/6.3%/2.5% forecast errors reported in the abstract and Section 4.2.",
+      "concern": "The headline forecasting claim (a central contribution) cannot be reproduced or verified from the repo because the extrapolate-and-measure-error procedure is not implemented.",
+      "resolution": "Authors: please add the forecasting script/notebook that produces the per-model forecast errors and the averaged 4.6%.",
+      "cross_refs": [
+        "bootstrap-tiling-extrapolation",
+        "§4.2"
+      ],
+      "check_script": "_audit_code/check_missing_powerlaw_module.py",
+      "paper_ref": "Abstract; Section 4.2 'Forecasting'; Figure 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "forecasting-code-absent",
+      "audit": "2212_Best_of_N_Jailbreaking",
+      "audit_md_line": 57,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "2212_Best_of_N_Jailbreaking/composition-analysis-absent",
+      "category": "missing",
+      "topic": "result traceability / attack composition",
+      "title": "No analysis/plot code for composition ASR gains and sample-efficiency (Fig. 5 / §5)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "For Claude Sonnet and GPT-4o, sample efficiency increases by 34x with text inputs and 18x with vision inputs. Notably, both Gemini models see particularly high sample efficiency increases with audio inputs—222x on average.\n",
+      "claim": "run_prepair.py runs the PrePAIR/MSJ prefix attack, but no script computes the composition ASR deltas (e.g. '+20% Claude Sonnet text', '32% to 70% vision') or the sample-efficiency ratios (28x/68x/250x/34x/18x/222x) shown in Figure 5 and Section 5.",
+      "concern": "The composition results, an entire section of the paper, have no value-producing code in the repo, so they cannot be reproduced or audited.",
+      "resolution": "Authors: please add the script/notebook that computes the composition ASR gains and sample-efficiency ratios from the PrePAIR/MSJ + BoN runs.",
+      "cross_refs": [
+        "§5"
+      ],
+      "paper_ref": "Section 5; Figure 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "composition-analysis-absent",
+      "audit": "2212_Best_of_N_Jailbreaking",
+      "audit_md_line": 80,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "2212_Best_of_N_Jailbreaking/pair-tap-baseline-absent",
+      "category": "missing",
+      "topic": "baselines",
+      "title": "PAIR and TAP baseline comparisons are not implemented in the repo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "As for other black-box baselines, BoN achieves 33% higher ASR than PAIR (Chao et al., 2023) and 39% higher than TAP (Mehrotra et al., 2023) on average, outperforming both on all models except o1 (see Appendix E.1).\n",
+      "claim": "bon/attacks/ contains only the authors' own attacks (text/image/audio BoN, PrePAIR, baseline resampling). There is no PAIR or TAP implementation or runner; the prompts/pair/ directory belongs to the authors' PrePAIR variant, not the PAIR/TAP baselines used for these comparison numbers.",
+      "concern": "The cross-method comparison claims (BoN beats PAIR by 33% / TAP by 39%) cannot be reproduced or checked for fair, like-for-like tuning because the baseline attacks are absent from the repo.",
+      "resolution": "Authors: please add or point to the PAIR/TAP baseline code and confirm it used the same dataset, classifier, and N budget as BoN.",
+      "cross_refs": [
+        "App. E.1"
+      ],
+      "paper_ref": "Section 3.1 Results; Appendix E.1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "pair-tap-baseline-absent",
+      "audit": "2212_Best_of_N_Jailbreaking",
+      "audit_md_line": 102,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "2212_Best_of_N_Jailbreaking/reliability-text-vision-absent",
+      "category": "missing",
+      "topic": "result traceability / reliability",
+      "title": "Text/vision resampling-reliability numbers (§6.4) have no computing code",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "At temperature 1, attacks generate harmful responses only 30% (text), 25% (vision), and 15% (audio) of the time on average.\n",
+      "claim": "The only reliability harness in the repo is experiments/audio_reliability/ (audio only). No script resamples successful text or vision jailbreaks to compute the 30% (text) / 25% (vision) reliability figures, nor the abstract's ~20% resampling-reliability headline.",
+      "concern": "Two of the three resampling-reliability numbers, and the abstract's headline reliability claim, are not reproducible from the repo.",
+      "resolution": "Authors: please add the text/vision resampling-reliability scripts or confirm they were run off-repo.",
+      "cross_refs": [
+        "§6.4"
+      ],
+      "paper_ref": "Abstract; Section 6.4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "reliability-text-vision-absent",
+      "audit": "2212_Best_of_N_Jailbreaking",
+      "audit_md_line": 124,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "2212_Best_of_N_Jailbreaking/experiment-outputs-not-committed",
+      "category": "missing",
+      "topic": "reproducibility / committed outputs",
+      "title": "No experiment outputs committed; all numbers require live commercial-API runs",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/jplhughes__bon-jailbreaking/.gitignore",
+      "line_start": 23,
+      "line_end": 23,
+      "quote": "exp\n",
+      "claim": "The exp/ directory that holds every attack's per-(n,k) responses, classifier judgements, and search-step jsonls is gitignored, and no exp/ data is present in the repo. The notebooks read from ./exp/bon/... which does not exist. Regenerating any reported ASR requires running the attacks against paid, nondeterministic commercial APIs (OpenAI/Anthropic/Google/GraySwan) at N=7,200–10,000 on 159 requests.",
+      "concern": "Because no intermediate outputs are shared, none of the paper's quantitative results can be reproduced without large paid-API budgets, and API nondeterminism means exact figures cannot be recovered even then; this is a reproducibility limitation inherent to a commercial-API black-box study.",
+      "resolution": "Authors: please release the per-request success/failure trajectory data (the exp/ search_steps or powerlaw jsonls) so ASR curves and final ASRs can be recomputed without re-querying the APIs.",
+      "cross_refs": [
+        "forecasting-code-absent",
+        "csv-circuitbreaking-asr-mismatch"
+      ],
+      "paper_ref": "Section 3 (all reported ASRs)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "experiment-outputs-not-committed",
+      "audit": "2212_Best_of_N_Jailbreaking",
+      "audit_md_line": 146
+    },
+    {
+      "id": "2212_Best_of_N_Jailbreaking/powerlaw-notebook-dead-import",
+      "category": "bug",
+      "topic": "reproduction notebook",
+      "title": "2_plot_powerlaw.ipynb imports bon.utils.power_law, which does not exist",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/jplhughes__bon-jailbreaking/experiments/2_plot_powerlaw.ipynb",
+      "line_start": 175,
+      "line_end": 175,
+      "quote": "\"from bon.utils.power_law import (\\n\",\n",
+      "claim": "Cell 13 of the power-law reproduction notebook imports five symbols (exp_power_law, exp_power_law_single_term_no_constant, o1_simple_fit_power_law_no_constant, power_law, power_law_single_term_no_constant) from bon.utils.power_law. The module bon/utils/power_law.py does not exist in the repo (only power_law_simple.py and powerlaw_plot_utils.py do), and none of the five imported symbols are defined anywhere in the repo (verified by AST scan).",
+      "concern": "The notebook the README points to for replicating the power-law figures raises ModuleNotFoundError on import and cannot run, so the Figure 3/4 power-law results are not reproducible via the shipped notebook.",
+      "resolution": "Authors: please add the missing bon/utils/power_law.py module (or fix the import to use power_law_simple), and re-run the notebook end-to-end.",
+      "cross_refs": [
+        "forecasting-code-absent"
+      ],
+      "check_script": "_audit_code/check_missing_powerlaw_module.py",
+      "paper_ref": "Figures 3 and 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "powerlaw-notebook-dead-import",
+      "audit": "2212_Best_of_N_Jailbreaking",
+      "audit_md_line": 172
+    },
+    {
+      "id": "2212_Best_of_N_Jailbreaking/random-cap-drops-nonascii",
+      "category": "bug",
+      "topic": "text augmentation",
+      "title": "apply_random_capitalization silently deletes non-ASCII letters when selected",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/jplhughes__bon-jailbreaking/bon/attacks/run_text_bon.py",
+      "line_start": 328,
+      "line_end": 337,
+      "quote": "new_text = []\nfor c in text:\n    if c.isalpha() and random.random() < sigma ** (1 / 2):\n        if \"a\" <= c <= \"z\":\n            new_text.append(chr(ord(c) - 32))  # Convert to uppercase\n        elif \"A\" <= c <= \"Z\":\n            new_text.append(chr(ord(c) + 32))  # Convert to lowercase\n    else:\n        new_text.append(c)\nreturn \"\".join(new_text)\n",
+      "claim": "When a character passes c.isalpha() and the random gate but is neither in a-z nor A-Z (e.g. accented letters such as 'é', 'ñ'), neither the if nor elif branch fires and there is no else, so the character is dropped from the output entirely (verified: input 'café señor' with sigma=1 -> 'CAF SEOR').",
+      "concern": "The augmentation is meant to recase letters, not delete them; on requests containing non-ASCII letters it removes information from the prompt, which the function's own intent contradicts (low impact since HarmBench direct requests are predominantly ASCII English).",
+      "resolution": "Add an else branch that appends the original character when it is alphabetic but outside the a-z/A-Z ranges.",
+      "cross_refs": [],
+      "paper_ref": "Section 2 'Random Capitalization'; Appendix C.1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "random-cap-drops-nonascii",
+      "audit": "2212_Best_of_N_Jailbreaking",
+      "audit_md_line": 197
+    },
+    {
+      "id": "2212_Best_of_N_Jailbreaking/bootstrap-repeats-10-vs-100",
+      "category": "difference",
+      "topic": "bootstrapping",
+      "title": "Shipped notebook uses 10 bootstrap trajectories; paper states 100",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/jplhughes__bon-jailbreaking/experiments/2_plot_asr.ipynb",
+      "line_start": 81,
+      "line_end": 81,
+      "quote": "\"            dfs[model_name], model_path, num_repeats=10\\n\",\n",
+      "claim": "The ASR-plot reproduction notebook calls calculate_asr_trajectories with num_repeats=10, whereas the paper (Section 2 'Bootstrapping') states it plots the mean over 100 bootstrap trajectories and uses their standard deviation for error bars.",
+      "concern": "Mean ASR is unbiased under bootstrapping, but error bars from 10 trajectories are noisier than from 100; the released notebook does not reproduce the paper's stated error-bar procedure, though the underlying function supports num_repeats=100.",
+      "resolution": "Authors: confirm the paper figures used 100 trajectories and update the notebook default to 100, or clarify the discrepancy.",
+      "cross_refs": [],
+      "paper_ref": "Section 2 'Bootstrapping'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "bootstrap-repeats-10-vs-100",
+      "audit": "2212_Best_of_N_Jailbreaking",
+      "audit_md_line": 232
+    },
+    {
+      "id": "2212_Best_of_N_Jailbreaking/csv-circuitbreaking-asr-mismatch",
+      "category": "difference",
+      "topic": "released data consistency",
+      "title": "Released text-jailbreak CSV implies 37% Circuit Breaking ASR vs paper's 52%",
+      "severity": "low",
+      "confidence": "low",
+      "status": "question",
+      "file": "out/released_csv_asr.csv",
+      "csv_row": 4,
+      "quote": "Circuit Breaking,59,37.1,52,MISMATCH\n",
+      "claim": "docs/assets/data/text_jailbreaks.csv contains only successful jailbreaks (label==1), one per request; unique successes / 159 gives an implied ASR. For Sonnet/GPT-4o/Gemini-Pro/Llama3 this matches the paper within rounding (78/87/47/94%), but for Circuit Breaking the CSV has 59 unique successes (37.1%) versus the paper's reported 52%.",
+      "concern": "Either the website CSV is a partial/older Circuit Breaking run or the reported 52% used a different N or post-hoc correction; the discrepancy is unexplained, though the CSV is a website-display artifact and not claimed to reproduce Figure 1.",
+      "resolution": "Authors: clarify why the released Circuit Breaking successes (37%) differ from the reported 52% ASR — different N, different run, or human-grading corrections not reflected in the CSV?",
+      "cross_refs": [
+        "experiment-outputs-not-committed"
+      ],
+      "check_script": "_audit_code/check_released_csv_asr.py",
+      "paper_ref": "Section 3.1 ('52% ASR' on Circuit Breaking)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "csv-circuitbreaking-asr-mismatch",
+      "audit": "2212_Best_of_N_Jailbreaking",
+      "audit_md_line": 256,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "2212_Best_of_N_Jailbreaking/bootstrap-tiling-extrapolation",
+      "category": "methodology",
+      "topic": "bootstrapping / extrapolation",
+      "title": "Bootstrap cycles the observed trajectory when N exceeds observed samples",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "question",
+      "file": "code/jplhughes__bon-jailbreaking/bon/utils/shotgun_utils.py",
+      "line_start": 662,
+      "line_end": 667,
+      "quote": "success_trajectory = np.stack(\n    df.groupby(\"i\")[\"flagged\"].apply(\n        lambda x: np.tile(x.to_numpy(), (num_samples + len(x) - 1) // len(x))[:num_samples]\n    )\n).T\nnp.apply_along_axis(lambda col: np.random.shuffle(col), 0, success_trajectory)\n",
+      "claim": "In bootstrap_type='sample_without_replacement', when the requested num_samples exceeds the number of observed steps for a request, the observed success/failure vector is tiled (cycled) and then shuffled, i.e. the same observed outcomes are reused to fill larger N rather than sampling new outcomes.",
+      "concern": "If this path is used to populate ASR trajectories at N beyond the observed budget (e.g. for forecasting validation), the 'expected ASR' at large N is constructed by recycling the same finite observations, which can bias the cumulative-success curve; whether this affects any reported number depends on which N values were actually requested, which the repo's missing forecasting driver does not show.",
+      "resolution": "Authors: confirm whether any reported ASR/forecast value was generated with num_samples greater than the observed per-request step count, and if so justify the tiling behavior.",
+      "cross_refs": [
+        "forecasting-code-absent"
+      ],
+      "paper_ref": "Section 2 'Bootstrapping'; Section 4.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "bootstrap-tiling-extrapolation",
+      "audit": "2212_Best_of_N_Jailbreaking",
+      "audit_md_line": 282
+    }
+  ]
+}

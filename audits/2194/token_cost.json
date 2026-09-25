@@ -1,0 +1,19 @@
+{
+  "folder": "2194_Unlocking_Dataset_Distillation_with_Diffusion_Models",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 10913,
+    "output": 30900,
+    "cache_write": 327664,
+    "cache_read": 10325955
+  },
+  "total_tokens": 10695432,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 24.11
+}

@@ -1,0 +1,10 @@
+input_ids fed to the model at eval time CONTAINS the ground-truth annotation text
+  (data.py:138: combined_text = image_tokens + annotations_text + <|endofchunk|> + eos;
+   there is NO separate question/prompt -- the answer itself is the sequence).
+gaze_score2 does a single teacher-forced forward pass: model(images, gaze, input_ids,...)
+  (train_utils_attention.py:735) and takes argmax of outputs.logits as 'prediction'
+  (train_utils_attention.py:737). Position i logits are conditioned on TRUE tokens 0..i.
+ground_truth = decode(input_ids); predicted_text = decode(argmax(logits)).
+  Both come from the SAME sequence, so the model is scored on copying the answer it was shown.
+Consequence: SBERT cosine in Table 1 reflects teacher-forced next-token accuracy,
+  not autoregressive generation. No .generate() is used in the gaze_score2 eval path.

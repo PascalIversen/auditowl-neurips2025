@@ -1,0 +1,182 @@
+{
+  "schema_version": "1",
+  "audit": "205_Improving_Perturbation_based_Explanations_by_Understanding_t",
+  "audit_md": "audits/205_Improving_Perturbation_based_Explanations_by_Understanding_t/audit.md",
+  "generated_at": "2026-05-29T22:26:51.914070+00:00",
+  "findings": [
+    {
+      "id": "205_Improving_Perturbation_based_Explanations_by_Understanding_t/no-table-figure-pipeline",
+      "category": "missing",
+      "topic": "result traceability / repository provenance",
+      "title": "No code produces any headline table or figure (Tables 1-3, Figs 2-5)",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 71,
+      "line_end": 74,
+      "quote": "## Demos\n\n- **demo_tabular.ipynb** -- Train an MLP, learn ReCalX temperatures, compare calibration errors across perturbation levels, and validate explanation quality via remove-and-retrain.\n- **demo_images.ipynb** -- Load a pretrained DenseNet121 with ReCalX, visualize confidence under perturbation, and compare Shapley explanations.\n",
+      "claim": "The repo ships only a minimal package plus two single-dataset/single-image demo notebooks; the inventory grep (out/inventory.txt) finds no sensitivity (Table 3) code, no KernelSHAP/FeatureAblation, no ViT/SigLIP, no blur perturbation, no Covertype/Credit/Pol datasets, no regression/quantile-CE code, and no multi-dataset/multi-model calibration-error harness.",
+      "concern": "Every quantitative result in the paper (all of Tables 1-3 and Figs 2-5) is untraceable to code, so none of the empirical claims can be reproduced or checked from this repository.",
+      "resolution": "Authors: release the full experiment pipeline (data loaders for all datasets/models, the calibration-error harness, the sensitivity experiments, and the table/figure generation scripts) used to produce Tables 1-3 and Figures 2-5.",
+      "cross_refs": [
+        "densenet-temps-placeholder",
+        "regression-experiments-missing"
+      ],
+      "check_script": "_audit_code/check_repo_inventory.py",
+      "paper_ref": "Tables 1-3; Figures 2-5; Section 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-table-figure-pipeline",
+      "audit": "205_Improving_Perturbation_based_Explanations_by_Understanding_t",
+      "audit_md_line": 60
+    },
+    {
+      "id": "205_Improving_Perturbation_based_Explanations_by_Understanding_t/densenet-temps-placeholder",
+      "category": "missing",
+      "topic": "result traceability / trained artefacts",
+      "title": "Image ReCalX temperatures supplied as a CSV with no code that learns them",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "data/densenet_temperatures.csv",
+      "line_start": 1,
+      "line_end": 11,
+      "quote": "perturbation_level,temperature\n0.0,1.023\n0.1,1.156\n0.2,1.287\n0.3,1.412\n0.4,1.534\n0.5,1.651\n0.6,1.763\n0.7,1.871\n0.8,1.975\n0.9,2.084\n",
+      "claim": "The image demo and any image ReCalX result depend on per-bin temperatures loaded from data/densenet_temperatures.csv (image_wrapper.py:40-44), but no script in the repo fits these temperatures on ImageNet validation data; the values are smooth, monotone, evenly stepped and read like a placeholder.",
+      "concern": "The temperatures driving the image experiments (Table 2, Fig 5) are an unverifiable hand-supplied artefact with no producing code, so the image-side calibration claims cannot be reproduced.",
+      "resolution": "Authors: provide the script that learns image temperatures (the ImageNet perturbation sweep + per-bin cross-entropy minimization) and confirm whether the released CSV is the learned output or an illustrative placeholder.",
+      "cross_refs": [
+        "no-table-figure-pipeline"
+      ],
+      "check_script": "_audit_code/check_repo_inventory.py",
+      "paper_ref": "Section 4 (ReCalX); Table 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "densenet-temps-placeholder",
+      "audit": "205_Improving_Perturbation_based_Explanations_by_Understanding_t",
+      "audit_md_line": 89
+    },
+    {
+      "id": "205_Improving_Perturbation_based_Explanations_by_Understanding_t/regression-experiments-missing",
+      "category": "missing",
+      "topic": "evaluation coverage",
+      "title": "Regression / quantile-calibration experiments (Appendix C) absent from repo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "In Appendix C, we conducted corresponding experiments on two tabular regression datasets, which demonstrate that ReCalX effectively reduces the quantile-based calibration error [35] under explainability-specific perturbations for regression tasks as well.\n",
+      "claim": "The paper claims regression experiments using quantile-based calibration error on two tabular regression datasets; the repo contains no regression model, no quantile-CE code, and no isotonic/affine recalibrator (inventory grep: ABSENT).",
+      "concern": "A claimed extension of the method (regression) has no supporting code, so that contribution is unreproducible.",
+      "resolution": "Authors: release the regression experiment code (probabilistic regression model, affine/isotonic calibrator, quantile-CE metric) referenced in Appendix C.",
+      "cross_refs": [
+        "no-table-figure-pipeline"
+      ],
+      "check_script": "_audit_code/check_repo_inventory.py",
+      "paper_ref": "Section 4 'Applying ReCalX beyond Classification'; Appendix C",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "regression-experiments-missing",
+      "audit": "205_Improving_Perturbation_based_Explanations_by_Understanding_t",
+      "audit_md_line": 125,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "205_Improving_Perturbation_based_Explanations_by_Understanding_t/perturb-level-vs-single-reference",
+      "category": "bug",
+      "topic": "perturbation-level inference",
+      "title": "Perturbation level mis-inferred: non-reference samples read as ~100% perturbed",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "recalx/calibration.py",
+      "line_start": 220,
+      "line_end": 234,
+      "quote": "def _infer_perturbation_level(self, x: torch.Tensor) -> float:\n    \"\"\"Infer perturbation level by comparing to unperturbed reference.\"\"\"\n    if self.unperturbed_input is None:\n        return 0.0\n    \n    # Fraction of features that differ from original\n    diff = (x != self.unperturbed_input).float()\n    level = float(diff.mean().item())\n    return round(level, 1)\n\ndef set_unperturbed_input(self, x: torch.Tensor):\n    \"\"\"Set reference input for perturbation inference.\"\"\"\n    if x.dim() == 1:\n        x = x.unsqueeze(0)\n    self.unperturbed_input = x[0].detach()\n",
+      "claim": "The temperature bin is chosen from the fraction of features that differ from a single stored reference vector (set to one sample via set_unperturbed_input). When Captum's Shapley/LIME attribution feeds many different samples through forward(), any sample other than the reference differs from it in nearly all features, so the inferred perturbation level is ~1.0 regardless of how many features were actually masked.",
+      "concern": "check_perturb_level_inference.py shows an UNPERTURBED non-reference sample is read as level 1.0 (should be 0.0), so during attribution almost every query gets the maximum-perturbation temperature, contradicting the code's stated intent of selecting the temperature for the actual perturbation level.",
+      "resolution": "Authors: confirm how the perturbation level is meant to be inferred per query during attribution; the level should be measured relative to the per-sample unperturbed input (or computed from the coalition mask Captum supplies), not relative to one global reference vector.",
+      "cross_refs": [
+        "no-table-figure-pipeline"
+      ],
+      "check_script": "_audit_code/check_perturb_level_inference.py",
+      "paper_ref": "Section 4, f^pi_ReCalX(x,S) adaptive temperature T(S)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "perturb-level-vs-single-reference",
+      "audit": "205_Improving_Perturbation_based_Explanations_by_Understanding_t",
+      "audit_md_line": 151
+    },
+    {
+      "id": "205_Improving_Perturbation_based_Explanations_by_Understanding_t/ece-kl-not-paper-estimator",
+      "category": "difference",
+      "topic": "calibration metric",
+      "title": "ece_kl is a 15-bin top-1 estimator, not the cited Popordanoska et al. [51] estimator",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "recalx/calibration.py",
+      "line_start": 55,
+      "line_end": 81,
+      "quote": "def ece_kl(probs: np.ndarray, labels: np.ndarray, n_bins: int = 15) -> float:\n    \"\"\"KL-divergence based Expected Calibration Error.\n    \n    Measures calibration error as KL divergence between predicted\n    and empirical distributions within bins.\n    \"\"\"\n    predictions = np.argmax(probs, axis=1)\n    confidences = np.max(probs, axis=1)\n    accuracies = (predictions == labels).astype(float)\n    \n    bins = np.linspace(0, 1, n_bins + 1)\n    ece_kl_value = 0.0\n    \n    for i in range(n_bins):\n        in_bin = (confidences > bins[i]) & (confidences <= bins[i + 1])\n        \n        if np.sum(in_bin) > 0:\n            empirical_acc = np.mean(accuracies[in_bin])\n            empirical_dist = np.array([1 - empirical_acc, empirical_acc])\n            empirical_dist = np.clip(empirical_dist, 1e-45, None)\n            \n            for conf in confidences[in_bin]:\n                pred_dist = np.array([1 - conf, conf])\n                pred_dist = np.clip(pred_dist, 1e-45, None)\n                ece_kl_value += np.sum(empirical_dist * np.log(empirical_dist / pred_dist))\n    \n    return float(ece_kl_value / len(probs))\n",
+      "claim": "The paper (Sec. 5) states CE_KL was computed with the 'consistent and asymptotically unbiased estimator proposed by [51]' (Popordanoska et al., a kernel/KDE estimator), but the repo's ece_kl is a 15-bin top-1-confidence binning that collapses the K-class prediction to a binary [1-conf, conf] distribution.",
+      "concern": "check_ece_kl.py confirms this metric depends on n_bins and is invariant to the non-top-1 probability mass, so it is a different (biased, bin-dependent) estimator than the one the paper names; the demo's reported CE_KL values are therefore not the paper's quantity. (Routed as difference because the paper's tables are not produced here, so this is a paper-vs-code metric mismatch in the demo, not the source of a reported number.)",
+      "resolution": "Authors: confirm which estimator produced Tables 1-2; if the kernel estimator of [51] was used, include its implementation in the repo rather than this binned proxy.",
+      "cross_refs": [
+        "no-table-figure-pipeline"
+      ],
+      "check_script": "_audit_code/check_ece_kl.py",
+      "paper_ref": "Section 5: 'consistent and asymptotically unbiased estimator proposed by [51]'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ece-kl-not-paper-estimator",
+      "audit": "205_Improving_Perturbation_based_Explanations_by_Understanding_t",
+      "audit_md_line": 193
+    },
+    {
+      "id": "205_Improving_Perturbation_based_Explanations_by_Understanding_t/retrain-demo-protocol-differs",
+      "category": "difference",
+      "topic": "remove-and-retrain protocol",
+      "title": "Demo remove-and-retrain uses 1 seed / 500 samples vs paper's 3 seeds / 1000 samples",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "demo_tabular.ipynb",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "SEEDS = [0]\n",
+      "claim": "The paper states global importances are averaged over 1000 samples and retraining is performed over 3 random seeds [29] (paper p.8). The demo notebook's remove-and-retrain cell uses SEEDS = [0] (one seed) and computes importance over X_val[:500] (500 samples).",
+      "concern": "The released remove-and-retrain demonstration does not follow the paper's stated protocol, so it neither reproduces Fig. 4 nor provides the variability the paper reports; this is a demo-vs-paper difference, not the source of a paper number.",
+      "resolution": "Authors: provide the Fig. 4 script run with the paper's protocol (3 seeds, 1000 samples, all four tabular datasets, MLP and tabular ResNet).",
+      "cross_refs": [
+        "no-table-figure-pipeline"
+      ],
+      "paper_ref": "Section 5 'Global Remove and Retrain Fidelity'; Figure 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "retrain-demo-protocol-differs",
+      "audit": "205_Improving_Perturbation_based_Explanations_by_Understanding_t",
+      "audit_md_line": 245
+    }
+  ]
+}

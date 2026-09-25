@@ -1,0 +1,5 @@
+paper_number: 4465
+title: DePass: Unified Feature Attributing by Simple Decomposed Forward Pass
+authors: Xiangyu Hong, Che Jiang, Kai Tian, Biqing Qi, Youbang Sun, Ning Ding, Bowen Zhou
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/d8aaa1eaa23e3d73d5ee802cd5058013-Abstract-Conference.html
+category: empirical

@@ -1,0 +1,5 @@
+paper_number: 2941
+title: Geometric Logit Decoupling for Energy-Based Graph Out-of-distribution Detection
+authors: Min Wang, Hao Yang, Qing Cheng, Jincai Huang
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/8bd9f3ae50e9e1230e483dda4873e710-Abstract-Conference.html
+category: empirical

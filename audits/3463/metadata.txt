@@ -1,0 +1,5 @@
+paper_number: 3463
+title: Unleashing Diffusion Transformers for Visual Correspondence by Modulating Massive Activations
+authors: Chaofan Gan, Yuanpeng Tu, Xi Chen, Tieyuan Chen, Yuxi Li, Mehrtash Harandi, Weiyao Lin
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/a654298de44ec95dec28aa37e8d0af51-Abstract-Conference.html
+category: empirical

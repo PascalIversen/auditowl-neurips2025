@@ -1,0 +1,343 @@
+{
+  "schema_version": "1",
+  "audit": "run_02",
+  "audit_md": "/home/author/Projects/neurips_audit/for_rebuttal/recall_experiment/major_recall_study/runs/3463/run_02/audit.md",
+  "generated_at": "2026-08-03T01:33:58.544962+00:00",
+  "findings": [
+    {
+      "id": "run_02/nonflux-dit-extractors-missing",
+      "category": "missing",
+      "topic": "result traceability / model coverage",
+      "title": "Only Flux extractor shipped; SD3-5/SD3/Pixart code (incl. SOTA rows) absent",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "We evaluate our strategies on four different pre-trained DiTs\n",
+      "claim": "The paper reports DiTF results for Pixart-alpha, SD3, SD3-5 and Flux (Tables 2, 3, 5, 7), but the repo's src/ contains only the Flux model (src/flux/**); eval_spair.py hard-restricts --dift_model to 'flux' (choices=['flux'], and raises otherwise at lines 100-103), and there is no SD3/SD3-5/Pixart feature-extraction code anywhere.",
+      "concern": "None of the DiTFsd3-5 / DiTFsd3 / DiTFpixart numbers can be reproduced, including the headline SOTA row DiTFsd3-5(ours)† (SPair 72.2, AP-10K-I.S. 71.3); the 'new state-of-the-art for DiTs' claim rests mostly on models with no released code.",
+      "resolution": "Release the feature-extraction code (the analogue of feat_flux.py/forward_feat) for SD3, SD3-5 and Pixart-alpha, plus the eval driver that consumes them.",
+      "cross_refs": [
+        "dinov2-integration-missing",
+        "ap10k-pfpascal-eval-missing"
+      ],
+      "paper_ref": "Section 5.1 (Model Variants); Tables 2, 3, 7",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "nonflux-dit-extractors-missing",
+      "audit": "run_02",
+      "audit_md_line": 35,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "run_02/dinov2-integration-missing",
+      "category": "missing",
+      "topic": "result traceability / DINOv2 fusion",
+      "title": "DINOv2-integrated (†) pipeline entirely absent — no DINO load, concat, or PCA",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "We extracted DINOv2 features from the token facet of the 11th layer of the model.\n",
+      "claim": "The '†: Integrating DINOv2 features' rows of Tables 2-3 (which include the best-reported results, e.g. DiTFsd3-5† = 72.2 on SPair) require loading DINOv2, concatenating it channel-wise with DiT features, and the pair-PCA of Eq. (14); none of this exists in the repo. The only PCA helper, eval_spair.py:pca_feature_pair (line 32), is never called (grep: sole occurrence is its def).",
+      "concern": "Every '†' number in the paper — including the overall SOTA claims — is unreproducible; the leftover pca_feature_pair function is dead code and no DINOv2 model is ever instantiated.",
+      "resolution": "Release the DINOv2 loading + channel concatenation + pair-PCA integration code, and wire pca_feature_pair (or its replacement) into the eval path.",
+      "cross_refs": [
+        "nonflux-dit-extractors-missing"
+      ],
+      "paper_ref": "Appendix C (Integration of DINOv2 feature), Eq. (14); Tables 2, 3 († rows)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "dinov2-integration-missing",
+      "audit": "run_02",
+      "audit_md_line": 57,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "run_02/ap10k-pfpascal-eval-missing",
+      "category": "missing",
+      "topic": "result traceability / datasets",
+      "title": "AP-10K and PF-Pascal evaluation code absent (only SPair-71k implemented)",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "we conduct experiments on three popular benchmarks: SPair-71k\n",
+      "claim": "The paper evaluates on SPair-71k, PF-Pascal and AP-10K (I.S./C.S./C.F.), but the repo ships only eval_spair.py, which is hardwired to SPair's PairAnnotation/test JSON layout (eval_spair.py:72-98). Grep for 'ap10k|pf.?author' across *.py/*.sh returns nothing.",
+      "concern": "The abstract's second headline claim ('+4.4% on AP-10K-C.S.', text: 64.6 -> 69.4 on C.S.) and all PF-Pascal numbers (Table 3) have no code and cannot be reproduced.",
+      "resolution": "Release the AP-10K and PF-Pascal evaluation drivers (data loading, split selection, and PCK-per-image computation for the I.S./C.S./C.F. settings).",
+      "cross_refs": [
+        "nonflux-dit-extractors-missing",
+        "pck-single-threshold-missing"
+      ],
+      "paper_ref": "Section 5.1 (Datasets); Table 3; abstract",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ap10k-pfpascal-eval-missing",
+      "audit": "run_02",
+      "audit_md_line": 79,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "run_02/channel-discard-missing",
+      "category": "missing",
+      "topic": "core contribution / channel discard",
+      "title": "Channel-discard strategy (a named contribution) is not implemented anywhere",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "we zero out the corresponding dimensions of these weakly massive activations in the post-AdaLN features\n",
+      "claim": "The paper's channel-discard strategy zeroes specific post-AdaLN dimensions (for Flux the massive-activation dims 154 and 1446). eval_spair.py applies only the AdaLN modulation (line 190: `src_ft = (1 + src_scale) * src_ft + src_shift`) and never zeroes any channel; grep for 'discard', '154', '1446', '676', 'zero' over *.py returns no zeroing code.",
+      "concern": "One of the paper's four itemized contributions and the top row of the ablation (Table 4: +AdaLN 65.3 -> +Channel discard 67.1 on SPair) cannot be reproduced or even located in the code.",
+      "resolution": "Release the channel-discard implementation and the mechanism that identifies which post-AdaLN dimensions are zeroed per model.",
+      "cross_refs": [
+        "ablation-harness-missing"
+      ],
+      "paper_ref": "Section 4.3 (Channel discard); Table 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "channel-discard-missing",
+      "audit": "run_02",
+      "audit_md_line": 101,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "run_02/ablation-harness-missing",
+      "category": "missing",
+      "topic": "ablations",
+      "title": "No toggles/scripts for Table 4 (Original/+AdaLN) or Table 5 (condition) ablations",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "We report the PCK per point for SPair-71k and PCK per image for\n",
+      "claim": "eval_spair.py always applies AdaLN modulation (line 190) and always conditions on both t and c (feat_flux.py builds prompt embeds and passes a fixed timestep); there is no flag to produce the 'Original' (no-AdaLN) row, and no way to vary the condition among {original, c, t, t&c} for Table 5.",
+      "concern": "The ablations that establish the method's core mechanism (Tables 4 and 5) are not runnable from the released code without editing it, so their numbers are unverifiable.",
+      "resolution": "Add command-line switches (or scripts) that reproduce each ablation row: no-AdaLN, +AdaLN, +channel-discard, and the condition sweep original/c/t/t&c.",
+      "cross_refs": [
+        "channel-discard-missing"
+      ],
+      "paper_ref": "Tables 4 and 5; Figure 6",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ablation-harness-missing",
+      "audit": "run_02",
+      "audit_md_line": 123,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "run_02/aux-tasks-missing",
+      "category": "missing",
+      "topic": "result traceability / auxiliary tasks",
+      "title": "Segmentation (ADE20K), geometric (HPatches) and temporal (DAVIS) code absent",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "we conduct semantic segmentation experiments on\n",
+      "claim": "Table 6 (ADE20K semantic segmentation, incl. training a segmentation head), Table 8 (HPatches homography via cv2.findHomography), and Table 9 (DAVIS-2017 video segmentation) are all reported, but no code for any of these tasks exists in the repo (grep 'ade20k|hpatches|davis' over *.py/*.sh returns nothing).",
+      "concern": "The generalization evidence in Section 5.4 and Appendices D-E cannot be reproduced from the released code.",
+      "resolution": "Release the ADE20K segmentation training/eval, the HPatches homography pipeline, and the DAVIS label-propagation pipeline.",
+      "cross_refs": [],
+      "paper_ref": "Table 6; Appendix D (Table 8); Appendix E (Table 9)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "aux-tasks-missing",
+      "audit": "run_02",
+      "audit_md_line": 145,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "run_02/deps-readme-missing",
+      "category": "missing",
+      "topic": "code completeness / reproducibility",
+      "title": "No dependency spec and no README/results table for the DiTF eval pipeline",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "eval_spair.py",
+      "line_start": 13,
+      "line_end": 20,
+      "quote": "import cv2\nimport matplotlib.pyplot as plt\nimport gc\nimport copy\nfrom sklearn.decomposition import PCA\nfrom torchvision import transforms as T\nfrom math import sqrt\nimport seaborn as sns\n",
+      "claim": "eval_spair.py / feat_flux.py require diffusers, opencv (cv2), scikit-learn, scipy, seaborn, matplotlib, tqdm, einops, but the repo root has no requirements.txt / pyproject.toml / setup.py / environment.yml and no README (only eval_spair.py, test_spair.sh, model_cards/, model_licenses/, src/). The sole dependency list is src/flux.egg-info/requires.txt, which is the upstream flux package's manifest and lists none of diffusers/cv2/sklearn/scipy/seaborn.",
+      "concern": "The environment cannot be rebuilt from the repo, and there is no README with the exact reproduction commands or a results table, so even the one implemented experiment is not turn-key.",
+      "resolution": "Add a pinned requirements/environment file covering all imports and a README documenting data layout, weights, and the exact command + expected numbers.",
+      "cross_refs": [],
+      "paper_ref": "Checklist Q5 ('Datasets and codes are available ... to faithfully reproduce')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "deps-readme-missing",
+      "audit": "run_02",
+      "audit_md_line": 167
+    },
+    {
+      "id": "run_02/analysis-viz-missing",
+      "category": "missing",
+      "topic": "analysis / massive-activation characterization",
+      "title": "No code identifies the massive-activation dimensions or produces the analysis figures",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "the SD3-5 model exhibits massive activations concentrated in a single feature dimension (676)\n",
+      "claim": "The paper's central empirical analysis — massive activations concentrated at fixed dims (SD3-5: 676; Flux: 154 and 1446), the per-dimension mean/variance of Table 1, and the pre/post-AdaLN visualizations of Figs 2-5/10-16 — has no supporting code; the specific dimensions never appear in the repo (grep '676|154|1446' finds nothing).",
+      "concern": "The paper's identification/characterization of massive activations (which motivates the whole method) is not reproducible from released code.",
+      "resolution": "Release the scripts that compute the ranked-dimension statistics (Table 1) and locate/visualize the massive-activation dimensions per model.",
+      "cross_refs": [
+        "channel-discard-missing"
+      ],
+      "paper_ref": "Section 4.1; Table 1; Figures 2-5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "analysis-viz-missing",
+      "audit": "run_02",
+      "audit_md_line": 198,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "run_02/pck-single-threshold-missing",
+      "category": "missing",
+      "topic": "metrics",
+      "title": "Eval computes only PCK@0.10; the @0.01 and @0.05 columns have no code",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "eval_spair.py",
+      "line_start": 252,
+      "line_end": 252,
+      "quote": "if (dist / threshold) <= 0.1:\n",
+      "claim": "The PCK threshold is hardcoded to 0.1; the script emits only PCK@0.10. Tables 3 and 8 report PCK@0.01 and @0.05 (and 1/3/5 px) as well, which this code never computes.",
+      "concern": "The @0.01/@0.05 entries across the paper's tables are not produced by the released code (a one-line change, but as shipped they are untraceable).",
+      "resolution": "Parameterize the PCK threshold (or loop over {0.01,0.05,0.10}) so the reported multi-threshold columns are reproducible.",
+      "cross_refs": [
+        "ap10k-pfpascal-eval-missing"
+      ],
+      "paper_ref": "Tables 3 and 8",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "pck-single-threshold-missing",
+      "audit": "run_02",
+      "audit_md_line": 220
+    },
+    {
+      "id": "run_02/chunk2-unpack-crash",
+      "category": "bug",
+      "topic": "runtime / released reproduction script",
+      "title": "Shipped test_spair.sh (ensemble_size=1) crashes: chunk(2) returns one chunk",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "eval_spair.py",
+      "line_start": 175,
+      "line_end": 177,
+      "quote": "feat_pred_uncond, feat_pred_text = src_ft_raw.chunk(2)\n# src_ft_raw = feat_pred_uncond + guidance_scale * (feat_pred_text - feat_pred_uncond)\nsrc_ft_raw = feat_pred_text\n",
+      "claim": "The saved per-image feature has batch dim == ensemble_size (feat_flux.py returns unet_ft without averaging — the `.mean(0)` at feat_flux.py:197 is commented out). The released test_spair.sh passes `--ensemble_size 1`, so src_ft_raw has shape [1, 3072, 48, 48]. torch.chunk(x, 2, dim=0) on a size-1 dim returns a SINGLE chunk, so `feat_pred_uncond, feat_pred_text = src_ft_raw.chunk(2)` raises `ValueError: not enough values to unpack (expected 2, got 1)`. This is the first statement in the per-pair loop, so evaluation dies before any PCK is produced. Reproduced in _audit_code/check_chunk_crash.py (out/chunk_crash.json).",
+      "concern": "The repo's only end-to-end reproduction command crashes on the first evaluated pair, so the one implemented headline number (SPair-71k / Flux, 67.1) cannot be reproduced as shipped; the chunk(uncond/text) split is also structurally vestigial because feat_flux never produces an uncond pass.",
+      "resolution": "Remove the chunk/uncond-text split (feat_flux emits only the text-conditioned feature), or set ensemble_size==2; confirm which ensemble_size and feature layout produced the paper numbers.",
+      "cross_refs": [
+        "img-size-960-vs-768"
+      ],
+      "check_script": "_audit_code/check_chunk_crash.py",
+      "paper_ref": "Table 2 (DiTFflux All = 67.1)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "chunk2-unpack-crash",
+      "audit": "run_02",
+      "audit_md_line": 246
+    },
+    {
+      "id": "run_02/img-size-960-vs-768",
+      "category": "difference",
+      "topic": "evaluation setup / input resolution",
+      "title": "Paper states 960x960 input; released script uses 768x768",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "test_spair.sh",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "CUDA_VISIBLE_DEVICES=1 python eval_spair.py --dataset spair --dataset_path spair-71k_path --save_path dfm_feats/spair_flux_img768 --dift_model flux --img_size 768 768 --t 260 --ft_index 28 --ensemble_size 1\n",
+      "claim": "Appendix C states 'We set the input image size as 960x960 for DiTs'. The released reproduction script instead runs at 768x768 (and names its output dir spair_flux_img768), and the eval_spair.py CLI default is even smaller ([512,512]).",
+      "concern": "Correspondence PCK is resolution-sensitive; a reviewer following the shipped command will not reproduce the paper's stated 960px configuration, so the two disagree on a result-affecting setting.",
+      "resolution": "Clarify which resolution produced Table 2/3 (960 vs 768), and ship a script matching it.",
+      "cross_refs": [
+        "chunk2-unpack-crash"
+      ],
+      "paper_ref": "Appendix C (Configurations); Table 7",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "img-size-960-vs-768",
+      "audit": "run_02",
+      "audit_md_line": 275
+    },
+    {
+      "id": "run_02/hyperparam-search-split",
+      "category": "methodology",
+      "topic": "hyperparameter tuning",
+      "title": "Block-index/timestep grid search — split not stated; search code absent",
+      "severity": "medium",
+      "confidence": "low",
+      "status": "question",
+      "file": "paper.pdf",
+      "quote": "we conducted grid search experiments to identify the optimal hyperparameters\n",
+      "claim": "The block index k and timestep t are per-model tuned (Table 7; Fig 12 shows SPair-71k PCK vs k and vs t). The code takes k (ft_index) and t as fixed CLI args (test_spair.sh: --ft_index 28 --t 260); the grid-search harness is not in the repo, and the paper does not state whether the k/t curves in Fig 12 are on a validation split or on the SPair-71k test set used for the headline numbers.",
+      "concern": "If the optimal k/t were selected on the SPair-71k test set (no validation split is described for these training-free features), the reported numbers are optimistically biased by tuning on the evaluation set.",
+      "resolution": "Authors: state the split used for the Fig 12 grid search and release the search harness; confirm k/t were fixed without touching the test set.",
+      "cross_refs": [
+        "analysis-viz-missing"
+      ],
+      "paper_ref": "Appendix C (Investigation on block index k and timestep t); Figure 12; Table 7",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "hyperparam-search-split",
+      "audit": "run_02",
+      "audit_md_line": 301,
+      "line_start": null,
+      "line_end": null
+    }
+  ]
+}

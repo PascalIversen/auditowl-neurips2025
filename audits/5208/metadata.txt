@@ -1,0 +1,5 @@
+paper_number: 5208
+title: RF-Agent: Automated Reward Function Design via Language Agent Tree Search
+authors: Ning Gao, Xiuhui Zhang, Xingyu Jiang, Mukang You, Mohan Zhang, Yue Deng
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/fb9f53edbfd80b3a543f7963b63363ff-Abstract-Conference.html
+category: empirical

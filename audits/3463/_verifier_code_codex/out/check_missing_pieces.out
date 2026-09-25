@@ -1,0 +1,11 @@
+=== channel discard ===
+  'discard' occurrences in .py: 0
+  channel-zeroing patterns ([..]=0): 0
+=== DINOv2 integration ===
+  case-insensitive 'dinov2'/'dino' identifiers used as a model: 0
+Traceback (most recent call last):
+  File "/home/author/Projects/neurips_audit/audits/3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_/_verifier_code_codex_resnap/check_missing_pieces.py", line 35, in <module>
+    eval_src = read("eval_spair.py")
+  File "/home/author/Projects/neurips_audit/audits/3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_/_verifier_code_codex_resnap/check_missing_pieces.py", line 9, in read
+    with open(os.path.join(ROOT, p), encoding="utf-8") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/home/author/Projects/neurips_audit/audits/3463_Unleashing_Diffusion_Transformers_for_Visual_Correspondence_/_verifier_code_codex_resnap/extracted/Supplementary Material/code_extracted/code/eval_spair.py'

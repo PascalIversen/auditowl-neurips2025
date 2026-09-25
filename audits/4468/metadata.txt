@@ -1,0 +1,5 @@
+paper_number: 4468
+title: Execution Guided Line-by-Line Code Generation
+authors: Boaz Lavon, Shahar Katz, Lior Wolf
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/d8b69a226ec6bea8f187ca990abb2dae-Abstract-Conference.html
+category: empirical

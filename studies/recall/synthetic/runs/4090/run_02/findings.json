@@ -1,0 +1,256 @@
+{
+  "schema_version": "1",
+  "audit": "run_02",
+  "audit_md": "run_02/audit.md",
+  "generated_at": "2026-08-03T01:06:22.161078+00:00",
+  "findings": [
+    {
+      "id": "run_02/visual-ad-code-absent",
+      "category": "missing",
+      "topic": "expected code completeness / result traceability",
+      "title": "No CIFAR-10 or MVTec (visual-AD) code at all — Tables 2, 4 and visual Table 5 unreproducible",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "dataset MVTec, a frozen WideResNet-50 [23] is used as the backbone for both the encoder and\n",
+      "claim": "The paper reports a full visual-AD track — CIFAR-10 image-level AUROC (Table 2, 11 classes), MVTec image/pixel-level AUROC 99.5/98.3 (Table 2), a visual ablation (Table 4) and a visual K/R sweep (Table 5) — using a DO2HSC CNN (CIFAR-10) and a frozen WideResNet-50 (MVTec). The repo contains only the tabular pipeline: a deterministic grep of all 24 .py files finds 0 references to cifar/mvtec/wideresnet/resnet/conv2d/do2hsc/torchvision, and data/ holds only 4 tabular .mat files.",
+      "concern": "Roughly half of the paper's headline experiments (all image results) have no code, no backbones, and no data in the repository, so they cannot be reproduced from the released artefact.",
+      "resolution": "Authors: release the CIFAR-10 and MVTec training/eval code, the DO2HSC-CNN and WideResNet-50 feature extractors, and the data-preparation scripts, or state that the visual experiments were run from unreleased code.",
+      "cross_refs": [
+        "ablation-sweep-code-missing"
+      ],
+      "check_script": "_audit_code/check_visual_scan.py",
+      "paper_ref": "Section 4 Implementation Details (visual setup); Tables 2, 4, 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "visual-ad-code-absent",
+      "audit": "run_02",
+      "audit_md_line": 46,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "run_02/tabular-datasets-missing",
+      "category": "missing",
+      "topic": "data availability",
+      "title": "5 of the 20 Table-1 tabular datasets have no fetch/committed path; campaign/fraud .npz unloadable",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "Unifying_INN/get_data.sh",
+      "line_start": 21,
+      "line_end": 27,
+      "quote": "#campaign\nmkdir -p data/campaign\ncurl -o data/campaign/5_campaign.npz https://github.com/Minqi824/ADBench/raw/main/adbench/datasets/Classical/5_campaign.npz\n\n#fraud\nmkdir -p data/fraud\ncurl -o data/fraud/13_fraud.npz https://github.com/Minqi824/ADBench/raw/main/adbench/datasets/Classical/13_fraud.npz\n",
+      "claim": "get_data.sh fetches 13 datasets and data/ commits 4 (glass/thyroid/wbc/wine), giving 15 distinct datasets; Table 1 lists 20. check_dataset_coverage.py shows Arrhythmia, Census, Cardiotocography, NSL-KDD and Shuttle have NO acquisition path. campaign/fraud are saved as .npz under per-dataset subdirs, but loadData() only loadmat()s a flat '<name>.mat', so even those downloads are not loadable by the shipped loader.",
+      "concern": "Five Table-1 rows cannot be reproduced (no data), and two more (campaign, fraud) download in a format/location the loader cannot read, so the reported 20-dataset average (78.64/91.19) cannot be recomputed as released.",
+      "resolution": "Authors: add the 5 missing datasets to get_data.sh (or commit them) and extend loadData() to handle the .npz ADBench format and the subdirectory layout produced by get_data.sh.",
+      "cross_refs": [
+        "hardcoded-abs-data-path"
+      ],
+      "check_script": "_audit_code/check_dataset_coverage.py",
+      "paper_ref": "Table 1 (20 tabular datasets)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "tabular-datasets-missing",
+      "audit": "run_02",
+      "audit_md_line": 69
+    },
+    {
+      "id": "run_02/ablation-sweep-code-missing",
+      "category": "missing",
+      "topic": "ablations / hyperparameters",
+      "title": "R hardcoded to 3, K unimplemented, no ablation switches — Tables 3 (A/B/C) and 5 not reproducible",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "Unifying_INN/model/INN.py",
+      "line_start": 14,
+      "line_end": 15,
+      "quote": "self.encoder=Encoder(self.input_dim)\nself.INN=denoise_net(self.latent_dim,3)\n",
+      "claim": "The number of flow modules R is hardcoded to 3 here, there is no argument anywhere for the per-module iteration count K, and each flow_unit is a fixed [AffineCoupling, ActNorm, AffineCoupling] chain (denet.py:63-65) unrelated to K. main.py always trains the full loss reconstruction_loss + 0.5*(prior_loss + post_loss) with no flag to disable RE or DE and no six-layer-MLP baseline model.",
+      "concern": "Table 5's 4×5 K/R sweep and Table 3's ablation variants A (baseline MLP), B (RE-only) and C (DE-only) have no corresponding code path or configuration, so those ablation numbers cannot be reproduced from the released repository.",
+      "resolution": "Authors: expose K and R as configurable arguments and provide the ablation-variant entrypoints (baseline MLP, RE-only, DE-only) used for Tables 3 and 5.",
+      "cross_refs": [
+        "visual-ad-code-absent"
+      ],
+      "paper_ref": "Table 3 (variants A/B/C); Table 5 (K/R sweep)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ablation-sweep-code-missing",
+      "audit": "run_02",
+      "audit_md_line": 100
+    },
+    {
+      "id": "run_02/density-loglik-not-chained",
+      "category": "bug",
+      "topic": "density estimation / change-of-variables",
+      "title": "prob_predictor loop does not thread z or accumulate log-det across flow modules",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "Unifying_INN/flow_net/denet.py",
+      "line_start": 141,
+      "line_end": 144,
+      "quote": "def prob_predictor(self, z: Tensor, log_p_prior: Tensor):\n    for i in reversed(range(self.num_modules)):\n        _, log_p_post = self.flow_net[i].inverse(z,log_p_prior)\n    return log_p_post\n",
+      "claim": "The loop iterates over all num_modules (=3) flow modules but passes the SAME z and SAME log_p_prior to every module's inverse and discards the transformed output (`_`). Only the last iteration (i=0) is returned, so log_p_post = log_p_prior + log-det of flow_net[0].inverse(z) — a single module — instead of composing F_R⁻¹∘…∘F_1⁻¹ and summing all R log-dets.",
+      "concern": "The density log-likelihood (Eq. 4, and hence the LMLE training term and the −α·log p(x) part of the anomaly score, Eq. 8) omits 2 of the 3 flow modules' Jacobian contributions and evaluates them at the wrong point, so the implemented density estimation is not the change-of-variables the code plainly intends.",
+      "resolution": "Authors: thread the transformed variable and accumulate the log-det, e.g. `for i in reversed(range(self.num_modules)): z, log_p_post = self.flow_net[i].inverse(z, log_p_post)` seeded with log_p_prior; confirm which version produced the reported numbers.",
+      "cross_refs": [
+        "affine-coupling-not-contraction"
+      ],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "density-loglik-not-chained",
+      "audit": "run_02",
+      "audit_md_line": 127
+    },
+    {
+      "id": "run_02/hardcoded-abs-data-path",
+      "category": "bug",
+      "topic": "reproducibility / data loading",
+      "title": "loadData reads a hardcoded absolute path /home/author/ddpm/UniINN/data/ — crashes for anyone else",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "Unifying_INN/utils/loadData.py",
+      "line_start": 4,
+      "line_end": 5,
+      "quote": "def loadData(datasetname):\n    dataset=loadmat('/home/author/ddpm/UniINN/data/'+datasetname+'.mat')\n",
+      "claim": "Every dataset is loaded from the author's absolute path '/home/author/ddpm/UniINN/data/<name>.mat', ignoring the repo's own Unifying_INN/data/ directory.",
+      "concern": "The only entrypoint (main.py) calls loadData for all tabular datasets, so the entire tabular pipeline — Tables 1, 3 and 5 — raises FileNotFoundError on any machine other than the author's, and even after fixing the path the committed data lives at Unifying_INN/data/ while get_data.sh writes to data/<name>/<file>.",
+      "resolution": "Authors: replace the absolute path with a repo-relative / CLI-configurable data directory and align it with get_data.sh's output layout.",
+      "cross_refs": [
+        "tabular-datasets-missing"
+      ],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "hardcoded-abs-data-path",
+      "audit": "run_02",
+      "audit_md_line": 153
+    },
+    {
+      "id": "run_02/cudnn-determinism-typo",
+      "category": "bug",
+      "topic": "reproducibility / seeding",
+      "title": "Misspelled attribute cudnn.deterministirc silently disables the determinism flag",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "Unifying_INN/main.py",
+      "line_start": 21,
+      "line_end": 22,
+      "quote": "torch.backends.cudnn.deterministirc = True\ntorch.backends.cudnn.benchmark = False\n",
+      "claim": "setup_seed sets torch.backends.cudnn.deterministirc (typo for 'deterministic'), which creates a no-op attribute rather than enabling cuDNN determinism.",
+      "concern": "Intended deterministic cuDNN behaviour is never actually turned on, so GPU runs may not be reproducible despite the fixed seed; the effect is minor but the guard silently does nothing.",
+      "resolution": "Authors: fix the spelling to torch.backends.cudnn.deterministic = True.",
+      "cross_refs": [],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "cudnn-determinism-typo",
+      "audit": "run_02",
+      "audit_md_line": 177
+    },
+    {
+      "id": "run_02/affine-coupling-not-contraction",
+      "category": "difference",
+      "topic": "core method / model architecture",
+      "title": "Released flow uses affine coupling (RealNVP); the Eq.2 i-DenseNet contraction unit is dead code",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "Unifying_INN/flow_net/denet.py",
+      "line_start": 56,
+      "line_end": 66,
+      "quote": "def _iMonotoneBlock(preact=False):\n    return iMonotoneBlock(\n        FlowNet(\n            channels=dim,\n            lipschitz_layer=_lipschitz_layer()\n        )\n    )\nchain.append(AffineCoupling(dim, 0))\nchain.append(_actnorm(dim))\nchain.append(AffineCoupling(dim, 1))\nsuper(flow_unit, self).__init__(chain)\n",
+      "claim": "Each flow_unit is built from AffineCoupling + ActNorm + AffineCoupling (standard RealNVP). The _iMonotoneBlock closure — which wraps iMonotoneBlock, the invertible-monotone-operator unit implementing the paper's Eq. 2 contraction mapping f(x)=((Id+G)/2)⁻¹(x)−x via an i-DenseNet (iMonotoneBlock.py:51-65) — is defined but never appended to the chain and is unused everywhere (grep: only its own definition).",
+      "concern": "The paper's entire theory (Definition 1, Lemmas 1-2, Propositions 1-2, Fig. 1/3/4 'fixed point in the normal manifold' mechanism) rests on the map being a contraction with Lipschitz constant <1; an affine-coupling layer's Jacobian scale exp(0.5·tanh(·)) can exceed 1, so the released model is not a contraction mapping and does not instantiate the paper's central contribution.",
+      "resolution": "Authors: confirm whether Tables 1-5 were produced by the affine-coupling model in this repo or by the iMonotoneBlock/i-DenseNet path; if the latter, release that configuration.",
+      "cross_refs": [
+        "density-loglik-not-chained"
+      ],
+      "paper_ref": "Section 3.1.2, Eq. (2); Section 3.1.1 Propositions 1-2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "affine-coupling-not-contraction",
+      "audit": "run_02",
+      "audit_md_line": 203
+    },
+    {
+      "id": "run_02/auc-orientation-selection",
+      "category": "methodology",
+      "topic": "evaluation / metric integrity",
+      "title": "aucPerformance reports max AUROC/AP over {s, −s, |s|, s²} scored against the test labels",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "Unifying_INN/utils/utils.py",
+      "line_start": 24,
+      "line_end": 29,
+      "quote": "def aucPerformance(score, labels):\n    score = np.asarray(score)\n    candidates = [score, -score, np.abs(score), np.square(score)]\n    roc_values = [roc_auc_score(labels, candidate) for candidate in candidates]\n    ap_values = [average_precision_score(labels, candidate) for candidate in candidates]\n    return max(roc_values), max(ap_values)\n",
+      "claim": "The reported AUROC/AP is the maximum over four transforms of the anomaly score — score, −score, |score|, score² — each evaluated against the ground-truth test labels; aucPerformance is the metric used by evaluation_batch (main.py:49) for the reported numbers.",
+      "concern": "Choosing the score orientation/transform that maximises the metric on the test labels is test-set label leakage: because roc_auc(labels,−s)=1−roc_auc(labels,s), every reported AUROC is bounded below by 0.5 and is upward-biased (check_auc_orientation.py: an anti-correlated score with honest AUROC 0.18 is reported as 0.82; pure noise reports 0.52), so Table 1/3 AUROC and AP are not honest fixed-orientation metrics.",
+      "resolution": "Authors: fix the anomaly-score orientation a priori (higher = more anomalous, per Eq. 8) and report roc_auc_score(labels, score) without the max-over-transforms; re-report Tables 1 and 3.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_auc_orientation.py",
+      "paper_ref": "Section 4 Evaluation Metrics; Tables 1, 3",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "auc-orientation-selection",
+      "audit": "run_02",
+      "audit_md_line": 239
+    },
+    {
+      "id": "run_02/test-set-hparam-selection",
+      "category": "methodology",
+      "topic": "hyperparameter tuning / model selection",
+      "title": "No validation set; K,R (Table 5) and epoch are selected on the test set",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "Unifying_INN/utils/loadData.py",
+      "line_start": 21,
+      "line_end": 26,
+      "quote": "train_x = normal_data[ixs[:n_train]]\ntrain_y = normal_labels[ixs[:n_train]]\nanomalous_data = features[np.where(labels==1)[0]][:]\nanomalous_labels = labels[np.where(labels==1)[0]]\ntest_x = np.concatenate((anomalous_data, normal_data_test), axis=0)\ntest_y = np.concatenate((anomalous_labels, normal_labels_test), axis=0)\n",
+      "claim": "loadData returns only train and test splits — no validation set is ever created. main.py evaluates on the test loader every 5 epochs (main.py:82-85), and Table 5 selects the 'best' K,R (K=2,R=3) by their AP/AUROC on the same tabular/MVTec test sets.",
+      "concern": "With no held-out validation data, the reported best K/R (and the epoch at which test AUROC is read) are chosen using test-set performance, which optimistically biases the headline 78.64/91.19; the ambiguity is that the config might instead have been fixed a priori from prior work.",
+      "resolution": "Authors: hold out a validation split from the training normals for model/hyperparameter selection, or confirm that K,R,λ,α were fixed without consulting test-set metrics.",
+      "cross_refs": [
+        "ablation-sweep-code-missing"
+      ],
+      "paper_ref": "Table 5; Section 4 Implementation Details",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "test-set-hparam-selection",
+      "audit": "run_02",
+      "audit_md_line": 269
+    }
+  ]
+}

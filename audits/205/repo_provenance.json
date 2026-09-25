@@ -1,0 +1,17 @@
+{
+  "paper_id": "205_Improving_Perturbation_based_Explanations_by_Understanding_t",
+  "title": "Improving Perturbation-based Explanations by Understanding the Role of Uncertainty Calibration",
+  "repos": [
+    {
+      "name": "thomdeck__recalx",
+      "role": "core",
+      "evidence": "README: 'ReCalX: Recalibration for Perturbation-Based Explanations ... Accompanying code for Improving Perturbation-based Explanations by Understanding the Role of Uncertainty Calibration (https://arxiv.org/abs/2511.10439) (NeurIPS 2025)'; BibTeX names 'Thomas Decker and Volker Tresp and Florian Buettner' — exact paper title/venue/author match. Owner 'thomdeck' = Thomas Decker (1st author). Package recalx/ implements the named method: BinnedTemperatureScaling (ReCalX), ece_kl (KL calibration error CE_KL), and mean-replacement perturb_features matching paper Sec 4-5."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "Exactly one repo was cloned and it is unambiguously the paper's own core implementation. README explicitly cites this paper by exact title, arXiv id 2511.10439, NeurIPS 2025, and a BibTeX block naming all three authors; GitHub owner 'thomdeck' = first author Thomas Decker; the recalx/ package implements the paper's named ReCalX method (BinnedTemperatureScaling adaptive temperature scaling, KL-divergence calibration error, mean-replacement perturbation). No baseline/dependency/different-paper/mirror/stub repo was cloned, so there is no contamination. Source-present is justified.",
+  "audit_impact": "Provenance is clean: no flip needed. The audit correctly identified this as the author's own ReCalX repo (audit.md line 5: 'github.com/thomdeck/recalx ... is a minimal demonstration package, not the experiment pipeline'). Its findings are NOT false 'no code exists' claims against a non-core repo; they are scoped, accurate reproducibility/quality findings against the genuine author code: (a) the released code is a demo package that does not reproduce the headline Tables 1-3 / Figs 2-5 pipeline ('No code produces any headline table or figure'), (b) two real code-level findings (perturbation-level mis-inference reading non-reference samples as ~100% perturbed; ece_kl is a 15-bin top-1 estimator, not the cited [51] kernel estimator). These remain valid against the core repo and are unaffected by this provenance check.",
+  "recommended_action": "Keep paper_verdict=correct and source-present. No reclassification or re-clone needed. Existing findings stand as written against the verified author core; optionally note in the audit that the released artifact is a demonstration package (not the full experiment pipeline) so the 'missing pipeline' finding is framed as partial-release rather than wrong-repo."
+}

@@ -1,0 +1,17 @@
+{
+  "paper_id": "1729_On_Evaluating_Policies_for_Robust_POMDPs",
+  "title": "On Evaluating Policies for Robust POMDPs",
+  "repos": [
+    {
+      "name": "zenodo-17424410__RPOMDP_Benchmark",
+      "role": "core",
+      "evidence": "README.md line 2: 'Codebase for the NeurIPS 2025 paper entitled \"On Evaluating Policies for Robust POMDPs\"' (exact title match). Layout maps onto all three paper contributions: Envs/{Chain,Toy,Machine,CNC_Detection,CupAndBall}.jl = the benchmark models (Sec 3); RPOMDPs/adversarialnature.jl defines get_model_adversary(M::RPOMDP, pi::Policy) = the best-response/worst-case nature evaluation method (Sec 4); RPOMDPs/Algorithms/RQMDP.jl (RQMDPSolver) and RSARSOP/fib.jl (FastInformedBound) = the robust QMDP/FIB baselines (Sec 5). Project.toml lists POMDPs.jl, Gurobi, JuMP, matching paper's stated 'Julia framework (based on POMDPs.jl), available on Zenodo [29]'. DOI 10.5281/zenodo.17424409 is the paper's cited code reference [29]."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "Exactly one repo was cloned, from the Zenodo DOI the paper itself cites as its code release [29]. Its README states the exact paper title and the file structure implements all three named contributions (solvability benchmarks, best-response nature evaluation via adversarialnature.jl, and robust QMDP/FIB baselines). Authors are Krale/Bovy/Galesloot/Simao/Jansen (Radboud et al.); the Julia/POMDPs.jl framework matches the paper's own description. No baseline-only, dependency, different-paper, mirror, or stub repo was mistaken for the core; no contaminating extra repos.",
+  "audit_impact": "None negative. The audit's three findings (repro-nondeterminism in run.jl, figure4-machine-vs-echo-label in DataCollection.ipynb, reference-value-from-uncertified-solver in RobustAlphaVectors.jl) are all written against files inside this same core repo and correctly treat it as the paper's own implementation. No 'missing code' / 'no code' finding exists, so source-present is justified and the findings are substantive reproducibility/methodology critiques of the real author code.",
+  "recommended_action": "No change. Keep paper as source-present (correct). The single cloned Zenodo repo is the paper's own core; findings stand as critiques of author code, not as misclassification."
+}

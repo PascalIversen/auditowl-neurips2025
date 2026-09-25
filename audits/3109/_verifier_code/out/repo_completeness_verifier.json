@@ -1,0 +1,63 @@
+{
+  "repo": "../code/tencent-ailab__songgeneration",
+  "result_producing_code_signatures": {
+    "training_loop (loss.backward / training_step)": {
+      "count": 4,
+      "examples": [
+        "codeclm/tokenizer/Flow1dVAE/models/test_model.py:45: .backward()",
+        "codeclm/tokenizer/Flow1dVAE/our_MERT_BESTRQ/mert_fairseq/models/musicfm/model/rvq_musicfm.py:241: .backward()",
+        "codeclm/tokenizer/Flow1dVAE/our_MERT_BESTRQ/mert_fairseq/models/musicfm/model/rvq.py:524: .backward()",
+        "codeclm/tokenizer/Flow1dVAE/our_MERT_BESTRQ/mert_fairseq/models/mert/rvq.py:524: .backward()"
+      ]
+    },
+    "DPO_loss (dpo loss / reference model logits)": {
+      "count": 0,
+      "examples": []
+    },
+    "preference_data_construction": {
+      "count": 0,
+      "examples": []
+    },
+    "interpolation_merge (DNI param interpolation of 3 nets)": {
+      "count": 2,
+      "examples": [
+        "codeclm/tokenizer/Flow1dVAE/our_MERT_BESTRQ/mert_fairseq/models/eat/mae.py:437: interpolate_pos_embed(model, checkpoint_model",
+        "codeclm/tokenizer/Flow1dVAE/our_MERT_BESTRQ/mert_fairseq/models/eat/EAT_audio_classification.py:208: interpolate_pos_embed(model"
+      ]
+    },
+    "FAD_metric": {
+      "count": 0,
+      "examples": []
+    },
+    "PER_metric": {
+      "count": 40,
+      "examples": [
+        "codeclm/tokenizer/Flow1dVAE/model_septoken.py:303: per",
+        "codeclm/tokenizer/Flow1dVAE/generate_septoken.py:180: per",
+        "codeclm/tokenizer/Flow1dVAE/model_1rvq.py:328: per",
+        "codeclm/tokenizer/Flow1dVAE/generate_1rvq.py:135: per",
+        "codeclm/tokenizer/Flow1dVAE/generate_1rvq.py:259: per",
+        "codeclm/tokenizer/Flow1dVAE/generate_2rvq.py:145: per",
+        "codeclm/tokenizer/Flow1dVAE/model_2rvq.py:345: per",
+        "codeclm/tokenizer/Flow1dVAE/generate_4rvq.py:144: per"
+      ]
+    },
+    "MuQ_similarity_metric": {
+      "count": 0,
+      "examples": []
+    },
+    "Audiobox_aesthetic_metric": {
+      "count": 0,
+      "examples": []
+    },
+    "reward_model_training": {
+      "count": 0,
+      "examples": []
+    }
+  },
+  "jsonl_files_present": [
+    "sample/lyrics.jsonl (5 lines)",
+    "sample/test100_v2_sg_des.jsonl (100 lines)"
+  ],
+  "note": "Paper Table 1/2/3/5/6 metrics, DPO training, preference-data construction, and LeLM training are headline result producers."
+}

@@ -1,0 +1,268 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T15:19:00.128437+00:00",
+  "findings": [
+    {
+      "id": "/video-pipeline-absent",
+      "category": "missing",
+      "topic": "result traceability / dataset construction",
+      "title": "HQ-VSR video processing pipeline (Sec 3.3, Fig 3, Tab 1c/1d) not in repo",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/zhengchen1999__DOVE/README.md",
+      "line_start": 80,
+      "line_end": 80,
+      "quote": "- [ ] Release the video processing pipeline.\n",
+      "claim": "The four-step pipeline (metadata/scene/quality filtering + optical-flow motion-area detection and cropping, Eq. 8) that builds the 2,055-video HQ-VSR dataset is not present anywhere in the repo; grep for motion_mask/bounding_box/aesthetic/scenedetect/optical-flow-score returns nothing, and the README TODO marks it unreleased.",
+      "concern": "HQ-VSR construction is the paper's second headline contribution and underpins Tab. 1c (dataset ablation) and Tab. 1d (+Filter/+Motion ablation); without the pipeline these ablation results cannot be reproduced and the dataset cannot be regenerated.",
+      "resolution": "Release the pipeline scripts (metadata/scene/quality filtering, motion-area detection/cropping) or the exact configs and thresholds (Aesthetic>6.5, CLIP-IQA>0.4, FasterVQA>0.6, DOVER>0.7, τ, padding p) used to produce HQ-VSR.",
+      "cross_refs": [
+        "§3.3",
+        "Tab. 1c",
+        "Tab. 1d"
+      ],
+      "check_script": "_audit_code/check_missing_eval_deps.py",
+      "paper_ref": "Section 3.3 (Video Processing Pipeline); Table 1c/1d",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "video-pipeline-absent",
+      "audit": "",
+      "audit_md_line": 50,
+      "verdict": "keep",
+      "reason": "README line 80 exactly matches the quoted TODO item '- [ ] Release the video processing pipeline.' confirming the pipeline is unreleased.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/fastervqa-script-missing",
+      "category": "missing",
+      "topic": "result traceability / metrics",
+      "title": "No FasterVQA computation script for Tab. 2 / Fig. 1 FasterVQA column",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/zhengchen1999__DOVE/README.md",
+      "line_start": 269,
+      "line_end": 269,
+      "quote": "> **TODO:** Add metric computation scripts for FasterVQA, DOVER, and $E^*_{warp}$.\n",
+      "claim": "FasterVQA is reported in Tab. 2 and Fig. 1, but no script computes it: a repo-wide grep for 'fastervqa'/'faster_vqa' over all .py files returns no hits (see _audit_code/out/missing_eval_deps.json: fastervqa_script_present=false).",
+      "concern": "A reported metric column has no traceable computation in the repo, so those FasterVQA numbers cannot be reproduced from the released code; the authors acknowledge this in the README TODO.",
+      "resolution": "Add the FasterVQA evaluation script (or document the exact external repo/commit and command used).",
+      "cross_refs": [
+        "Tab. 2",
+        "Fig. 1"
+      ],
+      "check_script": "_audit_code/check_missing_eval_deps.py",
+      "paper_ref": "Table 2 (FasterVQA rows); Figure 1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "fastervqa-script-missing",
+      "audit": "",
+      "audit_md_line": 75,
+      "verdict": "keep",
+      "reason": "README line 269 exactly matches the quoted TODO acknowledging missing metric scripts for FasterVQA, DOVER, and E*_warp.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/dover-eval-imports-absent-package",
+      "category": "bug",
+      "topic": "metrics / DOVER evaluation",
+      "title": "eval_dover.py imports a DOVER package that does not exist in the repo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/zhengchen1999__DOVE/finetune/scripts/eval_dover.py",
+      "line_start": 150,
+      "line_end": 150,
+      "quote": "from DOVER.evaluate_a_set_of_videos import evaluate_set as dover\n",
+      "claim": "After os.chdir(script_directory) (the script's own dir, finetune/scripts/), the script imports DOVER.evaluate_a_set_of_videos, but no 'DOVER' package/directory exists anywhere in the repo (see _audit_code/out/missing_eval_deps.json: DOVER_pkg_anywhere=false).",
+      "concern": "The DOVER metric reported throughout Tab. 2/Tab. 3/Fig. 1 cannot be computed with the shipped code as-is; the script raises ModuleNotFoundError on import.",
+      "resolution": "Vendor the DOVER package, add it as a pinned dependency with the expected import path, or document the external DOVER repo/commit and how to place it on sys.path.",
+      "cross_refs": [
+        "Tab. 2",
+        "Tab. 3",
+        "fastervqa-script-missing"
+      ],
+      "check_script": "_audit_code/check_missing_eval_deps.py",
+      "paper_ref": "Table 2 (DOVER rows)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "dover-eval-imports-absent-package",
+      "audit": "",
+      "audit_md_line": 102,
+      "verdict": "keep",
+      "reason": "eval_dover.py line 150 exactly matches the quoted import; no DOVER directory exists anywhere in the repo confirming the ModuleNotFoundError claim.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/ewarp-eval-wrong-raft-path-and-missing-module",
+      "category": "bug",
+      "topic": "metrics / temporal consistency E*_warp",
+      "title": "eval_ewarp.py chdir's to non-existent scripts/RAFT and imports absent ewarp",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/zhengchen1999__DOVE/finetune/scripts/eval_ewarp.py",
+      "line_start": 147,
+      "line_end": 149,
+      "quote": "raft_dir = os.path.join(original_dir, \"RAFT\")\nos.chdir(raft_dir)\nfrom ewarp import Ewarp as Ewarp\n",
+      "claim": "original_dir is finetune/scripts/ (set by os.chdir(script_directory) at the top), so raft_dir resolves to finetune/scripts/RAFT, which does not exist (RAFT lives at finetune/utils/RAFT); furthermore no 'ewarp.py' exists anywhere in the repo (see _audit_code/out/missing_eval_deps.json: RAFT_under_scripts=false, RAFT_under_utils=true, ewarp_module_anywhere=false).",
+      "concern": "The E*_warp temporal-consistency metric reported in Tab. 2 cannot be computed with the shipped code; the chdir raises FileNotFoundError and the import would raise ModuleNotFoundError.",
+      "resolution": "Point raft_dir at finetune/utils/RAFT (or the correct location) and add the missing ewarp.py implementation, or document the external source for both.",
+      "cross_refs": [
+        "Tab. 2"
+      ],
+      "check_script": "_audit_code/check_missing_eval_deps.py",
+      "paper_ref": "Table 2 (E*_warp rows)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ewarp-eval-wrong-raft-path-and-missing-module",
+      "audit": "",
+      "audit_md_line": 127,
+      "verdict": "keep",
+      "reason": "Lines 147-149 match the quote exactly; script_directory chdir at line 7 is confirmed, RAFT exists only at finetune/utils/RAFT (not finetune/scripts/RAFT), and ewarp.py is absent from the entire repo.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/inference-sh-gt-hardcoded-udm10",
+      "category": "bug",
+      "topic": "evaluation harness",
+      "title": "inference.sh evaluates every dataset against UDM10 ground truth",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/zhengchen1999__DOVE/inference.sh",
+      "line_start": 22,
+      "line_end": 25,
+      "quote": "python eval_metrics.py \\\n    --gt datasets/test/UDM10/GT \\\n    --pred results/DOVE/SPMCS \\\n    --metrics psnr,ssim,lpips,dists,clipiqa\n",
+      "claim": "All six eval_metrics.py calls pass --gt datasets/test/UDM10/GT while --pred varies (SPMCS, YouHQ40, RealVSR, MVSR4x, VideoLQ); 5/6 calls pair non-UDM10 predictions with UDM10 GT (see _audit_code/out/inference_sh_gt.json).",
+      "concern": "eval_metrics.py skips any prediction whose basename has no matching GT filename (process(): 'if has_gt and name_hr not in gt_files: continue'), so running inference.sh as written would compute full-reference metrics for the wrong/empty GT set on 5 of 6 datasets, not reproducing the Tab. 2 fidelity columns.",
+      "resolution": "Set --gt to the matching dataset's GT folder in each block (e.g. datasets/test/SPMCS/GT).",
+      "cross_refs": [
+        "Tab. 2"
+      ],
+      "check_script": "_audit_code/check_inference_sh_gt.py",
+      "paper_ref": "Table 2 (per-dataset PSNR/SSIM/LPIPS/DISTS)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "inference-sh-gt-hardcoded-udm10",
+      "audit": "",
+      "audit_md_line": 154,
+      "verdict": "keep",
+      "reason": "inference.sh lines 22-25 match the quote; inspection confirms all eval_metrics.py calls use --gt datasets/test/UDM10/GT while --pred varies across 5 different datasets.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/dover-per-sample-offbyone",
+      "category": "bug",
+      "topic": "metrics / DOVER per-sample mapping",
+      "title": "eval_dover.py maps DOVER scores to names with an off-by-one (i-1)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/zhengchen1999__DOVE/finetune/scripts/eval_dover.py",
+      "line_start": 158,
+      "line_end": 159,
+      "quote": "for i, name in enumerate(pred_names):\n    results[name] = dover_results[i-1]\n",
+      "claim": "The loop assigns dover_results[i-1] to pred_names[i]; for i=0 this is dover_results[-1] (the last score), shifting every per-sample DOVER score by one name (see _audit_code/out/dover_offbyone.json: 4/4 mismatched, first_name_gets_last_score=true).",
+      "concern": "Per-sample DOVER values written to metrics_dover.json are attributed to the wrong videos; the overall average (np.mean over results.values(), L164) is unaffected since it is the same multiset, so reported Tab. 2 DOVER averages are not corrupted by this alone.",
+      "resolution": "Index with dover_results[i] instead of dover_results[i-1]; confirm len(dover_results)==len(pred_names) and the ordering returned by evaluate_set matches sorted(pred_names).",
+      "cross_refs": [
+        "dover-eval-imports-absent-package"
+      ],
+      "check_script": "_audit_code/check_dover_offbyone.py",
+      "paper_ref": "Table 2 (DOVER rows)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "dover-per-sample-offbyone",
+      "audit": "",
+      "audit_md_line": 182,
+      "verdict": "keep",
+      "reason": "eval_dover.py lines 158-159 exactly match the quote; dover_results[i-1] at i=0 indexes -1 (last element), confirming the off-by-one bug.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/pad-removal-hardcoded-x4",
+      "category": "bug",
+      "topic": "inference / spatial padding",
+      "title": "SR-output padding removed as pad*4 regardless of --upscale (breaks upscale=1)",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "code/zhengchen1999__DOVE/inference_script.py",
+      "line_start": 731,
+      "line_end": 731,
+      "quote": "video_generate = remove_padding_and_extra_frames(video_generate, pad_f, pad_h*4, pad_w*4)\n",
+      "claim": "pad_h/pad_w are LR-pixel pads making H/W multiples of 16 (lines 228-229); the LR is then upscaled by args.upscale (line 672), so the SR padding region is pad*args.upscale, but removal hardcodes pad*4. inference.sh runs RealVSR and MVSR4x with --upscale 1 (lines 45, 58), where for non-multiple-of-16 input dims the code over-crops by 3*pad pixels (see _audit_code/out/pad_upscale_mismatch.json).",
+      "concern": "For RealVSR/MVSR4x (upscale=1) with input width/height not divisible by 16, the SR output is over-cropped on the right/bottom edge, slightly shifting the evaluated region and the Tab. 2 fidelity metrics for those two real-world datasets.",
+      "resolution": "Use pad_h*args.upscale and pad_w*args.upscale in remove_padding_and_extra_frames; confirm whether RealVSR/MVSR4x inputs are multiples of 16 (if always, impact is nil).",
+      "cross_refs": [
+        "Tab. 2"
+      ],
+      "check_script": "_audit_code/check_pad_upscale_mismatch.py",
+      "paper_ref": "Table 2 (RealVSR, MVSR4x rows)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "pad-removal-hardcoded-x4",
+      "audit": "",
+      "audit_md_line": 208,
+      "verdict": "keep",
+      "reason": "inference_script.py line 731 matches the quote; pad_h/pad_w computed at lines 228-229 are LR-pixel pads and upscale is applied at line 672, confirming the hardcoded *4 is wrong when --upscale != 4.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/div2k-image-count-900-vs-800",
+      "category": "difference",
+      "topic": "training data description",
+      "title": "Paper says DIV2K = 900 images; README/standard DIV2K_train_HR = 800",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "The image dataset is DIV2K [3], with 900 images, which follows the RealESRGAN [38] degradation process.\n",
+      "claim": "The paper (Sec 4.1) states 900 DIV2K images; the repo README lists DIV2K-HR with 800 images and links DIV2K_train_HR.zip (the standard DIV2K training split is exactly 800; 900 = 800 train + 100 val).",
+      "concern": "Minor inconsistency in the reported image-dataset size between paper and released code; does not affect headline conclusions but the exact training-set composition for Stage-2 is ambiguous.",
+      "resolution": "Clarify whether 800 or 900 DIV2K images were used for Stage-2 (and whether the 100 DIV2K validation images were included).",
+      "cross_refs": [
+        "§4.1"
+      ],
+      "paper_ref": "Section 4.1 (Datasets)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "div2k-image-count-900-vs-800",
+      "audit": "",
+      "audit_md_line": 235,
+      "line_start": null,
+      "line_end": null,
+      "verdict": "keep",
+      "reason": "paper_text.txt confirms the '900 images' quote in Sec 4.1; README line 120 lists 800 images linking DIV2K_train_HR.zip, confirming the paper/code discrepancy.",
+      "changed": "nothing"
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "schema_version": "1",
+  "audit": "5202_Graph_Neural_Network_Based_Action_Ranking_for_Planning",
+  "audit_md": "audits/5202_Graph_Neural_Network_Based_Action_Ranking_for_Planning/audit.md",
+  "generated_at": "2026-05-31T11:02:50.055247+00:00",
+  "findings": [
+    {
+      "id": "5202_Graph_Neural_Network_Based_Action_Ranking_for_Planning/missing-pddl-problems",
+      "category": "missing",
+      "topic": "data availability",
+      "title": "Train/val/test PDDL problems absent from repo; only an inaccessible anonymized URL",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 23,
+      "line_end": 26,
+      "quote": "### Additional Requirements\n\nFor use with pddlgym, we require our fork of [pddlgym](https://anonymous.4open.science/r/pddlgym-0F03/\n  ), which houses our custom domains and problems.\n",
+      "claim": "All training, validation, and test PDDL instances live in a separate custom pddlgym fork; the repo itself contains no .pddl domain or problem files (check_repo_completeness.py: pddl_problem_files_in_repo=0), and the only pointer is an anonymous.4open.science link that returns HTTP 401.",
+      "concern": "Every headline number (Tables 2/4/5/6) is computed over these instances, but the dataset defining train/val/test is not in the repo and the linked source is unreachable, so none of the results can be reproduced.",
+      "resolution": "Authors: provide the custom pddlgym domains/problems (or the supplementary dataset) at a resolvable, non-anonymized location and pin which problem indices form each easy/medium/hard test subset.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_repo_completeness.py",
+      "paper_ref": "Appendix A.2 footnote 'Dataset submitted as supplementary material'; Table 1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-pddl-problems",
+      "audit": "5202_Graph_Neural_Network_Based_Action_Ranking_for_Planning",
+      "audit_md_line": 49
+    },
+    {
+      "id": "5202_Graph_Neural_Network_Based_Action_Ranking_for_Planning/missing-dependency-spec",
+      "category": "missing",
+      "topic": "reproducibility / dependencies",
+      "title": "No dependency-specification file; deps only as prose with several unpinned packages",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 3,
+      "line_end": 21,
+      "quote": "pip install numpy==1.26.0\npip install protobuf==3.20.0\npip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126\npip install torch-geometric==2.6.1\npip install torch-scatter torch-sparse torch-cluster -f https://data.pyg.org/whl/torch-2.6.0+cu126.html\npip install tensorboard\npip install torchviz==0.0.2\npip install pytorch-lightning==2.0.1\npip install wandb\npip install icecream\npip install pymimir==0.9.71\npip install pyperplan==2.1\npip install pandas\n",
+      "claim": "There is no requirements.txt / setup.py / environment.yml / pyproject.toml in the repo (check_repo_completeness.py: dependency_spec_file=0); dependencies are listed only as README pip commands, and torch/torchvision/torchaudio, tensorboard, wandb, icecream, pandas, termcolor, tarski, and clingo are unpinned.",
+      "concern": "Without a pinned, machine-readable environment the build is not deterministically reproducible (e.g. an unpinned torch against the pinned torch-geometric 2.6.1 / torch-2.6.0 wheels can break).",
+      "resolution": "Authors: add a requirements.txt or environment.yml with fully pinned versions for every dependency, including torch.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_repo_completeness.py",
+      "paper_ref": "Appendix A.2 (Code link)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-dependency-spec",
+      "audit": "5202_Graph_Neural_Network_Based_Action_Ranking_for_Planning",
+      "audit_md_line": 77
+    },
+    {
+      "id": "5202_Graph_Neural_Network_Based_Action_Ranking_for_Planning/missing-llm-comparison-code",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No code for the LLM comparison (Table 5 / Appendix A.3, OpenAI-O3 & Gemini-2.5-Pro)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "To evaluate the relative capabilities of our approach against state-of-the-art language models, we\nconducted experiments using OpenAI's O3 model and Gemini-2.5-Pro (both released in 2025).\nFollowing the methodology of [28], we adopted their One-Shot prompting technique to generate\nprompts for our planning problems.\n",
+      "claim": "Appendix A.3 / Table 5 report a GABAR-vs-LLM comparison, but no script in the repo generates the one-shot prompts, queries OpenAI-O3 or Gemini-2.5-Pro, or validates the returned plans (grep for openai/gemini/gpt/one_shot/prompt across all .py returns nothing outside baselines).",
+      "concern": "The OpenAI-O3 and Gemini-2.5-Pro Coverage/PQR columns in Table 5 cannot be reproduced or audited; commercial-API nondeterminism makes this comparison unreproducible without the prompting/validation code and run logs.",
+      "resolution": "Authors: release the prompt-generation, model-query, and plan-validation scripts plus the raw model responses used for Table 5, and state model snapshot dates and decoding parameters.",
+      "cross_refs": [],
+      "paper_ref": "Appendix A.3, Table 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-llm-comparison-code",
+      "audit": "5202_Graph_Neural_Network_Based_Action_Ranking_for_Planning",
+      "audit_md_line": 114,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "5202_Graph_Neural_Network_Based_Action_Ranking_for_Planning/missing-trained-weights",
+      "category": "missing",
+      "topic": "reproducibility / artefacts",
+      "title": "No trained model weights or cached training-data shipped",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 105,
+      "line_end": 109,
+      "quote": "#### Testing a Pre-trained Model\n\n```sh\npython main.py --method ltp --domain manyblocks_ipcc_big --all-problems --num-test-problems 10 --mode test --max-plan-length 500 --run-learned-model True --use-global-node True\n```\n",
+      "claim": "The README documents a 'Testing a Pre-trained Model' workflow, but no .pt/.pth/.ckpt weights and no training-data .pkl caches exist in the repo (check_repo_completeness.py: trained_weight_files=0, training_data_pickles=0); only the cache/results/.gitkeep skeleton ships.",
+      "concern": "Reproducing any number requires retraining from scratch, which is itself blocked by the missing dataset (see missing-pddl-problems) and the undisclosed sweep (see undisclosed-hparam-sweep).",
+      "resolution": "Authors: ship the per-domain best-model checkpoints (and the model_tracking.json) used to produce Table 2.",
+      "cross_refs": [
+        "missing-pddl-problems",
+        "undisclosed-hparam-sweep"
+      ],
+      "check_script": "_audit_code/check_repo_completeness.py",
+      "paper_ref": "README 'Testing a Pre-trained Model'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-trained-weights",
+      "audit": "5202_Graph_Neural_Network_Based_Action_Ranking_for_Planning",
+      "audit_md_line": 139
+    },
+    {
+      "id": "5202_Graph_Neural_Network_Based_Action_Ranking_for_Planning/undisclosed-hparam-sweep",
+      "category": "difference",
+      "topic": "hyperparameter tuning",
+      "title": "Runner sweeps n_heads and attention-dropout; paper describes a single fixed config",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "train_test_scripts/ltp_all_run.sh",
+      "line_start": 57,
+      "line_end": 61,
+      "quote": "METHOD=\"ltp\"\nheads=(1 2 4 8)\nlrs=(0.0005)\ndecays=(0.000)\nother_drops=(0)\ngnn_rounds=(9)\n",
+      "claim": "The canonical runner trains+tests GABAR across n_heads in {1,2,4,8} and (for ablation 'main', line 175) attention-dropout in {0.1,0.2}, logging each run to a separate file; analyse_domain_results.py then aggregates all logs into a CSV (check_selection_on_test.py confirms heads_swept='1 2 4 8', attn_drops_for_main='0.1 0.2').",
+      "concern": "The paper's Training Procedure (§3.4) specifies a single fixed configuration (lr 0.0005, 9 GNN rounds, batch 16, hidden 64) and never mentions tuning the number of attention heads or attention dropout, so the reported numbers may be the best of an undisclosed sweep.",
+      "resolution": "Authors: state the n_heads and attention-dropout actually used per domain and how they were selected; if a sweep was run, report the selection criterion and the full grid.",
+      "cross_refs": [
+        "model-selection-on-test-coverage"
+      ],
+      "check_script": "_audit_code/check_selection_on_test.py",
+      "paper_ref": "Section 3.4 'Training Procedure'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "undisclosed-hparam-sweep",
+      "audit": "5202_Graph_Neural_Network_Based_Action_Ranking_for_Planning",
+      "audit_md_line": 176
+    },
+    {
+      "id": "5202_Graph_Neural_Network_Based_Action_Ranking_for_Planning/model-selection-on-test-coverage",
+      "category": "methodology",
+      "topic": "model selection / test-set leakage",
+      "title": "Reported checkpoint chosen by best TEST-set coverage, not validation loss as paper claims",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "ploi/test_utils.py",
+      "line_start": 391,
+      "line_end": 395,
+      "quote": "# Track best model for this planner type\nif metrics.success_rate_with_monitor > best_results[planner_type][\"success_rate\"]:\n    best_results[planner_type][\"success_rate\"] = metrics.success_rate_with_monitor\n    best_results[planner_type][\"model_type\"] = model_type\n    best_results[planner_type][\"epoch\"] = epoch\n",
+      "claim": "main.py evaluates up to 6 checkpoints per run on the test set (num_models_to_test=2 for each of all_model_types=['validation','training','combined']) and log_model_metrics then reports, as 'Best Model', the checkpoint with the highest success_rate_with_monitor, which is the test-set coverage (check_selection_on_test.py confirms the active definition selects by 'success_rate_with_monitor (TEST coverage)').",
+      "concern": "Selecting which checkpoint/run to report by its score on the test set is test-set leakage into model selection and contradicts the paper's stated criterion 'we select the model checkpoint that achieves the lowest loss on the validation set', biasing the reported Coverage/PQR upward.",
+      "resolution": "Authors: confirm whether the Table 2 numbers come from the validation-loss checkpoint or from this best-by-test-coverage selection; if the latter, re-report using only the validation-selected checkpoint (and validation-selected hyperparameters).",
+      "cross_refs": [
+        "undisclosed-hparam-sweep"
+      ],
+      "check_script": "_audit_code/check_selection_on_test.py",
+      "paper_ref": "Section 3.4: 'we select the model checkpoint that achieves the lowest loss on the validation set for evaluation'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "model-selection-on-test-coverage",
+      "audit": "5202_Graph_Neural_Network_Based_Action_Ranking_for_Planning",
+      "audit_md_line": 208
+    }
+  ]
+}

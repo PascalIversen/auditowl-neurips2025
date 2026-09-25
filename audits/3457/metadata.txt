@@ -1,0 +1,5 @@
+paper_number: 3457
+title: Understanding and Rectifying Safety Perception Distortion in VLMs
+authors: Xiaohan Zou, Jian Kang, George Kesidis, Lu Lin
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/a627b9468c319c13a70b7c2fb8df65a3-Abstract-Conference.html
+category: empirical

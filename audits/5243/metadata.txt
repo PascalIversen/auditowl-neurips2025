@@ -1,0 +1,5 @@
+paper_number: 5243
+title: Causal Explanation-Guided Learning for Organ Allocation
+authors: Alessandro Marchese, Jeroen Berrevoets, Sam Verboven
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/fde7a53da2d95f459331e308e684c9a9-Abstract-Conference.html
+category: empirical

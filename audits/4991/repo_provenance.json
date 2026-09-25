@@ -1,0 +1,17 @@
+{
+  "paper_id": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti",
+  "title": "Data Efficient Adaptation in Large Language Models via Continuous Low-Rank Fine-Tuning",
+  "repos": [
+    {
+      "name": "Applied-Machine-Learning-Lab__DEAL",
+      "role": "core",
+      "evidence": "README states 'Our paper has been accepted by NeurIPS 2025' and title exactly matches the paper. Paper text (line 46) gives official URL https://github.com/Applied-Machine-Learning-Lab/DEAL. Repo contains src/T5_run_wavelet.py, src/Llama3_run_wavelet.py, src/waveletLoRAAdapter.py implementing the DEAL wavelet-LoRA method, CL_Benchmark/ with the 15-task data, and even the paper PDF paper/2025_NIPS_HanXiaoZimo_ContineFTLora.pdf. Repo owner 'Applied-Machine-Learning-Lab' corresponds to the paper's co-author lab (Xiangyu Zhao, City University of Hong Kong)."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo Applied-Machine-Learning-Lab__DEAL is the paper's own official implementation. The README explicitly announces NeurIPS 2025 acceptance and matches the paper title verbatim. Core method files (waveletLoRAAdapter.py, T5_run_wavelet.py, Llama3_run_wavelet.py) implement the DEAL wavelet-LoRA continual fine-tuning framework described in the paper. All audit findings are correctly targeted at this repo: high-severity bugs (reg-loss-never-applied, long-t5-script-crashes), difference findings (wavelet-method-differs-from-paper, adapter-update-both-vs-A-only), and missing findings (baselines-not-in-repo, stat-test-not-implemented) are genuine reproducibility issues with this paper's own code. No non-core repos were cloned.",
+  "audit_impact": "None. The audit correctly identified the paper's own implementation and all findings are validly written against it. No misclassification or contamination detected.",
+  "recommended_action": "No change needed. The paper is correctly classified as source-present and all findings stand."
+}

@@ -1,0 +1,17 @@
+{
+  "paper_id": "3242_Robust_Estimation_Under_Heterogeneous_Corruption_Rates",
+  "title": "Robust Estimation Under Heterogeneous Corruption Rates",
+  "repos": [
+    {
+      "name": "supplement",
+      "role": "core",
+      "evidence": "NeurIPS supplemental ZIP unpacked into code/supplement/. Contains experiments.ipynb implementing the paper's own opt_linear, thresh_linear (bounded mean estimation), opt_linear_G, thresh_linear_G (Gaussian mean estimation), and sample_mean/sample_median baselines — exactly the algorithms of Theorems 1–2 and Algorithm 1 — producing bounded.png and gaussian.png (Figure 2). Also contains depth-map.ipynb for Figure 1. Hyperparameters match paper: N=10000, trials=10000, c=3, quantile=0.8, tol=1e-6, seed=1. Source: https://papers.nips.cc/paper_files/paper/2025/file/99fc8bc48b917c301a80cb74d91c0c06-Supplemental-Conference.zip"
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The only cloned artefact is the NeurIPS supplemental ZIP (unpacked to code/supplement/). It contains two Jupyter notebooks that implement this paper's core methods (opt_linear / opt_linear_G for the optimal linear estimator, thresh_linear / thresh_linear_G for the threshold estimator) and reproduce Figures 1–2 exactly as described in Appendix A. The audit initially missed this because it checked only an absent GitHub clone; the supplement-fetch correction (recorded in audit.md section 6 and findings_verified.json) reclassified two 'missing' findings as false positives and moved the paper to 'source present'. The one remaining 'missing' finding (no-public-code-repository) is technically correct — there is no *public* URL — but the supplement does supply runnable code. No non-core repos were cloned.",
+  "audit_impact": "The original audit wrongly reported 'no code' before the supplement was fetched. After the supplement-fetch correction the two most material missing findings (linked-codebase-not-resolvable, fig2-experiment-code-missing) were marked supplement_verdict=false_positive and the paper was reclassified as source-present. The sole remaining finding (no-public-code-repository, medium/high) is a genuine reproducibility concern because the code is not at a stable public URL; it should remain. The low-severity question about baseline comparability is unaffected.",
+  "recommended_action": "No reclassification needed — the audit's post-hoc correction already handled this correctly. Confirm that no-public-code-repository (medium/high) stays active, since the supplement notebooks are not at a resolvable public URL. The paper verdict should remain 'source present (supplement only)'."
+}

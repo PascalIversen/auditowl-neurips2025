@@ -1,0 +1,88 @@
+{
+  "paper": "4090",
+  "repo": "wxl1122__URD",
+  "design": "major_recall_study DESIGN.md",
+  "seeds": [
+    {
+      "id": "S02",
+      "slot": "MAJOR-MISS",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "wxl1122__URD/Unifying_INN/flow_net/denoise_net.py",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the industrial-image contraction-flow model",
+      "description": "Delete denoise_net.py, the only visual patch-flow implementation: it contains the 768-channel DenoiseFlow, its flow assemblies, inversion path, and sampling path used for spatial feature maps. The tabular vector flow remains, but no code remains for applying the contraction flow to MVTec multi-layer patch embeddings, so the paper's industrial-image pipeline and its classification/localization results have no implementation.",
+      "expected_reasoning": "The appendix says that fused encoder feature maps are passed through a contraction flow before decoding and patch-level likelihood scoring. A repository search shows that denoise_net.py alone implements a B-by-N-by-C flow with the 768-channel default corresponding to the fused image representation; denet.py only implements the released tabular B-by-C model. Deleting the visual flow file removes the complete relevant forward/inverse mechanism and leaves no runnable code path for that reported experiment. Nothing executes in its place, satisfying MISS.",
+      "paper_anchor": "Based on this baseline framework, the contraction mapping flow \u03c6(\u00b7) is applied after the feature encoder (see Fig.5 (c)).",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    {
+      "id": "S03",
+      "slot": "MAJOR-DIFF",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "wxl1122__URD/Unifying_INN/flow_net/denet.py",
+          "line": 10,
+          "action": "replace"
+        },
+        {
+          "file": "wxl1122__URD/Unifying_INN/flow_net/denet.py",
+          "line": 63,
+          "action": "replace"
+        }
+      ],
+      "title": "Replace contraction units with affine coupling flows",
+      "description": "Replace each implicit i-DenseNet contraction unit in the tabular flow with a RealNVP-style affine coupling transform. The substitute is fully invertible and trainable, has complementary masks, learned scale and translation networks, exact forward/inverse computations, and log-determinant gradients. It is a coherent normalizing-flow method, but it does not implement the paper's Lipschitz contraction mapping or fixed-point mechanism, invalidating the claimed reason for the reported gains.",
+      "expected_reasoning": "The paper specifies that G is parameterized by i-DenseNet and each flow block is a composition of contraction units of Eq. (2). The patched flow_unit instead instantiates two masked affine coupling layers. Inspection of AffineCoupling shows real learned scale/translation networks, exponentiation, complementary masks, an analytic inverse, log-Jacobian accumulation, and gradient-bearing parameters, so this is not an identity or stub. An auditor must recognize the RealNVP computation and contrast it with the paper's implicit Lipschitz resolvent construction, establishing a functional but genuinely different method.",
+      "paper_anchor": "In addition, to implement \u03c6(\u00b7), i-DenseNet [33] is applied to parametrize the mapping G.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    {
+      "id": "S05",
+      "slot": "MAJOR-METH",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "wxl1122__URD/Unifying_INN/utils/utils.py",
+          "line": 24,
+          "action": "replace"
+        }
+      ],
+      "title": "Select anomaly-score transforms on test labels",
+      "description": "Turn final evaluation into test-label model selection by evaluating four anomaly-score transformations and reporting the best AUROC and AP, independently, on the same labels used for the headline metrics. This is direct test-set peeking in the main evaluation path and can materially inflate every Table 1 result without changing training code.",
+      "expected_reasoning": "The paper defines the test samples as previously unseen and specifies a fixed anomaly score in Eq. (8). main.py passes the complete test scores and labels to aucPerformance. The patched function uses those labels to compare score, negated score, absolute score, and squared score, then reports the separate maxima. A careful reader must trace the evaluation call, notice that the candidates are selected against ground-truth test labels rather than validation data, and conclude that the reported test metric is the result of test-set model selection and therefore leaked.",
+      "paper_anchor": "In the one-class classification (OCC) anomaly detection (AD) task, only normal samples are provided during training, and the goal is to detect previously unseen anomalies in the testing set.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    {
+      "id": "S07",
+      "slot": "MAJOR-BUG",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "wxl1122__URD/Unifying_INN/flow_net/layers/base/activations.py",
+          "line": 112,
+          "action": "replace"
+        }
+      ],
+      "title": "Make every contraction unit non-invertible with ReLU",
+      "description": "Replace the learnable Leaky LipSwish activation used inside every FlowNet with ReLU. Negative preactivations collapse to zero, so the mapping is many-to-one and violates the invertibility and smooth Lipschitz assumptions required by the implicit inverse solver and likelihood calculation. Training still has real gradients on positive activations and the code remains a substantive neural computation, but the central bidirectional method is mathematically invalid.",
+      "expected_reasoning": "The appendix explicitly contrasts LipSwish with ReLU and states that ReLU is non-invertible. denet.FlowNet instantiates base.LeakyLSwish inside each iMonotoneBlock; after the patch, that class is an nn.ReLU wrapper. An auditor must follow the imported activation through the flow construction and recognize that all negative values map to the same output, so an inverse and valid Jacobian density cannot exist. This is a central activation bug, not a different coherent invertible method or an absent mechanism.",
+      "paper_anchor": "LipSwish guarantees the reversibility of the entire network, while ReLU cannot guarantee it.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    }
+  ]
+}

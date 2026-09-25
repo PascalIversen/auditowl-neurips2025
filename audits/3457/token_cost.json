@@ -1,0 +1,19 @@
+{
+  "folder": "3457_Understanding_and_Rectifying_Safety_Perception_Distortion_in",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 8375,
+    "output": 19683,
+    "cache_write": 300027,
+    "cache_read": 4689171
+  },
+  "total_tokens": 5017256,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 14.26
+}

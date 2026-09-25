@@ -1,0 +1,5 @@
+paper_number: 4838
+title: Visual Jenga: Discovering Object Dependencies via Counterfactual Inpainting
+authors: Anand Bhattad, Konpat Preechakul, Alexei A Efros
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/ea7efe35cef8808c2fa66c349671a73d-Abstract-Conference.html
+category: empirical

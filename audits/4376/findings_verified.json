@@ -1,0 +1,167 @@
+{
+  "schema_version": "1",
+  "audit": "4376_HiFlow_Training_free_High_Resolution_Image_Generation_with_F",
+  "audit_md": "audits/4376_HiFlow_Training_free_High_Resolution_Image_Generation_with_F/audit.md",
+  "generated_at": "2026-05-31T11:00:10.805930+00:00",
+  "findings": [
+    {
+      "id": "4376_HiFlow_Training_free_High_Resolution_Image_Generation_with_F/no-evaluation-pipeline",
+      "category": "missing",
+      "topic": "result traceability / evaluation code",
+      "title": "No code, prompts, or reference data to compute any reported metric (Tab.1/2/3)",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "run_hiflow.py",
+      "line_start": 1,
+      "line_end": 52,
+      "quote": "import torch\nfrom flux_pipeline_hiflow import FluxPipeline\nfrom transformer_flux import FluxTransformer2DModel\nfrom utils import set_seeds\nimport pdb\n",
+      "claim": "The repo's only entrypoint, run_hiflow.py, generates a single image from one hard-coded prompt; there is no FID/IS/CLIP/patch-metric computation, no 1K caption set, no 10K LAION-High-Resolution reference images, and no latency-timing or ablation driver anywhere in the 4 Python files.",
+      "concern": "Every quantitative claim in the paper (Tab.1 FID/FIDpatch/IS/ISpatch/CLIP at 2K and 4K, Tab.2 latency, Tab.3 ablation) is unreproducible from the repo: none of the values can be recomputed and none can be checked against the paper.",
+      "resolution": "Authors: please release the evaluation scripts (FID/IS/CLIP and the patch variants), the 1K caption list, the resolvable LAION-High-Resolution reference subset (or its image IDs), and the ablation/latency drivers.",
+      "cross_refs": [
+        "no-baseline-implementations",
+        "eval-prompt-set-missing",
+        "§4.1",
+        "§4.2",
+        "§4.3"
+      ],
+      "check_script": "_audit_code/check_eval_artifacts.py",
+      "paper_ref": "Tables 1, 2, 3; §4.1 Evaluation",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-evaluation-pipeline",
+      "audit": "4376_HiFlow_Training_free_High_Resolution_Image_Generation_with_F",
+      "audit_md_line": 57,
+      "verdict": "keep",
+      "reason": "check_eval_artifacts.py ran successfully and confirms all eval tokens (FID, CLIP, patch metric, prompts, LAION, baselines, latency) are ABSENT from all 4 repo Python files; quote matches run_hiflow.py lines 1-5 exactly.",
+      "changed": "nothing"
+    },
+    {
+      "id": "4376_HiFlow_Training_free_High_Resolution_Image_Generation_with_F/no-baseline-implementations",
+      "category": "missing",
+      "topic": "baselines",
+      "title": "Baseline methods (DemoFusion, DiffuseHigh, I-Max, BSRGAN) absent from repo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "Baselines. The compared methods encompass DemoFusion [12], DiffuseHigh [26], I-Max [13], and\nan image super-resolution method, BSRGAN [58]. For a fair comparison, the training-free methods\nare tested on the same Flux model according to their official implementations.\n",
+      "claim": "Table 1 and Table 2 compare HiFlow against four baselines run on Flux, but the repo contains no baseline code, configs, or pointers to the exact adaptations used.",
+      "concern": "The 'fair comparison' and 'same Flux model' claims cannot be verified, and the comparative numbers cannot be reproduced, without the adapted baseline pipelines.",
+      "resolution": "Authors: release (or link to the exact forks/commits of) the Flux-adapted DemoFusion, DiffuseHigh, I-Max, and BSRGAN pipelines used to produce Tables 1–2.",
+      "cross_refs": [
+        "no-evaluation-pipeline"
+      ],
+      "paper_ref": "§4.1 Baselines; Tables 1, 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-baseline-implementations",
+      "audit": "4376_HiFlow_Training_free_High_Resolution_Image_Generation_with_F",
+      "audit_md_line": 86,
+      "line_start": null,
+      "line_end": null,
+      "verdict": "keep",
+      "reason": "Paper quote confirmed at paper_text.txt lines 454-456; repo-wide grep finds no DemoFusion/DiffuseHigh/I-Max/BSRGAN implementation code (README contains only external GitHub links, not Flux-adapted code).",
+      "changed": "nothing"
+    },
+    {
+      "id": "4376_HiFlow_Training_free_High_Resolution_Image_Generation_with_F/eval-prompt-set-missing",
+      "category": "missing",
+      "topic": "data availability",
+      "title": "1K evaluation caption set and 10K LAION reference subset not shipped",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "We collect 1K high-quality captions across various scenarios for diverse image generation. The CLIP [43] score is used to assess the prompt-following capability, Frechet Inception\nDistance [18] (FID) and Inception Score [47] (IS) are reported to measure image quality, in which FID\nis calculated between generated images and 10K real high-quality images (with at least 1024 × 1024\nresolution) sourced from LAION-High-Resolution [48].\n",
+      "claim": "The evaluation uses 1K self-collected captions and a 10K-image LAION-High-Resolution reference set; neither the caption file nor the image IDs/accessions for the reference subset are in the repo.",
+      "concern": "FID/IS depend on the exact reference image distribution and the exact prompt set; without them the reported metrics cannot be reproduced or audited for selection effects.",
+      "resolution": "Authors: include the caption list (paper says App. Tab.H.1–H.3) as a machine-readable file and provide the LAION image IDs or a fetch script for the 10K reference subset.",
+      "cross_refs": [
+        "no-evaluation-pipeline"
+      ],
+      "paper_ref": "§4.1 Evaluation; Appendix §C",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "eval-prompt-set-missing",
+      "audit": "4376_HiFlow_Training_free_High_Resolution_Image_Generation_with_F",
+      "audit_md_line": 110,
+      "line_start": null,
+      "line_end": null,
+      "verdict": "keep",
+      "reason": "Paper quote confirmed at paper_text.txt lines 457-460; check_eval_artifacts.py confirms 'prompt/caption set' and 'LAION-High-Res data' are both ABSENT from the repo.",
+      "changed": "nothing"
+    },
+    {
+      "id": "4376_HiFlow_Training_free_High_Resolution_Image_Generation_with_F/default-loads-lora-not-table1-config",
+      "category": "difference",
+      "topic": "evaluation consistency (config)",
+      "title": "Default run loads an aesthetic LoRA, unlike the base-Flux Table-1 setup",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "run_hiflow.py",
+      "line_start": 17,
+      "line_end": 22,
+      "quote": "# LoRA can be downloaded from https://civitai.com/models/832683/flux-pro-11-style-lora-extreme-detailer-for-flux-illustrious\npipe.load_lora_weights(\"./lora_models/aidmaFLUXPro1.1-FLUX-v0.3.safetensors\") # optional\n\nset_seeds(seed)\n\nprompt = \"A robot standing in the rain reading newspaper, rusty and worn down, in a dystopian cyberpunk street, photo-realistic, urbanpunk. aidmaFLUXPro1.1\"\n",
+      "claim": "The shipped default entrypoint loads the aidmaFLUXPro1.1 detail-enhancing LoRA (and inference.sh downloads it), whereas the Table-1 quantitative comparison uses base Flux.1.0-dev with no LoRA.",
+      "concern": "A reader running the repo out-of-the-box reproduces a LoRA-enhanced demo, not the base-model configuration behind the reported metrics; the divergence is cosmetic since the call is labelled optional and the metric setup is base Flux.",
+      "resolution": "Authors: comment out or gate the LoRA call by default, or add a base-Flux config matching the Table-1 evaluation.",
+      "cross_refs": [
+        "no-evaluation-pipeline"
+      ],
+      "paper_ref": "§4.1; Table 1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "default-loads-lora-not-table1-config",
+      "audit": "4376_HiFlow_Training_free_High_Resolution_Image_Generation_with_F",
+      "audit_md_line": 145,
+      "verdict": "keep",
+      "reason": "run_hiflow.py lines 17-18 match the quote exactly; check_run_config.py confirms loads_lora_by_default=True and lora_call_commented=False.",
+      "changed": "nothing"
+    },
+    {
+      "id": "4376_HiFlow_Training_free_High_Resolution_Image_Generation_with_F/default-cascade-skips-3k-stage",
+      "category": "difference",
+      "topic": "evaluation consistency (config)",
+      "title": "Default cascade is 1K→2K→4K; paper specifies a 1K→2K→3K→4K schedule",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "run_hiflow.py",
+      "line_start": 38,
+      "line_end": 39,
+      "quote": "target_heights = [2048, 4096], \ntarget_widths = [2048, 4096], \n",
+      "claim": "The default script upscales 1024→2048→4096 (two upscale steps), but the paper's implementation details state the noise-adding ratio tau = [0.6, 0.3, 0.3] for a 1K→2K→3K→4K cascade (three upscale steps, including a 3072 stage).",
+      "concern": "The shipped default cascade does not match the cascade schedule the paper describes for 4K generation; results may differ from the paper's 4K numbers, though both schedules are valid and the parameters are user-configurable.",
+      "resolution": "Authors: confirm which cascade (2-stage vs 3-stage to 4K) produced the Table-1 4K numbers and ship that as the default, or document that the intermediate 3K stage is optional.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_run_config.py",
+      "paper_ref": "§4.1 Implementation details ('tau ... [0.6, 0.3, 0.3] for 1K → 2K → 3K → 4K')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "default-cascade-skips-3k-stage",
+      "audit": "4376_HiFlow_Training_free_High_Resolution_Image_Generation_with_F",
+      "audit_md_line": 174,
+      "verdict": "keep",
+      "reason": "run_hiflow.py lines 38-39 match the quote exactly; check_run_config.py confirms target_heights=[2048,4096] with 3K (3072) stage absent from the default.",
+      "changed": "nothing"
+    }
+  ]
+}

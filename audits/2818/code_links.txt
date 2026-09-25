@@ -1,0 +1,6 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/NUS-HPC-AI-Lab/Recurrent-Parameter-Generation	[title-match]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/albertotamajo/imagenet1k-coarse-classes	[no-author-signal]
+https://github.com/huggingface/pytorch-image-models	[known-org:huggingface]

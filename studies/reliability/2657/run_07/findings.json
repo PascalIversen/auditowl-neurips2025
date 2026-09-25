@@ -1,0 +1,159 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T10:23:51.392354+00:00",
+  "findings": [
+    {
+      "id": "/missing-csm-epoch-selection",
+      "category": "missing",
+      "topic": "hyperparameter tuning / result traceability",
+      "title": "Unsupervised CSM epoch-selection procedure (Table 5 values) is absent; only a hardcoded lookup remains",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "FMAD/functions.py",
+      "line_start": 73,
+      "line_end": 82,
+      "quote": "def determine_FMAD_hyperparameters(dataset_name_raw):\n    dataset_name = dataset_name_raw.lower()\n    if \"census\" in dataset_name:\n        epoch_size = 5\n        batch_size = 1024\n        learning_rate = 0.005\n    elif \"backdoor\" in dataset_name:\n        epoch_size = 200\n        batch_size = 1024\n        learning_rate = 0.005\n",
+      "claim": "The only data-dependent TCCM hyperparameter (training epochs) is set by a hardcoded per-dataset if/elif lookup table running to line 268; inline comments at lines 128 and 132 read 'epoch_size = 110  # Chosen first from \"100 or 1\"' and 'epoch_size = 2  # Chosen first from \"100 or 1\"'. No code anywhere in the repo computes the 'Improved Contrast Score Margin (CSM)' criterion, examines training-loss curves, or searches a candidate-epoch space.",
+      "concern": "The paper (App. B.6, Table 5) attributes these epoch values to an unsupervised, label-agnostic CSM selection procedure (Li et al. 2025b); that procedure is what makes the headline effectiveness numbers fair, yet no implementation of it exists in the repo, so the claim that epochs were chosen without any access to test/anomaly information cannot be reproduced or verified (the inline comments 'Chosen first from \"100 or 1\"' suggest manual choice).",
+      "resolution": "Authors: please release the CSM epoch-selection script (the T(f) criterion and the per-candidate-epoch search), and confirm whether the Table-5 epochs were ever selected using test-set AUROC/AUPRC rather than the unsupervised criterion.",
+      "cross_refs": [
+        "§B.3",
+        "§B.6",
+        "Table 5"
+      ],
+      "check_script": "_audit_code/check_missing_artifacts.py",
+      "paper_ref": "Appendix B.6 'Unsupervised Epoch Selection Strategy'; Table 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-csm-epoch-selection",
+      "audit": "",
+      "audit_md_line": 52
+    },
+    {
+      "id": "/missing-explainability-code",
+      "category": "missing",
+      "topic": "explainability",
+      "title": "No code for the explainability contribution (Fig. 4 MNIST, Table 3 ExactMatch/Jaccard)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "We use digit 1 as the normal class and digit 7\nas the anomaly (achieving an AUROC of 0.76). As shown in Figure 4, the model highlights the\nadditional horizontal stroke that distinguishes 7 from 1\n",
+      "claim": "Explainability is one of the three headline contributions (RQ3). The paper reports a MNIST feature-attribution figure (Fig. 4, AUROC=0.76) and a quantitative synthetic-GMM attribution study (Table 3: ExactMatch / Jaccard over d in {5,10,15,20,25}, App. D.4.2). A repo-wide grep finds no code that loads MNIST as 1-vs-7, computes per-feature importance/attribution, or computes ExactMatch / Jaccard against ground-truth shifted dimensions.",
+      "concern": "A full headline contribution and its quantitative validation (Table 3, near-perfect ExactMatch/Jaccard) have no implementing artefact, so neither Fig. 4 nor Table 3 can be reproduced.",
+      "resolution": "Authors: please add the MNIST explanation script and the synthetic GMM attribution-accuracy script (top-k feature selection from the residual vector, ExactMatch and Jaccard computation).",
+      "cross_refs": [
+        "Figure 4",
+        "Table 3",
+        "§D.4.2"
+      ],
+      "check_script": "_audit_code/check_missing_artifacts.py",
+      "paper_ref": "Section 5 (3) Explainability; Appendix D.4.2; Table 3; Figure 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-explainability-code",
+      "audit": "",
+      "audit_md_line": 86,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/missing-statistical-tests",
+      "category": "missing",
+      "topic": "statistical integrity",
+      "title": "Friedman + Nemenyi critical-difference tests (App. D.5, Figs. 21-22) have no code",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "We further perform statistical significance testing using the\nFriedman (Friedman, 1937) and Nemenyi tests (Nemenyi, 1963) to assess whether the observed\nranking differences are statistically meaningful; detailed results are provided in Appendix D.5.\n",
+      "claim": "The paper relies on Friedman + Nemenyi tests and critical-difference diagrams (Figs. 21-22) to support its significance claims. A repo-wide grep for 'friedman', 'nemenyi', 'critical difference', 'posthoc', 'wilcoxon', 'scikit_posthocs' returns zero hits; `AggregateResults.py` computes only mean ranks, not any hypothesis test.",
+      "concern": "The statistical tests that the paper cites as evidence for/against ranking significance (and which conclude no significant difference among the top group) cannot be reproduced from the released code.",
+      "resolution": "Authors: please release the script that computes the Friedman statistic, the Nemenyi post-hoc test, and the critical-difference diagrams from the per-seed ranks.",
+      "cross_refs": [
+        "§D.5",
+        "Figure 21",
+        "Figure 22"
+      ],
+      "check_script": "_audit_code/check_missing_artifacts.py",
+      "paper_ref": "Section 5 (1); Appendix D.5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-statistical-tests",
+      "audit": "",
+      "audit_md_line": 111,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/knn-semisup-omitted-from-bash",
+      "category": "bug",
+      "topic": "reproducibility / experiment harness",
+      "title": "run_semisupervise.sh loop {45..50} omits KNN_semisup (index 51); run_knn.sh calls a nonexistent script",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "bash_files/run_semisupervise.sh",
+      "line_start": 23,
+      "line_end": 28,
+      "quote": "for j in {45..50}; do # 7 models\n    core_id=$(( (i * 6 + j) % MAX_CORES ))\n\n    # Run the process\n    echo \"$core_id $dname $RANDOM_SEED\" >> ./logs/All_log.log\n    nohup taskset -c \"$core_id\" python FullExperiments.py -d \"$dname\" -i \"$j\" -r \"$RANDOM_SEED\" -t \"$TIME_LIMIT\" -m \"$MEMORY_LIMIT\" >> \"./logs/seed_${RANDOM_SEED}/run_${dname}_model_${j}.log\" 2>&1 &\n",
+      "claim": "MODEL_NAMES has 52 entries (verified by AST). The 7 force-inductive models occupy indices 45-51, with KNN_semisup at index 51. run_semisupervise.sh loops j in {45..50} (only 6 indices), so KNN_semisup (51) is never launched even though the comment says '7 models'. The auxiliary run_knn.sh invokes `python Full_experiments.py` (line 28 etc.), but the file is named `FullExperiments.py` and `Full_experiments.py` does not exist; its loop {50..50} targets index 50 (INNE_semisup), not KNN.",
+      "concern": "The inductive-evaluation appendix (Fig. 23) reports a KNN_semisup result, but as scripted no run produces it, and the dedicated run_knn.sh fails with FileNotFoundError; the supplementary inductive figure cannot be reproduced as released.",
+      "resolution": "Change the loop to {45..51} (and fix the comment / core_id divisor) and rename `Full_experiments.py` to `FullExperiments.py` in run_knn.sh.",
+      "cross_refs": [
+        "Figure 23",
+        "§E"
+      ],
+      "check_script": "_audit_code/check_model_index_ranges.py",
+      "paper_ref": "Appendix E (Results under the Inductive Evaluation Setting); Figure 23",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "knn-semisup-omitted-from-bash",
+      "audit": "",
+      "audit_md_line": 138
+    },
+    {
+      "id": "/torch-version-mismatch",
+      "category": "difference",
+      "topic": "dependencies / environment",
+      "title": "Paper and README state PyTorch 2.0, requirements.txt pins torch==1.13.1",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "requirements.txt",
+      "line_start": 7,
+      "line_end": 7,
+      "quote": "torch==1.13.1\n",
+      "claim": "requirements.txt pins torch==1.13.1, whereas the paper (App. B.3, 'Our implementation is based on Python 3.9.21 with PyTorch 2.0') and the README (Setup) state PyTorch 2.0 / Python 3.9.21.",
+      "concern": "Minor environment inconsistency; unlikely to change results for this simple MLP, but a reproducer following the paper's stated PyTorch 2.0 may see slightly different numerics than the pinned 1.13.1 environment.",
+      "resolution": "Authors: align requirements.txt with the reported PyTorch version (or note that 1.13.1 is the actually-used version).",
+      "cross_refs": [
+        "§B.3"
+      ],
+      "paper_ref": "Appendix B.3 (Hardware and Software)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "torch-version-mismatch",
+      "audit": "",
+      "audit_md_line": 170
+    }
+  ]
+}

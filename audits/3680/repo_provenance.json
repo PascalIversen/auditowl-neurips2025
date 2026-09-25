@@ -1,0 +1,17 @@
+{
+  "paper_id": "3680_Mitigating_Instability_in_High_Residual_Adaptive_Sampling_fo",
+  "title": "Mitigating Instability in High Residual Adaptive Sampling for PINNs via Langevin Dynamics",
+  "repos": [
+    {
+      "name": "neurips2025-las__LAS-implementation",
+      "role": "core",
+      "evidence": "README title and BibTeX entry match the paper exactly ('Mitigating Instability in High Residual Adaptive Sampling for PINNs via Langevin Dynamics', NeurIPS 2025). Authors listed in README (Minseok Jeong, Giup Seo, Euiseok Hwang) match paper authors. Paper itself cites 'https://github.com/neurips2025-las/LAS-implementation' as the official code URL. Repo contains LASSampler implementing the paper's Langevin dynamics-based adaptive sampling across 10 PDE benchmarks (Burgers1D, Allen-Cahn1D, KdV1D, etc.) matching paper §5 experiments."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo (neurips2025-las/LAS-implementation) is unambiguously this paper's own implementation. The README reproduces the paper's exact title, lists all three paper authors with matching email addresses, and cites the NeurIPS 2025 venue. The paper itself names this URL as the official code release. The repo implements LASSampler (the paper's core Langevin dynamics-based adaptive sampling method) across all 10 PDE benchmarks described in §5. All four audit findings are written against this same core repo and concern legitimate reproducibility gaps (missing aggregation/figure code, no dependency spec, unseeded RNG, minor k-exponent discrepancy) — none misidentify the repo as non-core.",
+  "audit_impact": "No misclassification. The audit correctly treated this repo as the paper's core implementation and all findings are validly scoped to it. The high-severity finding (no-result-aggregation-or-figures) and medium findings (no-rng-seed-control, no-dependency-specification) are genuine reproducibility gaps in an otherwise present codebase.",
+  "recommended_action": "No action needed on provenance. All findings stand; no finding was written against a wrong repo."
+}

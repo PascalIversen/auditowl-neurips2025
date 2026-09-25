@@ -1,0 +1,107 @@
+{
+  "schema_version": "1",
+  "audit": "4828_WarpGAN_Warping_Guided_3D_GAN_Inversion_with_Style_Based_Nov",
+  "audit_md": "audits/4828_WarpGAN_Warping_Guided_3D_GAN_Inversion_with_Style_Based_Nov/audit.md",
+  "generated_at": "2026-05-30T05:43:57.607982+00:00",
+  "findings": [
+    {
+      "id": "4828_WarpGAN_Warping_Guided_3D_GAN_Inversion_with_Style_Based_Nov/no-metric-evaluation-code",
+      "category": "missing",
+      "topic": "result traceability / evaluation",
+      "title": "No code computes FID, ID-similarity, or LPIPS — all of Table 1 & 2 untraceable",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "scripts/infer.py",
+      "line_start": 210,
+      "line_end": 213,
+      "quote": "save_inp_dir = os.path.join(self.opts.exp_dir)\nos.makedirs(save_inp_dir, exist_ok=True)\nsave_inp_path = os.path.join(save_inp_dir, f'{frame[i]}.png')\ncv2.imwrite(save_inp_path, cv2.cvtColor(self.tensor2im(res[i]), cv2.COLOR_RGB2BGR))\n",
+      "claim": "The inference entrypoint only synthesizes and writes PNG images; it computes no metric. A repo-wide scan (_audit_code/check_metric_code.py over 205 .py files, excluding vendored editings/ and the arcface IJB-C helper) finds zero FID/Frechet/InceptionV3, zero ID-similarity, and zero LPIPS-as-metric code. LPIPS appears only as a training loss (criteria/lpips/, training/coach_*.py).",
+      "concern": "Every reported number in Table 1 (CelebA-HQ FID/ID; MEAD LPIPS/FID/ID at ±30°/±60°; inference Time) and Table 2 (7-row FID/ID ablation) lacks any producing script, so none of the paper's quantitative claims can be reproduced or verified from the released code.",
+      "resolution": "Authors: please add the evaluation harness that loads synthesized vs ground-truth/reference images and computes FID, ArcFace ID-cosine similarity, and LPIPS for Tables 1 and 2 (and the timing measurement), specifying the exact FID/ID/LPIPS implementations and reference-set construction used.",
+      "cross_refs": [
+        "eval-datasets-absent"
+      ],
+      "check_script": "_audit_code/check_metric_code.py",
+      "paper_ref": "Table 1; Table 2; §4.1 Evaluation metrics",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-metric-evaluation-code",
+      "audit": "4828_WarpGAN_Warping_Guided_3D_GAN_Inversion_with_Style_Based_Nov",
+      "audit_md_line": 56
+    },
+    {
+      "id": "4828_WarpGAN_Warping_Guided_3D_GAN_Inversion_with_Style_Based_Nov/eval-datasets-absent",
+      "category": "missing",
+      "topic": "data availability / evaluation",
+      "title": "Preprocessed CelebA-HQ and MEAD test sets used for Table 1/2 are not in the repo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "configs/paths_config.py",
+      "line_start": 1,
+      "line_end": 9,
+      "quote": "dataset_paths = {\n\t'test': './data/celeba-hq_1000_align',\n\t'train': './data/FFHQ-LPFF-EG3D_all',\n}\n\ndataset_static_paths = {\n\t'test': './data/celeba-hq_1000_static_rebalanced',\n\t'train': './data/FFHQ-EG3D_all_static_rebalanced',\n\t'synth': './data/SynthData100000_rebalanced',\n}\n",
+      "claim": "Config points the test/eval pipeline at local directories ./data/celeba-hq_1000_align and ./data/celeba-hq_1000_static_rebalanced (and the paper also evaluates on MEAD), but the repo ships only 8 demo PNGs under data/test_img/ and these CelebA-HQ/MEAD directories are absent (data/ is gitignored).",
+      "concern": "The exact 1000-image CelebA-HQ subset and the MEAD multi-view test split (with their preprocessing/pose extraction) that produce the Table 1/2 numbers are not provided, so even if metric code were added the precise reported values could not be reproduced.",
+      "resolution": "Authors: please release (or give an exact reconstruction recipe for) the preprocessed CelebA-HQ 1000-image subset and the MEAD test split, including the alignment/pose-extraction outputs and the list of identities/views used.",
+      "cross_refs": [
+        "no-metric-evaluation-code"
+      ],
+      "paper_ref": "§4.1 Datasets / Evaluation metrics",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "eval-datasets-absent",
+      "audit": "4828_WarpGAN_Warping_Guided_3D_GAN_Inversion_with_Style_Based_Nov",
+      "audit_md_line": 85
+    },
+    {
+      "id": "4828_WarpGAN_Warping_Guided_3D_GAN_Inversion_with_Style_Based_Nov/pretrained-weights-external-only",
+      "category": "missing",
+      "topic": "pretrained models / reproducibility",
+      "title": "All pretrained weights live on an external Google Drive folder, not in the repo",
+      "severity": "low",
+      "confidence": "high",
+      "status": "question",
+      "file": "README.md",
+      "line_start": 16,
+      "line_end": 18,
+      "quote": "## Checkpoints\nWe have uploaded the pre-trained models required for image preprocessing, training, inference, and editing to [Google Drive](https://drive.google.com/drive/folders/1G9PeyrCS1gTyF3C957l6Key__t44aiIE?usp=sharing). After downloading, please place them in the corresponding directories (`./pose_estimation`, `./pretrained_models`, `./editings`).\n",
+      "claim": "Inference and training require ./pretrained_models/inversion/gan_encoder.pt and ./pretrained_models/inpaintor/inpaintor.pt (configs/infer.yaml, configs/train_inpainting.yaml:30,60); the pretrained_models/ directory does not exist in the clone and all weights are gated behind a single Google Drive link.",
+      "concern": "Reproduction depends on an external, mutable Drive folder I did not retrieve; if it is incomplete or removed, neither inference nor the LaMa-perceptual-loss training path is runnable. (Routing as a question: external hosting is an acceptable mechanism, only the resolvability is unverified here.)",
+      "resolution": "Authors: confirm the Drive folder contains every checkpoint referenced by the configs (gan_encoder.pt, inpaintor.pt, EG3D generator, LaMa_perceptual_loss_models, pose-estimation/Deep3DFaceRecon weights) and consider a checksummed download script.",
+      "cross_refs": [],
+      "paper_ref": "README Checkpoints section",
+      "id_local": "pretrained-weights-external-only",
+      "audit": "4828_WarpGAN_Warping_Guided_3D_GAN_Inversion_with_Style_Based_Nov",
+      "audit_md_line": 119
+    },
+    {
+      "id": "4828_WarpGAN_Warping_Guided_3D_GAN_Inversion_with_Style_Based_Nov/reconstruction-perceptual-loss-impl",
+      "category": "difference",
+      "topic": "loss function (paper vs code)",
+      "title": "Paper's reconstruction perceptual loss L_P is implemented as LaMa ResNet-PL, not LPIPS",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "question",
+      "file": "configs/train_inpainting.yaml",
+      "line_start": 48,
+      "line_end": 62,
+      "quote": "perceptual:\n  weight: 0\nadversarial:\n  kind: r1\n  weight: 10\n  gp_coef: 0.001\n  mask_as_fake_target: ${losses.with_mask}\n  allow_scale_mask: True\nfeature_matching:\n  weight: 100\nresnet_pl:\n  weight: 30\n  weights_path: ./pretrained_models/LaMa_perceptual_loss_models\nlpips:\n  weight: 0\n",
+      "claim": "The released SVINet config drives the reconstruction 'perceptual' term via LaMa's ResNet-PL (weight 30) and adds a feature-matching loss (weight 100) and r1 adversarial loss; the generic 'perceptual' and 'lpips' losses are zeroed.",
+      "concern": "The paper's Eq. (6) names a perceptual loss L_P with weight λ_P=30 but does not disclose it is LaMa ResNet-PL, nor mention the weight-100 feature-matching term, so the realized objective is broader than the paper states (paper omission).",
+      "resolution": "Authors: confirm whether L_P in Eq. (6) is the LaMa ResNet perceptual loss and whether the feature-matching loss (weight 100) was part of the reported runs; if so, state it in the loss description.",
+      "cross_refs": [],
+      "paper_ref": "§3.3.3 Eq. (6), Eq. (10); §4.1 (λ_P=30)",
+      "id_local": "reconstruction-perceptual-loss-impl",
+      "audit": "4828_WarpGAN_Warping_Guided_3D_GAN_Inversion_with_Style_Based_Nov",
+      "audit_md_line": 150
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "folder": "1867_A_Differential_and_Pointwise_Control_Approach_to_Reinforceme",
+  "model": "claude-opus-4-8",
+  "audit_runs": 2,
+  "tokens": {
+    "input": 81852,
+    "output": 37372,
+    "cache_write": 907941,
+    "cache_read": 7807217
+  },
+  "total_tokens": 8834382,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 32.77
+}

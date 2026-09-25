@@ -1,0 +1,83 @@
+{
+  "paper": "2657",
+  "repo": "ZhongLIFR__TCCM-NIPS",
+  "design": "major_recall_study DESIGN.md",
+  "seeds": [
+    {
+      "id": "S01",
+      "slot": "MAJOR-MISS",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "ZhongLIFR__TCCM-NIPS/AblationStudies.py",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the complete time-conditioning ablation pipeline",
+      "description": "Delete AblationStudies.py, the repository's only executable pipeline for the reported time-embedding comparison and fixed-inference-time sensitivity experiments (Figures 12 and 13). This creates an actual absence rather than leaving a runnable stand-in: no remaining file trains the three embedding variants across the eight datasets or sweeps the eleven inference-time values and produces those figures.",
+      "expected_reasoning": "The paper says Figure 12 compares Linear+Sin, Sinusoidal, and Sinusoidal+MLP embeddings over eight representative datasets and Figure 13 sweeps fixed inference time. A careful reader should search for those embedding names, dataset configurations, and figure outputs, find that all of them live in AblationStudies.py, then observe that the patch deletes that file. The residual core TCCM implementation can run the main method, but no code path anywhere in the repository can execute or reproduce the reported time-conditioning ablation suite.",
+      "paper_anchor": "Figure 12: Ablation Study on Time Embedding Methods. We compare three different time embedding strategies used in our flow-based anomaly detection model: Linear+Sin, Sinusoidal (default), and Sinusoidal+MLP, across eight representative datasets spanning four categories: Small (29_Pima, 18_Ionosphere), Medium (31_satimage-2, 44_Wilt), Large (22_magic.gamma , 23_mammography), and High-dimensional (25_musk, 17_InternetAds).",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    {
+      "id": "S03",
+      "slot": "MAJOR-DIFF",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "ZhongLIFR__TCCM-NIPS/baselines/normalizingFlow.py",
+          "line": 29,
+          "action": "replace"
+        }
+      ],
+      "title": "Run a bottleneck autoencoder under the NormalizingFlow label",
+      "description": "Replace the planar-flow density model with a fully trainable bottleneck autoencoder. The substitute has a real encoder-decoder computation, learns through reconstruction-loss gradients, and scores squared reconstruction error, while preserving the NormalizingFlow class API used by the main benchmark. It is therefore a coherent but fundamentally different anomaly detector, not an identity or no-op.",
+      "expected_reasoning": "The paper states that its NormalizingFlow baseline is a planar-flow detector. A careful reader should inspect baselines/normalizingFlow.py and verify whether fit optimizes change-of-variables likelihood and decision_function uses the base density plus log-Jacobian. After the patch, PlanarFlow is unused: NormalizingFlowModel is an encoder-decoder, fit minimizes MSE reconstruction, and decision_function returns reconstruction error. The benchmark would still run and backpropagate real gradients, but the reported NormalizingFlow comparison would actually measure an autoencoder, undermining the claimed 44-baseline evaluation.",
+      "paper_anchor": "The implementation of planar flows (Rezende and Mohamed, 2015), a normalizing-flows-based detector, is also taken from (Livernoche et al., 2023).",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    {
+      "id": "S05",
+      "slot": "MAJOR-METH",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "ZhongLIFR__TCCM-NIPS/utils.py",
+          "line": 33,
+          "action": "replace"
+        }
+      ],
+      "title": "Reuse every normal training sample in the test set",
+      "description": "Change the shared ADBench loader so the full normal pool becomes both X_train and X_test_normal. All main inductive models are then trained on every normal observation they are evaluated on, while anomalies remain test-only. The arrays still have valid shapes and the benchmark runs, but the main train/test protocol contains direct sample overlap.",
+      "expected_reasoning": "The paper requires a stratified 50/50 split of normal data, with the held-out half used for testing. A careful reader should trace FullExperiments.py to utils.load_adbench_npz and compare the constructed arrays. After the patch, X_train and X_test_normal are separate copies of the same X_normal array rather than disjoint partitions. StandardScaler is then fitted on those training samples and transforms their duplicates in the test set. This is direct main-pipeline leakage that can inflate detection metrics and invalidate the 47-dataset rankings.",
+      "paper_anchor": "Specifically, we apply a stratified split to the normal data, using 50% for training and holding out the rest for testing. The test set includes both normal and anomalous samples.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    {
+      "id": "S07",
+      "slot": "MAJOR-BUG",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "ZhongLIFR__TCCM-NIPS/baselines/mcm.py",
+          "line": 38,
+          "action": "replace"
+        }
+      ],
+      "title": "Bypass MCM's learned masks during reconstruction",
+      "description": "Make the MCM mask generator return repeated, completely unmasked inputs to its encoder-decoder while still computing mask logits for the diversity loss. Training and inference remain runnable and update the reconstruction network, but the central masked-cell mechanism is a no-op, allowing the model to reconstruct every feature from itself rather than from complementary unmasked features.",
+      "expected_reasoning": "The paper says MCM dynamically generates multiple soft masks, reconstructs masked features from unmasked portions, and averages reconstruction errors across masked versions. A careful reader should inspect Generator.forward and follow x_T into MCMModel.forward. After the patch, x_T is initialized as repeated copies of x and never multiplied by sigmoid(mask); mask networks influence only the diversity regularizer. Thus all advertised masked versions are identical full inputs. The code still trains, but its anomaly score no longer tests violated cross-feature correlations, making the MCM baseline result methodologically invalid.",
+      "paper_anchor": "MCM learns to reconstruct randomly masked subsets of input features using only the unmasked portions. The core hypothesis is that normal instances exhibit strong internal feature correlations, which the model can learn to reconstruct effectively\u2014while anomalies violate such correlations, leading to higher reconstruction error.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    }
+  ]
+}

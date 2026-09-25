@@ -1,0 +1,13 @@
+Expected-artefact presence:
+  dependency_spec              present=False  found=[]
+  license                      present=False  found=[]
+  eval_or_test_entrypoint      present=False  found=[]
+  restoration_net_arch         present=False  found=[]
+  pretrained_weights_dir       present=False  found=[]
+  datasets_dir                 present=False  found=[]
+
+Hardcoded absolute path references: 4
+  basicsr/train.py:8  sys.path.append("/fs-computility/ai4sData/liuyidi/code/LatentGen")
+  basicsr/utils/options.py:159  experiments_root = osp.join('/fs-computility/ai4sData/liuyidi/model', 'experiments', opt['name'])
+  basicsr/archs/LHVAE_arch.py:7  sys.path.append("/fs-computility/ai4sData/liuyidi/code/LatentGen")
+  basicsr/archs/LHVAE_arch.py:467  with open("/fs-computility/ai4sData/liuyidi/code/LatentGen/options/debug.yml") as f:

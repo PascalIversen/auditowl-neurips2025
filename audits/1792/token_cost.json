@@ -1,0 +1,19 @@
+{
+  "folder": "1792_Ada_R1_Hybrid_CoT_via_Bi_Level_Adaptive_Reasoning_Optimizati",
+  "model": "claude-opus-4-8",
+  "audit_runs": 2,
+  "tokens": {
+    "input": 20646,
+    "output": 42670,
+    "cache_write": 385894,
+    "cache_read": 8050997
+  },
+  "total_tokens": 8500207,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 22.82
+}

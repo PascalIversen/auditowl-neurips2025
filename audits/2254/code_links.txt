@@ -1,0 +1,6 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/xunzheng/notears	[author-cue]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/cmu-phil/py-tetrad	[baseline-cue]
+https://github.com/kevinsbello/dagma	[baseline-cue]

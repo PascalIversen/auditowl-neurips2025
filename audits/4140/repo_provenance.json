@@ -1,0 +1,17 @@
+{
+  "paper_id": "4140_A_Principle_of_Targeted_Intervention_for_Multi_Agent_Reinfor",
+  "title": "A Principle of Targeted Intervention for Multi-Agent Reinforcement Learning",
+  "repos": [
+    {
+      "name": "iamlilAJ__Pre-Strategy-Intervention",
+      "role": "core",
+      "evidence": "README states 'This repository contains the official JAX implementation for the NeurIPS 2025 paper: A Principle of Targeted Intervention for Multi-Agent Reinforcement Learning (https://arxiv.org/abs/2510.17697).' Authors in BibTeX (Anjie Liu, Jianhong Wang, Samuel Kaski, Jun Wang, Mengyue Yang) match paper authors exactly. Repo owner 'iamlilAJ' corresponds to first author Anjie Liu. Paper footnote 2 gives the exact URL https://github.com/iamlilAJ/Pre-Strategy-Intervention. Repo implements PSI (Pre-Strategy Intervention) with pre_policy_module directories in IPPO/MAPPO/QLearning, augmented MPE and Hanabi environments, and Hydra configs for all three conditions (PSI, base_marl_*, intrinsic_reward_*)."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo (iamlilAJ__Pre-Strategy-Intervention) is unambiguously the paper's own official implementation. The paper's footnote 2 cites this exact GitHub URL, the README confirms it as the 'official JAX implementation for the NeurIPS 2025 paper,' the BibTeX author list matches the paper's author list, and the code structure (pre_policy_module, augmented_mpe.py, Hanabi reward shaping, Hydra configs for PSI/base_marl_*/intrinsic_reward_* conditions) directly implements the paper's PSI method evaluated in MPE and Hanabi. The audit's findings are all written against the correct repo. No non-core repos were cloned.",
+  "audit_impact": "None — the audit correctly identified and evaluated the paper's own implementation. Findings (LIIR/LAIES absent, Hanabi 5-Save penalty mismatch, NUM_SEEDS default=1, asymmetric hyperparameters) are valid and were raised against the right repo. No re-classification needed.",
+  "recommended_action": "No action needed on provenance; the audit is correctly scoped. Findings stand as written."
+}

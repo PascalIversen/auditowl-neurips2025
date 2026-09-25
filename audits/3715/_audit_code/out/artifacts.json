@@ -1,0 +1,39 @@
+{
+  "repo": "/Users/anon/Projects/neurips_audit/audits/3715_Diffusion_Models_and_the_Manifold_Hypothesis_Log_Domain_Smoo/code/samuel-howard__log_smoothing",
+  "top_level": [
+    ".git",
+    ".gitignore",
+    "README.md",
+    "bump_compare_smoothing.ipynb",
+    "circle2d_log_likelihood.ipynb",
+    "data",
+    "environment.yml",
+    "low_dim_plots.ipynb",
+    "mnist_KDE_vs_gaussian.ipynb",
+    "mnist_compare_smoothing.ipynb",
+    "mnist_fid_computations.ipynb",
+    "src"
+  ],
+  "referenced_artifacts": [
+    {
+      "path": "params/vae_params.pkl",
+      "exists": false,
+      "role": "loaded by mnist_KDE_vs_gaussian + mnist_compare_smoothing (VAE checkpoint)"
+    },
+    {
+      "path": "figures/",
+      "exists": false,
+      "role": "every notebook savefig target"
+    },
+    {
+      "path": "samples/digit_4/gaussian_samples_mnist_digit_4.npy",
+      "exists": false,
+      "role": "saved by mnist_compare, read by mnist_fid_computations"
+    },
+    {
+      "path": "samples/digit_4/fid_images.npy",
+      "exists": false,
+      "role": "saved by mnist_compare, read by mnist_fid_computations"
+    }
+  ]
+}

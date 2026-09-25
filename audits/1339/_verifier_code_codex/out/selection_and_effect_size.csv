@@ -1,0 +1,5 @@
+comparison,baseline_pct,e3ad_pct,delta_pp,events_at_n_6019,events_at_n_5000,events_at_n_4819,events_at_n_4000
+"VAD-Base -> E3AD(VAD-Base), avg collision",0.22,0.18,0.04,2.41,2.0,1.93,1.6
+"VAD-Base -> E3AD(VAD-Base), 3 s collision",0.41,0.36,0.05,3.01,2.5,2.41,2.0
+"UniAD -> E3AD(UniAD), avg collision",0.31,0.23,0.08,4.82,4.0,3.86,3.2
+"best vs 2nd-best sweep row (A.4), avg col",0.2,0.18,0.02,1.2,1.0,0.96,0.8

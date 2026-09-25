@@ -1,0 +1,128 @@
+{
+  "paper": "2657",
+  "seeds": [
+    {
+      "sid": "S01",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "ZhongLIFR__TCCM-NIPS/AblationStudies.py",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the complete time-conditioning ablation pipeline",
+      "description": "Delete AblationStudies.py, the repository's only executable pipeline for the reported time-embedding comparison and fixed-inference-time sensitivity experiments (Figures 12 and 13). This creates an actual absence rather than leaving a runnable stand-in: no remaining file trains the three embedding variants across the eight datasets or sweeps the eleven inference-time values and produces those figures."
+    },
+    {
+      "sid": "S03",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "ZhongLIFR__TCCM-NIPS/baselines/normalizingFlow.py",
+          "line": 29,
+          "action": "replace"
+        }
+      ],
+      "title": "Run a bottleneck autoencoder under the NormalizingFlow label",
+      "description": "Replace the planar-flow density model with a fully trainable bottleneck autoencoder. The substitute has a real encoder-decoder computation, learns through reconstruction-loss gradients, and scores squared reconstruction error, while preserving the NormalizingFlow class API used by the main benchmark. It is therefore a coherent but fundamentally different anomaly detector, not an identity or no-op."
+    },
+    {
+      "sid": "S05",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "ZhongLIFR__TCCM-NIPS/utils.py",
+          "line": 33,
+          "action": "replace"
+        }
+      ],
+      "title": "Reuse every normal training sample in the test set",
+      "description": "Change the shared ADBench loader so the full normal pool becomes both X_train and X_test_normal. All main inductive models are then trained on every normal observation they are evaluated on, while anomalies remain test-only. The arrays still have valid shapes and the benchmark runs, but the main train/test protocol contains direct sample overlap."
+    },
+    {
+      "sid": "S07",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "ZhongLIFR__TCCM-NIPS/baselines/mcm.py",
+          "line": 38,
+          "action": "replace"
+        }
+      ],
+      "title": "Bypass MCM's learned masks during reconstruction",
+      "description": "Make the MCM mask generator return repeated, completely unmasked inputs to its encoder-decoder while still computing mask logits for the diversity loss. Training and inference remain runnable and update the reconstruction network, but the central masked-cell mechanism is a no-op, allowing the model to reconstruct every feature from itself rather than from complementary unmasked features."
+    }
+  ],
+  "baseline": [
+    {
+      "id": "2657/explainability-code-missing",
+      "category": "missing",
+      "file": "FMAD/FlowMatchingAD.py",
+      "line_start": 40,
+      "line_end": 53,
+      "title": "No code for the explainability contribution (Table 3 ExactMatch/Jaccard, Fig. 1)"
+    },
+    {
+      "id": "2657/csm-epoch-selection-missing",
+      "category": "missing",
+      "file": "FMAD/functions.py",
+      "line_start": 73,
+      "line_end": 78,
+      "title": "Disclosed unsupervised epoch-selection (CSM) protocol absent; epochs hardcoded"
+    },
+    {
+      "id": "2657/run-knn-wrong-script-name",
+      "category": "bug",
+      "file": "bash_files/run_knn.sh",
+      "line_start": 28,
+      "line_end": 28,
+      "title": "run_knn.sh invokes non-existent Full_experiments.py (file is FullExperiments.py)"
+    },
+    {
+      "id": "2657/torch-version-mismatch",
+      "category": "difference",
+      "file": "requirements.txt",
+      "line_start": 7,
+      "line_end": 7,
+      "title": "Paper states PyTorch 2.0; requirements.txt pins torch==1.13.1"
+    },
+    {
+      "id": "2657/epoch-selection-asymmetry",
+      "category": "methodology",
+      "file": "FullExperiments.py",
+      "line_start": 254,
+      "line_end": 266,
+      "title": "TCCM gets per-dataset epoch selection; all baselines run at library defaults"
+    }
+  ],
+  "unassigned": [
+    {
+      "fid": "run_01/epoch-selection-not-implemented",
+      "run": "run_01",
+      "category": "missing",
+      "loc": "FMAD/functions.py:127",
+      "title": "Unsupervised (CSM) epoch-selection procedure is not in the repo; epochs are hardcoded per dataset",
+      "claim": "TCCM's number of training epochs \u2014 described by the paper as 'the only data-dependent hyperparameter' and selected by an unsupervised, label-free Improved-Contrast-Score-Margin (CSM) procedure (Appendix B.6) \u2014 is instead provided as a hardcoded per-dataset if/else in determine_FMAD_hyperparameters, with comments such as `# Chosen first from \"100 or 1\"`; a repo-wide grep for the selection procedure (CSM / candidate / inlier / epoch-selection) finds no implementation.",
+      "concern": "The paper states the epochs are 'not arbitrarily hardcoded' and chosen without anomaly labels, but the repo contains only the final numbers and no selection code, so the fairness/reproducibility of TCCM's sole tuned hyperparameter (range 1\u20135000 epochs across datasets) cannot be verified, and the manual-looking comments suggest hand-selection rather than the described automated procedure."
+    },
+    {
+      "fid": "run_02/epoch-selection-code-missing",
+      "run": "run_02",
+      "category": "missing",
+      "loc": "code/ZhongLIFR__TCCM-NIPS/FMAD/functions.py:127",
+      "title": "Unsupervised epoch-selection (CSM) procedure not implemented; epochs are hardcoded",
+      "claim": "TCCM's number of training epochs \u2014 its only tuned hyperparameter, ranging 1 to 5000 across datasets \u2014 is returned by a hardcoded per-dataset if/elif table (`determine_FMAD_hyperparameters`, lines 73-268); no code computes it.",
+      "concern": "Paper \u00a7B.6 says epochs are chosen by a principled, largely-automated unsupervised CSM criterion (Li et al. 2025b) requiring no labels, but that selection routine is absent from the repo and comments like 'Chosen first from \"100 or 1\"' suggest manual choice, so a reviewer cannot verify the tuning was unsupervised/fair or reproduce the values."
+    },
+    {
+      "fid": "run_02/contam-duplicate-normal-leakage",
+      "run": "run_02",
+      "category": "methodology",
+      "loc": "code/ZhongLIFR__TCCM-NIPS/ContaminationStudies.py:162",
+      "title": "Contamination study duplicates every normal before splitting, leaking ~50-75% of test normals",
+      "claim": "The contamination study stacks `X_train` and `X_test` from load_adbench_npz, but their normal rows are identical (see no-heldout-split-leakage), so `X_normal` contains each normal twice before the subsequent `train_test_split(X_normal, test_size=0.5)` at line 168.",
+      "concern": "Because each normal appears twice, ~50% (48-75% measured by _audit_code/check_contam_split_leakage.py) of the normal test rows have an identical copy in the training set, so the contamination-robustness curves (Fig 15) are computed with partial train/test leakage and overstate absolute AUROC/AUPRC."
+    }
+  ]
+}

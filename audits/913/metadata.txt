@@ -1,0 +1,5 @@
+paper_number: 913
+title: Equivariance Everywhere All At Once: A Recipe for Graph Foundation Models
+authors: Ben Finkelshtein, Ismail Ilkan Ceylan, Michael Bronstein, Ron Levie
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/2b89783b68cdcfa7c8d7b08c09f47b2a-Abstract-Conference.html
+category: empirical

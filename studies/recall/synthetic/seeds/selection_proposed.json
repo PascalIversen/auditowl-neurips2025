@@ -1,0 +1,222 @@
+{
+  "1023": {
+    "MAJOR-MISS": {
+      "sid": "S01",
+      "rule": "author pick (dry run)",
+      "no_paper_suspicion": false
+    },
+    "MAJOR-DIFF": {
+      "sid": "S03",
+      "rule": "author pick (dry run)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-METH": {
+      "sid": "S06",
+      "rule": "author pick (dry run)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-BUG": {
+      "sid": "S07",
+      "rule": "author pick (dry run)",
+      "no_paper_suspicion": true
+    }
+  },
+  "2657": {
+    "MAJOR-MISS": {
+      "sid": "S01",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-DIFF": {
+      "sid": "S03",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-METH": {
+      "sid": "S05",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-BUG": {
+      "sid": "S07",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    }
+  },
+  "2578": {
+    "MAJOR-MISS": {
+      "sid": "S01",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    "MAJOR-DIFF": {
+      "sid": "S03",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    "MAJOR-METH": {
+      "sid": "S05",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-BUG": {
+      "sid": "S07",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    }
+  },
+  "2167": {
+    "MAJOR-MISS": {
+      "sid": "S01",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    "MAJOR-DIFF": {
+      "sid": "S03",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    "MAJOR-METH": {
+      "sid": "S05",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-BUG": {
+      "sid": "S07",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    }
+  },
+  "1908": {
+    "MAJOR-MISS": {
+      "sid": "S01",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-DIFF": {
+      "sid": "S04",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    "MAJOR-METH": {
+      "sid": "S05",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-BUG": {
+      "sid": "S07",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    }
+  },
+  "4090": {
+    "MAJOR-MISS": {
+      "sid": "S02",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    "MAJOR-DIFF": {
+      "sid": "S03",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-METH": {
+      "sid": "S05",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-BUG": {
+      "sid": "S07",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    }
+  },
+  "1171": {
+    "MAJOR-MISS": {
+      "sid": "S01",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-DIFF": {
+      "sid": "S03",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-METH": {
+      "sid": "S06",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-BUG": {
+      "sid": "S07",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    }
+  },
+  "3463": {
+    "MAJOR-MISS": {
+      "sid": "S01",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    "MAJOR-DIFF": {
+      "sid": "S03",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-METH": {
+      "sid": "S06",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-BUG": {
+      "sid": "S07",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    }
+  },
+  "913": {
+    "MAJOR-MISS": {
+      "sid": "S01",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    "MAJOR-DIFF": {
+      "sid": "S03",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    "MAJOR-METH": {
+      "sid": "S06",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-BUG": {
+      "sid": "S07",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    }
+  },
+  "1717": {
+    "MAJOR-MISS": {
+      "sid": "S01",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    "MAJOR-DIFF": {
+      "sid": "S04",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-METH": {
+      "sid": "S06",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    "MAJOR-BUG": {
+      "sid": "S08",
+      "rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    }
+  }
+}

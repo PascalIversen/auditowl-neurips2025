@@ -1,0 +1,5 @@
+paper_number: 2167
+title: DiCoFlex: Model-Agnostic Diverse Counterfactuals with Flexible Control
+authors: Oleksii Furman, Ulvi Movsum-zada, Patryk Marszałek, Maciej Zieba, Marek Śmieja
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/679fcceef65c3d855aa885bd024542c1-Abstract-Conference.html
+category: empirical

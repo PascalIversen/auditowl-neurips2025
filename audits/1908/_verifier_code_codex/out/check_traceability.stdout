@@ -1,0 +1,26 @@
+{
+  "baseline_impl_in_py": [],
+  "ablation_toggles": [],
+  "localization_code": [],
+  "density_experiment": [],
+  "fle_degree_configs": {
+    "arguments/configs/csi/exp1.yaml": {
+      "config_fle_degree": 9,
+      "config_num_coeffs": 100
+    },
+    "arguments/configs/ble/exp1.yaml": {
+      "config_fle_degree": 9,
+      "config_num_coeffs": 100
+    },
+    "arguments/configs/rfid/exp1.yaml": {
+      "config_fle_degree": 9,
+      "config_num_coeffs": 100
+    }
+  },
+  "paper_ablation_claim": {
+    "L": 3,
+    "num_coeffs": 16,
+    "quote": "Both FLE and SH are implemented with a degree of L = 3, resulting in 16 coefficients each."
+  },
+  "root_dependency_files": []
+}

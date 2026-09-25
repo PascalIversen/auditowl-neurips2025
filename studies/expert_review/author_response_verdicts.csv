@@ -1,0 +1,124 @@
+category,author_correctness,author_relevance
+bug,Correct,
+bug,Correct,Irrelevant
+bug,Correct,Irrelevant
+bug,Correct,Irrelevant
+bug,Correct,Minor point
+bug,Correct,Minor point
+bug,Correct,Minor point
+bug,Correct,Minor point
+bug,Correct,Minor point
+bug,Correct,Minor point
+bug,Correct,Minor point
+bug,Correct,Minor point
+bug,Incorrect,
+bug,Partially correct,
+bug,Partially correct,Irrelevant
+bug,Partially correct,Minor point
+bug,Partially correct,Minor point
+bug,Partially correct,Minor point
+bug,Partially correct,Relevant
+bug,Partially correct,Relevant
+difference,Correct,Irrelevant
+difference,Correct,Irrelevant
+difference,Correct,Irrelevant
+difference,Correct,Irrelevant
+difference,Correct,Irrelevant
+difference,Correct,Irrelevant
+difference,Correct,Irrelevant
+difference,Correct,Minor point
+difference,Correct,Minor point
+difference,Correct,Minor point
+difference,Correct,Relevant
+difference,Correct,Relevant
+difference,Correct,Relevant
+difference,Correct,Relevant
+difference,Correct,Relevant
+difference,Correct,Relevant
+difference,Correct,Relevant
+difference,Incorrect,Irrelevant
+difference,Incorrect,Irrelevant
+difference,Incorrect,Irrelevant
+difference,Incorrect,Irrelevant
+difference,Incorrect,Relevant
+difference,Partially correct,
+difference,Partially correct,Irrelevant
+difference,Partially correct,Irrelevant
+difference,Partially correct,Irrelevant
+difference,Partially correct,Irrelevant
+difference,Partially correct,Minor point
+difference,Partially correct,Minor point
+difference,Partially correct,Relevant
+difference,Partially correct,Relevant
+methodology,Correct,Irrelevant
+methodology,Correct,Minor point
+methodology,Correct,Minor point
+methodology,Incorrect,
+methodology,Incorrect,Relevant
+methodology,Incorrect,Relevant
+methodology,Partially correct,
+methodology,Partially correct,Irrelevant
+methodology,Partially correct,Minor point
+methodology,Partially correct,Minor point
+methodology,Partially correct,Minor point
+methodology,Partially correct,Relevant
+methodology,Partially correct,Relevant
+missing,Correct,
+missing,Correct,
+missing,Correct,
+missing,Correct,
+missing,Correct,
+missing,Correct,Irrelevant
+missing,Correct,Irrelevant
+missing,Correct,Irrelevant
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Minor point
+missing,Correct,Relevant
+missing,Correct,Relevant
+missing,Correct,Relevant
+missing,Correct,Relevant
+missing,Correct,Relevant
+missing,Correct,Relevant
+missing,Correct,Relevant
+missing,Correct,Relevant
+missing,Incorrect,
+missing,Incorrect,
+missing,Incorrect,Minor point
+missing,Partially correct,
+missing,Partially correct,
+missing,Partially correct,
+missing,Partially correct,
+missing,Partially correct,Irrelevant
+missing,Partially correct,Irrelevant
+missing,Partially correct,Irrelevant
+missing,Partially correct,Irrelevant
+missing,Partially correct,Minor point
+missing,Partially correct,Minor point
+missing,Partially correct,Minor point
+missing,Partially correct,Minor point
+missing,Partially correct,Minor point
+missing,Partially correct,Minor point
+missing,Partially correct,Minor point
+missing,Partially correct,Minor point
+missing,Partially correct,Relevant
+missing,Partially correct,Relevant
+missing,Partially correct,Relevant

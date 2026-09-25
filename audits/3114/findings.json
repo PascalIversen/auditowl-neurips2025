@@ -1,0 +1,208 @@
+{
+  "schema_version": "1",
+  "audit": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput",
+  "audit_md": "audits/3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput/audit.md",
+  "generated_at": "2026-05-30T23:19:24.469389+00:00",
+  "findings": [
+    {
+      "id": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput/results-npz-not-committed",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No results/*.npz committed; every figure script reads files that do not exist",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "main.py",
+      "line_start": 36,
+      "line_end": 41,
+      "quote": "save_dir = os.path.join(g.dataset_path, 'results')\nos.makedirs(save_dir, exist_ok=True)\n\nfilename = f'{method}_node_{node}_alpha_{alpha}_eps_{eps}.npz'\nsave_path = os.path.join(save_dir, filename)\nnp.savez(save_path, **result_data)\n",
+      "claim": "main.py writes per-run results to datasets/<graph>/results/*.npz, and every plotting script loads those .npz files to render Figs. 2-9 and the R/operation tables; the repo commits zero such .npz files (check_artefact_inputs.py: 0 result .npz).",
+      "concern": "None of the paper's figures or per-graph numbers can be regenerated as shipped because the intermediate result artefacts they consume are absent and the only dataset that could regenerate them is as-skitter (1 of 19).",
+      "resolution": "Authors: commit (or provide a download for) the results/*.npz used to produce Figs. 2-9 and Tables 3-4, or a single driver that regenerates them end-to-end.",
+      "cross_refs": [
+        "datasets-18-of-19-missing",
+        "fig4-dead-mnt-paths"
+      ],
+      "check_script": "_audit_code/check_artefact_inputs.py",
+      "paper_ref": "Figs. 2-9, Tables 3-4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "results-npz-not-committed",
+      "audit": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput",
+      "audit_md_line": 62
+    },
+    {
+      "id": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput/datasets-18-of-19-missing",
+      "category": "missing",
+      "topic": "data availability / preprocessing",
+      "title": "18 of 19 datasets absent and no download/preprocessing script provided",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "utils.py",
+      "line_start": 21,
+      "line_end": 23,
+      "quote": "class graph:\n    def __init__(self, name, path):\n        self.adj_m = sp.load_npz(path)\n",
+      "claim": "The graph loader reads a preprocessed *_csr-mat.npz for each dataset, but only datasets/as-skitter/ is shipped (check_artefact_inputs.py: count=1); the paper evaluates on 19 graphs (Table 2), and no script downloads the raw SNAP/OGB graphs or performs the paper's stated preprocessing (treat as undirected, remove self-loops, keep largest connected component) to build the *_csr-mat.npz inputs (grep for download/preprocessing/save_npz code finds none).",
+      "concern": "The headline experiments (incl. Fig. 4 on ogb-mag240m / ogbn-papers100M / com-friendster / wiki-en21) cannot be reproduced because neither the preprocessed graphs nor the code to construct them is present.",
+      "resolution": "Authors: add a preprocessing/download script that produces the *_csr-mat.npz files from the public sources, or host the preprocessed graphs.",
+      "cross_refs": [
+        "results-npz-not-committed"
+      ],
+      "check_script": "_audit_code/check_artefact_inputs.py",
+      "paper_ref": "Appendix C.1 (Datasets and Preprocessing); Table 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "datasets-18-of-19-missing",
+      "audit": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput",
+      "audit_md_line": 93
+    },
+    {
+      "id": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput/no-dependency-spec",
+      "category": "missing",
+      "topic": "expected code completeness",
+      "title": "No requirements.txt / environment file; README references a non-existent one",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "readme.md",
+      "line_start": 44,
+      "line_end": 49,
+      "quote": "```bash\ngit clone https://github.com/username/NIPS2025.git\ncd NIPS2025\npip install -r requirements.txt\n```\n",
+      "claim": "README instructs `pip install -r requirements.txt`, but no requirements.txt, environment.yml, setup.py, or pyproject.toml exists in the repo (directory listing confirms none).",
+      "concern": "The runtime depends on a specific numba/numpy/scipy stack (numba njit with objmode), and unpinned dependencies mean the environment that produced the paper's timings cannot be rebuilt, which directly affects the runtime claims in Table 4 / Fig. 5.",
+      "resolution": "Authors: add a pinned dependency specification (requirements.txt or environment.yml) including numba, numpy, scipy versions.",
+      "cross_refs": [
+        "readme-generic-template"
+      ],
+      "paper_ref": "Appendix C.2 (implemented in Python with numba)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-dependency-spec",
+      "audit": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput",
+      "audit_md_line": 121
+    },
+    {
+      "id": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput/tables34-no-builder-script",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No script aggregates per-run outputs into Tables 3 and 4",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "main.py",
+      "line_start": 15,
+      "line_end": 16,
+      "quote": "x, errs, opers, runtime, runtime_acc, grad_norms, vols, gammas, eps_t = g.run_method(method, node, alpha, eps)\n",
+      "claim": "Per-run operation counts and runtimes are computed and saved per graph, but no script reads across the 19 graphs to assemble the operation table (Table 3) or runtime table (Table 4); tables/runtime_operation_data.csv holds only raw com-dblp rows, not the per-graph 5-method summary of Tables 3/4.",
+      "concern": "The reader cannot trace the specific cell values reported in Tables 3 and 4 to a computation that produces them, so those tables are not independently checkable from the repo.",
+      "resolution": "Authors: provide the aggregation script (and inputs) that turns per-run .npz outputs into the exact Table 3 / Table 4 values.",
+      "cross_refs": [
+        "results-npz-not-committed",
+        "datasets-18-of-19-missing"
+      ],
+      "paper_ref": "Appendix C.3, Tables 3 and 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "tables34-no-builder-script",
+      "audit": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput",
+      "audit_md_line": 150
+    },
+    {
+      "id": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput/fig4-dead-mnt-paths",
+      "category": "bug",
+      "topic": "reproducibility / hardcoded paths",
+      "title": "Headline Figure 4 plotting script reads dead absolute /mnt paths",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "plot_from_old_four_plot.py",
+      "line_start": 97,
+      "line_end": 102,
+      "quote": "path = '/mnt/data/binbin/git/ICML_2025_code_review/results/ogb-mag240m'\npaths = [\n    '/mnt/data/binbin/git/ICML_2025_code_review/results/ogb-mag240m',\n    '/mnt/data/binbin/git/ICML_2025_code_review/results/ogbn-papers100M',\n    '/mnt/data/binbin/git/ICML_2025_code_review/results/com-friendster',\n    '/mnt/data/binbin/git/ICML_2025_code_review/results/wiki-en21',\n",
+      "claim": "The script that renders Figure 4 (the headline four-large-graph convergence comparison) loads results from absolute paths under /mnt/data/binbin/git/ICML_2025_code_review/results/ that exist only on an author machine.",
+      "concern": "Figure 4 cannot be regenerated by any user of the repo: the input directories are author-local and not portable, and the same absolute write path is hardcoded in plot_R_with_alpha.py:227 (tables_dir = '/mnt/data/binbin/git/NIPS2025/tables').",
+      "resolution": "Authors: replace the hardcoded /mnt absolute paths with repo-relative paths and ship the corresponding results, so Fig. 4 is reproducible.",
+      "cross_refs": [
+        "results-npz-not-committed"
+      ],
+      "paper_ref": "Figure 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "fig4-dead-mnt-paths",
+      "audit": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput",
+      "audit_md_line": 178
+    },
+    {
+      "id": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput/dataset-stats-m-mismatch",
+      "category": "difference",
+      "topic": "dataset statistics",
+      "title": "Committed edge counts for ogb-mag240m and ogbn-papers100M differ from paper Table 2",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "out/dataset_stats.csv",
+      "csv_row": 8,
+      "quote": "ogb-mag240m,244160499,244160499,True,1727235912,1728364232,False\n",
+      "claim": "graph_statistic.py recomputes n and m via nnz//2 and writes tables/graph_statistic.csv; the committed CSV gives m(ogb-mag240m)=1727235912 and m(ogbn-papers100M)=1614061934, whereas paper Table 2 reports 1728364232 and 1615685450 respectively (n matches for both; 17/19 graphs match exactly).",
+      "concern": "The two largest graphs' edge counts in the committed statistics file disagree with the paper's Table 2, indicating the committed npz/CSV was produced from a slightly different preprocessing of those graphs than the version used in the paper (the procedure itself is valid).",
+      "resolution": "Authors: confirm which preprocessing (self-loop removal / LCC extraction) produced the Table 2 values and align the committed graph_statistic.csv, or note the source of the discrepancy.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_dataset_stats.py",
+      "paper_ref": "Table 2, ogb-mag240m and ogbn-papers100M rows",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "dataset-stats-m-mismatch",
+      "audit": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput",
+      "audit_md_line": 210,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput/readme-generic-template",
+      "category": "difference",
+      "topic": "repository provenance",
+      "title": "README is a generic template describing a repo layout and API that do not exist",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "readme.md",
+      "line_start": 55,
+      "line_end": 65,
+      "quote": "```python\nfrom src.accelerated_ppr import AcceleratedPPR\n\n# Load your graph\nG = load_graph('path/to/graph')\n\n# Initialize the accelerated PPR solver\nsolver = AcceleratedPPR(damping_factor=0.85, epsilon=1e-6)\n\n# Compute PPR vector\nppr_vector = solver.compute_ppr(G, source_node)\n",
+      "claim": "The README documents a src/ / experiments/ / data/ / results/ layout, a `from src.accelerated_ppr import AcceleratedPPR` API, and entrypoints experiments/run_synthetic.py and experiments/run_realworld.py; none of these directories, modules, or scripts exist (the real entrypoint is main.py + ppr_solver.py + plot_*.py).",
+      "concern": "A user following the README cannot run anything, and the mismatch obscures what the actual reproduction commands are (these live only in experiment_setting.md).",
+      "resolution": "Authors: rewrite the README to match the actual file layout and provide the exact reproduction commands and a results table.",
+      "cross_refs": [
+        "no-dependency-spec"
+      ],
+      "paper_ref": "n/a",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "readme-generic-template",
+      "audit": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput",
+      "audit_md_line": 235
+    }
+  ]
+}

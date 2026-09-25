@@ -1,0 +1,7 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/AIR-DISCOVER/E-cubed-AD	[author-cue]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+
+# RE-AUDIT 2026-06-03: real code is on the non-default E-VAD branch (not main)
+https://github.com/AIR-DISCOVER/E-cubed-AD/tree/E-VAD	[author-cue, branch=E-VAD]

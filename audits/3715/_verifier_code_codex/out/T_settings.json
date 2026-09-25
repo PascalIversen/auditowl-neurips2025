@@ -1,0 +1,44 @@
+[
+  {
+    "notebook": "bump_compare_smoothing.ipynb",
+    "cell": 9,
+    "sigma_max": "3.0",
+    "T": 9.0
+  },
+  {
+    "notebook": "circle2d_log_likelihood.ipynb",
+    "cell": 3,
+    "sigma_max": "3.0",
+    "T": 9.0
+  },
+  {
+    "notebook": "circle2d_log_likelihood.ipynb",
+    "cell": 9,
+    "sigma_max": "sigma_max",
+    "T": "varies"
+  },
+  {
+    "notebook": "low_dim_plots.ipynb",
+    "cell": 5,
+    "sigma_max": "2.0",
+    "T": 4.0
+  },
+  {
+    "notebook": "low_dim_plots.ipynb",
+    "cell": 7,
+    "sigma_max": "2.0",
+    "T": 4.0
+  },
+  {
+    "notebook": "mnist_KDE_vs_gaussian.ipynb",
+    "cell": 16,
+    "sigma_max": "3.0",
+    "T": 9.0
+  },
+  {
+    "notebook": "mnist_compare_smoothing.ipynb",
+    "cell": 15,
+    "sigma_max": "3.0",
+    "T": 9.0
+  }
+]

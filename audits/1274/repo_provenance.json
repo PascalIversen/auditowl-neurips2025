@@ -1,0 +1,17 @@
+{
+  "paper_id": "1274_Efficient_Adaptive_Experimentation_with_Noncompliance",
+  "title": "Efficient Adaptive Experimentation with Noncompliance",
+  "repos": [
+    {
+      "name": "CausalML/Adaptive-IV",
+      "role": "core",
+      "evidence": "README title is verbatim 'Efficient Adaptive Experimentation with Noncompliance', advertises the paper's named method AMRIV ('We develop AMRIV, an adaptive, multiply robust estimator...'), and states 'Replication code for ...(https://arxiv.org/abs/2505.17468)' with exact figure commands ('For Figure 2 & 3: python run_synthetic.py', 'For Figure 4: python run_semi_synthetic.py'). models.py defines AMRIVExperiment (the core estimator: variance-aware adaptive instrument assignment + influence-function plug-in) plus the A2IPWExperiment baseline. run_synthetic.py docstring: 'run a synthetic experiment with the AMRIV estimator'. Repo owner CausalML is co-author Nathan Kallus's lab org; git remote = github.com/CausalML/Adaptive-IV, last commit 'NeurIPS Camera Ready'."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo CausalML/Adaptive-IV is unambiguously this paper's own core implementation: exact-title README, the paper's headline method AMRIV implemented in models.py (AMRIVExperiment), arXiv 2505.17468 cross-link, figure-replication scripts for the paper's Figs 2-4, and ownership by co-author Kallus's CausalML org with a 'NeurIPS Camera Ready' commit. EconML (py-why) was correctly NOT cloned and tagged dependency. Source-present classification is justified.",
+  "audit_impact": "None of the audit's findings are false 'no code' / 'missing core' claims. All four kept findings (no requirements.txt/env spec; semi-synthetic DGP draws confounder/treatment/noise from global np.random instead of the seeded rng in data_TA.py; sequential cross-fitting CV=False so disabled in the figure-producing runs; synthetic AMRIV-MS misspecification constant uses OracleMuA mean rather than E[muY]) are reproducibility/faithfulness nitpicks written AGAINST the correct core repo, so they are appropriately targeted. No misclassification or contamination.",
+  "recommended_action": "No change needed. Confirm paper as source-present with core present. Retain the four reproducibility/faithfulness findings as-is; they are correctly scoped to the author's own AMRIV implementation."
+}

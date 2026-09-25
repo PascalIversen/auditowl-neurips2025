@@ -1,0 +1,6 @@
+Dependency-spec files found: NONE
+Model weight files (.pth/.pt/...) in repo: NONE
+README 'python train.py' invocations: 1
+README contains a results/accuracy table: no
+helper.py imports 'torch_dct' (unlisted dep): yes
+Network.py imports 'timm' (unlisted dep): yes

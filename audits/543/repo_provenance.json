@@ -1,0 +1,17 @@
+{
+  "paper_id": "543_ProRL_Prolonged_Reinforcement_Learning_Expands_Reasoning_Bou",
+  "title": "ProRL: Prolonged Reinforcement Learning Expands Reasoning Boundaries in Large Language Models",
+  "repos": [
+    {
+      "name": "open-thought__reasoning-gym",
+      "role": "dependency",
+      "evidence": "README identifies this as 'Reasoning Gym', a community-created Python library of procedural dataset generators for RL training (arXiv 2505.24760, owner: open-thought org — not NVIDIA/ProRL authors). Code_links.txt explicitly tags it '[dependency: the third-party RL task/environment suite [19] used for training/eval, not ProRL's own code]'. No ProRL/Nemotron/prolonged references anywhere in the repo. The paper cites it as reference [19], one of five upstream data sources. Its training/train_grpo.py and eval/ are reasoning-gym's own example tooling, not ProRL's verl pipeline."
+    }
+  ],
+  "core_present": "no",
+  "paper_verdict": "misclassified_missing_code",
+  "confidence": "high",
+  "rationale": "The paper (NVIDIA, all-NVIDIA authors) released only trained model weights (HuggingFace Nemotron-Research-Reasoning-Qwen-1.5B). No ProRL training code was cited or released. The single cloned repo (open-thought__reasoning-gym) is a third-party dependency — a community RL task suite by a different org, cited as reference [19], used as one of five data sources. Its README advertises arXiv 2505.24760 (a different paper), and its owner (open-thought) has no overlap with the NVIDIA ProRL author list. The audit's own code_links.txt correctly labels it as [dependency]. All high-severity 'missing' findings (training-code-unreleased, eval-harness-unreleased) are correctly directed at the absence of ProRL code — but the paper was apparently counted source-present because a dependency was cloned. The paper's true status is missing-code.",
+  "audit_impact": "The audit itself correctly identified that no ProRL code was released and filed all missing-code findings against the paper text (not the dependency). The findings are correct and well-supported. However, if the paper was counted as 'source-present' in the summary statistics because reasoning-gym was cloned, that count is wrong — the paper should be classified as missing-code. The findings themselves need no revision; only the source-present/missing classification in the summary may need correction.",
+  "recommended_action": "Reclassify paper #543 from source-present to missing-code in the summary statistics. All audit findings are valid and should be kept as-is. No re-audit needed."
+}

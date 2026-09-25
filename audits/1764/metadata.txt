@@ -1,0 +1,5 @@
+paper_number: 1764
+title: AlphaZero Neural Scaling and Zipf's Law: a Tale of Board Games and Power Laws
+authors: Oren Neumann, Claudius Gros
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/54c15a3033686e7999aecd2740c5a7c4-Abstract-Conference.html
+category: empirical

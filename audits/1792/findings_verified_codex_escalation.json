@@ -1,0 +1,16 @@
+{
+  "findings": [
+    {
+      "id": "1792_Ada_R1_Hybrid_CoT_via_Bi_Level_Adaptive_Reasoning_Optimizati/instance-pref-shortest-wrong-when-no-correct",
+      "verdict": "keep",
+      "reason": "The first-pass reachability argument assumes a positive per-problem relative length increment, but the script does not enforce that condition, so a negative increment can reverse the gain sign, select a zero-correct group, and reach the branch that emits shortest-wrong-over-longer-wrong pairs.",
+      "changed": "reverted from reject to keep"
+    },
+    {
+      "id": "1792_Ada_R1_Hybrid_CoT_via_Bi_Level_Adaptive_Reasoning_Optimizati/inter-group-pairs-may-be-all-wrong",
+      "verdict": "keep",
+      "reason": "The both-zero filter and accuracy margin guarantee a correct chosen group only when the relative length increment is positive, while an unenforced negative increment flips the gain sign and can leave an all-wrong group on the chosen side of the inter-group Cartesian product.",
+      "changed": "reverted from reject to keep"
+    }
+  ]
+}

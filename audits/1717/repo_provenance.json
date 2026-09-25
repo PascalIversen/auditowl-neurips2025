@@ -1,0 +1,17 @@
+{
+  "paper_id": "1717_Transformer_brain_encoders_explain_human_high_level_visual_r",
+  "title": "Transformer brain encoders explain human high-level visual responses",
+  "repos": [
+    {
+      "name": "Hosseinadeli__transformer_brain_encoder",
+      "role": "core",
+      "evidence": "Exact URL cited in paper (\"Our code is available at https://github.com/Hosseinadeli/transformer_brain_encoder/\"). README title matches paper verbatim and cites arXiv:2505.17329 with author list Adeli/Sun/Minni/Kriegeskorte == paper authors; repo owner 'Hosseinadeli' == first author Hossein Adeli. models/brain_encoder.py implements the TBEn transformer decoder with learnable ROI query embeddings (nn.Embedding(num_queries, hidden_dim)) routing frozen-backbone tokens; datasets/nsd.py = Natural Scene Dataset; main.py trains with --subj/--readout_res 'rois_all' exactly as the paper describes. spatial_feature/linear encoder_arch branches are the in-repo baselines the paper compares against."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "A single repo was cloned and it is the paper's own official implementation: title, arXiv id (2505.17329), author list, and repo owner all match, and it is the exact GitHub URL printed in the paper. The core method (Transformer Brain Encoder: transformer decoder with per-ROI learnable queries doing cross-attention over a frozen vision-transformer backbone to predict NSD fMRI vertices) is fully present in models/brain_encoder.py + models/transformer.py + datasets/nsd.py + main.py. No baseline-only, dependency-only, different-paper, mirror, or stub repo was substituted. Source-present is justified.",
+  "audit_impact": "None on the source-present classification. The audit's 12 findings are completeness/reproducibility critiques written against the correctly-identified core repo (e.g. high: 'No BERT backbone in repo; Table 6 text-modality results untraceable'; high: 'Test fMRI, noise ceiling, saved predictions and weights absent; data_dir hardcoded'; medium: 'No dependency specification'). These concern missing auxiliary baselines (DeepGaze, YOLO, BrainDiVE), missing data/weights, and reproducibility gaps -- NOT a claim that no code exists. They are not invalidated by provenance: the core IS the author code. No finding was written against a wrongly-cloned non-core repo.",
+  "recommended_action": "Keep paper as source-present (core_present=yes). No reclassification needed. The existing completeness/reproducibility findings stand as-is since they correctly target the author's own core repo; reviewers may note these are partial-release gaps rather than absent-code issues."
+}

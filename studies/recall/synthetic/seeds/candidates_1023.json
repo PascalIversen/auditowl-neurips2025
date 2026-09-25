@@ -1,0 +1,235 @@
+{
+  "paper": "1023",
+  "seeds": [
+    {
+      "sid": "S01",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "ROCKETMAN experiment pipeline absent",
+      "description": "Remove the ROCKETMAN dataset implementation, its registration and dataset configuration, and the only sweep that generates the Ring/Lollipop distance grids in Figures 4 and 7. The remaining synthetic pipeline still supports the COPY tasks, but there is no executable dataset or experiment path for the paper's central joint space-time validation.",
+      "expected_reasoning": "A careful auditor first identifies Figures 4 and 7 as the paper's purpose-built empirical validation of joint spatial and temporal over-squashing. Tracing the corresponding run_space_vs_time sweep leads to the rocketman dataset config, the get_dataset_class registry entry, and RocketmanDataset.generate_y, which constructs exact-k-hop, time-offset labels. After the patch, all four links are absent: no registered dataset can construct those labels and no sweep can enumerate temporal distance, spatial distance, graph type, and kernel size. Generic MPTCN code cannot itself produce the reported ROCKETMAN experiment, so this is a complete missing experiment rather than a broken stand-in.",
+      "paper_anchor": "We design a synthetic memory task named ROCKETMAN where, given a graph and a time window of random values, the model must retrieve the average value at time step t \u2212i for nodes exactly k hops away from a target node.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "marshka__spatiotemporal-oversquashing/lib/datasets/__init__.py",
+            "old_string": "from .memory import MemoryTestDataset, RocketmanDataset",
+            "new_string": "from .memory import MemoryTestDataset"
+          },
+          {
+            "action": "replace",
+            "file": "marshka__spatiotemporal-oversquashing/lib/datasets/__init__.py",
+            "old_string": "    elif dataset_name == \"rocketman\":\n        dataset_class = RocketmanDataset\n",
+            "new_string": ""
+          },
+          {
+            "action": "replace",
+            "file": "marshka__spatiotemporal-oversquashing/lib/datasets/memory.py",
+            "old_string": "\n\nclass RocketmanDataset(SyntheticDataset):\n    \"\"\"The Rocketman dataset for testing over-squashing in spatiotemporal models.\n\n    Args:\n        target_node (int, optional): The target node to predict.\n            (default: :obj:`0`)\n        temporal_distance (int, optional): The temporal distance within the input window\n            from which to copy the signal to the output. If negative, counts from the\n            end of the window.\n            (default: :obj:`-1`)\n        signal_generator (str, optional): The type of random signal to generate.\n            Can be either :obj:`\"normal\"`, :obj:`\"uniform\"` or :obj:`\"binary\"`.\n            (default: :obj:`\"uniform\"`)\n    \"\"\"\n    target_node: int = 0\n    temporal_distance: int = -1\n    signal_generator: Literal[\"normal\", \"uniform\", \"binary\"] = \"uniform\"\n\n    def generate_x(self):\n        \"\"\"Generate random data\"\"\"\n        if self.signal_generator == 'normal':\n            x = torch.randn(self.n_samples, self.window, self.n_nodes, self.n_channels,\n                            generator=self._rng)\n        elif self.signal_generator == 'uniform':\n            x = torch.rand(self.n_samples, self.window, self.n_nodes, self.n_channels,\n                           generator=self._rng)\n        else:\n            raise ValueError(f\"Unknown data generator {self.signal_generator}.\")\n\n        return x\n\n    def generate_y(self, x) -> Tensor:\n        \"\"\"Function generating the target signal.\"\"\"\n        # Memorize task: memorize the first `horizon` steps\n        if self.temporal_distance < 0:\n            distance = (self.temporal_distance * -1) - 1\n        else:\n            distance = self.window - self.temporal_distance - 1\n        y = x[:, distance:distance + self.horizon]\n        if self.spatial_order > 0:\n            y = torch_sparse.matmul(self.adj_l, y, reduce='mean')\n        y = y[:, :, self.target_node]\n        return y\n\n    def baseline_metrics(self) -> dict:\n        return {\"mse\": self.y.var().item(),\n                \"mae\": (self.y - self.y.median()).abs().mean().item()}\n",
+            "new_string": ""
+          },
+          {
+            "action": "delete_file",
+            "file": "marshka__spatiotemporal-oversquashing/config/dataset/rocketman.yaml"
+          },
+          {
+            "action": "delete_file",
+            "file": "marshka__spatiotemporal-oversquashing/config/run_space_vs_time.yaml"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S02",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "Graph WaveNet TTS baseline absent",
+      "description": "Remove the implementation, model config, registry branch, and sweep selection for the TTS reorganization of Graph WaveNet. The original interleaved Graph WaveNet baseline remains functional, but nothing in the repository implements or invokes the TTS counterpart reported in Table 1.",
+      "expected_reasoning": "The paper reports separate GWNet (original) and GWNet TTS rows and explains that the TTS version stacks all graph message passing after temporal processing while preserving parameter count. In the released code, those claims map specifically to GraphWaveNetTTSModel, gwnet_tts.yaml, the model registry branch, and the gwnet/gwnet_tts sweep. Removing all of them leaves only the library's original GraphWaveNetModel. Since no remaining class performs the claimed temporal-then-spatial reorganization, the GWNet TTS result has no code backing anywhere in the repository.",
+      "paper_anchor": "Finally, we compare Graph WaveNet (GWNet) [21] \u2013 a widely-used and more complex T&S architecture \u2013 against its TTS counterpart. Results show that our findings remain valid even when more sophisticated architectural components are involved.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "delete_file",
+            "file": "marshka__spatiotemporal-oversquashing/lib/nn/models/gwnet_tts.py"
+          },
+          {
+            "action": "delete_file",
+            "file": "marshka__spatiotemporal-oversquashing/config/model/gwnet_tts.yaml"
+          },
+          {
+            "action": "replace",
+            "file": "marshka__spatiotemporal-oversquashing/lib/nn/models/__init__.py",
+            "old_string": "    elif model_name == 'gwnet_tts':\n        from .gwnet_tts import GraphWaveNetTTSModel\n        model = GraphWaveNetTTSModel\n",
+            "new_string": ""
+          },
+          {
+            "action": "replace",
+            "file": "marshka__spatiotemporal-oversquashing/config/run_realworld_gwnet.yaml",
+            "old_string": "      model: gwnet, gwnet_tts",
+            "new_string": "      model: gwnet"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S03",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "GCN replaces the claimed diffusion convolution",
+      "description": "Keep the public mptcn_diff model path and all experiment sweeps intact, but make that path instantiate a normalized one-hop GCN with matching GCN hyperparameters instead of the bidirectional two-hop diffusion convolution claimed by the paper. This is a fully trainable graph convolution with real gradients, but its propagation operator and receptive field are materially different.",
+      "expected_reasoning": "The paper identifies DCNN as the reference MPTCN message-passing layer and specifies different incoming/outgoing weights up to two hops. An auditor following model.name=mptcn_diff reaches MPTCN_DiffConvModel and DiffConvMixin. After the patch, the class still runs and trains, yet gnn_class is GCNConv and the config supplies symmetric normalized GCN parameters rather than k=2/add_backward diffusion parameters. A GCN aggregates a one-hop normalized neighborhood with shared propagation, so it cannot be the claimed bidirectional diffusion operator; this is a coherent alternative method, not a no-op.",
+      "paper_anchor": "The reference MPTCN architecture used in the experiments features the Diffusion Convolution (DCNN) operator [54] as the MP layer.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "marshka__spatiotemporal-oversquashing/lib/nn/models/gnn_mixin.py",
+            "old_string": "class DiffConvMixin:\n    gnn_class: Module = DiffConv\n    gnn_kwargs: dict = {\n        'k': 2,\n        'root_weight': True,\n        'add_backward': True,\n        'activation': 'relu',\n    }\n\n    def smp(self, h, edge_index, edge_weight=None, l_out=None, l_in=None, **kwargs):\n        return super().smp(h, edge_index, edge_weight, l_out=l_out, l_in=l_in,\n                           cache_support=True, **kwargs)\n",
+            "new_string": "class DiffConvMixin:\n    gnn_class: Module = GCNConv\n    gnn_kwargs: dict = {\n        'add_self_loops': True,\n        'normalize': True,\n        'bias': True,\n        'cached': True,\n    }\n"
+          },
+          {
+            "action": "replace",
+            "file": "marshka__spatiotemporal-oversquashing/config/model/gnn/diffconv.yaml",
+            "old_string": "      root_weight: True\n      k: 2\n      add_backward: True\n      activation: 'gelu'",
+            "new_string": "      add_self_loops: True\n      normalize: True\n      activation: 'gelu'\n      bias: True\n      cached: True"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S04",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "Recurrent temporal processor replaces causal convolutions",
+      "description": "Replace every trainable TemporalConv in MPTCN with a GRU applied independently to each node's sequence, while preserving output shapes, nonlinearities, outer/inner layer counts, row weighting, receptive-field cropping, spatial processing, and gradient flow. The model remains a coherent trainable spatiotemporal predictor, but its temporal dynamics are recurrent rather than the causal convolutional computation analyzed in the paper.",
+      "expected_reasoning": "The paper's MPTCN analysis and complexity results assume that TMP is a stack of causal finite-kernel convolutions. A code reader tracing MPTCN.__init__ and tmp after the patch finds nn.GRU modules and recurrent hidden-state updates over each node's time axis. The tensors are reshaped back to [batch,time,node,feature], so training and spatial message passing remain functional with real gradients. Because a GRU has gated recurrent state and a different dependency/parameterization from a kernel-P TemporalConv, it is a genuine different method that invalidates conclusions attributed to the analyzed convolutional topology.",
+      "paper_anchor": "We begin by analyzing the temporal component in Eq.8, where the TMP operator is implemented as a stack of causal convolutional layers, each with kernel size P as specified in Eq.10.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "marshka__spatiotemporal-oversquashing/lib/nn/models/convolution_disjoint.py",
+            "old_string": "import torch.nn.functional\nfrom torch import nn\nfrom tsl.nn import get_functional_activation\nfrom tsl.nn.layers import TemporalConv",
+            "new_string": "import torch\nfrom torch import nn\nfrom tsl.nn import get_functional_activation"
+          },
+          {
+            "action": "replace",
+            "file": "marshka__spatiotemporal-oversquashing/lib/nn/models/convolution_disjoint.py",
+            "old_string": "                conv = TemporalConv(\n                    input_channels=in_channels,\n                    output_channels=hidden_size,\n                    causal_pad=True,\n                    dilation=d,\n                    channel_last=False,\n                    **tcn_default_kwargs,\n                )\n                self.tmps[i].append(conv)\n                rf += d * (tcn_kwargs[\"kernel_size\"] - 1)",
+            "new_string": "                recurrent = nn.GRU(input_size=in_channels,\n                                   hidden_size=hidden_size,\n                                   batch_first=True)\n                self.tmps[i].append(recurrent)\n                rf += d * (tcn_kwargs[\"kernel_size\"] - 1)"
+          },
+          {
+            "action": "replace",
+            "file": "marshka__spatiotemporal-oversquashing/lib/nn/models/convolution_disjoint.py",
+            "old_string": "    def tmp(self, x, l_out=None, l_in=None):\n        if l_in == 0:\n            if l_out == 0:\n                x = self.check_temporal_rf(x)\n            x = torch.swapaxes(x, -3, -1)  # 'b t n f -> b f n t'\n        if self.row_normalization:\n            # divide input by number of outgoing edges in the convolution\n            diff = x.size(-1) - self._norm_weights.size(-1)\n            w = torch.nn.functional.pad(self._norm_weights, (diff, 0, 0, 0, 0, 0),\n                                        mode='replicate')\n            x = x * w\n        z = self.tmps[l_out][l_in](x)\n        z = self.tcn_activation(z)\n        if l_in == self.n_temporal_layers - 1:\n            z = torch.swapaxes(z, -3, -1)  # 'b f n t -> b t n f'\n            if l_out == self.n_layers - 1 and self.horizon is not None:\n                z = z[:, -1]  # return last time step\n        return z",
+            "new_string": "    def tmp(self, x, l_out=None, l_in=None):\n        if l_in == 0 and l_out == 0:\n            x = self.check_temporal_rf(x)\n        if self.row_normalization:\n            diff = x.size(1) - self._norm_weights.size(-1)\n            w = torch.nn.functional.pad(self._norm_weights, (diff, 0, 0, 0, 0, 0),\n                                        mode='replicate')\n            x = x * w.movedim(-1, 1)\n        batch, steps, nodes, features = x.shape\n        x = x.transpose(1, 2).reshape(batch * nodes, steps, features)\n        z, _ = self.tmps[l_out][l_in](x)\n        z = self.tcn_activation(z)\n        z = z.reshape(batch, nodes, steps, -1).transpose(1, 2)\n        if l_in == self.n_temporal_layers - 1:\n            if l_out == self.n_layers - 1 and self.horizon is not None:\n                z = z[:, -1]\n        return z"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S05",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Synthetic test examples included in training",
+      "description": "Construct the synthetic training subset from the nominal 20,000 training examples plus all 500 held-out test examples, while retaining the same validation and test loaders. COPYFIRST, COPYLAST, and any remaining synthetic task therefore optimize directly on their reported test set.",
+      "expected_reasoning": "The paper specifies disjoint counts of 20,000 training, 320 validation, and 500 testing sequences. In SyntheticDatamodule.setup, n_train still evaluates to 20,000 and test_start to 20,320, but train_idx explicitly concatenates range(0,n_train) with range(test_start,len(dataset)); the latter is exactly the 500 examples also assigned to test_set. The Trainer consumes train_dataloader for gradient updates and later reports test_dataloader metrics on overlapping indices, so the main synthetic evaluation is contaminated by direct training-on-test leakage.",
+      "paper_anchor": "We generate 20,000 sequences for training, 320 for validation, and 500 for testing.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "marshka__spatiotemporal-oversquashing/lib/datasets/syntethic.py",
+            "old_string": "        n_train = len(self.dataset) - n_val - n_test\n        self.train_set = self.make_subset(last=n_train)\n        self.val_set = self.make_subset(first=n_train, last=n_train + n_val)\n        self.test_set = self.make_subset(first=n_train + n_val)",
+            "new_string": "        n_train = len(self.dataset) - n_val - n_test\n        test_start = n_train + n_val\n        train_idx = list(range(n_train)) + list(range(test_start, len(self.dataset)))\n        self.train_set = self.make_subset(subset=train_idx)\n        self.val_set = self.make_subset(first=n_train, last=test_start)\n        self.test_set = self.make_subset(first=test_start)"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S06",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Real-world checkpoint selection reads the test set",
+      "description": "Feed the real-world test loader to Lightning as the validation loader during fitting. Early stopping and save-top-k still monitor val_MAE, but those validation-step metrics are now computed on METR-LA, PEMS-BAY, or EngRAD test windows; the selected checkpoint is then evaluated on the same test loader.",
+      "expected_reasoning": "The paper distinguishes training, validation, and testing folds, and the code configures both EarlyStopping and ModelCheckpoint to select on val_MAE. After the patch, trainer.fit receives dm.test_dataloader() as val_dataloaders. Lightning labels validation_step outputs with the val_ prefix regardless of the loader's source, so both stopping and best-checkpoint selection repeatedly inspect the held-out test fold. The later trainer.test call reuses those same windows, making the headline Table 1 evaluation test-tuned even though gradient batches still come from train_dataloader.",
+      "paper_anchor": "We sequentially split the windows into 70%/10%/20% partitions for training, validation, and testing, respectively.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "marshka__spatiotemporal-oversquashing/experiments/run_realworld.py",
+            "old_string": "        trainer.fit(predictor,\n                    train_dataloaders=dm.train_dataloader(),\n                    val_dataloaders=dm.val_dataloader())",
+            "new_string": "        trainer.fit(predictor,\n                    train_dataloaders=dm.train_dataloader(),\n                    val_dataloaders=dm.test_dataloader())"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S07",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "Regression readout clamps all negative outputs",
+      "description": "Apply ReLU after the shared decoder in the base STGNN readout. Every MPTCN prediction is forced nonnegative even though the paper specifies a linear regression projection and the traffic targets are standardized around zero during optimization, so negative normalized forecasts become impossible and receive zero gradient through the clamp.",
+      "expected_reasoning": "The appendix states that all experiments are regression tasks and that MPTCN uses separate linear projections for forecasting steps. The real-world preprocessing standardizes METR-LA and PEMS-BAY targets using training statistics, which necessarily produces legitimate negative normalized values. Tracing MPTCN.forward to STGNN.readout after the patch reveals torch.relu applied after decoder. That changes the claimed linear, unbounded output into a half-bounded nonlinear head; for negative preactivations the derivative is zero, so the optimizer cannot represent or correct negative normalized forecasts. This centrally invalidates the reported forecasting errors rather than causing a superficial failure.",
+      "paper_anchor": "As the READOUT, we use different linear projections for each time step in the forecasting horizon.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "marshka__spatiotemporal-oversquashing/lib/nn/models/stgnn_base.py",
+            "old_string": "        return self.decoder(h)",
+            "new_string": "        out = self.decoder(h)\n        return torch.relu(out)"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S08",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "COPYFIRST and COPYLAST targets are reversed",
+      "description": "Reverse both endpoint selections in the synthetic memory target generator: the branch intended to copy the first value uses the sequence tail, while the branch intended to copy the last value uses the sequence head. Both tasks remain trainable and produce plausible success curves, but the curves are attached to the opposite temporal dependency from the one claimed.",
+      "expected_reasoning": "The paper defines COPYFIRST as predicting the first sequence element and COPYLAST as predicting the last. The run configuration encodes these as memorize=source versus dump=source, and MemoryTestDataset.generate_y is the authoritative label construction. After the patch, the memorize source branch slices x[:, -horizon:] and the dump source branch slices x[:, :horizon]. With horizon=1, these are exactly the last and first values, respectively. Thus the training loop and metrics run normally on well-formed regression targets, but every conclusion in Figure 3 comparing early-token and recent-token behavior is semantically reversed.",
+      "paper_anchor": "COPYLAST This task is analogous to COPYFIRST, but the model is required to predict the last value in the sequence, i.e., xt.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "marshka__spatiotemporal-oversquashing/lib/datasets/memory.py",
+            "old_string": "        elif self.memorize == 'source':\n            y_mem = x[:, :self.horizon]\n        elif self.memorize == 'neighbors':\n            y_mem = torch_sparse.matmul(self.adj_l, x[:, :self.horizon], reduce='mean')\n        else:\n            raise ValueError(f\"Unknown task {self.memorize}.\")\n\n        # Dump task: dump the last `horizon` steps\n        if self.dump is None:\n            y_dump = 0\n        elif self.dump == 'source':\n            y_dump = x[:, -self.horizon:]",
+            "new_string": "        elif self.memorize == 'source':\n            y_mem = x[:, -self.horizon:]\n        elif self.memorize == 'neighbors':\n            y_mem = torch_sparse.matmul(self.adj_l, x[:, :self.horizon], reduce='mean')\n        else:\n            raise ValueError(f\"Unknown task {self.memorize}.\")\n\n        # Dump task: dump the last `horizon` steps\n        if self.dump is None:\n            y_dump = 0\n        elif self.dump == 'source':\n            y_dump = x[:, :self.horizon]"
+          }
+        ]
+      },
+      "approved": false
+    }
+  ],
+  "_validation_errors": [],
+  "_repo": "marshka__spatiotemporal-oversquashing"
+}

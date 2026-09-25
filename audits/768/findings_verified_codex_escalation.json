@@ -1,0 +1,13 @@
+{
+  "findings": [
+    {
+      "id": "768_A_High_Dimensional_Statistical_Method_for_Optimizing_Transfe/ablation-experiments-code-missing",
+      "verdict": "lowered",
+      "reason": "Tables 6 and 7 require LoRA on ViT-B and Digits with 3Conv, and those paths are absent from the non-vendored project code, but bare ViT-B/16 and ResNet-18/50/101 support are present, confirming the first-pass narrowing.",
+      "changed": "nothing",
+      "severity": "low",
+      "confidence": "low",
+      "status": "question"
+    }
+  ]
+}

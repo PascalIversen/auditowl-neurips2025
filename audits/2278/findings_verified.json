@@ -1,0 +1,193 @@
+{
+  "schema_version": "1",
+  "audit": "2278_VITA_1_5_Towards_GPT_4o_Level_Real_Time_Vision_and_Speech_In",
+  "audit_md": "audits/2278_VITA_1_5_Towards_GPT_4o_Level_Real_Time_Vision_and_Speech_In/audit.md",
+  "generated_at": "2026-05-31T00:00:00.000000+00:00",
+  "findings": [
+    {
+      "id": "2278_VITA_1_5_Towards_GPT_4o_Level_Real_Time_Vision_and_Speech_In/asr-eval-missing",
+      "category": "missing",
+      "topic": "result traceability / ASR evaluation",
+      "title": "Table 4 ASR results have no producing code in the repo",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 289,
+      "line_end": 291,
+      "quote": "Evaluating on these benchmarks:\n```\nCUDA_VISIBLE_DEVICES=0 python run.py --data MMBench_TEST_EN_V11 MMBench_TEST_CN_V11 MMStar MMMU_DEV_VAL MathVista_MINI HallusionBench AI2D_TEST OCRBench MMVet MME --model vita_qwen2 --verbose\n",
+      "claim": "The repo's only documented evaluation harness is VLMEvalKit for image benchmarks (Table 2) and the videomme/ scripts for Video-MME (Table 3); a tree-wide search (excluding the VLMEvalKit fork) finds no code computing WER/CER and no reference to the ASR datasets aishell-1, test-net, test-meeting, dev/test-clean, or dev/test-other used in Table 4.",
+      "concern": "The paper's Table 4 ASR numbers (CER 2.2/8.4/10.0; WER 3.3/7.2/3.4/7.5) — a headline contribution ('outperforms specialized speech models') — cannot be reproduced or traced to any script in the repository.",
+      "resolution": "Authors: please add the ASR inference + WER/CER scoring code and dataset preparation used to produce Table 4, or point to where it lives.",
+      "cross_refs": [
+        "ctc-encoder-training-missing",
+        "stage3-audio-output-training-missing"
+      ],
+      "check_script": "_audit_code/check_artifacts.py",
+      "paper_ref": "Table 4 (Evaluation on ASR Benchmarks)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "asr-eval-missing",
+      "audit": "2278_VITA_1_5_Towards_GPT_4o_Level_Real_Time_Vision_and_Speech_In",
+      "audit_md_line": 55,
+      "verdict": "keep",
+      "reason": "README lines 289-291 match the quote exactly; repo-wide grep confirms no WER/CER computation code or ASR dataset references (aishell, librispeech, test-net, test-meeting) outside the README headline, and artifacts.json corroborates (asr_metric_files=[README.md], asr_dataset_ref_files=[README.md]).",
+      "changed": "nothing"
+    },
+    {
+      "id": "2278_VITA_1_5_Towards_GPT_4o_Level_Real_Time_Vision_and_Speech_In/stage3-audio-output-training-missing",
+      "category": "missing",
+      "topic": "training pipeline / Stage 3 audio output",
+      "title": "Stage 3 codec + NAR/AR speech-decoder training is described but not in the code",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "Stage 3.1 Codec Training. The goal of this step is to train a codec model with a single codebook\n",
+      "claim": "The paper describes Stage 3.1 (train a single-codebook codec) and Stage 3.2 (train NAR+AR speech decoders on text-speech pairs); in the repo the TTS/codec modules in vita/model/vita_tts/ are imported only by the inference demos (web_demo/server.py, web_demo/web_ability_demo.py) — the training entrypoint vita/train/train.py contains no reference to tts/codec/nar/decoder, and no script under script/train/ trains them (_audit_code/out/artifacts.json: stage3_training_shell_scripts=[], train_py_mentions_tts_codec=false).",
+      "concern": "The end-to-end speech-output capability is a core paper claim ('without separate ASR and TTS modules'), but the code to train the codec and the NAR/AR decoders — i.e. to reproduce the speech-generation model — is absent; only inference-time use of pretrained decoders is shipped.",
+      "resolution": "Authors: please add the Stage 3.1 codec training and Stage 3.2 NAR/AR decoder training code, or confirm these were trained off-repo and only weights are released.",
+      "cross_refs": [
+        "asr-eval-missing"
+      ],
+      "check_script": "_audit_code/check_artifacts.py",
+      "paper_ref": "Section 3.3.3 Stage 3 (Audio Output Tuning)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "stage3-audio-output-training-missing",
+      "audit": "2278_VITA_1_5_Towards_GPT_4o_Level_Real_Time_Vision_and_Speech_In",
+      "audit_md_line": 83,
+      "line_start": null,
+      "line_end": null,
+      "verdict": "keep",
+      "reason": "Paper text confirms the quote at line 370 (Stage 3.1 Codec Training); grep of script/train/ and train.py finds zero references to tts/codec/nar/decoder; artifacts.json confirms stage3_training_shell_scripts=[] and train_py_mentions_tts_codec=false.",
+      "changed": "nothing"
+    },
+    {
+      "id": "2278_VITA_1_5_Towards_GPT_4o_Level_Real_Time_Vision_and_Speech_In/ctc-encoder-training-missing",
+      "category": "missing",
+      "topic": "training pipeline / Stage 2.1 audio encoder",
+      "title": "Stage 2.1(a) CTC speech-encoder training is described but absent from the code",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "recognition systems, using a Connectionist Temporal Classification (CTC) loss function [54] to train\n",
+      "claim": "The paper's Stage 2.1 step (a) trains the speech encoder with a CTC loss on 11,000 hours of speech-transcription pairs; in the repo no training loop uses CTCLoss/ctc_loss (_audit_code/out/artifacts.json: ctc_training_loop_files=[]), the only CTC references (vita/model/vita_tts/audioLLM.py) load a frozen CTC module for inference (self.ctc = ctc.eval()), and every audio training script sets --freeze_audio_encoder True while loading a pretrained 'audio-encoder ... 11wh-tunning' checkpoint.",
+      "concern": "The audio encoder that underlies the ASR results is consumed as a pretrained download; the code that trains it (the CTC stage) is not in the repo, so that part of the pipeline is not reproducible.",
+      "resolution": "Authors: please release the CTC speech-encoder training code, or state explicitly that the audio encoder is provided only as pretrained weights.",
+      "cross_refs": [
+        "asr-eval-missing",
+        "stage3-audio-output-training-missing"
+      ],
+      "check_script": "_audit_code/check_artifacts.py",
+      "paper_ref": "Section 3.3.2 Stage 2.1 (a) Speech Encoder Training",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ctc-encoder-training-missing",
+      "audit": "2278_VITA_1_5_Towards_GPT_4o_Level_Real_Time_Vision_and_Speech_In",
+      "audit_md_line": 107,
+      "line_start": null,
+      "line_end": null,
+      "verdict": "keep",
+      "reason": "Paper text confirms the CTC quote at line 345; artifacts.json shows ctc_training_loop_files=[]; all audio training shell scripts set --freeze_audio_encoder True loading a pretrained checkpoint; only occurrence of CTC in the non-VLMEvalKit codebase is inference-only (audioLLM.py).",
+      "changed": "nothing"
+    },
+    {
+      "id": "2278_VITA_1_5_Towards_GPT_4o_Level_Real_Time_Vision_and_Speech_In/mvbench-tempcompass-eval-missing",
+      "category": "missing",
+      "topic": "result traceability / video benchmarks",
+      "title": "No driver for the MVBench and TempCompass columns of Table 3",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "question",
+      "file": "README.md",
+      "line_start": 294,
+      "line_end": 296,
+      "quote": "### Video-MME\n#### Data Preparation\nDownload the [Video-MME dataset](https://github.com/BradyFU/Video-MME) and extract the frames, saving them as images to improve IO efficiency.\n",
+      "claim": "The README's video-evaluation section and the videomme/ scripts cover only Video-MME; Table 3 also reports MVBench and TempCompass for VITA-1.5, but I found no repo script that runs or scores those two benchmarks (they may be intended to run through the vendored VLMEvalKit, which is not documented for VITA video eval).",
+      "concern": "Two of the four Table-3 columns lack a clearly identifiable producing path in the repo, so those numbers are not straightforwardly reproducible.",
+      "resolution": "Authors: please point to the MVBench / TempCompass evaluation entrypoint (VLMEvalKit config or a script), or add it.",
+      "cross_refs": [],
+      "paper_ref": "Table 3 (MVBench, TempCompass columns)",
+      "id_local": "mvbench-tempcompass-eval-missing",
+      "audit": "2278_VITA_1_5_Towards_GPT_4o_Level_Real_Time_Vision_and_Speech_In",
+      "audit_md_line": 131,
+      "verdict": "keep",
+      "reason": "README lines 294-296 match; no MVBench/TempCompass scripts exist outside VLMEvalKit, and the VITA wrapper in VLMEvalKit (vita_qwen2.py) has no video-benchmark handling, confirming these two Table-3 columns have no documented producing path.",
+      "changed": "nothing"
+    },
+    {
+      "id": "2278_VITA_1_5_Towards_GPT_4o_Level_Real_Time_Vision_and_Speech_In/videomme-hardcoded-denominator",
+      "category": "bug",
+      "topic": "evaluation scoring / Video-MME",
+      "title": "Video-MME scorer hardcodes 30 questions per category instead of counting them",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "videomme/parse_answer.py",
+      "line_start": 91,
+      "line_end": 103,
+      "quote": "num_total += 30\ncate_df = pd.read_csv(f\"{result_dir}/{video_type}/{category}.csv\")\ncorrect = 0\nfor (cate_id, cate_row) in cate_df.iterrows():\n\n    gt = cate_row[[\"答案一\", \"答案二\", \"答案三\"]]\n    pred = cate_row[[\"模型回答一\", \"模型回答二\", \"模型回答三\"]]\n\n    pred = pred.apply(extract_characters_regex)\n\n    correct += (gt.to_numpy() == pred.to_numpy()).sum()\n    \nnum_correct += correct\n",
+      "claim": "For each (video_type, category) the script adds a fixed constant 30 to the accuracy denominator (num_total += 30) while the numerator sums correct answers over the actual rows of the CSV (each row contributing up to 3 questions); the denominator never reads len(cate_df) (_audit_code/out/artifacts.json: parse_answer_hardcoded_num_total=true, parse_answer_counts_rows=false).",
+      "concern": "If any (video_type, category) CSV does not contain exactly 10 videos / 30 questions (e.g. dropped/`continue`-skipped videos in yt_video_inference_qa_imgs.py, or NaN answers), the reported Video-MME accuracy in Table 3 is computed against a wrong, fixed denominator rather than the number actually evaluated.",
+      "resolution": "Authors: confirm every category CSV always has exactly 30 questions, or change num_total to count the actual number of (row x 3) questions scored; report whether skipped videos were handled.",
+      "cross_refs": [
+        "mvbench-tempcompass-eval-missing"
+      ],
+      "check_script": "_audit_code/check_artifacts.py",
+      "paper_ref": "Table 3 (Video-MME w/o sub, w/ sub)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "videomme-hardcoded-denominator",
+      "audit": "2278_VITA_1_5_Towards_GPT_4o_Level_Real_Time_Vision_and_Speech_In",
+      "audit_md_line": 156,
+      "verdict": "keep",
+      "reason": "parse_answer.py lines 91-103 match the quote exactly: num_total += 30 is a fixed constant preceding the CSV read, and correct is summed from actual row data; artifacts.json confirms parse_answer_hardcoded_num_total=true and parse_answer_counts_rows=false.",
+      "changed": "nothing"
+    },
+    {
+      "id": "2278_VITA_1_5_Towards_GPT_4o_Level_Real_Time_Vision_and_Speech_In/videomme-sampling-decoding",
+      "category": "difference",
+      "topic": "evaluation / decoding settings",
+      "title": "Video-MME inference uses sampling (do_sample=True) with max 10 new tokens",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "videomme/yt_video_inference_qa_imgs.py",
+      "line_start": 291,
+      "line_end": 307,
+      "quote": "with torch.inference_mode():\n    output_ids = model.generate(\n        input_ids,\n        images=video_frames.half().cuda(),\n        audios=audios,\n        sf_masks=sf_masks,\n        do_sample=True,\n        temperature=args.temperature,\n        top_p=args.top_p,\n        num_beams=args.num_beams,\n        output_scores=True,\n        return_dict_in_generate=True,\n        max_new_tokens=10,\n        use_cache=True,\n        stopping_criteria=[stopping_criteria],\n        shared_v_pid_stride=None#2#16#8#4#1#None,\n    )\n",
+      "claim": "The Video-MME multiple-choice inference uses stochastic decoding (do_sample=True) at temperature 0.01, whereas the image-benchmark wrapper (VLMEvalKit/vlmeval/vlm/vita/vita_qwen2.py:205) uses deterministic decoding (do_sample=False); the paper does not specify the video decoding settings.",
+      "concern": "Sampling (even at low temperature) makes the Video-MME numbers non-deterministic and not exactly reproducible; the two evaluation paths use inconsistent decoding, undocumented in the paper.",
+      "resolution": "Authors: confirm the decoding configuration used for the reported Video-MME results and whether sampling was intentional; consider greedy decoding for a fixed-answer MCQ task.",
+      "cross_refs": [
+        "videomme-hardcoded-denominator"
+      ],
+      "paper_ref": "Table 3",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "videomme-sampling-decoding",
+      "audit": "2278_VITA_1_5_Towards_GPT_4o_Level_Real_Time_Vision_and_Speech_In",
+      "audit_md_line": 196,
+      "verdict": "keep",
+      "reason": "yt_video_inference_qa_imgs.py lines 291-307 match the quote exactly with do_sample=True; vita_qwen2.py line 205 confirms do_sample=False for the image path, corroborating the inconsistency claim.",
+      "changed": "nothing"
+    }
+  ]
+}

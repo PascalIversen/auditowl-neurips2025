@@ -1,0 +1,24 @@
+=== Python files in repo ===
+  config.py
+  demo.py
+  demo_batch.py
+  generation.py
+  prompts.py
+  sam.py
+  sam_utils.py
+  similarity.py
+total .py files: 8
+
+=== Eval/metric/benchmark token hits across .py source ===
+  iou: ['sam.py:130', 'sam.py:147', 'sam.py:33', 'sam_utils.py:21']
+
+=== README disclaimer / dataset lines (verbatim) ===
+  README.md:13:   <i>This repository contains a re-implementation of the codebase. The initial version is subject to a protected license that restricts redistribution. The prompts provided in this repository may not be the original version, and optimal performance may require further iterative refinement and tuning.</i>
+  README.md:133: ## 📊 ABO-ARES Dataset
+  README.md:134: We will try to release ABO-ARES dataset ASAP.
+
+=== Driver entrypoints (if __main__) ===
+  demo.py has __main__
+  demo_batch.py has __main__
+  sam.py has __main__
+

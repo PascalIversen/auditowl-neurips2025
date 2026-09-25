@@ -1,0 +1,1026 @@
+{
+  "description": "Robustness-of-the-metric check: the strict anchor matcher requires two findings to cite the same file to count as the same defect, so a defect legitimately cited from a different location in another run gets split into a distinct 'flaky' issue. Each paper's findings were independently re-clustered by an adversarial LLM pass that merges same-defect findings across category/file/line/wording (conservative). Strict = analyze.py anchor matcher (K=109, over-splits by citation path, not defect identity); merged = LLM by-defect (K=80), the reliability estimate reported throughout. This confirms the anchor matcher is unsuitable as a reliability measure, not a valid alternative bound on it.",
+  "method": "LLM re-clustering (workflow recluster-robustness), partitions validated complete+exact against /tmp/recluster inputs",
+  "pooled": {
+    "strict": {
+      "K": 109,
+      "stable": 12,
+      "flaky": 81,
+      "mean_jaccard": 0.33,
+      "mean_alpha": 0.24
+    },
+    "merged": {
+      "K": 80,
+      "stable": 18,
+      "flaky": 39,
+      "mean_jaccard": 0.463,
+      "mean_alpha": 0.32
+    }
+  },
+  "papers": [
+    {
+      "paper": "1829",
+      "n_runs": 10,
+      "strict": {
+        "K": 28,
+        "stable_core_ge80": 0,
+        "flaky_le30": 24,
+        "jaccard_mean": 0.136,
+        "alpha": 0.031
+      },
+      "merged_by_defect": {
+        "K": 18,
+        "stable_core_ge80": 1,
+        "flaky_le30": 11,
+        "jaccard_mean": 0.256,
+        "alpha": 0.146
+      },
+      "clusters": [
+        {
+          "label": "Headline long-term benchmark datasets (CSV/NPZ) and their precomputed temporal Q-matrices are not shipped in the repo (only weather/short-term data present); abstract/README claim datasets are available",
+          "detection": 9,
+          "n_findings": 11,
+          "runs": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "requirements.txt pins no versions (all dependencies floating; no Python/CUDA/torch spec)",
+          "detection": 6,
+          "n_findings": 6,
+          "runs": [
+            1,
+            2,
+            3,
+            4,
+            6,
+            7
+          ]
+        },
+        {
+          "label": "No code aggregates the reported std-dev / 99% CI / Student's t-test over seeds; seed hardcoded to 2023 with no usable multi-seed harness",
+          "detection": 5,
+          "n_findings": 5,
+          "runs": [
+            2,
+            3,
+            5,
+            6,
+            8
+          ]
+        },
+        {
+          "label": "run.py driver selects/reports the 'global best' as the minimum test-set MSE+MAE across itr seeds, lamda1 grid, and test_batch_size (best-on-test selection)",
+          "detection": 5,
+          "n_findings": 5,
+          "runs": [
+            2,
+            4,
+            6,
+            8,
+            10
+          ]
+        },
+        {
+          "label": "requirements.txt lists wrong PyPI name 'pywt' (should be PyWavelets); pip install fails on the wavelet-ablation import path",
+          "detection": 4,
+          "n_findings": 4,
+          "runs": [
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "No baseline model code or scripts for the OrthoTrans/NormLin plug-in experiments (Tables 5, 9, 24); only OLinear variants in model/",
+          "detection": 4,
+          "n_findings": 4,
+          "runs": [
+            1,
+            4,
+            5,
+            9
+          ]
+        },
+        {
+          "label": "exp_forecast.py test() reports the intermediate decoder stage with the lowest test-set MSE+MAE (best-stage-on-test; dead/gated off for the shipped single-tensor OLinear models)",
+          "detection": 4,
+          "n_findings": 4,
+          "runs": [
+            6,
+            7,
+            8,
+            10
+          ]
+        },
+        {
+          "label": "OLinear-C per-dataset channel-correlation matrices (*_COV_channel_*.npy) missing for all datasets except weather",
+          "detection": 2,
+          "n_findings": 2,
+          "runs": [
+            3,
+            9
+          ]
+        },
+        {
+          "label": "OrthoTrans/channel Q-matrices computed from the training portion only (no look-ahead leakage) \u2014 verified, no concern",
+          "detection": 2,
+          "n_findings": 2,
+          "runs": [
+            7,
+            8
+          ]
+        },
+        {
+          "label": "Basis-ablation scripts pass model names (OLinear_wavelet_concat/OLinear_wavelet2_concat) absent from the model registry (KeyError)",
+          "detection": 2,
+          "n_findings": 2,
+          "runs": [
+            5,
+            7
+          ]
+        },
+        {
+          "label": "OrthoTrans forward pass adds learnable additive biases delta1/delta2 that are absent from the paper's transform equations",
+          "detection": 2,
+          "n_findings": 2,
+          "runs": [
+            6,
+            9
+          ]
+        },
+        {
+          "label": "Early-stopping patience mismatch: paper states 10, but shipped scripts use 5/8/10 depending on dataset",
+          "detection": 2,
+          "n_findings": 2,
+          "runs": [
+            5,
+            10
+          ]
+        },
+        {
+          "label": "patoolib and tqdm imported (via m4.py) but absent from requirements.txt",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            5
+          ]
+        },
+        {
+          "label": "Generate_corrmat.ipynb has hardcoded Windows/absolute paths and processes one hardcoded file per run; not parameterized, will not run as-is",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            2
+          ]
+        },
+        {
+          "label": "Q/correlation-matrix notebook hardcodes train_ratio=0.7 for the channel-correlation slice, inconsistent with the 0.6 train split used by ETT/PEMS in data_loader",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            1
+          ]
+        },
+        {
+          "label": "run.py references Exp_Short_Term_Forecast / Exp_Long_Term_Forecast_Partial / Exp_Imputation that are never imported (NameError if those branches are invoked)",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            3
+          ]
+        },
+        {
+          "label": "OLinear_C uses `assert ValueError(...)` which never raises when the channel-corr file is missing, leaving channel_corr_mat unset",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            9
+          ]
+        },
+        {
+          "label": "Test loss is computed and printed every training epoch (checkpoint selection still uses validation loss; benign but distinct observation)",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "paper": "1333",
+      "n_runs": 10,
+      "strict": {
+        "K": 20,
+        "stable_core_ge80": 5,
+        "flaky_le30": 13,
+        "jaccard_mean": 0.439,
+        "alpha": 0.358
+      },
+      "merged_by_defect": {
+        "K": 15,
+        "stable_core_ge80": 5,
+        "flaky_le30": 7,
+        "jaccard_mean": 0.566,
+        "alpha": 0.423
+      },
+      "clusters": [
+        {
+          "label": "Stage-2 latent restoration network R_theta (and its Eq.7 L_Res training phase) is absent; Stage-2 just auto-encodes the degraded input through the LoRA-VAE",
+          "detection": 10,
+          "n_findings": 13,
+          "runs": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "No evaluation/inference/test script and val.metrics disabled in configs, so no reported PSNR/SSIM/LPIPS/FID/etc. number is reproducible",
+          "detection": 10,
+          "n_findings": 10,
+          "runs": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "Stage-2 config requests vae_config.type 'RAVAE', which is never registered (only RAVAE_EQ) -> ARCH_REGISTRY.get raises KeyError at build",
+          "detection": 10,
+          "n_findings": 10,
+          "runs": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "No dependency specification (requirements.txt/setup.py/environment.yml/pyproject.toml) despite non-trivial third-party imports",
+          "detection": 9,
+          "n_findings": 9,
+          "runs": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "label": "Training experiments_root hardcoded to author cluster path /fs-computility/ai4sData/liuyidi/model instead of root_path; training cannot write off the authors' machine",
+          "detection": 8,
+          "n_findings": 8,
+          "runs": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "label": "Pretrained Stage-1 VAE / DINOv2 weights and benchmark UHD datasets are not shipped and have no fetch script/URL; configs point at non-existent ./weights and ./datasets paths",
+          "detection": 7,
+          "n_findings": 8,
+          "runs": [
+            1,
+            3,
+            4,
+            5,
+            6,
+            7,
+            9
+          ]
+        },
+        {
+          "label": "README is a 16-byte one-line title stub: no install/run commands, no results table, no data/weights instructions",
+          "detection": 5,
+          "n_findings": 5,
+          "runs": [
+            2,
+            6,
+            7,
+            8,
+            10
+          ]
+        },
+        {
+          "label": "Hardcoded author-machine absolute paths injected via sys.path.append in core modules (train.py, LHVAE_arch.py, attention.py, encoder_3.py)",
+          "detection": 4,
+          "n_findings": 4,
+          "runs": [
+            3,
+            4,
+            6,
+            10
+          ]
+        },
+        {
+          "label": "Decoder (PHF-LoRA) step adds an HF-fidelity L1 term to the GAN loss, whereas paper Eq. 9 (L_HFGAN) is a pure adversarial loss",
+          "detection": 3,
+          "n_findings": 3,
+          "runs": [
+            1,
+            7,
+            10
+          ]
+        },
+        {
+          "label": "Stage-1 equivariance loss L_Eqv uses the PDPS-perturbed-input latent, not the clean-image latent z_clean as in Eq. 5",
+          "detection": 3,
+          "n_findings": 3,
+          "runs": [
+            4,
+            7,
+            8
+          ]
+        },
+        {
+          "label": "Stage-1 LInv/DINOv2 loaded from a local weight path (empty/missing by default) and via torch.hub network call, undocumented",
+          "detection": 2,
+          "n_findings": 2,
+          "runs": [
+            3,
+            8
+          ]
+        },
+        {
+          "label": "Table 5(c) latent-restoration backbones (Restormer/NAFNet/SFHformer) have no standalone code and are never registered/imported",
+          "detection": 2,
+          "n_findings": 2,
+          "runs": [
+            8,
+            10
+          ]
+        },
+        {
+          "label": "Both encoder and decoder LoRA branches stay active at alpha=0.5 in both FHF and PHF steps; paper says the non-trained side uses frozen base params",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            1
+          ]
+        },
+        {
+          "label": "Stage-1 reconstruction loss encodes the PDPS-perturbed image rather than I_clean as written in Eq. 2 (clean->clean reconstruction)",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            4
+          ]
+        },
+        {
+          "label": "PDPS severity and interpolation (beta) schedules implemented as plain linear ramps in iteration",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "paper": "2657",
+      "n_runs": 10,
+      "strict": {
+        "K": 22,
+        "stable_core_ge80": 2,
+        "flaky_le30": 17,
+        "jaccard_mean": 0.317,
+        "alpha": 0.239
+      },
+      "merged_by_defect": {
+        "K": 18,
+        "stable_core_ge80": 4,
+        "flaky_le30": 9,
+        "jaccard_mean": 0.429,
+        "alpha": 0.285
+      },
+      "clusters": [
+        {
+          "label": "Unsupervised CSM epoch-selection procedure absent; per-dataset epochs (1-5000, matching Table 5) only hardcoded as an if/elif lookup",
+          "detection": 10,
+          "n_findings": 10,
+          "runs": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "No code for the explainability contribution (Fig. 4 MNIST attribution, Table 3 ExactMatch/Jaccard, App. D.4.2)",
+          "detection": 10,
+          "n_findings": 10,
+          "runs": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "Friedman + Nemenyi significance tests and critical-difference diagrams (App. D.5, Figs 21-22) have no code",
+          "detection": 8,
+          "n_findings": 8,
+          "runs": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            10
+          ]
+        },
+        {
+          "label": "TCCM gets per-dataset tuned epochs (1-5000) while all baselines run at library/default configs (asymmetric tuning)",
+          "detection": 8,
+          "n_findings": 8,
+          "runs": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            9
+          ]
+        },
+        {
+          "label": "run_knn.sh invokes nonexistent Full_experiments.py (actual file is FullExperiments.py); fails immediately",
+          "detection": 6,
+          "n_findings": 6,
+          "runs": [
+            2,
+            4,
+            6,
+            7,
+            8,
+            10
+          ]
+        },
+        {
+          "label": "AggregateResults.py writes only CSVs and produces no plots; README promises Rank_ROC.pdf / Rank_PR.pdf (Fig. 2 box plots) it never emits",
+          "detection": 5,
+          "n_findings": 5,
+          "runs": [
+            2,
+            3,
+            5,
+            7,
+            9
+          ]
+        },
+        {
+          "label": "requirements.txt pins torch==1.13.1 but paper states PyTorch 2.0",
+          "detection": 4,
+          "n_findings": 4,
+          "runs": [
+            1,
+            3,
+            4,
+            6
+          ]
+        },
+        {
+          "label": "Cannot verify the per-dataset CSM epoch selection avoided the labeled test split; no validation split exists in the repo",
+          "detection": 4,
+          "n_findings": 4,
+          "runs": [
+            2,
+            5,
+            6,
+            10
+          ]
+        },
+        {
+          "label": "Appendix ablation/sensitivity figures (Fig. 5 epoch-sensitivity, Fig. 16 normalization, Fig. 17 interpolation, AE+TimeEmbedding) have no producing code",
+          "detection": 4,
+          "n_findings": 4,
+          "runs": [
+            4,
+            6,
+            7,
+            8
+          ]
+        },
+        {
+          "label": "run_contamination.sh loops model index 0..10 (11 values) but only 10 models exist; index 10 -> IndexError",
+          "detection": 3,
+          "n_findings": 3,
+          "runs": [
+            4,
+            6,
+            7
+          ]
+        },
+        {
+          "label": "RobustnessStudy plot reads false-negative data for the false-positive figure and vice versa (FP/FN labels/files swapped)",
+          "detection": 3,
+          "n_findings": 3,
+          "runs": [
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "label": "Force-inductive bash loop {45..50} runs only 6 of the 7 *_semisup models, omitting the 7th (KNN_semisup/INNE_semisup index 51)",
+          "detection": 3,
+          "n_findings": 3,
+          "runs": [
+            5,
+            7,
+            10
+          ]
+        },
+        {
+          "label": "Theory-validation figures (Fig. 1 2D contraction field, Fig. 6 per-dimension score boxplots) have no producing code",
+          "detection": 2,
+          "n_findings": 2,
+          "runs": [
+            3,
+            10
+          ]
+        },
+        {
+          "label": "AggregateResults.py defaults to --semi_only=True (inductive variants), not the transductive main-paper Figure 2 setting",
+          "detection": 2,
+          "n_findings": 2,
+          "runs": [
+            6,
+            10
+          ]
+        },
+        {
+          "label": "Headline inference-speedup ratios (1573x/85.9x/4864x) and Fig. 3 runtime plot have no computing script",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            7
+          ]
+        },
+        {
+          "label": "determine_FMAD_hyperparameters has no else branch; unknown dataset name triggers UnboundLocalError",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            9
+          ]
+        },
+        {
+          "label": "GOAD baseline overridden with n_epoch=25, contradicting the 'default configurations' claim",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            9
+          ]
+        },
+        {
+          "label": "Failed/timed-out/OOM runs imputed AUC=PR=-1 and ranked worst rather than excluded",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "paper": "2578",
+      "n_runs": 10,
+      "strict": {
+        "K": 14,
+        "stable_core_ge80": 4,
+        "flaky_le30": 7,
+        "jaccard_mean": 0.523,
+        "alpha": 0.391
+      },
+      "merged_by_defect": {
+        "K": 11,
+        "stable_core_ge80": 5,
+        "flaky_le30": 4,
+        "jaccard_mean": 0.632,
+        "alpha": 0.416
+      },
+      "clusters": [
+        {
+          "label": "HQ-VSR video processing pipeline (Sec 3.3 metadata/scene/quality/motion filtering, Eq.8, Table 1d ablation) not implemented in repo",
+          "detection": 10,
+          "n_findings": 10,
+          "runs": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "inference.sh hardcodes --gt datasets/test/UDM10/GT for all datasets (SPMCS/YouHQ40/RealVSR/MVSR4x/VideoLQ scored against wrong GT)",
+          "detection": 10,
+          "n_findings": 10,
+          "runs": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "eval_dover.py off-by-one: per-sample DOVER scores cyclically shifted via dover_results[i-1]",
+          "detection": 10,
+          "n_findings": 10,
+          "runs": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "eval_dover.py imports external DOVER package (and related VQA metric trees) that is not vendored or in requirements",
+          "detection": 9,
+          "n_findings": 9,
+          "runs": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "label": "eval_ewarp.py non-runnable: chdir into nonexistent finetune/scripts/RAFT and import of nonexistent ewarp module",
+          "detection": 8,
+          "n_findings": 8,
+          "runs": [
+            1,
+            3,
+            4,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "No script computes the FasterVQA metric reported across Table 2 / Fig. 1",
+          "detection": 7,
+          "n_findings": 7,
+          "runs": [
+            1,
+            4,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "requirements.txt omits/unpins version-sensitive core deps (diffusers, pyiqa, safetensors, etc.) installed via ad-hoc README pip lines",
+          "detection": 4,
+          "n_findings": 4,
+          "runs": [
+            2,
+            4,
+            6,
+            10
+          ]
+        },
+        {
+          "label": "No timing/benchmark script measures the Table 3 / Fig. 1 running times (28x speed-up claim)",
+          "detection": 3,
+          "n_findings": 3,
+          "runs": [
+            2,
+            6,
+            7
+          ]
+        },
+        {
+          "label": "UDM10 used simultaneously as training-time validation set and reported Table 1 ablation / Table 2 test set",
+          "detection": 2,
+          "n_findings": 2,
+          "runs": [
+            3,
+            7
+          ]
+        },
+        {
+          "label": "RealVSR/MVSR4x run with upscale=1 (vs paper's x4) and padding removal hardcodes *4, over-cropping those runs",
+          "detection": 2,
+          "n_findings": 2,
+          "runs": [
+            3,
+            4
+          ]
+        },
+        {
+          "label": "PSNR/SSIM computed on full-frame RGB by default rather than Y-channel; paper does not specify convention",
+          "detection": 2,
+          "n_findings": 2,
+          "runs": [
+            5,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "paper": "2371",
+      "n_runs": 10,
+      "strict": {
+        "K": 25,
+        "stable_core_ge80": 1,
+        "flaky_le30": 20,
+        "jaccard_mean": 0.233,
+        "alpha": 0.183
+      },
+      "merged_by_defect": {
+        "K": 18,
+        "stable_core_ge80": 3,
+        "flaky_le30": 8,
+        "jaccard_mean": 0.432,
+        "alpha": 0.33
+      },
+      "clusters": [
+        {
+          "label": "No similarity-metric code (MDD/ACD/SD/KD/ED/DTW/SHR) for Tables 1, D.3-D.14; some runs bundle baselines+utility into the same finding",
+          "detection": 10,
+          "n_findings": 10,
+          "runs": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "Only 2 of the ~12-14 benchmark datasets shipped; no fetch/preprocess scripts for the rest",
+          "detection": 10,
+          "n_findings": 10,
+          "runs": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "trainer.py dataset.shape(1) calls a tuple - TypeError on numpy-array training branch (should be shape[1])",
+          "detection": 9,
+          "n_findings": 9,
+          "runs": [
+            1,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "No baseline-model code/config (TimeVAE/TimeVQVAE/RtsGAN/SdeGAN/LS4) in the repo",
+          "detection": 6,
+          "n_findings": 6,
+          "runs": [
+            3,
+            4,
+            5,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "Section 6 text-conditioned generation / kNN accuracy 0.81 (Fig. 2) not wired in / not reproducible",
+          "detection": 6,
+          "n_findings": 6,
+          "runs": [
+            2,
+            3,
+            5,
+            6,
+            8,
+            9
+          ]
+        },
+        {
+          "label": "No TTM downstream-forecasting utility pipeline (RMSE/MASE/WQL) for Table 2",
+          "detection": 5,
+          "n_findings": 5,
+          "runs": [
+            3,
+            5,
+            6,
+            8,
+            10
+          ]
+        },
+        {
+          "label": "Generation requires a fine-tuned vLLM checkpoint that is not shipped and has no obtaining/training instructions",
+          "detection": 4,
+          "n_findings": 4,
+          "runs": [
+            1,
+            2,
+            8,
+            10
+          ]
+        },
+        {
+          "label": "Generation while-loop OR-guard makes min_outputs_to_generate clause dead/inert",
+          "detection": 4,
+          "n_findings": 4,
+          "runs": [
+            1,
+            3,
+            6,
+            7
+          ]
+        },
+        {
+          "label": "embedding_dim='auto' computed once for channel 0 and frozen/reused for all later channels (loop-variable mutation bug)",
+          "detection": 4,
+          "n_findings": 4,
+          "runs": [
+            2,
+            7,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "Shipped config uses 100 training epochs; paper states a maximum of 200 (r07#5 also bundles the auto-vs-k=3 difference)",
+          "detection": 4,
+          "n_findings": 4,
+          "runs": [
+            1,
+            4,
+            7,
+            8
+          ]
+        },
+        {
+          "label": "Shipped task configs default embedding_dim='auto' (variance 0.7) instead of the paper's fixed k=3",
+          "detection": 3,
+          "n_findings": 3,
+          "runs": [
+            4,
+            5,
+            9
+          ]
+        },
+        {
+          "label": "NeurIPS availability statement promises reproduction scripts for method and baselines that are absent",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            1
+          ]
+        },
+        {
+          "label": "Default inference temperature 1.3 not stated in the paper's parameter list",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            3
+          ]
+        },
+        {
+          "label": "Early-stopping validation windows overlap (~54%) the training windows",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            1
+          ]
+        },
+        {
+          "label": "StandardScaler fit on all windows before the train/validation split (leakage)",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            1
+          ]
+        },
+        {
+          "label": "Norm/IQR filter uses plain L2 norm; appendix A.3 describes squared L2-norm",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            5
+          ]
+        },
+        {
+          "label": "No multi-seed driver despite results 'averaged across 5 seeds' (fixed seed 42, FastICA random_state=0)",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            9
+          ]
+        },
+        {
+          "label": "No driver script reproduces ablation Tables D.1/D.2/D.5/D.8/D.9 (variance, rejection, timing, LLM sweep)",
+          "detection": 1,
+          "n_findings": 1,
+          "runs": [
+            6
+          ]
+        }
+      ]
+    }
+  ]
+}

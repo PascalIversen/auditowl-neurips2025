@@ -1,0 +1,10 @@
+{
+  "NUS-HPC-AI-Lab__Recurrent-Parameter-Generation": {
+    "repo": "https://github.com/NUS-HPC-AI-Lab/Recurrent-Parameter-Generation",
+    "clone_status": "cached",
+    "size_mb": 1.3,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

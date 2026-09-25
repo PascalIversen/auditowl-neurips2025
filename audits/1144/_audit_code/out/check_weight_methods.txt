@@ -1,0 +1,7 @@
+linear     -> OK (0.5)
+sqrt       -> NameError: name 'math' is not defined
+squared    -> OK (0.25)
+equal      -> OK (0.3333333333333333)
+arccos     -> NameError: name 'math' is not defined
+cosine     -> NameError: name 'math' is not defined
+adaptive   -> OK (1.0)

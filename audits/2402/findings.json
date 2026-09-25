@@ -1,0 +1,266 @@
+{
+  "schema_version": "1",
+  "audit": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_",
+  "audit_md": "audits/2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_/audit.md",
+  "generated_at": "2026-05-29T22:27:18.024816+00:00",
+  "findings": [
+    {
+      "id": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_/comparison-table-metrics-not-computed",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No code computes the metrics in any comparison table (Tables 1-9)",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "combined_t2s_eval.py",
+      "line_start": 451,
+      "line_end": 593,
+      "quote": "# Dataset evaluation mode\nelse:\n    # Load datasets for batch processing\n    dataloaders = create_dataset_dataloader(t2s_cfg, t2s_tokenizer)\n    t2s_model, *dataloaders = accelerator.prepare(t2s_model, *dataloaders)\n",
+      "claim": "The four eval scripts (combined_t2s_eval.py, eval_compress_vq_video.py, eval_compress_video_from_origin.py, eval_multihead_t2vqpgpt.py) only generate videos / pose tokens and save them to disk; none ingests generated + ground-truth videos and computes FID, CLIP-FID, FVD, IDS, PSNR, SSIM, LPIPS, Hand-SSIM, BLEU, ROUGE, or COMET for the paper's comparison tables. The repo-wide grep in _audit_code/out/metric_coverage.csv finds zero files computing CLIP-FID, IDS, PSNR, LPIPS, Hand-SSIM, BLEU, ROUGE, or COMET.",
+      "concern": "Every headline quantitative claim in Tables 1-9 (the entire empirical case for state-of-the-art performance) is untraceable to code, so the reported numbers cannot be reproduced or verified.",
+      "resolution": "Authors: please provide the evaluation driver(s) that load generated and reference videos/poses and emit each table's metrics (FID/CLIP-FID/FVD/IDS, PSNR/SSIM/LPIPS/Hand-SSIM, and the back-translation BLEU/ROUGE/COMET).",
+      "cross_refs": [
+        "backtranslation-slt-model-missing",
+        "fid-calculator-never-invoked",
+        "fvd-ssim-only-in-training-val"
+      ],
+      "check_script": "_audit_code/check_metric_coverage.py",
+      "paper_ref": "Tables 1-9",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "comparison-table-metrics-not-computed",
+      "audit": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_",
+      "audit_md_line": 68
+    },
+    {
+      "id": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_/backtranslation-slt-model-missing",
+      "category": "missing",
+      "topic": "evaluation / back-translation",
+      "title": "Back-translation SLT model and BLEU/ROUGE/COMET pipeline absent",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "\"To evaluate the semantic consistency of the generated sign language videos, we follow\nProTran [58] to train two SLP models [6] to translate sign language videos (i.e., the\nvideo back-translation model) and poses (i.e., the pose back-translation model) into\ntexts, respectively.\"\n",
+      "claim": "The paper's Appendix C describes training a video and a pose back-translation (SLT) model used to produce all BLEU/ROUGE/COMET numbers in Tables 1, 2, and 7, but the repo contains no SLT model definition, no training script for it, no inference/back-translation script, and no BLEU/ROUGE/COMET computation (confirmed by repo-wide grep, _audit_code/out/metric_coverage.csv).",
+      "concern": "The semantic-fidelity claims (a core contribution) rest entirely on back-translation metrics that no released code can produce, so the semantic comparison is unreproducible.",
+      "resolution": "Authors: please release the back-translation SLT models (or checkpoints) and the script that computes BLEU/ROUGE/COMET from generated videos/poses.",
+      "cross_refs": [
+        "comparison-table-metrics-not-computed"
+      ],
+      "check_script": "_audit_code/check_metric_coverage.py",
+      "paper_ref": "Appendix C; Tables 1, 2, 7",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "backtranslation-slt-model-missing",
+      "audit": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_",
+      "audit_md_line": 98,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_/fid-calculator-never-invoked",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "FID calculator present but never called by any live code path",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "train_stage1_multi_cond.py",
+      "line_start": 27,
+      "line_end": 28,
+      "quote": "# from metrics.calculate_fid import calculate_fid as calc_fid  # 添加 FID 计算导入\nfrom metrics.calculate_ssim import calculate_ssim as calc_ssim  # 添加 SSIM 计算导入\n",
+      "claim": "metrics/calculate_fid.py defines calculate_fid, but its only import in the repo (train_stage1_multi_cond.py:27) is commented out; no other file calls calculate_fid. Thus the FID/CLIP-FID/Table 9 FID numbers have no producing code.",
+      "concern": "The FID column in Table 3 and Table 9 cannot be reproduced because the FID function is dead code (never invoked).",
+      "resolution": "Authors: point to the script that actually invokes FID computation over generated vs. ground-truth frames, or confirm FID was computed off-repo.",
+      "cross_refs": [
+        "comparison-table-metrics-not-computed"
+      ],
+      "check_script": "_audit_code/check_metric_coverage.py",
+      "paper_ref": "Table 3 (FID), Table 9",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "fid-calculator-never-invoked",
+      "audit": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_",
+      "audit_md_line": 125
+    },
+    {
+      "id": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_/fvd-ssim-only-in-training-val",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "FVD/SSIM computed only inside training validation, no table driver",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "train_stage2_multi_cond.py",
+      "line_start": 386,
+      "line_end": 394,
+      "quote": "fvd_result = calc_fvd(\n    fvd_all_real,  # 真实视频 [N, T, C, H, W]\n    fvd_all_generated,  # 生成视频 [N, T, C, H, W]\n",
+      "claim": "calculate_fvd is invoked only inside the validation/checkpoint-selection loop of train_stage2_multi_cond.py (and calculate_ssim only inside train_stage1_multi_cond.py validation). There is no standalone evaluation script that computes the FVD/SSIM values reported in the cross-method comparison Tables 3 and 4.",
+      "concern": "The FVD and SSIM table numbers (and the FVD-based ablations in Table 5/Fig 4) are produced for checkpoint selection on validation data, not by a reproducible test-set evaluation matching the reported protocol, so the table values are not directly traceable.",
+      "resolution": "Authors: provide the test-set evaluation script that computes the FVD/SSIM/Hand-SSIM table values for SignViP and each baseline under the same protocol.",
+      "cross_refs": [
+        "comparison-table-metrics-not-computed"
+      ],
+      "check_script": "_audit_code/check_metric_coverage.py",
+      "paper_ref": "Tables 3, 4, 5; Figure 4(a)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "fvd-ssim-only-in-training-val",
+      "audit": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_",
+      "audit_md_line": 152
+    },
+    {
+      "id": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_/baseline-code-absent",
+      "category": "missing",
+      "topic": "baselines",
+      "title": "No code for any baseline (SignGAN, SignGen, MoMP, ControlNet, AnimateAnyone)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "\"in video back-translation comparison, SignViP outperforms all competing methods,\nincluding SignGAN [61], its enhanced version using AnimateAnyone [29], and SignGen [47].\"\n",
+      "claim": "Tables 1-4 compare against SignGAN, SignGAN+AnimateAnyone, SignGen, MoMP+ControlNet, MoMP+AnimateAnyone, ProTran, Adversarial, MDN, ControlNet, and AnimateAnyone, but the repo contains no implementation, config, or invocation for any of these baselines (no files matching these method names outside the README/citation).",
+      "concern": "Without baseline code under the same split/metric/preprocessing it cannot be verified that the comparisons are fair (e.g. equal tuning budget), and the SOTA claim cannot be reproduced.",
+      "resolution": "Authors: release the baseline configs/checkpoints or the harness used to evaluate the competing methods under the identical protocol.",
+      "cross_refs": [
+        "comparison-table-metrics-not-computed"
+      ],
+      "paper_ref": "Tables 1, 2, 3, 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "baseline-code-absent",
+      "audit": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_",
+      "audit_md_line": 180,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_/pretrained-checkpoints-not-released",
+      "category": "missing",
+      "topic": "expected code completeness",
+      "title": "Trained checkpoints required for evaluation not released (How2Sign 'coming soon')",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 77,
+      "line_end": 81,
+      "quote": "## 📦 Model Checkpoint\n\n* RWTH-T Models: [[huggingface]](https://huggingface.co/umnooob/signvip/tree/main/RWTH)\n* How2Sign Models: *comming soon*\n",
+      "claim": "The eval scripts require trained checkpoints (e.g. cfg.modules.ckpt, condition_encoder, unet, vq_model). The README provides only RWTH-T weights and marks How2Sign weights as 'comming soon', so the How2Sign half of every results table cannot be reproduced from released artefacts.",
+      "concern": "All How2Sign results (a full column of every comparison table) depend on weights that are not released, blocking reproduction of half the empirical claims.",
+      "resolution": "Authors: release the How2Sign checkpoints (and confirm the RWTH-T HuggingFace link contains all stages: diffusion model, FSQ autoencoder, token translator, and back-translation models).",
+      "cross_refs": [
+        "comparison-table-metrics-not-computed"
+      ],
+      "paper_ref": "Tables 1-9 (How2Sign columns)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "pretrained-checkpoints-not-released",
+      "audit": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_",
+      "audit_md_line": 204
+    },
+    {
+      "id": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_/readme-references-nonexistent-files",
+      "category": "missing",
+      "topic": "documentation / reproducibility commands",
+      "title": "README training commands reference files that do not exist in the repo",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 88,
+      "line_end": 99,
+      "quote": "# Single frame training\naccelerate launch \\\n  --config_file accelerate_config.yaml \\\n  --num_processes 2 --gpu_ids \"0,1\" \\\n  train_stage_1.py --config \"configs/stage1/stage_1_multicond_RWTH.yaml\"\n\n# Temporal-Attention Layer training\naccelerate launch \\\n  --config_file accelerate_config.yaml \\\n  --num_processes 2 --gpu_ids \"0,1\" \\\n  train_stage_2.py --config \"configs/stage2/stage_2_RWTH.yaml\"\n",
+      "claim": "The README's Stage I commands call train_stage_1.py and train_stage_2.py, and the structure section lists train.sh, but none of these files exists in the repo (the actual files are train_stage1_multi_cond.py and train_stage2_multi_cond.py). README also lists scripts/RWTH-T/3_process_annotation.py whereas the repo has 3_process_annotion.py. Verified by _audit_code/out/readme_files.csv.",
+      "concern": "The exact reproduce-commands in the README fail as written, so a reader cannot run the documented pipeline without guessing the correct filenames.",
+      "resolution": "Authors: update the README to the actual script names, or add the referenced wrapper files.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_metric_coverage.py",
+      "paper_ref": "README Training section",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "readme-references-nonexistent-files",
+      "audit": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_",
+      "audit_md_line": 232
+    },
+    {
+      "id": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_/hardcoded-absolute-paths",
+      "category": "bug",
+      "topic": "configuration / portability",
+      "title": "Eval/training scripts and configs default to hardcoded /deepo_data absolute paths",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "combined_t2s_eval.py",
+      "line_start": 52,
+      "line_end": 59,
+      "quote": "parser.add_argument(\n    \"--t2s_config\",\n    type=str,\n    help=\"Config file for text-to-pose model (GPT)\",\n    default=\"/deepo_data/signvip_v2/configs/gpt/eval_multihead_t2vqpgpt_RWTH.yaml\",\n)\nparser.add_argument(\n    \"--vq_config\",\n",
+      "claim": "19 of the repo's .py files hardcode absolute paths under /deepo_data/ as defaults (confirmed in _audit_code/out/hardcoded_paths.csv), and the eval configs (e.g. configs/gpt/eval_multihead_t2vqpgpt_RWTH.yaml) point ckpt to /t2pgpt/model.bin and datasets to /deepo_data/... and /RWTH/...; none of these paths exist outside the authors' machine.",
+      "concern": "The scripts will not run out-of-the-box: every default config/checkpoint/dataset path must be hand-edited, and the configs reference paths that are absent from the release, impeding reproduction.",
+      "resolution": "Authors: replace absolute defaults with repo-relative paths or required CLI args, and document where each checkpoint/dataset must be placed.",
+      "cross_refs": [
+        "pretrained-checkpoints-not-released"
+      ],
+      "check_script": "_audit_code/check_metric_coverage.py",
+      "paper_ref": "N/A (engineering)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "hardcoded-absolute-paths",
+      "audit": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_",
+      "audit_md_line": 270
+    },
+    {
+      "id": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_/token-accuracy-computed-not-reported",
+      "category": "difference",
+      "topic": "evaluation consistency",
+      "title": "eval_multihead_t2vqpgpt.py computes token accuracy, a metric not in the paper",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "eval_multihead_t2vqpgpt.py",
+      "line_start": 108,
+      "line_end": 135,
+      "quote": "# Calculate accuracy\nfor i in range(pose_latents.shape[0]):\n    pred = pred_idx[i, : pose_len[i]]\n    gt = pose_latents[i, : pose_len[i]]\n    # print(f\"pred: {pred.shape}, gt: {gt.shape}\")\n    valid_acc.append((pred == gt).sum().item() / pose_len[i].item())\n",
+      "claim": "The token-translator evaluation script computes exact token-match accuracy against ground-truth tokens, but the paper explicitly avoids token accuracy (Appendix G: 'Directly computing the accuracy of token translation ... presents significant challenges') and reports normalized DTW instead. The released eval script computes a metric the paper says is unreliable, not the DTW metric the paper reports.",
+      "concern": "The released token-translator evaluation does not implement the paper's stated DTW-based protocol (Tables 10/11); the implemented accuracy metric is internally valid but does not match what the paper reports.",
+      "resolution": "Authors: confirm whether the DTW numbers in Tables 10/11 were produced by the training-validation DTW path (train_multihead_t2vqpgpt.py:208-214) rather than this eval script, and release the DTW evaluation entry point.",
+      "cross_refs": [
+        "comparison-table-metrics-not-computed"
+      ],
+      "paper_ref": "Appendix G; Tables 10, 11",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "token-accuracy-computed-not-reported",
+      "audit": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_",
+      "audit_md_line": 305
+    }
+  ]
+}

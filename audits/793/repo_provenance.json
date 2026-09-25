@@ -1,0 +1,17 @@
+{
+  "paper_id": "793_Mixture_of_Inputs_Text_Generation_Beyond_Discrete_Token_Samp",
+  "title": "Mixture of Inputs: Text Generation Beyond Discrete Token Sampling",
+  "repos": [
+    {
+      "name": "EvanZhuang__mixinputs",
+      "role": "core",
+      "evidence": "README title 'Mixture of Inputs (MoI) — Text Generation Beyond Discrete Token Sampling' matches paper exactly. arXiv link https://arxiv.org/abs/2505.14827 matches the paper. Repo owner EvanZhuang = first author Yufan Zhuang. The mixinputs/ package implements the paper's Bayesian Dirichlet-Multinomial mixing (gpu_model_runner.py:1216-1228 verified to match paper Eq.(5) to 3.3e-16). Paper's own code URL (line 40 of paper_text.txt) is 'https://github.com/EvanZhuang/mixinputs'."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo EvanZhuang/mixinputs is unambiguously the paper's own implementation. The repo owner matches first author Yufan Zhuang, the README title and arXiv ID (2505.14827) match the paper, and the paper itself cites this exact URL as its code release. The core MOI method (Bayesian mixing weights, Eq.5) is implemented in gpu_model_runner.py and was numerically verified by the auditor. No non-core repos were cloned. The audit findings are all written against the correct core repo and concern legitimate reproducibility gaps (missing benchmark harness for most tables, top-k truncation vs full-vocab, loose vLLM pin) — none are 'missing code' claims written against a wrong repo.",
+  "audit_impact": "No misclassification. The audit correctly identified the repo as the paper's core implementation. All findings are grounded in the correct repo. The high-severity finding 'benchmark-harness-absent' is legitimate: only AIME and CountDown4 eval scripts are present; GPQA, LiveCodeBench, stats, and ablation code are absent.",
+  "recommended_action": "No change to paper classification. Findings stand as written."
+}

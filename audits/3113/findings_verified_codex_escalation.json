@@ -1,0 +1,10 @@
+{
+  "findings": [
+    {
+      "id": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo/speedup-measurement-missing",
+      "verdict": "keep",
+      "reason": "The generation methods report accepted-token counts, but the evaluation code contains no wall-clock tokens-per-second aggregation or baseline-ratio driver capable of reproducing Figure 6 or Table 2, while the cited artifact's shell failure does not invalidate that absence claim.",
+      "changed": "reverted the first-pass reject to keep because the repository-wide absence check supports the finding"
+    }
+  ]
+}

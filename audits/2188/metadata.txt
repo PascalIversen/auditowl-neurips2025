@@ -1,0 +1,5 @@
+paper_number: 2188
+title: Detoxifying Large Language Models via Autoregressive Reward Guided Representation Editing
+authors: Yisong Xiao, Aishan Liu, Siyuan Liang, Zonghao Ying, Xianglong Liu, Dacheng Tao
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/68eee66183a4db1ecfb32104402c77ae-Abstract-Conference.html
+category: empirical

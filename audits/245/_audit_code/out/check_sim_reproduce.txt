@@ -1,0 +1,3 @@
+linear mu=0.1: rct_reproduces=True ext_reproduces=True (rct shape (400, 10) vs ship (400, 10))
+linear mu=0.3: rct_reproduces=True ext_reproduces=True (rct shape (400, 10) vs ship (400, 10))
+linear mu=0.5: rct_reproduces=True ext_reproduces=True (rct shape (400, 10) vs ship (400, 10))

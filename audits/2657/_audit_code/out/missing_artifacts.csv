@@ -1,0 +1,6 @@
+artefact,status,evidence
+"explainability_attribution_code (Table 3, RQ3, Fig 1 synthetic)",ABSENT,
+figure1_2d_contraction_visualization,ABSENT,
+csm_unsupervised_epoch_selection (Appendix B.6),ABSENT,
+run_knn.sh references Full_experiments.py,FILE_MISSING,bash_files/run_knn.sh:28; bash_files/run_knn.sh:63; bash_files/run_knn.sh:101; bash_files/run_knn.sh:141
+dataset_npz_count (paper claims 47),47,small+medium+high_dim+large

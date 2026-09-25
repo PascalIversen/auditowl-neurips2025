@@ -1,0 +1,5 @@
+paper_number: 3680
+title: Mitigating Instability in High Residual Adaptive Sampling for PINNs via Langevin Dynamics
+authors: Minseok Jeong, Giup Seo, Euiseok Hwang
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/b00efe6d4dbf119e2d0d44186cdfe7c8-Abstract-Conference.html
+category: empirical

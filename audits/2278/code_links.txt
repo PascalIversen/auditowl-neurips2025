@@ -1,0 +1,5 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/VITA-MLLM/VITA	[title-match]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/Share14/ShareGemini	[no-author-signal]

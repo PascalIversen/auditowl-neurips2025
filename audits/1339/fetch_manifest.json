@@ -1,0 +1,18 @@
+{
+  "AIR-DISCOVER__E-cubed-AD": {
+    "repo": "https://github.com/AIR-DISCOVER/E-cubed-AD",
+    "clone_status": "cached",
+    "size_mb": 0.0,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  },
+  "AIR-DISCOVER__E-cubed-AD__E-VAD": {
+    "repo": "https://github.com/AIR-DISCOVER/E-cubed-AD",
+    "branch": "E-VAD",
+    "commit": "ad78ad0bf8c0351d5c0cf126b1d776a51339a1cf",
+    "clone_status": "cloned-on-reaudit-2026-06-03",
+    "size_mb": 6.8,
+    "note": "Non-default branch holding the real implementation (565 files); the original audit cloned only the shallow default `main` branch (README only) and falsely concluded 'no code'."
+  }
+}

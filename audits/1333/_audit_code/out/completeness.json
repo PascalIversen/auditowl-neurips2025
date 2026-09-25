@@ -1,0 +1,82 @@
+{
+  "dependency_spec": {
+    "candidates": [
+      "requirements.txt",
+      "environment.yml",
+      "setup.py",
+      "setup.cfg",
+      "pyproject.toml",
+      "Pipfile"
+    ],
+    "found": [],
+    "present": false
+  },
+  "license": {
+    "candidates": [
+      "LICENSE",
+      "LICENSE.txt",
+      "LICENSE.md"
+    ],
+    "found": [],
+    "present": false
+  },
+  "eval_or_test_entrypoint": {
+    "candidates": [
+      "test.py",
+      "eval.py",
+      "evaluate.py",
+      "inference.py",
+      "infer.py",
+      "basicsr/test.py"
+    ],
+    "found": [],
+    "present": false
+  },
+  "restoration_net_arch": {
+    "candidates": [
+      "basicsr/archs/sfhformer_arch.py",
+      "basicsr/archs/nafnet_arch.py"
+    ],
+    "found": [],
+    "present": false
+  },
+  "pretrained_weights_dir": {
+    "candidates": [
+      "weights",
+      "pretrained",
+      "checkpoints",
+      "experiments"
+    ],
+    "found": [],
+    "present": false
+  },
+  "datasets_dir": {
+    "candidates": [
+      "datasets"
+    ],
+    "found": [],
+    "present": false
+  },
+  "hardcoded_abs_path_refs": [
+    {
+      "file": "basicsr/train.py",
+      "line": 8,
+      "text": "sys.path.append(\"/fs-computility/ai4sData/liuyidi/code/LatentGen\")"
+    },
+    {
+      "file": "basicsr/utils/options.py",
+      "line": 159,
+      "text": "experiments_root = osp.join('/fs-computility/ai4sData/liuyidi/model', 'experiments', opt['name'])"
+    },
+    {
+      "file": "basicsr/archs/LHVAE_arch.py",
+      "line": 7,
+      "text": "sys.path.append(\"/fs-computility/ai4sData/liuyidi/code/LatentGen\")"
+    },
+    {
+      "file": "basicsr/archs/LHVAE_arch.py",
+      "line": 467,
+      "text": "with open(\"/fs-computility/ai4sData/liuyidi/code/LatentGen/options/debug.yml\") as f:"
+    }
+  ]
+}

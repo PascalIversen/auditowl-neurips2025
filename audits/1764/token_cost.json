@@ -1,0 +1,19 @@
+{
+  "folder": "1764_AlphaZero_Neural_Scaling_and_Zipf_s_Law_a_Tale_of_Board_Game",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 21960,
+    "output": 14766,
+    "cache_write": 521042,
+    "cache_read": 4841086
+  },
+  "total_tokens": 5398854,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 18.47
+}

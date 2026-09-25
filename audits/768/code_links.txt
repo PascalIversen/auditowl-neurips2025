@@ -1,0 +1,5 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/zqy0126/OTQMS	[author-cue]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/huggingface/pytorch-image-models	[known-org:huggingface]

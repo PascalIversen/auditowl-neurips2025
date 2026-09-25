@@ -1,0 +1,17 @@
+{
+  "paper_id": "1023_Over_squashing_in_Spatiotemporal_Graph_Neural_Networks",
+  "title": "Over-squashing in Spatiotemporal Graph Neural Networks",
+  "repos": [
+    {
+      "name": "marshka__spatiotemporal-oversquashing",
+      "role": "core",
+      "evidence": "README: \"official code for the reproducibility of the experiments presented in the paper 'Over-squashing in Spatiotemporal Graph Neural Networks' (NeurIPS 2025)\" with NeurIPS-2025 badge, arXiv 2506.15507, OpenReview CVp0WCw4a1, all four authors (Marisca, Bamberger, Alippi, Bronstein) matching metadata, and bibtex key marisca2025oversquashing. GitHub owner 'marshka' = first author Ivan Marisca (README links marshka.github.io). git remote = github.com/marshka/spatiotemporal-oversquashing. lib/nn/models/ implements STGNN base + TTS/T&S variants (stgnn_base.py, gwnet_tts.py, convolution_disjoint.py, gnn_mixin.py) using torch.autograd.functional.jacobian for the paper's over-squashing sensitivity analysis; lib/datasets/syntethic.py builds the bottleneck graphs (barbell, crossed-ring, lollipop) for the copy-time tasks in Fig. 3; config/ has run_copy_time, run_realworld, run_space_vs_time matching the paper's named experiments."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo is unambiguously this paper's own official implementation: README explicitly states it is the official NeurIPS 2025 code, advertises the matching arXiv id (2506.15507) and OpenReview id, lists all four paper authors, and the GitHub owner 'marshka' is first author Ivan Marisca. Source modules implement the paper's named methods (TTS/T&S convolutional STGNNs, Jacobian sensitivity, synthetic bottleneck datasets, copy-time/real-world experiments). No baseline, dependency, different-paper, mirror, or stub repo was cloned (pytorch-lightning/tsl/hydra were correctly identified as dependencies and NOT cloned).",
+  "audit_impact": "No provenance error. The audit correctly treated the repo as the paper's own code; all four findings are intra-repo reproducibility gaps (missing FOSR/RGCN code for Table 2 'fosr-rgcn-missing'; no success-rate/aggregation script 'succrate-aggregation-missing'; COPYFIRST config absent 'copyfirst-config-missing'; commented-out multi-seed sweep 'multi-run-seed-commented'). None asserts 'no code released' and none is written against a non-core repo, so these findings stand on their own merits and are not contaminated by a wrong-clone.",
+  "recommended_action": "No change to source-present status or to the existing findings on provenance grounds. Verdict 'correct': the cloned repo is the genuine author core. The high-severity missing-code findings target legitimate gaps within the correct repo and should be evaluated as reproducibility issues (note that some may be resolvable via off-repo W&B/aggregation per the resolutions), but no reclassification is warranted."
+}

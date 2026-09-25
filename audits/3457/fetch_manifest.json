@@ -1,0 +1,10 @@
+{
+  "Renovamen__ShiftDC": {
+    "repo": "https://github.com/Renovamen/ShiftDC",
+    "clone_status": "cached",
+    "size_mb": 0.3,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

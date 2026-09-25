@@ -1,0 +1,1 @@
+code_constant(mean_compliance)=0.8335  paper_constant(mean_muY1)=0.7166

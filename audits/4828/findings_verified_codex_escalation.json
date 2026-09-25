@@ -1,0 +1,13 @@
+{
+  "findings": [
+    {
+      "id": "4828_WarpGAN_Warping_Guided_3D_GAN_Inversion_with_Style_Based_Nov/reconstruction-perceptual-loss-impl",
+      "verdict": "lowered",
+      "reason": "The config and generator-loss code confirm active weight-30 ResNetPL and weight-100 feature matching with generic perceptual and LPIPS disabled, but the paper already identifies L_P by citing the LaMa paper [37], leaving only the omitted feature-matching term as a low-confidence documentation discrepancy.",
+      "changed": "nothing",
+      "severity": "low",
+      "confidence": "low",
+      "status": "question"
+    }
+  ]
+}

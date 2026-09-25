@@ -1,0 +1,10 @@
+{
+  "findings": [
+    {
+      "id": "5243_Causal_Explanation_Guided_Learning_for_Organ_Allocation/reported-numbers-not-reproducible",
+      "verdict": "reject",
+      "reason": "The notebook calls _set_seeds(seed) before constructing the selection network g, invokes make_dataset with seed=42, and stores synthetic outputs that match the paper's Table 1 values after rounding, so the claimed unseeded generative component is absent.",
+      "changed": "nothing"
+    }
+  ]
+}

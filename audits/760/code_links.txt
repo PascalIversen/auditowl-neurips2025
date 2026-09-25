@@ -1,0 +1,9 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/compasszzn/MIGN	[author-cue]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/Graph-Machine-Learning-Group/taming-local-effects-stgnns	[no-author-signal]
+https://github.com/benedekrozemberczki/pytorch_geometric_temporal	[baseline-cue]
+https://github.com/marshka/hdtts	[baseline-cue]
+https://github.com/suzy0223/DualCast	[no-author-signal]
+https://github.com/wangzz-yyzz/ReDyNet	[no-author-signal]

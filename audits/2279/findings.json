@@ -1,0 +1,233 @@
+{
+  "schema_version": "1",
+  "audit": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti",
+  "audit_md": "audits/2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti/audit.md",
+  "generated_at": "2026-05-29T22:27:12.534235+00:00",
+  "findings": [
+    {
+      "id": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti/toy-alpha1-script-missing",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No script generates the varying-initial-step-size experiment (Figs 10–11)",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "In the final experiment, we examine the effect of the initial\nvalue α1 > 0 in the step-size schedule. For SGD, we set αk = α1k−1/2, while for reg-SGD we\nfix λk = k−0.111 and use the step-size schedule αk = α1k−0.667. We report both the pathwise\noptimality gap and the pathwise squared error to the minimum-norm solution for SGD (Figure 10)\nand reg-SGD (Figure 11) under varying initial step sizes α1 ∈ {0.01, 0.1, 1, 2}.\n",
+      "claim": "Appendix A.2 reports Figures 10 and 11 sweeping the initial step size α1 ∈ {0.01,0.1,1,2}; the three toy-example scripts (main_L2rates.m, main_asrates.m, main_comparison.m) sweep (p,q) and rates but none loops over α1 or reproduces Figs 10/11.",
+      "concern": "The α1-sweep figures cannot be reproduced from the provided code.",
+      "resolution": "Authors: please add the script that produces Figures 10–11 (the α1 sweep), or confirm it was a minor variant run off-repo.",
+      "cross_refs": [],
+      "paper_ref": "Appendix A.2, Figures 10 and 11",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "toy-alpha1-script-missing",
+      "audit": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti",
+      "audit_md_line": 60,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti/ode-K",
+      "category": "difference",
+      "topic": "experiment configuration",
+      "title": "ODE example uses 63 observation points, paper states 64",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "ODE_example/main_ODE.m",
+      "line_start": 7,
+      "line_end": 8,
+      "quote": "% number of observation points\nK = 2^6-1;\n",
+      "claim": "The ODE inverse-problem script sets the number of observation points to K = 2^6-1 = 63.",
+      "concern": "Appendix A.3 states K = 64 equidistant observation points (s_k = k/K, k=1,…,K); the code uses 63, a one-off mismatch in the discretization size.",
+      "resolution": "Authors: confirm whether K=63 (interior nodes) or K=64 was used to produce Figs 12–13, and reconcile with the appendix.",
+      "cross_refs": [
+        "ode-lambda-const"
+      ],
+      "check_script": "_audit_code/check_params.py",
+      "paper_ref": "Appendix A.3 ('K = 64 equidistant observation points')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ode-K",
+      "audit": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti",
+      "audit_md_line": 98
+    },
+    {
+      "id": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti/ode-lambda-const",
+      "category": "difference",
+      "topic": "experiment configuration",
+      "title": "ODE regularization constant is 0.002 in code, 0.001 in paper",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "ODE_example/main_ODE.m",
+      "line_start": 113,
+      "line_end": 114,
+      "quote": "% decaying regularization\nlambdak = 0.002/k^p;\n",
+      "claim": "The ODE script uses regularization schedule lambda_k = 0.002 * k^{-1/3}.",
+      "concern": "Appendix A.3 states lambda_k = 0.001 k^{-1/3}; the code's prefactor (0.002) is twice the reported value.",
+      "resolution": "Authors: confirm the regularization prefactor used for Figs 12–13 (0.001 vs 0.002).",
+      "cross_refs": [
+        "ode-K"
+      ],
+      "check_script": "_audit_code/check_params.py",
+      "paper_ref": "Appendix A.3 ('regularization λk = 0.001k−1/3')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ode-lambda-const",
+      "audit": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti",
+      "audit_md_line": 125
+    },
+    {
+      "id": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti/toy-asrates-noise",
+      "category": "difference",
+      "topic": "experiment configuration",
+      "title": "Toy a.s.-rate script uses gradient-noise std 1, paper A.2 states 0.1",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "Toy_example/main_asrates.m",
+      "line_start": 66,
+      "line_end": 68,
+      "quote": "% generate synthetic noise for gradient evaluation, same realization\n% for SGD and reg-SGD\nnoisygrad = 1*randn(n,1);\n",
+      "claim": "main_asrates.m perturbs the gradient with N(0,1) noise (std 1, covariance 1·Id).",
+      "concern": "Appendix A.2 states the toy example perturbs the gradient with covariance 0.1²·Id (std 0.1); the a.s.-rate script uses std 1 — 100× larger variance — and an SGD/reg-SGD step prefactor 0.05 rather than the stated 0.1.",
+      "resolution": "Authors: confirm the noise covariance and step-size prefactor used for Figure 7 (a.s. rates) vs the values quoted in Appendix A.2.",
+      "cross_refs": [
+        "toy-step-const"
+      ],
+      "check_script": "_audit_code/check_params.py",
+      "paper_ref": "Appendix A.2 ('covariance 0.12 · Id', 'αk = 0.1k−1/2')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "toy-asrates-noise",
+      "audit": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti",
+      "audit_md_line": 152
+    },
+    {
+      "id": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti/toy-step-const",
+      "category": "difference",
+      "topic": "experiment configuration",
+      "title": "Toy L²-rate SGD step prefactor is 1, paper A.2 states 0.1",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "Toy_example/main_L2rates.m",
+      "line_start": 75,
+      "line_end": 76,
+      "quote": "% learning rate for SGD without reg\nstep_sizek_literature = 1./k^(1/2);\n",
+      "claim": "main_L2rates.m sets the plain-SGD step size to 1·k^{-1/2} (and reg-SGD step to 1·k^{-q}).",
+      "concern": "Appendix A.2 states αk = 0.1k−1/2 for SGD (and αk = 0.1k−q for reg-SGD); the L²-rate script omits the 0.1 prefactor (uses 1), so the simulated step sizes differ from the reported ones.",
+      "resolution": "Authors: confirm the step-size prefactor used for Figure 6 (0.1 vs 1).",
+      "cross_refs": [
+        "toy-asrates-noise"
+      ],
+      "check_script": "_audit_code/check_params.py",
+      "paper_ref": "Appendix A.2 ('αk = 0.1k−1/2', 'αk = 0.1k−q')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "toy-step-const",
+      "audit": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti",
+      "audit_md_line": 180
+    },
+    {
+      "id": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti/toy-comparison-step",
+      "category": "difference",
+      "topic": "experiment configuration",
+      "title": "Comparison script step law q·0.2·k^{-q} differs from paper's 0.2q·k^{-1/2}",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "Toy_example/main_comparison.m",
+      "line_start": 111,
+      "line_end": 115,
+      "quote": "% learning rate for reg-SGD\nstep_sizek = q*0.2/k^q;\nstep_sizek2 = q2*0.2/k^q2;\nstep_sizek3 = q3*0.2/k^q3;\nstep_sizek4 = q4*0.2/k^q4;\n",
+      "claim": "The (p,q)-comparison script uses step size α_k = q·0.2·k^{-q} (decay exponent q, varying per configuration).",
+      "concern": "Appendix A.2 (Figs 8–9) writes the step size as αk = 0.2q·k−1/2 (a fixed k^{-1/2} decay); the code instead decays with each configuration's own q, so the step-size schedule used differs from the formula printed in the paper (the (p,q) value set itself matches).",
+      "resolution": "Authors: confirm the step-size exponent for the (p,q)-comparison experiment — fixed k^{-1/2} as written, or per-configuration k^{-q} as coded.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_params.py",
+      "paper_ref": "Appendix A.2 ('αk = 0.2qk−1/2')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "toy-comparison-step",
+      "audit": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti",
+      "audit_md_line": 207
+    },
+    {
+      "id": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti/ode-kl-coeff",
+      "category": "difference",
+      "topic": "experiment configuration",
+      "title": "ODE KL-basis coefficient is sqrt(2*pi) in code vs sqrt(2)/pi in paper",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "ODE_example/main_ODE.m",
+      "line_start": 23,
+      "line_end": 25,
+      "quote": "for j = 1:N_x\n    V_basis(:,j) = sqrt(2*pi)*sin(j*pi*xx)';\nend\n",
+      "claim": "The KL basis used to (re)generate the ground-truth rhs x† scales each sine mode by sqrt(2*pi) ≈ 2.507.",
+      "concern": "Appendix A.3 defines x†(s) = Σ (√2/π) ξ_i sin(iπs) with coefficient √2/π ≈ 0.450; the code uses √(2π) ≈ 2.507, a ~5.6× different amplitude. Effect is limited because the actual run loads a saved m_ref.mat (regeneration at lines 37-38 is commented out), so it only matters if the reference is regenerated.",
+      "resolution": "Authors: confirm the basis normalization (√2/π vs √(2π)) and whether the saved m_ref.mat was produced with the paper's formula.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_params.py",
+      "paper_ref": "Appendix A.3 ('x†(s) = Σ √2/π ξi sin(iπs)')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ode-kl-coeff",
+      "audit": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti",
+      "audit_md_line": 237
+    },
+    {
+      "id": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti/iteration-count-defaults",
+      "category": "difference",
+      "topic": "result traceability",
+      "title": "Default iteration counts far below the figure captions (10^3–10^5 vs 5·10^6–10^7)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "Radon/main_radon.m",
+      "line_start": 50,
+      "line_end": 51,
+      "quote": "% number of iterates\nfinal_iterate = 10^3;\n",
+      "claim": "Shipped defaults are final_iterate = 10^3 (Radon), 10^4 (toy L²/a.s., ODE), 10^5 (toy comparison).",
+      "concern": "The figure captions report runs of length N = 5·10^6 (Fig 5), 10^6 (Figs 6–7), and 10^7 (Figs 9–12); the shipped defaults are 10^3–10^5, so running the code as-is does not reproduce the published curves. The readme explicitly notes 'the user may select an increased final iterate', so this is an acknowledged convenience default rather than a hidden discrepancy.",
+      "resolution": "No action strictly required (acknowledged); optionally ship the exact N used per figure as a comment or config so the published plots are reproducible without guessing.",
+      "cross_refs": [
+        "radon-N-default"
+      ],
+      "check_script": "_audit_code/check_params.py",
+      "paper_ref": "Figure captions 5, 6, 7, 9, 10, 11, 12 (N values)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "iteration-count-defaults",
+      "audit": "2279_Controlling_the_Flow_Stability_and_Convergence_for_Stochasti",
+      "audit_md_line": 265
+    }
+  ]
+}

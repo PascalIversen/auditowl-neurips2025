@@ -1,0 +1,19 @@
+{
+  "folder": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 8633,
+    "output": 9514,
+    "cache_write": 385735,
+    "cache_read": 6408151
+  },
+  "total_tokens": 6812033,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 17.69
+}

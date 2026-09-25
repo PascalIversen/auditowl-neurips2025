@@ -1,0 +1,142 @@
+{
+  "paper": "2578",
+  "seeds": [
+    {
+      "sid": "S01",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "zhengchen1999__DOVE/finetune/models/dove/lora_one_s2_trainer.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "zhengchen1999__DOVE/finetune/models/dove/sft_one_s2_trainer.py",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the entire stage-2 pixel-space refinement implementation",
+      "description": "Delete both stage-2 trainer modules. The remaining launch script names dove-s2, but no model registration or executable stage-2 loss/decoder path remains anywhere, so neither the mixed image/video refinement nor the S2-I and S2-I/V ablations can be produced."
+    },
+    {
+      "sid": "S03",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "zhengchen1999__DOVE/finetune/models/dove/sft_one_s1_trainer.py",
+          "line": 1,
+          "action": "replace"
+        }
+      ],
+      "title": "Train an x0-prediction Transformer instead of the claimed v-prediction denoiser",
+      "description": "Wrap the SFT Transformer's output so the inherited velocity reconstruction algebra resolves exactly to the raw Transformer output. The resulting model is a fully differentiable direct clean-latent predictor trained by MSE, rather than the CogVideoX v-prediction method in Equation (2)."
+    },
+    {
+      "sid": "S05",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "zhengchen1999__DOVE/finetune/train_ddp_one_s1.sh",
+          "line": 26,
+          "action": "replace"
+        }
+      ],
+      "title": "Train stage-1 directly on the UDM10 test ground truths",
+      "description": "Point the main 10,000-step stage-1 run at UDM10's GT-Video manifest while leaving validation on the same UDM10 split. The test videos are therefore training samples, creating direct train-test overlap in the main model."
+    },
+    {
+      "sid": "S07",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "zhengchen1999__DOVE/finetune/datasets/utils.py",
+          "line": 480,
+          "action": "replace"
+        }
+      ],
+      "title": "Independently crop LQ and HQ time windows in paired training",
+      "description": "Draw a second temporal start index for LQ frames while retaining the shared spatial crop. Training remains runnable and tensor shapes agree, but the LR input clip and HR regression target almost always depict different moments."
+    }
+  ],
+  "baseline": [
+    {
+      "id": "2578/video-metric-scripts-missing-deps",
+      "category": "missing",
+      "file": "finetune/scripts/eval_dover.py",
+      "line_start": 150,
+      "line_end": 150,
+      "title": "DOVER, FasterVQA, E*warp metric scripts depend on external code not in repo"
+    },
+    {
+      "id": "2578/pipeline-code-missing",
+      "category": "missing",
+      "file": "paper.pdf",
+      "line_start": null,
+      "line_end": null,
+      "title": "Sec 3.3 video-processing pipeline (HQ-VSR construction) not in repo"
+    },
+    {
+      "id": "2578/eval-dover-off-by-one",
+      "category": "bug",
+      "file": "finetune/scripts/eval_dover.py",
+      "line_start": 158,
+      "line_end": 159,
+      "title": "eval_dover.py assigns DOVER scores with an off-by-one index"
+    },
+    {
+      "id": "2578/eval-ewarp-broken",
+      "category": "bug",
+      "file": "finetune/scripts/eval_ewarp.py",
+      "line_start": 146,
+      "line_end": 150,
+      "title": "eval_ewarp.py chdirs to script dir and uses a non-existent default RAFT path"
+    },
+    {
+      "id": "2578/inference-sh-wrong-gt",
+      "category": "bug",
+      "file": "inference.sh",
+      "line_start": 34,
+      "line_end": 37,
+      "title": "inference.sh passes UDM10 ground truth for every dataset's eval"
+    }
+  ],
+  "unassigned": [
+    {
+      "fid": "/stage2-refinement-not-implemented",
+      "run": "run_01",
+      "category": "missing",
+      "loc": "finetune/train_ddp_one_s2.sh:9",
+      "title": "Stage-2 pixel refinement (DISTS + frame + image/video mix) has no trainer or loss code",
+      "claim": "The stage-2 training script selects model_name 'dove-s2', but only 'dove-s1' is ever register()ed (lora_one_s1_trainer.py:384, sft_one_s1_trainer.py:31); get_model_cls('dove-s2','sft') raises 'Model dove-s2 is not supported'. The only compute_loss implementations are the abstract one (trainer.py:903) and the stage-1 latent-MSE one (lora_one_s1_trainer.py:116). The DISTS loss (trainer.py:424/426), LPIPS loss (429/431) and frame-difference loss are instantiated or configured but never used in any loss computation, and no compute_loss accepts the `mode` argument required by trainer.py:568.",
+      "concern": "The paper's stage-2 'Refinement' (pixel-space MSE + DISTS perceptual loss Eq.4, frame-difference loss Eq.6, mixed image/video training Eq.7) is a headline contribution that yields the final DOVE model and the perceptual gains in Table 1a (S1+S2-I, S1+S2-I/V) and Table 1b \u2014 none of it is implemented, so the final model and those results cannot be reproduced from this repo."
+    },
+    {
+      "fid": "/sft-x0-vs-inference-vpred-mismatch",
+      "run": "run_01",
+      "category": "bug",
+      "loc": "finetune/models/dove/sft_one_s1_trainer.py:18",
+      "title": "SFT training predicts x0 directly, but inference applies the v-prediction get_velocity",
+      "claim": "Both train scripts use training_type 'sft' -> DOVES1SFTTrainer, which wraps transformer.forward so its output becomes prediction=(alpha*z_t - m)/sigma. The inherited compute_loss then applies get_velocity(prediction, z_t, t) = alpha*z_t - sigma*prediction, which algebraically returns m, so the SFT loss is MSE(m, z_hr): the transformer is trained to output the clean HR latent directly (x0-prediction). Inference (inference_script.py:491-492) instead computes latent_generate = get_velocity(raw_output, z_t, t) = alpha*z_t - sigma*raw_output, i.e. it treats the raw output as the velocity v (v-prediction, Eq.2). check_sft_vs_inference_param.py confirms: (A) SFT latent_pred == raw output m; (B) feeding an x0-predictor through the inference formula does NOT recover z_hr; (C) only the v-prediction/LoRA path is consistent with inference.",
+      "concern": "If the released model was trained by the SFT trainer (as the scripts specify), the released inference script applies an extra v->x0 conversion to an already-x0 output, so the documented reproduction path (`python inference_script.py`) would not reproduce the paper's numbers; training-time validation, which reuses the wrapper, would look fine and mask this."
+    },
+    {
+      "fid": "/sft-predict-sample-wrong-target",
+      "run": "run_02",
+      "category": "bug",
+      "loc": "finetune/models/dove/sft_one_s1_trainer.py:13",
+      "title": "Stage-1 SFT trainer regresses raw velocity to HQ latent, not x0",
+      "claim": "The SFT trainer wraps transformer.forward so it returns prediction=(alpha*z_t - v)/sigma. The inherited compute_loss then applies get_velocity(prediction, z_t) = alpha*z_t - sigma*prediction, which algebraically collapses to the RAW velocity v; the MSE loss therefore compares v to the HQ latent, not x0 = alpha*z_t - sigma*v (Eq. 2).",
+      "concern": "Inference (inference_script.py:491) and the LoRA trainer (lora_one_s1_trainer.py:200-207) both decode x0 = alpha*z_t - sigma*v, but the SFT trainer (the documented main path, --training_type sft) optimizes v -> HQ latent, a different and inconsistent objective \u2014 so a model trained with the released SFT code would not match what the pipeline decodes at test time."
+    },
+    {
+      "fid": "/stage2-refinement-trainer-missing",
+      "run": "run_02",
+      "category": "missing",
+      "loc": "finetune/train_ddp_one_s2.sh:9",
+      "title": "Stage-2 (pixel-space) trainer and its DISTS/frame losses are absent",
+      "claim": "The Stage-2 launcher requests model_name 'dove-s2', but only 'dove-s1' is registered (lora_one_s1_trainer.py:384, sft_one_s1_trainer.py:31); train.py:13 get_model_cls('dove-s2','sft') therefore raises 'Model dove-s2 is not supported'. No trainer implements compute_loss(batch, mode): the only concrete compute_loss (lora_one_s1_trainer.py:116) is pure latent MSE. self.dists_loss is created in prepare_for_training (trainer.py:424-426) but never consumed by any loss, and frame_diff_weight (args.py:118, passed =1.0 by the launcher) is referenced nowhere in Python.",
+      "concern": "Stage-2 'Refinement' \u2014 pixel-space mixed image/video training with the perceptual DISTS loss (Eq. 4) and the frame-difference loss L_frame (Eq. 6-7) \u2014 is half of the paper's 'latent\u2013pixel training strategy' contribution and underlies Table 1a (rows S1+S2-I, S1+S2-I/V) and the Table 1b image-ratio ablation; none of it can be run or reproduced from the released code, and `bash train_ddp_one_s2.sh` crashes at startup."
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+paper_number: 5202
+title: Graph Neural Network Based Action Ranking for Planning
+authors: Rajesh Mangannavar, Stefan Lee, Alan Fern, Prasad Tadepalli
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/fb3c261cc0a611ec191f3aeb210e2f6f-Abstract-Conference.html
+category: empirical

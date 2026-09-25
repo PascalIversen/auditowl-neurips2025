@@ -1,0 +1,18 @@
+{
+  "__supplement__": {
+    "status": "no-code",
+    "url": "https://papers.nips.cc/paper_files/paper/2025/file/67b87de31003d4f56e3312a2e04b479d-Supplemental-Conference.zip",
+    "n_files": 1,
+    "size_mb": 9.6
+  },
+  "cvlab-kaist__Seg4Diff": {
+    "repo": "https://github.com/cvlab-kaist/Seg4Diff",
+    "clone_status": "ok",
+    "clone_error": "",
+    "source": "manual-recovery: automated miner missed (project-page / github.io / non-title repo name)",
+    "size_mb": 43.8,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

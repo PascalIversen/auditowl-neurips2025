@@ -1,0 +1,230 @@
+{
+  "paper": "2167",
+  "n_flags": 20,
+  "flags": [
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/datasets/DCENF/bank.py",
+      "line": 36,
+      "reason": "The Bank loader concatenates the held-out test features and labels into X_train/y_train before fitting both the discriminator and counterfactual models, directly leaking the evaluation set into training.",
+      "confidence": "high"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/datasets/DCENF/gmc.py",
+      "line": 36,
+      "reason": "The GMC loader appends X_test/y_test to X_train/y_train and then still evaluates on that same test set, causing direct train-test leakage.",
+      "confidence": "high"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/dicoflex/utils.py",
+      "line": 72,
+      "reason": "Counterfactuals are flattened factual-by-factual, but factual rows are paired with them using np.tile rather than np.repeat, so sparsity, actionability, and proximity compare almost every CF to the wrong factual point.",
+      "confidence": "high"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/discriminative_models/multilayer_perceptron.py",
+      "line": 99,
+      "reason": "predict_proba applies ReLU to logits and normalizes the positive parts instead of using the softmax assumed by CrossEntropyLoss, making classifier probabilities and the 0.55 confidence filter invalid.",
+      "confidence": "high"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/dicoflex/train_generic_counterfactual.py",
+      "line": 259,
+      "reason": "The sole configured mask contains only 1e-3 values, but the evaluation marks immutable features only where mask == 1, producing an empty mask and an actionability score that is vacuously 1 for every CF.",
+      "confidence": "high"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/dicoflex/train_generic_counterfactual.py",
+      "line": 337,
+      "reason": "Generated categorical one-hot/quantile coordinates are evaluated directly without projection to valid categories, so validity and proximity can reward off-manifold fractional categorical values even though only the saved CSV is decoded.",
+      "confidence": "high"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/dicoflex/train_generic_counterfactual.py",
+      "line": 160,
+      "reason": "The advertised p-norm sweep includes p=0.01 (not a norm), and the code raises the weighted sum to 1/p=100, making the 1e-3-masked distances numerically collapse or explode and corrupt nearest-neighbor selection.",
+      "confidence": "high"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/datasets/generic_counterfactual.py",
+      "line": 593,
+      "reason": "train_multiclass_counterfactual_flow_model ignores its flow_model_class argument and always constructs ContinuousNormalizingFlow, despite the caller explicitly passing MaskedAutoregressiveFlow and the API documenting that choice.",
+      "confidence": "high"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/datasets/generic_counterfactual.py",
+      "line": 104,
+      "reason": "After assigning below-threshold candidates infinite distance, argsort still takes exactly n_nearest entries; when fewer qualify, rejected low-confidence points silently re-enter the training targets.",
+      "confidence": "high"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/metrics/metrics.py",
+      "line": 112,
+      "reason": "action_mask is declared optional with default None but its .shape is accessed unconditionally, so CFMetrics crashes for the documented/default invocation (including the repository's own tests).",
+      "confidence": "high"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/metrics/metrics.py",
+      "line": 371,
+      "reason": "The metrics named proximity_continuous_* call feature_distance without setting categorical_metric=None, so its default Jaccard term is included and the reported values are not continuous-only proximity.",
+      "confidence": "high"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/dicoflex/train_generic_counterfactual.py",
+      "line": 267,
+      "reason": "NaN outputs are replaced by resampling other generated outputs before coverage/quality evaluation, hiding generation failures; if every row has a NaN the loop may never terminate, while an entirely-NaN batch bypasses repair.",
+      "confidence": "high"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/generative_models/maf.py",
+      "line": 198,
+      "reason": "Early stopping treats test_loss < min_test_loss + eps as an improvement and overwrites min_test_loss even with a worse loss, repeatedly saving degraded density models and resetting patience.",
+      "confidence": "high"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/datasets/generic_counterfactual.py",
+      "line": 857,
+      "reason": "Sampling returns the flow output unchanged and never copies or clamps immutable coordinates to the factual values, so the claimed actionability constraints are not actually enforced at inference time.",
+      "confidence": "high"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/datasets/generic_counterfactual.py",
+      "line": 830,
+      "reason": "Generation indexes the class one-hot vector by the raw target label, whereas training uses classes.index(label), so the purported generic multiclass API fails or conditions on the wrong class for non-contiguous labels.",
+      "confidence": "high"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/datasets/generic_counterfactual.py",
+      "line": 499,
+      "reason": "GroupedBatchDataLoader groups batch_size already-batched tensors per yield but reports len(self.batches), so batch_size=256 can flatten thousands of examples at once and all reported/early-stopping losses are divided by the wrong number of iterations.",
+      "confidence": "medium"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/datasets/DCENF/lending_club.py",
+      "line": 78,
+      "reason": "Lending Club (like Bank, GMC, and Default) discards CSV ground truth for stored y_*_pred arrays, then the main script calls agreement of a newly trained surrogate with those predictions discriminator accuracy; Adult alone uses true labels.",
+      "confidence": "medium"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/metrics/diversity.py",
+      "line": null,
+      "reason": "No diversity metric or equivalent evaluation exists although the README repeatedly claims superior diversity and each factual receives multiple samples.",
+      "confidence": "medium"
+    },
+    {
+      "file": "ofurman__DiCoFlex/baselines/",
+      "line": null,
+      "reason": "No baseline implementations or comparison runner/results are present despite the README's claim that extensive experiments show DiCoFlex outperforms existing methods.",
+      "confidence": "medium"
+    },
+    {
+      "file": "ofurman__DiCoFlex/counterfactuals/dicoflex/train_generic_counterfactual.py",
+      "line": 134,
+      "reason": "The experiment seeds only NumPy, leaving PyTorch initialization, dropout, and sampling uncontrolled, so the advertised all-dataset experiment is not reproducible from a single run configuration.",
+      "confidence": "medium"
+    }
+  ],
+  "candidates": {
+    "S01": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "counterfactuals/generative_models/nice.py",
+          "line": null
+        }
+      ],
+      "matched_flags": []
+    },
+    "S02": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "counterfactuals/generative_models/real_nvp.py",
+          "line": null
+        }
+      ],
+      "matched_flags": []
+    },
+    "S03": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "counterfactuals/generative_models/maf.py",
+          "line": 9
+        },
+        {
+          "file": "counterfactuals/generative_models/maf.py",
+          "line": 130
+        }
+      ],
+      "matched_flags": []
+    },
+    "S04": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "counterfactuals/generative_models/cnf/flow/flow.py",
+          "line": 32
+        },
+        {
+          "file": "counterfactuals/generative_models/cnf/flow/flow.py",
+          "line": 111
+        },
+        {
+          "file": "counterfactuals/datasets/generic_counterfactual.py",
+          "line": 592
+        }
+      ],
+      "matched_flags": [
+        "train_multiclass_counterfactual_flow_model ignores its flow_model_class argument and always constructs ContinuousNormalizingFlow, despite the caller explicitly passing MaskedAutoregressiveFlow and the API documenting that choice."
+      ]
+    },
+    "S05": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "counterfactuals/datasets/DCENF/bank.py",
+          "line": 34
+        }
+      ],
+      "matched_flags": [
+        "The Bank loader concatenates the held-out test features and labels into X_train/y_train before fitting both the discriminator and counterfactual models, directly leaking the evaluation set into training."
+      ]
+    },
+    "S06": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "counterfactuals/datasets/DCENF/gmc.py",
+          "line": 34
+        }
+      ],
+      "matched_flags": [
+        "The GMC loader appends X_test/y_test to X_train/y_train and then still evaluates on that same test set, causing direct train-test leakage."
+      ]
+    },
+    "S07": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "counterfactuals/discriminative_models/multilayer_perceptron.py",
+          "line": 98
+        }
+      ],
+      "matched_flags": [
+        "predict_proba applies ReLU to logits and normalizes the positive parts instead of using the softmax assumed by CrossEntropyLoss, making classifier probabilities and the 0.55 confidence filter invalid."
+      ]
+    },
+    "S08": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "counterfactuals/dicoflex/utils.py",
+          "line": 68
+        }
+      ],
+      "matched_flags": [
+        "Counterfactuals are flattened factual-by-factual, but factual rows are paired with them using np.tile rather than np.repeat, so sparsity, actionability, and proximity compare almost every CF to the wrong factual point."
+      ]
+    }
+  }
+}

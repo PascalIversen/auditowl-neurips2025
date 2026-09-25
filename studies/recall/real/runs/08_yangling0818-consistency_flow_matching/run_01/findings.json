@@ -1,0 +1,171 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-01T10:46:41.467244+00:00",
+  "findings": [
+    {
+      "id": "/hyperparameters-ignored",
+      "category": "bug",
+      "topic": "loss hyperparameters / config wiring",
+      "title": "ConsistencyFM drops the consistencyfm_hyperparameters arg; loss always runs hardcoded boundary=1",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/YangLing0818__consistency_flow_matching/sde_lib.py",
+      "line_start": 34,
+      "line_end": 39,
+      "quote": "self.consistencyfm_hyperparameters = {\n  \"delta\": 1e-3,\n  \"num_segments\": 2,\n  \"boundary\": 1, # NOTE If wanting zero, use 0 but not 0. or 0.0, since the former is integar.\n  \"alpha\": 1e-5,\n}\n",
+      "claim": "`ConsistencyFM.__init__` accepts `consistencyfm_hyperparameters=` (sde_lib.py:9) and both training paths pass `config.consistencyfm.to_dict()` into it (run_lib.py:96, run_lib_pytorch.py:100), but the body never reads that argument — it unconditionally hardcodes the dict above. The loss reads it at losses.py:150/167/234/237 via keys `delta`/`num_segments`/`boundary`/`alpha`, so every run uses boundary=1 regardless of the config. Separately, the configs declare key `delta_t` (not `delta`), so even if the argument were honoured the loss's `hyperparameter[\"delta\"]` (losses.py:167) would KeyError. Verified by AST in _audit_code/out/hyperparameters.json: param present, never used in body; hardcoded boundary==1; README schedules boundary 0 then 0.9.",
+      "concern": "The README's documented CIFAR-10 and high-res training recipe explicitly runs a two-phase boundary schedule (`--config.consistencyfm.boundary 0` then `0.9`, README:47-49,78-80); because the argument is discarded, both phases train with boundary=1, so the reproduction recipe for the headline FID cannot be followed as written (the boundary curriculum is a silent no-op).",
+      "resolution": "Assign `self.consistencyfm_hyperparameters = consistencyfm_hyperparameters` (falling back to the default only when None), and rename the config field `delta_t`→`delta` (or read `delta_t` in losses.py); then confirm which boundary schedule produced the reported numbers.",
+      "cross_refs": [
+        "threshold-isinstance-typo",
+        "README §CIFAR-10 Training"
+      ],
+      "check_script": "_audit_code/check_hyperparameters.py",
+      "paper_ref": "Table 1; README lines 47-49, 78-80",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "hyperparameters-ignored",
+      "audit": "",
+      "audit_md_line": 43
+    },
+    {
+      "id": "/threshold-isinstance-typo",
+      "category": "bug",
+      "topic": "loss / boundary masking",
+      "title": "Broken isinstance guard: `if (threshold, int) and threshold == 0` (tuple always truthy)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/YangLing0818__consistency_flow_matching/losses.py",
+      "line_start": 184,
+      "line_end": 184,
+      "quote": "if (threshold, int) and threshold == 0:\n",
+      "claim": "This guard (also at losses.py:220) is meant to be `isinstance(threshold, int) and threshold == 0` — the correct idiom is used at losses.py:203. As written, `(threshold, int)` builds a non-empty tuple that is always truthy, so the guard collapses to `threshold == 0`.",
+      "concern": "The intended int-vs-float distinction (per the code's own comment at sde_lib.py:37) is lost; it is currently inert only because boundary is hardcoded to int 1 (see hyperparameters-ignored) and the used values agree, but a float `0.0` boundary would silently take the wrong branch (demonstrated in _audit_code/out/threshold_tuple_bug.txt).",
+      "resolution": "Replace with `isinstance(threshold, int) and threshold == 0` at losses.py:184 and 220.",
+      "cross_refs": [
+        "hyperparameters-ignored"
+      ],
+      "check_script": "_audit_code/check_threshold_tuple_bug.py",
+      "paper_ref": "losses.py threshold_based_f_euler / masked_losses_v",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "threshold-isinstance-typo",
+      "audit": "",
+      "audit_md_line": 73
+    },
+    {
+      "id": "/checkpoint-index-mismatch",
+      "category": "bug",
+      "topic": "reproduction / checkpoint numbering",
+      "title": "README CIFAR eval reads ckpt 34-40 but the documented training saves only ckpt 0-10",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "code/YangLing0818__consistency_flow_matching/README.md",
+      "line_start": 65,
+      "line_end": 66,
+      "quote": "--config.eval.begin_ckpt 34 \\\n--config.eval.end_ckpt 40 \\\n",
+      "claim": "Checkpoints are named `checkpoint_{step // snapshot_freq}.pth` (run_lib.py:150, run_lib_pytorch.py:160). The CIFAR config sets `snapshot_freq = 20000` (cifar10_gaussian_ddpmpp.py:34) and the README trains to `n_iters 200001`, so from-scratch training produces checkpoint_0 … checkpoint_10, but the documented eval command requests indices 34-40.",
+      "concern": "A user reproducing Table 2 from scratch and running the documented eval command hits the `while not exists: time.sleep(60)` wait loop (run_lib.py:272-276) forever, because checkpoint_34.pth is never produced; the eval indices presumably match the separately provided Google-Drive checkpoints, but this is undocumented.",
+      "resolution": "Authors: state the snapshot_freq used for the released checkpoints, or align the README eval indices with the training snapshot_freq.",
+      "cross_refs": [],
+      "paper_ref": "README lines 63-67; Table 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "checkpoint-index-mismatch",
+      "audit": "",
+      "audit_md_line": 98
+    },
+    {
+      "id": "/data-pipeline-nondeterminism",
+      "category": "bug",
+      "topic": "reproducibility / data loading",
+      "title": "High-res Dataset.__getitem__ ignores idx and reseeds global numpy RNG every call",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/YangLing0818__consistency_flow_matching/pytorch_datasets.py",
+      "line_start": 23,
+      "line_end": 26,
+      "quote": "def __getitem__(self, idx):\n    np.random.seed()\n    idx = np.random.randint(0, self.num_imgs)\n    img_name = os.path.join(self.root_dir, '%d.jpg'%(idx))\n",
+      "claim": "For CelebA-HQ / AFHQ-Cat, `__getitem__` discards the DataLoader-supplied `idx`, calls `np.random.seed()` (entropy reseed) on every access, and returns a uniformly random image (with replacement); the AFHQ variant (lines 52-61) does the same inside a bare `try/except: continue`.",
+      "concern": "Despite `config.seed = 42`, the training data stream is nondeterministic and reseeds the global numpy RNG on every item across all 8 workers, so a high-res run cannot be reproduced bit-for-bit; impact on the reported FID (measured over 50k samples) is negligible, but exact-run reproduction is impossible.",
+      "resolution": "Index by the provided `idx` and seed numpy once per worker via `worker_init_fn`; remove the per-item `np.random.seed()`.",
+      "cross_refs": [],
+      "paper_ref": "pytorch_datasets.py:11-69",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "data-pipeline-nondeterminism",
+      "audit": "",
+      "audit_md_line": 123
+    },
+    {
+      "id": "/speedup-not-traceable",
+      "category": "missing",
+      "topic": "result traceability / efficiency claim",
+      "title": "Headline '4.4x / 1.7x faster' convergence claim has no code to compute it",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "significantly improves training efficiency by converging 4.4x faster than consistency models and 1.7x faster than rectified flow models\n",
+      "claim": "The repo trains only Consistency-FM and evaluates its FID; there is no baseline (Consistency Model, Rectified Flow) training code, no logged baseline FID-vs-step curves, and no script that computes a convergence-speed ratio. The one figure that this number comes from (Fig. 1) needs all three curves.",
+      "concern": "The abstract/Fig. 1/§4.1 headline efficiency ratios cannot be reproduced or checked from this repository; they depend on baseline runs that are neither included nor pointed to (baseline FID numbers in Table 2/3 are likewise cited, not recomputed here).",
+      "resolution": "Provide the baseline training/curve artefacts (or references to the exact runs) and the script that reads off the 4.4×/1.7× crossover, so the efficiency claim is reproducible.",
+      "cross_refs": [],
+      "paper_ref": "Abstract; Figure 1; Section 4.1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "speedup-not-traceable",
+      "audit": "",
+      "audit_md_line": 152,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/ema-vs-stopgrad-target",
+      "category": "difference",
+      "topic": "loss / target network",
+      "title": "Loss target uses stop-grad online model (θ⁻=θ), not the EMA network as Eq. (6)/(8) state",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/YangLing0818__consistency_flow_matching/losses.py",
+      "line_start": 202,
+      "line_end": 208,
+      "quote": "with torch.no_grad():\n  if (isinstance(hyperparameter[\"boundary\"], int) \n      and hyperparameter[\"boundary\"] == 0): # when hyperparameter[\"boundary\"] == 0, vr is not needed\n    vr = None\n  else:\n    vr = model_fn(xr, r*999)\n    vr = torch.nan_to_num(vr)\n",
+      "claim": "The target-branch velocity `vr` (and hence `fr`) is computed with `model_fn = model` (losses.py:196), i.e. the current online network under `torch.no_grad()` (stop-gradient), not the EMA weights. The EMA (`state['ema']`) is maintained but applied only at sampling/eval (run_lib_pytorch.py:165-168, losses.py:293-297).",
+      "concern": "Eq. (6) and Eq. (8) define the target with θ⁻ = 'the running average of past values of θ using EMA', whereas the code uses θ⁻ = θ (stop-grad); the two are different training objectives, though the code's variant is valid and is exactly the θ⁻=θ case that Theorem 1 analyses, so impact is limited.",
+      "resolution": "Either use the EMA parameters for the `vr`/`fr` target to match Eq. (6)/(8), or state in the paper that the released model trains with a stop-gradient (θ⁻=θ) target.",
+      "cross_refs": [],
+      "paper_ref": "Eq. (6), Eq. (8); Theorem 1 (θ⁻=θ)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ema-vs-stopgrad-target",
+      "audit": "",
+      "audit_md_line": 176
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+paper_number: 3764
+title: DNAEdit: Direct Noise Alignment for Text-Guided Rectified Flow Editing
+authors: Chenxi Xie, Minghan Li, Shuai Li, Yuhui Wu, Qiaosi Yi, Lei Zhang
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/b44ae90136013a8d0e2d24f6015b6097-Abstract-Conference.html
+category: empirical

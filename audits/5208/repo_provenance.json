@@ -1,0 +1,27 @@
+{
+  "paper_id": "5208_RF_Agent_Automated_Reward_Function_Design_via_Language_Agent",
+  "title": "RF-Agent: Automated Reward Function Design via Language Agent Tree Search",
+  "repos": [
+    {
+      "name": "deng-ai-lab__RF-Agent",
+      "role": "core",
+      "evidence": "README: '[NeurIPS 2025 Spotlight] The official implementation of RF-Agent: Automated Reward Function Design via Language Agent Tree Search'. Repo owner 'deng-ai-lab' is the lab of corresponding author Yue Deng (ydeng@buaa.edu.cn). Authors listed match paper exactly: Ning Gao, Xiuhui Zhang, Xingyu Jiang, Mukang You, Mohan Zhang, Yue Deng from Beihang University. Contains RF_Agent/rfagent.py, RF_Agent/rf_agent_algo/ (MCTS implementation), baseline_eureka.py, baseline_revolve.py, and reward_functions/ covering all 17 reported tasks."
+    },
+    {
+      "name": "RishiHazra__Revolve",
+      "role": "baseline",
+      "evidence": "README: 'Official code release of our ICLR 2025 paper.' with arXiv 2406.01309 by Rishi Hazra et al. (unrelated authors). This is REvolve, the evolutionary LLM reward-design baseline the paper benchmarks against (cited as [17] and directly referenced as 'Revolve' throughout the paper). The paper's core repo even includes baseline_revolve.py to run it."
+    },
+    {
+      "name": "isaac-sim__IsaacGymEnvs",
+      "role": "dependency",
+      "evidence": "NVIDIA's official IsaacGym environments repository (owner: isaac-sim). The paper uses IsaacGym as the RL simulation platform. A modified copy is already bundled inside deng-ai-lab__RF-Agent/isaacgymenvs/; this standalone clone is an upstream dependency."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "contaminated_extra_repos",
+  "confidence": "high",
+  "rationale": "The core paper implementation is definitively present in deng-ai-lab__RF-Agent: the README explicitly names it as the NeurIPS 2025 Spotlight official implementation, the repo owner maps to the corresponding author's lab, and all key modules (MCTS driver rfagent.py, rf_agent_algo/, reward_functions/ for all 17 tasks) are present. Two additional non-core repos were also cloned: RishiHazra__Revolve is a baseline competing method (ICLR 2025 paper by different authors) and isaac-sim__IsaacGymEnvs is a third-party simulator dependency. The audit correctly identified these roles and wrote all findings exclusively against the core repo. No findings were erroneously directed at the non-core repos.",
+  "audit_impact": "No impact on finding validity. All 5 findings (no-aggregation-or-figure-scripts, no-ablation-harness, unpinned-and-incorrect-deps, eval-seeds-not-disjoint-from-search, best-checkpoint-selection-by-eval-metric) were written against deng-ai-lab__RF-Agent (the core repo) and are correctly scoped. The two non-core clones were noted in the audit summary as 'baseline/dependency context and were not audited for internals'.",
+  "recommended_action": "No action required. The audit correctly used and identified all three repos. The contamination (two extra repos cloned) did not affect finding quality."
+}

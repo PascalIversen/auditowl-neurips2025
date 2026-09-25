@@ -1,0 +1,6 @@
+item,count,examples
+dependency_spec_file,0,NONE
+pddl_problem_files_in_repo,0,NONE
+trained_weight_files,0,NONE
+training_data_pickles,0,NONE
+fd_reference_jsons,9,cache/results/planner_data/Gripper_ipcc_non_optimal.json;cache/results/planner_data/Manyblocks_ipcc_big_non_optimal.json;cache/results/planner_data/Rovers_ipcc_non_optimal.json;cache/results/planner_data/Klondike_solitaire_non_optimal.json;cache/results/planner_data/Miconic_ipcc_non_optimal.json;cache/results/planner_data/Visitall_ipcc_non_optimal.json;cache/results/planner_data/Spanner_ipcc_non_optimal.json;cache/results/planner_data/Logistics_ipcc_non_optimal.json;cache/results/planner_data/Grid_ipcc_non_optimal.json

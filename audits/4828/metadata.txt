@@ -1,0 +1,5 @@
+paper_number: 4828
+title: WarpGAN: Warping-Guided 3D GAN Inversion with Style-Based Novel View Inpainting
+authors: Kaitao Huang, Yan Yan, Jing-Hao Xue, Hanzi Wang
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/e9fa37f81c88c31bdc6c01be72294a1a-Abstract-Conference.html
+category: empirical

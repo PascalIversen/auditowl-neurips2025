@@ -1,0 +1,6 @@
+=== lr keys in configs ===
+res50.json False data_augmentation= False batch_size= 600
+vits.json False data_augmentation= False batch_size= 850
+res101.json False data_augmentation= False batch_size= 200
+res18.json False data_augmentation= False batch_size= 1600
+paper says lr=1e-5; hparams_registry default lr for non-small dataset = 5e-5

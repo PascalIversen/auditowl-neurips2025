@@ -1,0 +1,17 @@
+{
+  "paper_id": "1144_Graph_Your_Own_Prompt",
+  "title": "Graph Your Own Prompt",
+  "repos": [
+    {
+      "name": "Darcyddx__graph-prompt",
+      "role": "core",
+      "evidence": "README header is literally 'Graph Your Own Prompt' with the exact author list ([Xi Ding], [Lei Wang], [Piotr Koniusz], [Yongsheng Gao]), arXiv badge 2509.23373, NeurIPS25 paper PDF, and project page darcyddx.github.io/gcr; BibTeX @article{ding2025graph, title={Graph Your Own Prompt}, ... journal={Advances in Neural Information Processing Systems}, year={2025}}. Repo owner 'Darcyddx' == first author Xi Ding (git remote origin https://github.com/Darcyddx/graph-prompt). Code implements the paper's named contribution: gcr.py RelationshipLayer computes ReLU(cos) feature graph (Eq. 1); indicator.py compute_similarity_indicator builds the intra-class binary mask M (Eq. 3); computeweight.py compute_adaptive does softmax(-L_graph) adaptive layer weighting (§3.2); train.py implements the GCR alignment loss (Eq. 5) and CIFAR/Tiny-ImageNet training. assets/gcr_icon.png + assets/graph_pipeline.png are the paper's own teaser/Fig.2."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo is the official author implementation of THIS paper. Decisive: README states the exact title, the full matching author list, arXiv id 2509.23373, the NeurIPS25 venue, and the camera PDF; repo owner Darcyddx is first author Xi Ding. The modules implement the paper's named method GCR/GCL (feature similarity graph Eq.1, intra-class masked prediction graph Eq.3, adaptive layer weighting §3.2, alignment loss Eq.5) rather than a baseline or library. No baseline/dependency/different-paper repo was cloned, so there is no contamination. Source-present is justified.",
+  "audit_impact": "No correction needed to source-present classification. All nine verified findings are legitimate reproducibility/code-quality critiques written against the correct core repo, not 'no code exists' claims: e.g. 'ImageNet-1K / iFormer / ViG experiments (Table 4) have no code path' and 'AdamW/AMP/cosine-annealing transformer training regime not in repo' flag genuinely absent transformer/ImageNet paths in the author code; 'sqrt/arccos/cosine weighting schemes crash (math never imported)' is a real bug in the author's computeweight.py. These are valid findings against THIS paper's own implementation; none is misattributed to a wrong repo.",
+  "recommended_action": "Keep paper classified as source-present (correct). No repo reclassification or finding reattribution required. The existing findings stand as written against the legitimate author core; optionally note in the audit that the partial-coverage findings (missing ImageNet-1K/transformer training path, missing figure/cats-vs-dogs scripts) indicate the released code is partial w.r.t. the full experiment suite, but the headline GCR/GCL method itself is fully implemented and released."
+}

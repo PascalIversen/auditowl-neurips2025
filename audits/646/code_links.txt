@@ -1,0 +1,6 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/berkegokmen1/RoPECraft	[title-match]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/Wan-Video/Wan2.1	[baseline-cue]
+https://github.com/spiros/discrete_frechet	[no-author-signal]

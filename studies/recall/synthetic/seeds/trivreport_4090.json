@@ -1,0 +1,230 @@
+{
+  "paper": "4090",
+  "n_flags": 20,
+  "flags": [
+    {
+      "file": "wxl1122__URD/Unifying_INN/flow_net/denet.py",
+      "line": 56,
+      "reason": "The helper constructing the advertised iMonotoneBlock contraction mapping is never called or appended, so each executed flow_unit contains only affine couplings and ActNorm.",
+      "confidence": "high"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/flow_net/denet.py",
+      "line": 141,
+      "reason": "prob_predictor never updates z or the running log probability inside its three-module loop, so the returned density ignores two modules and evaluates the remaining inverse at the wrong point.",
+      "confidence": "high"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/model/INN.py",
+      "line": 18,
+      "reason": "Evaluation forward passes perform an in-place gradient update on all model parameters, making each score depend on its batch composition, batch size, and all previously evaluated batches.",
+      "confidence": "high"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/main.py",
+      "line": 85,
+      "reason": "The test-time parameter updates performed by evaluation_batch are not restored, so training after every fifth epoch continues from a model fitted on the test set and later checkpoints leak test data.",
+      "confidence": "high"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/utils/utils.py",
+      "line": 20,
+      "reason": "AUROC and AP are reported as separate maxima over score, negated score, absolute score, and squared score using test labels, leaking label information and allowing different post-hoc score definitions per metric.",
+      "confidence": "high"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/utils/loadData.py",
+      "line": 5,
+      "reason": "All datasets are loaded from the author's absolute /home/author/ddpm/UniINN path, so the committed default dataset cannot be used from this repository without editing code.",
+      "confidence": "high"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/main.py",
+      "line": 84,
+      "reason": "The default checkpoint directory is absent and never created before torch.save, so a default run fails at the first evaluation checkpoint.",
+      "confidence": "high"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/flow_net/layers/normalize.py",
+      "line": 128,
+      "reason": "ActNorm.inverse adds the same log-determinant sign as forward while AffineCoupling.inverse subtracts its forward log-determinant, making the chained change-of-variables calculation internally inconsistent.",
+      "confidence": "high"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/utils/loadData.py",
+      "line": 25,
+      "reason": "The test array is deterministically ordered with every anomaly before every normal sample, which severely confounds the stateful online test-time adaptation used during evaluation.",
+      "confidence": "high"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/get_data.sh",
+      "line": 5,
+      "reason": "The download script stores MAT files in per-dataset subdirectories, but loadData expects flat data/<dataset>.mat paths, so downloaded data are not discoverable even after fixing the absolute root.",
+      "confidence": "high"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/get_data.sh",
+      "line": 23,
+      "reason": "campaign and fraud are downloaded as NPZ files, while loadData unconditionally requests <dataset>.mat and calls scipy.io.loadmat, making those advertised datasets unusable.",
+      "confidence": "high"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/get_data.sh",
+      "line": 50,
+      "reason": "The script names the downloaded dataset satimage/satimage.mat, whereas preprocessing is keyed to the distinct name satimage-2, so the download name and implemented protocol cannot coincide.",
+      "confidence": "high"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/requirements.txt",
+      "line": null,
+      "reason": "einops is imported by utils/utils.py during every main.py startup but is absent from requirements.txt, so the declared environment does not provide a required import.",
+      "confidence": "high"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/main.py",
+      "line": 30,
+      "reason": "The --lr argument omits type=float, so any command-line learning-rate override is a string and is rejected by torch.optim.Adam.",
+      "confidence": "high"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/main.py",
+      "line": 21,
+      "reason": "The misspelled cudnn attribute deterministirc silently creates an unused Python attribute instead of enabling deterministic cuDNN behavior as setup_seed intends.",
+      "confidence": "high"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/model/INN.py",
+      "line": 14,
+      "reason": "UniINN accepts latent_dim but does not pass it to Encoder, so any nondefault value makes the encoder emit 32 features while the flow expects latent_dim features.",
+      "confidence": "high"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/flow_net/denet.py",
+      "line": 167,
+      "reason": "LearnableNormal detaches its latent input, preventing both prior and posterior base-density terms from training the encoder or flow toward the learned density.",
+      "confidence": "medium"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/main.py",
+      "line": 85,
+      "reason": "There is no validation split or model-selection rule, yet test AUROC/AP are printed every five epochs, enabling epoch selection directly on the test set.",
+      "confidence": "medium"
+    },
+    {
+      "file": "wxl1122__URD/Unifying_INN/main.py",
+      "line": 35,
+      "reason": "Checkpoint loading provides no map_location, so a checkpoint saved from the default CUDA path cannot be evaluated on a CPU-only machine.",
+      "confidence": "medium"
+    },
+    {
+      "file": "wxl1122__URD/README.md",
+      "line": 1,
+      "reason": "The repository README contains only a title and acceptance claim, with no run command, data-layout instructions, experiment configurations, expected results, or explanation of the unusual test-time adaptation protocol.",
+      "confidence": "medium"
+    }
+  ],
+  "candidates": {
+    "S01": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "Unifying_INN/utils/utils.py",
+          "line": 18
+        }
+      ],
+      "matched_flags": [
+        "AUROC and AP are reported as separate maxima over score, negated score, absolute score, and squared score using test labels, leaking label information and allowing different post-hoc score definitions per metric."
+      ]
+    },
+    "S02": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "Unifying_INN/flow_net/denoise_net.py",
+          "line": null
+        }
+      ],
+      "matched_flags": []
+    },
+    "S03": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "Unifying_INN/flow_net/denet.py",
+          "line": 10
+        },
+        {
+          "file": "Unifying_INN/flow_net/denet.py",
+          "line": 63
+        }
+      ],
+      "matched_flags": [
+        "The helper constructing the advertised iMonotoneBlock contraction mapping is never called or appended, so each executed flow_unit contains only affine couplings and ActNorm."
+      ]
+    },
+    "S04": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "Unifying_INN/model/INN.py",
+          "line": 24
+        }
+      ],
+      "matched_flags": [
+        "Evaluation forward passes perform an in-place gradient update on all model parameters, making each score depend on its batch composition, batch size, and all previously evaluated batches.",
+        "UniINN accepts latent_dim but does not pass it to Encoder, so any nondefault value makes the encoder emit 32 features while the flow expects latent_dim features."
+      ]
+    },
+    "S05": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "Unifying_INN/utils/utils.py",
+          "line": 18
+        }
+      ],
+      "matched_flags": [
+        "AUROC and AP are reported as separate maxima over score, negated score, absolute score, and squared score using test labels, leaking label information and allowing different post-hoc score definitions per metric."
+      ]
+    },
+    "S06": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "Unifying_INN/model/INN.py",
+          "line": 17
+        }
+      ],
+      "matched_flags": [
+        "Evaluation forward passes perform an in-place gradient update on all model parameters, making each score depend on its batch composition, batch size, and all previously evaluated batches.",
+        "UniINN accepts latent_dim but does not pass it to Encoder, so any nondefault value makes the encoder emit 32 features while the flow expects latent_dim features."
+      ]
+    },
+    "S07": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "Unifying_INN/flow_net/layers/base/activations.py",
+          "line": 112
+        }
+      ],
+      "matched_flags": []
+    },
+    "S08": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "Unifying_INN/flow_net/layers/iMonotoneBlock.py",
+          "line": 80
+        },
+        {
+          "file": "Unifying_INN/flow_net/layers/normalize.py",
+          "line": 128
+        }
+      ],
+      "matched_flags": [
+        "ActNorm.inverse adds the same log-determinant sign as forward while AffineCoupling.inverse subtracts its forward log-determinant, making the chained change-of-variables calculation internally inconsistent."
+      ]
+    }
+  }
+}

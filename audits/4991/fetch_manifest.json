@@ -1,0 +1,7 @@
+{
+  "Applied-Machine-LearningLab__DEAL": {
+    "repo": "https://github.com/Applied-Machine-LearningLab/DEAL",
+    "clone_status": "failed",
+    "clone_error": "fatal: repository 'https://github.com/Applied-Machine-LearningLab/DEAL/' not found"
+  }
+}

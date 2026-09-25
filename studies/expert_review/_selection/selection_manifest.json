@@ -1,0 +1,156 @@
+{
+ "selected_papers": {
+  "1144": {
+   "dir": "1144",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 4
+  },
+  "1339": {
+   "dir": "1339",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 7
+  },
+  "1867": {
+   "dir": "1867",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 3
+  },
+  "1877": {
+   "dir": "1877",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 4
+  },
+  "2006": {
+   "dir": "2006",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 2
+  },
+  "2021": {
+   "dir": "2021",
+   "reason": ">=3 high missing",
+   "n_inscope": 6
+  },
+  "205": {
+   "dir": "205",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 4
+  },
+  "2170": {
+   "dir": "2170",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 2
+  },
+  "2818": {
+   "dir": "2818",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 3
+  },
+  "2911": {
+   "dir": "2911",
+   "reason": ">=3 high missing",
+   "n_inscope": 4
+  },
+  "3033": {
+   "dir": "3033",
+   "reason": ">=3 high missing",
+   "n_inscope": 5
+  },
+  "3109": {
+   "dir": "3109",
+   "reason": ">=3 high missing",
+   "n_inscope": 4
+  },
+  "3113": {
+   "dir": "3113",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 3
+  },
+  "3457": {
+   "dir": "3457",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 7
+  },
+  "3463": {
+   "dir": "3463",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 5
+  },
+  "376": {
+   "dir": "376",
+   "reason": ">=3 high missing",
+   "n_inscope": 6
+  },
+  "4090": {
+   "dir": "4090",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 4
+  },
+  "4140": {
+   "dir": "4140",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 3
+  },
+  "4468": {
+   "dir": "4468",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 2
+  },
+  "4523": {
+   "dir": "4523",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 4
+  },
+  "4563": {
+   "dir": "4563",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 7
+  },
+  "4932": {
+   "dir": "4932",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 4
+  },
+  "4946": {
+   "dir": "4946",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 6
+  },
+  "4991": {
+   "dir": "4991",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 5
+  },
+  "5202": {
+   "dir": "5202",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 3
+  },
+  "5243": {
+   "dir": "5243",
+   "reason": ">=3 high missing",
+   "n_inscope": 5
+  },
+  "54": {
+   "dir": "54",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 4
+  },
+  "570": {
+   "dir": "570",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 5
+  },
+  "768": {
+   "dir": "768",
+   "reason": "high bug/mismatch/methodology",
+   "n_inscope": 5
+  },
+  "838": {
+   "dir": "838",
+   "reason": ">=3 high missing",
+   "n_inscope": 4
+  }
+ },
+ "n_papers": 30,
+ "n_inscope_issues": 130
+}

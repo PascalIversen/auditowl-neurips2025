@@ -1,0 +1,5 @@
+paper_number: 4090
+title: Unifying Reconstruction and Density Estimation via Invertible Contraction Mapping in One-Class Classification
+authors: Xiaolei Wang, Tianhong Dai, Huihui Bai, Yao Zhao, Jimin XIAO
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/c4b652b7e228b18e1c65478da3a4a2cf-Abstract-Conference.html
+category: empirical

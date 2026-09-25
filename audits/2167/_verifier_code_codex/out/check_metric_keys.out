@@ -1,0 +1,19 @@
+Methods defined on CFMetrics: ['__init__', '_convert_to_numpy', 'actionability', 'calc_all_metrics', 'coverage', 'evaluate_cf', 'evaluate_cf_for_rppcef', 'feature_distance', 'isolation_forest_scores', 'lof_scores', 'log_density', 'prob_plausibility', 'sparsity', 'target_distance', 'validity']
+
+calc_all_metrics returns these keys:
+   coverage
+   validity
+   actionability
+   sparsity
+   proximity_continuous_manhattan
+   proximity_continuous_euclidean
+   prob_plausibility
+   log_density_cf
+   log_density_test
+   lof_scores_cf
+   lof_scores_test
+   isolation_forest_scores_cf
+   isolation_forest_scores_test
+
+hypervolume/diversity key present in calc_all_metrics: False
+Wrote /home/author/Projects/neurips_audit/audits/2167_DiCoFlex_Model_Agnostic_Diverse_Counterfactuals_with_Flexibl/_verifier_code_codex/out/metric_keys.csv

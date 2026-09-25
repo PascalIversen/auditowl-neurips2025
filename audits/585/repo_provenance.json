@@ -1,0 +1,17 @@
+{
+  "paper_id": "585_ReplaceMe_Network_Simplification_via_Depth_Pruning_and_Trans",
+  "title": "ReplaceMe: Network Simplification via Depth Pruning and Transformer Block Linearization",
+  "repos": [
+    {
+      "name": "mts-ai__ReplaceMe",
+      "role": "core",
+      "evidence": "README cites arXiv:2505.02819, lists all seven paper authors (Shopkhoev, Ali, Zhussip, Malykh, Lefkimmiatis, Komodakis, Zagoruyko), and the bibtex entry reads 'ReplaceMe: Network Simplification via Layer Pruning and Linear Transformations'. Repo owner 'mts-ai' matches paper institution MWS AI. Paper PDF line 33 states the official URL as 'https://github.com/mts-ai/ReplaceMe'. Modules ReplaceMe_pipeline.py, lstsq.py, cosine_dist.py directly implement the paper's core method (depth pruning + linear transformation estimation)."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo mts-ai__ReplaceMe is unambiguously the paper's own official implementation: the paper text itself cites the GitHub URL, the README names all co-authors and the arXiv id, and the core modules implement the paper's described method (calibration-based linear-transform estimation fused into the preceding MLP weight). All audit findings are written against this correct core repo and address genuine gaps (missing vision/ViT code for Table 6, missing orca_generated data loader, triangular-LT attribute bug, etc.). No non-core repos were cloned.",
+  "audit_impact": "None — the audit correctly identified the core repo and all findings are valid. No reclassification needed.",
+  "recommended_action": "No action required on repo provenance. The high-severity finding 'missing-vit-clip-code' and the medium-severity 'thri-attribute-bug' and 'missing-cosine-regularization' findings are well-grounded and should be retained."
+}

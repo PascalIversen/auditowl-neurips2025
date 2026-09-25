@@ -1,0 +1,30 @@
+=== (1) MNIST density-ranking by estimated probability density ===
+  rank/argsort/latent-density hits: 0
+=== (2) Iterated SD-KDE (multi-step) experiment ===
+  iteration-loop hits in .py: 0
+=== (3) Hardcoded absolute /scratch or /pscratch paths ===
+  absolute-path hits: 24
+    SD-KDE__neurips_supplemental/minDiffusion/train_mnist.py:20: BASE_DIR = "/pscratch/sd/j/jwl50/Score_KDE/minDiffusion"
+    SD-KDE__neurips_supplemental/minDiffusion/run_cifar10.sh:13: conda activate /pscratch/sd/j/jwl50/Score_KDE/minDiffusion/.pyenv
+    SD-KDE__neurips_supplemental/minDiffusion/run_mnist.sh:13: conda activate /pscratch/sd/j/jwl50/Score_KDE/minDiffusion/.pyenv
+    SD-KDE__neurips_supplemental/minDiffusion/run_2d.sh:13: conda activate /pscratch/sd/j/jwl50/Score_KDE/minDiffusion/.pyenv
+    SD-KDE__neurips_supplemental/minDiffusion/train_cifar10.py:18: BASE_DIR = "/pscratch/sd/j/jwl50/Score_KDE/minDiffusion"
+    SD-KDE__neurips_supplemental/minDiffusion/uci/process_uci.py:15:     os.makedirs("/scratch/Score_KDE/minDiffusion/uci/datasets/AReM", exist_ok=True)
+    SD-KDE__neurips_supplemental/minDiffusion/uci/process_uci.py:34:             f"/scratch/Score_KDE/minDiffusion/uci/arem/{activity}/dataset*.csv"
+    SD-KDE__neurips_supplemental/minDiffusion/uci/process_uci.py:93:     os.makedirs("/scratch/Score_KDE/minDiffusion/uci/datasets/CASP", exist_ok=True)
+    SD-KDE__neurips_supplemental/minDiffusion/uci/process_uci.py:97:         data = pd.read_csv("/scratch/Score_KDE/minDiffusion/uci/casp/CASP.csv")
+    SD-KDE__neurips_supplemental/minDiffusion/uci/process_uci.py:103:         np.save("/scratch/Score_KDE/minDiffusion/uci/datasets/CASP/data.npy", features)
+    SD-KDE__neurips_supplemental/minDiffusion/uci/process_uci.py:109:             "/scratch/Score_KDE/minDiffusion/uci/datasets/CASP/feature_names.txt", "w"
+    SD-KDE__neurips_supplemental/minDiffusion/uci/process_uci.py:124:     os.makedirs("/scratch/Score_KDE/minDiffusion/uci/datasets/BANK", exist_ok=True)
+    SD-KDE__neurips_supplemental/minDiffusion/uci/process_uci.py:128:         data = pd.read_csv("/scratch/Score_KDE/minDiffusion/uci/bank/bank.csv", sep=";")
+    SD-KDE__neurips_supplemental/minDiffusion/uci/process_uci.py:155:         np.save("/scratch/Score_KDE/minDiffusion/uci/datasets/BANK/data.npy", features)
+    SD-KDE__neurips_supplemental/minDiffusion/uci/process_uci.py:161:             "/scratch/Score_KDE/minDiffusion/uci/datasets/BANK/feature_names.txt", "w"
+    SD-KDE__neurips_supplemental/minDiffusion/uci/process_uci.py:174:     os.makedirs("/scratch/Score_KDE/minDiffusion/uci/datasets", exist_ok=True)
+    SD-KDE__neurips_supplemental/minDiffusion/notebooks/uci.py:55:                 f"/scratch/Score_KDE/minDiffusion/uci/datasets/{self.dataset_name}/data.npy",
+    SD-KDE__neurips_supplemental/minDiffusion/notebooks/uci.py:241:         with open(f"/scratch/Score_KDE/minDiffusion/uci/datasets/{dataset_name}/feature_names.txt", 'r') as f:
+    SD-KDE__neurips_supplemental/minDiffusion/notebooks/2d.py:908:     'gaussian': '/scratch/Score_KDE/minDiffusion/notebooks/best_model_gaussian.pth',
+    SD-KDE__neurips_supplemental/minDiffusion/notebooks/2d.py:909:     'moons': '/scratch/Score_KDE/minDiffusion/notebooks/best_model_moons.pth',
+    SD-KDE__neurips_supplemental/minDiffusion/notebooks/2d.py:910:     'spirals': '/scratch/Score_KDE/minDiffusion/notebooks/best_model_spirals.pth'
+    SD-KDE__neurips_supplemental/minDiffusion/notebooks/2d.py:1134:         'gaussian': '/scratch/Score_KDE/minDiffusion/notebooks/best_model_gaussian.pth',
+    SD-KDE__neurips_supplemental/minDiffusion/notebooks/2d.py:1135:         'moons': '/scratch/Score_KDE/minDiffusion/notebooks/best_model_moons.pth',
+    SD-KDE__neurips_supplemental/minDiffusion/notebooks/2d.py:1136:         'spirals': '/scratch/Score_KDE/minDiffusion/notebooks/best_model_spirals.pth'

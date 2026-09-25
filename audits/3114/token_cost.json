@@ -1,0 +1,19 @@
+{
+  "folder": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 24810,
+    "output": 20052,
+    "cache_write": 224588,
+    "cache_read": 4514604
+  },
+  "total_tokens": 4784054,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 12.86
+}

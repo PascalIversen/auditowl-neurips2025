@@ -1,0 +1,11 @@
+{
+  "kaist-ami__Automated-Model-Discovery": {
+    "repo": "https://github.com/kaist-ami/Automated-Model-Discovery",
+    "clone_status": "cloned",
+    "size_mb": 0.7,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": [],
+    "note": "shallow clone (--depth 1), GIT_LFS_SKIP_SMUDGE; located post-audit 2026-05-31 (was missing at original audit)"
+  }
+}

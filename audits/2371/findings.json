@@ -1,0 +1,203 @@
+{
+  "schema_version": "1",
+  "audit": "2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App",
+  "audit_md": "audits/2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App/audit.md",
+  "generated_at": "2026-06-02T22:24:57.273759+00:00",
+  "findings": [
+    {
+      "id": "2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App/no-aggregation-or-baseline-code",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No code produces Table 1 normalized averages, ranks, or any baseline numbers",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "utils/evaluation/utils_evaluation.py",
+      "line_start": 31,
+      "line_end": 46,
+      "quote": "def initialize_results_file_tsg(csv_file_path):\n\n    if os.path.exists(csv_file_path):\n        df_results = pd.read_csv(csv_file_path)\n    else:\n        df_results = pd.DataFrame(columns=[\n            'key',\n            'seed', 'data', 'target', 'augmentation', \n            'n points train', 'n samples train', 'min train windows',\n            'train windows', 'windows length', 'overlap', 'period', \n            'sdforge llm', 'learning rate', 'train splitting',\n            'permute', 'init value', 'embedding type', \n            'embedding dim', 'generated samples', 'var requested', \n            'var explained', 'MDD', 'ACD', 'SD', 'KD', 'ED', 'DTW', 'SHAP-RE'\n        ])\n    return df_results\n",
+      "claim": "The TSG evaluation writes one CSV row of raw metrics per (dataset, model) invocation; the repo contains no script that produces the 'Norm. Avg.' (Feat./Dist.) or 'Rank' columns of Table 1, and no code that generates the five baseline competitors (TimeVAE, TimeVQVAE, RtsGAN, SdeGAN, LS4) whose rows fill most of Tables 1 and 2.",
+      "concern": "The headline comparison ('SDForger outperforms existing generative models … average rank') depends on normalization and ranking across baselines, none of which can be reproduced from the shipped code — the NeurIPS checklist item 5 explicitly asks for scripts to reproduce results 'for the new proposed method and baselines'.",
+      "resolution": "Provide the aggregation/normalization/ranking script that turns per-run metric CSVs into Table 1's Norm. Avg. and Rank columns, and the baseline-generation code (or the baseline-generated .npy outputs) so each Table 1/2 row is reproducible.",
+      "cross_refs": [
+        "§5.1",
+        "Table 1",
+        "Table 2"
+      ],
+      "paper_ref": "Table 1 (Norm. Avg., Rank columns); Table 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-aggregation-or-baseline-code",
+      "audit": "2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App",
+      "audit_md_line": 48
+    },
+    {
+      "id": "2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App/fig2-knn-accuracy-missing",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No code computes the 0.81 kNN accuracy reported for text-conditioned generation (Fig. 2)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "using a longitudinal k-nearest neighbor classifier (Ramos-Carreño et al., 2024) trained\non real data, we achieve an accuracy of 0.81 in identifying the generated curves (see Figure 2).\n",
+      "claim": "Section 6 reports a quantitative result (accuracy 0.81 from a longitudinal kNN classifier) for the text-conditioned generation experiment, but the only artefact for that experiment is notebook/conditional_generation.ipynb, which standardizes, augments, and plots the three channels and contains no classifier, no 'accuracy', and no kNN call (grep over its 14 code cells returns 0 hits for accuracy/KNeighbors/knn/classif/score).",
+      "concern": "A reported numeric claim has no computing artefact in the repo, so the 0.81 cannot be reproduced or verified.",
+      "resolution": "Authors: please add the script/cell that builds the longitudinal kNN classifier, trains it on real data, and computes the 0.81 identification accuracy from the conditional generations.",
+      "cross_refs": [
+        "§6",
+        "Figure 2"
+      ],
+      "paper_ref": "Section 6, 'Shaping time series with language'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "fig2-knn-accuracy-missing",
+      "audit": "2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App",
+      "audit_md_line": 87,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App/ed-dtw-silent-truncation",
+      "category": "bug",
+      "topic": "evaluation / distance metrics",
+      "title": "ED and DTW loop over n_original, silently discarding surplus generated samples",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "utils/evaluation/distance_based_measures.py",
+      "line_start": 13,
+      "line_end": 22,
+      "quote": "def calculate_ed(ori_data,gen_data):\n    n_samples = ori_data.shape[0]\n    n_series = ori_data.shape[2]\n    distance_eu = []\n    for i in range(n_samples):\n        total_distance_eu = 0\n        for j in range(n_series):\n            distance = np.linalg.norm(ori_data[i, :, j] - gen_data[i, :, j])\n            total_distance_eu += distance\n        distance_eu.append(total_distance_eu / n_series)\n",
+      "claim": "Both calculate_ed (line 17) and calculate_dtw (line 30-31) iterate range(ori_data.shape[0]) and index gen_data[i], so only the first n_original generated samples are ever compared.",
+      "concern": "Under the paper's protocol the model generates ~100 samples while there are ~30 training windows (config minimum_windows_number=30, min/max_generations=100), so ED/DTW evaluate only the first 30 of 100 generated curves and ignore 70% of the synthetic set; check_ed_dtw_pairing.py confirms calculate_ed(orig, gen[:30]) == calculate_ed(orig, gen) exactly when 100 generated rows are supplied.",
+      "resolution": "Authors: confirm how many generated curves enter the reported ED/DTW; if generation count exceeds the original count the surplus is dropped — clarify whether the .npy fed to evaluation was pre-truncated to the window count, or fix the loop to aggregate over all generated samples.",
+      "cross_refs": [
+        "ed-dtw-index-pairing"
+      ],
+      "check_script": "_audit_code/check_ed_dtw_pairing.py",
+      "paper_ref": "Table 1, ED/DTW columns; Appendix B.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ed-dtw-silent-truncation",
+      "audit": "2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App",
+      "audit_md_line": 112
+    },
+    {
+      "id": "2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App/shapelet-multivariate-reshape-crash",
+      "category": "bug",
+      "topic": "evaluation / shapelet metric",
+      "title": "SHAP-RE reshape collapses only when channels==1; crashes for multivariate input",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "utils/evaluation/shapelet_based_measures.py",
+      "line_start": 20,
+      "line_end": 21,
+      "quote": "train_data  = orig_data.reshape(orig_data.shape[0], orig_data.shape[1])\ntest_data = gen_data.reshape(gen_data.shape[0], gen_data.shape[1])\n",
+      "claim": "calculate_shapelet_recons_err reshapes (n_samples, length, channels) to (n_samples, length), which is only valid when channels==1; for channels>1 numpy raises ValueError: cannot reshape array of size N into shape (n,length) (verified directly with a (30,250,3) array).",
+      "concern": "The SHAP-RE (SHR) metric cannot be computed on any multi-channel series; it is usable only because the Table 1 settings that report SHR (multisample ecl, univariate) are single-channel, so the metric is latently broken for the multivariate/multichannel case.",
+      "resolution": "Authors: confirm SHR was only ever computed on single-channel data; if a multivariate SHR was reported anywhere, the reshape would have failed — reshape should flatten or loop over channels.",
+      "cross_refs": [],
+      "paper_ref": "Table 1, SHR column; Appendix B.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "shapelet-multivariate-reshape-crash",
+      "audit": "2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App",
+      "audit_md_line": 146
+    },
+    {
+      "id": "2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App/ed-preprocessing-standardscaler-not-0-1",
+      "category": "difference",
+      "topic": "preprocessing / evaluation",
+      "title": "Paper says inputs scaled to [0,1] for ED; code uses StandardScaler (zero-mean/unit-var)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "utils/augmentation/utils_preprocess_data.py",
+      "line_start": 234,
+      "line_end": 237,
+      "quote": "arr_train = np.array(preprocessed_train[var])\nscaler = StandardScaler()\nscaled_arr_train = scaler.fit_transform(arr_train)\nscaled_preprocessed_train.append(scaled_arr_train)\n",
+      "claim": "The only scaler applied to the series before embedding and evaluation is sklearn StandardScaler (mean 0, unit variance per column), not min-max [0,1] scaling — grep over the package finds no MinMaxScaler.",
+      "concern": "Appendix B.2 states 'the input time series has been preprocessed to fit within the range of [0, 1]' as the basis for ED being a deterministic similarity; the actual preprocessing is standardization, which does not bound values to [0,1], so the paper's stated ED normalization does not match the code (the standardization is itself valid, only the description differs).",
+      "resolution": "Authors: correct the Appendix B.2 description to standardization, or apply [0,1] scaling if that is what produced the reported ED magnitudes.",
+      "cross_refs": [],
+      "paper_ref": "Appendix B.2, Euclidean Distance",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ed-preprocessing-standardscaler-not-0-1",
+      "audit": "2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App",
+      "audit_md_line": 173
+    },
+    {
+      "id": "2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App/ed-dtw-index-pairing",
+      "category": "methodology",
+      "topic": "evaluation / distance metrics",
+      "title": "ED/DTW pair original window i with generated sample i by index, not by similarity",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "utils/evaluation/distance_based_measures.py",
+      "line_start": 17,
+      "line_end": 22,
+      "quote": "for i in range(n_samples):\n    total_distance_eu = 0\n    for j in range(n_series):\n        distance = np.linalg.norm(ori_data[i, :, j] - gen_data[i, :, j])\n        total_distance_eu += distance\n    distance_eu.append(total_distance_eu / n_series)\n",
+      "claim": "ED (and DTW, line 30-32) compute a per-index distance between original sample i and generated sample i; check_ed_dtw_pairing.py shows that feeding the SAME SET of curves in a shuffled row order changes ED from 0 to 13.67, i.e. the metric depends entirely on arbitrary row alignment.",
+      "concern": "SDForger generation is unconditional, so generated row i has no correspondence to original window i; pairing them by index makes ED/DTW a distance between unrelated curves rather than a distribution-level similarity, and the value can be made arbitrarily large or small by reordering — weakening the ED/DTW evidence for 'high-quality' synthesis (note: this index-paired ED/DTW is the definition the paper itself gives in Appendix B.2, inherited from Ang et al. 2023 / TSGBench, and is applied identically to all baselines, so it does not by itself overturn the relative ranking — hence medium/medium).",
+      "resolution": "Authors: clarify whether ED/DTW use an optimal matching/nearest-neighbour assignment between real and generated sets; if it is raw index pairing, justify why a per-index distance over unconditionally generated samples is meaningful.",
+      "cross_refs": [
+        "ed-dtw-silent-truncation"
+      ],
+      "check_script": "_audit_code/check_ed_dtw_pairing.py",
+      "paper_ref": "Appendix B.2; Table 1 ED/DTW",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ed-dtw-index-pairing",
+      "audit": "2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App",
+      "audit_md_line": 202
+    },
+    {
+      "id": "2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App/ttm-mase-denominator-from-test-window",
+      "category": "methodology",
+      "topic": "evaluation / utility metric",
+      "title": "MASE scaled by the forecast window's own naive error, not the training-set naive error",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "question",
+      "file": "utils/evaluation/utils_ttm.py",
+      "line_start": 247,
+      "line_end": 251,
+      "quote": "def compute_mase(true, pred):\n    \"\"\"Compute MASE (Mean Absolute Scaled Error)\"\"\"\n    numerator = np.mean(np.abs(true - pred))\n    denominator = np.mean(np.abs(true[1:] - true[:-1]))  # Naive one-step ahead forecast\n    return numerator / denominator if denominator != 0 else np.nan\n",
+      "claim": "MASE scales the forecast error by the mean absolute one-step difference of the *future/test* window's own ground-truth values (true[1:]-true[:-1]), not by the in-sample naive error of the training series as in the standard MASE definition.",
+      "concern": "Using the test window's own volatility as the scaling denominator makes MASE a per-window-normalized error rather than the conventional training-anchored MASE; it is applied identically to all methods and to zero-shot, so cross-method ranking is preserved, but the absolute MASE values are not comparable to standard MASE in the literature.",
+      "resolution": "Authors: confirm the intended MASE definition; if the standard seasonal/in-sample naive denominator was intended, the metric should use the training series, not the forecast window.",
+      "cross_refs": [],
+      "paper_ref": "Table 2, MASE columns",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "ttm-mase-denominator-from-test-window",
+      "audit": "2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App",
+      "audit_md_line": 232
+    }
+  ]
+}

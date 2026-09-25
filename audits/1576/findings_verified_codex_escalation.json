@@ -1,0 +1,10 @@
+{
+  "findings": [
+    {
+      "id": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs/numpy-random-integers-removed",
+      "verdict": "reject",
+      "reason": "NumPy 2.2 explicitly retains and documents np.random.random_integers as deprecated, so the pinned NumPy 2.2.6 environment does not fail with the claimed removal-based AttributeError.",
+      "changed": "The verdict remains reject, but the reason changed from cannot-verify to a merits-based rejection because the claimed NumPy 2.x removal is false."
+    }
+  ]
+}

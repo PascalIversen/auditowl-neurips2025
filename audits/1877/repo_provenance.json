@@ -1,0 +1,17 @@
+{
+  "paper_id": "1877_Recognition_through_Reasoning_Reinforcing_Image_Geo_localiza",
+  "title": "Recognition through Reasoning: Reinforcing Image Geo-localization with Large Vision-Language Models",
+  "repos": [
+    {
+      "name": "lingli1996__GLOBE",
+      "role": "core",
+      "evidence": "README.md: 'Official implementation of the paper \"Recognition through Reasoning: Reinforcing Image Geo-localization with Large Vision-Language Models\", NeurIPS 2025' — exact title/venue match. Repo owner lingli1996 == paper first author Ling Li (lli297@connect.hkust-gz.edu.cn). The repo is a fork of ModelScope ms-swift, but the paper's own core method lives in examples/train/grpo/globe/: plugin.py registers the paper's three named GRPO rewards orms['globe_locatablity']=GeoLocatablityORM, orms['globe_accuracy']=GeoLocAccuracyV2ORM, orms['globe_visual_match']=GeoVisalEntityMatching2ORM (matching the paper's localizability/visual-cue/geolocation-accuracy rewards), plus dataset.py (MP16-Reason / geo_loc_rm preprocessors), eval.py, and 5 train_*.sh scripts. README links the paper's MP16-Reason HF dataset and GLOBE-Qwen2.5VL-7B/GLOBE-InternVL3-8B checkpoints."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "Exactly one repo was cloned (lingli1996/GLOBE), and it is the paper's own official implementation: the README states it verbatim, the owner matches the first author, and examples/train/grpo/globe/ implements the paper's named GLOBE method (GRPO with the three task-specific rewards: localizability, visual-cue/visual-match, geolocation accuracy). The repo being layered on top of the ms-swift framework does NOT make it a dependency clone — the paper-specific contribution is genuinely present and is what the findings target. Source-present is justified.",
+  "audit_impact": "None negative. The audit correctly identified the repo as a fork of ms-swift with the paper contribution isolated to examples/train/grpo/globe/, and wrote all findings against those GLOBE-specific files (plugin.py/eval.py/dataset.py/train scripts) — not against the ms-swift framework. No high-severity 'missing code' finding is mistargeted at a non-core repo, and no finding falsely asserts 'no code exists'. The 'missing' findings (eval distance metric, Azure geocoding step, baseline code, geo_loc_rm_20w RM dataset) are legitimate gaps WITHIN the present core implementation, not a misclassification of the repo's identity.",
+  "recommended_action": "Keep as source-present / verdict correct. No reclassification needed. The existing findings stand on their own merits as gaps within the genuine core repo; no action required for repo-provenance purposes."
+}

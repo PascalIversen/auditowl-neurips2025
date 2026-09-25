@@ -1,0 +1,19 @@
+{
+  "folder": "2006_Same_Task_Different_Circuits_Disentangling_Modality_Specific",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 10079,
+    "output": 12864,
+    "cache_write": 429706,
+    "cache_read": 10044076
+  },
+  "total_tokens": 10496725,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 24.24
+}

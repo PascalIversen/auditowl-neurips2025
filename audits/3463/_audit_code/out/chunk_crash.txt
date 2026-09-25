@@ -1,0 +1,2 @@
+ensemble_size=1: chunk(2) CRASH -> ValueError: not enough values to unpack (expected 2, got 1)
+ensemble_size=8: chunk(2) OK -> a(4, 3072, 4, 4) b(4, 3072, 4, 4)

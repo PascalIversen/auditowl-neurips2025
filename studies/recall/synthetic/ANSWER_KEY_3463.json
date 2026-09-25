@@ -1,0 +1,93 @@
+{
+  "paper": "3463",
+  "repo": "ganchaofan0000__DiTF",
+  "design": "major_recall_study DESIGN.md",
+  "seeds": [
+    {
+      "id": "S01",
+      "slot": "MAJOR-MISS",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "ganchaofan0000__DiTF/src/flux/feat_utils.py",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove all released AP-10K and PF-Pascal data-pipeline support",
+      "description": "Delete the only module that implements AP-10K and PF-Pascal pair discovery, annotation parsing, keypoint visibility filtering, resizing, and PCK-threshold preparation. The remaining SPair-only entry point cannot load either benchmark, so the principal cross-category AP-10K result and the PF-Pascal result in Table 3 have no producing code path anywhere in the release.",
+      "expected_reasoning": "A reviewer starts from the paper's three claimed semantic-correspondence benchmarks and searches the repository for AP-10K/PF-Pascal handling. All such executable support is confined to src/flux/feat_utils.py (load_ap10k_data, load_pascal_data, and their preprocessing helpers); eval_spair.py is hard-wired to SPair-71k. Deleting this module therefore creates an actual absence rather than a wrong substitute: no remaining file can construct the AP-10K or PF-Pascal evaluation pairs needed for Table 3.",
+      "paper_anchor": "For semantic correspondence, we conduct experiments on three popular benchmarks: SPair-71k [57], PF-Pascal [58], AP-10K benchmark [43].",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    {
+      "id": "S03",
+      "slot": "MAJOR-DIFF",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "ganchaofan0000__DiTF/src/flux/math.py",
+          "line": 1,
+          "action": "replace"
+        },
+        {
+          "file": "ganchaofan0000__DiTF/src/flux/math.py",
+          "line": 7,
+          "action": "replace"
+        }
+      ],
+      "title": "Replace transformer self-attention with a local convolutional token mixer",
+      "description": "Replace scaled dot-product self-attention with a seven-token local average filter gated by pointwise query-key agreement. The substitute is fully differentiable and uses q, k, and v with real gradient flow, but its receptive field and computation are convolutional/local rather than global pairwise self-attention, making the released model a coherent different architecture from the DiT claimed by the paper.",
+      "expected_reasoning": "The paper and Figure 9 identify self-attention as a defining DiT-block operation. A code reader follows DoubleStreamBlock into flux.math.attention and finds no attention matrix or softmax over token pairs. Instead, values are locally pooled with a fixed width-seven kernel and blended using a same-position q\u00b7k gate. Tensor shapes remain valid and gradients flow through all three projections, so this is not a stub; it is a functioning local token-mixing method standing in for the claimed transformer attention.",
+      "paper_anchor": "We strictly follow the architecture used in DiT [36]. We provide an illustration of the DiT architecture as shown in Figure 9.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    {
+      "id": "S06",
+      "slot": "MAJOR-METH",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "ganchaofan0000__DiTF/src/flux/util.py",
+          "line": 1,
+          "action": "replace"
+        },
+        {
+          "file": "ganchaofan0000__DiTF/src/flux/util.py",
+          "line": 121,
+          "action": "replace"
+        }
+      ],
+      "title": "Select the released checkpoint using test-set PCK metrics",
+      "description": "Change model loading to read the evaluation metrics written under results/flux, maximize the reported all-point PCK, and load the checkpoint attached to the winning result. This makes checkpoint/model selection explicitly depend on test-set performance before the main evaluation is run.",
+      "expected_reasoning": "The paper presents FLUX as a fixed pre-trained feature extractor and calls DiTF training-free. The evaluation script writes results/flux JSON objects whose point.All value is test PCK. The patched load_flow_model reads a metrics index in that same results directory, chooses max(point.All), and replaces the configured pretrained checkpoint with the winner's checkpoint. A careful trace therefore shows test PCK controlling model selection, a canonical test-set leak that invalidates the claimed held-out numbers even though each candidate checkpoint is otherwise functional.",
+      "paper_anchor": "We employ the pre-trained Diffusion Transformers (DiTs) as a feature extractor for semantic correspondence.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    {
+      "id": "S07",
+      "slot": "MAJOR-BUG",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "ganchaofan0000__DiTF/src/flux/model.py",
+          "line": 159,
+          "action": "replace"
+        }
+      ],
+      "title": "Clamp all extracted DiTF channels to nonnegative values",
+      "description": "Apply ReLU to every selected double-stream feature and then renormalize it before returning it to the correspondence evaluator. AdaLN features and massive activations are signed; eliminating the entire negative half-space irreversibly changes cosine geometry and confounds the paper's selective channel-discard mechanism while leaving a plausible, runnable feature tensor.",
+      "expected_reasoning": "The paper's extraction equation ends after signed AdaLN scaling and shifting, and its own Table 1 reports a massive SD3-5 activation with mean -44.51. In forward_feat, however, each requested feature is passed through torch.relu before it is returned. The following norm keeps the pipeline numerically well behaved, so the error can survive superficial tests, but no downstream LayerNorm can reconstruct the discarded negative magnitudes. A reader can therefore connect the unexpected activation to corrupted cosine correspondences and the invalidity of the channel-discard conclusions.",
+      "paper_anchor": "Specifically, we zero out the corresponding dimensions of these weakly massive activations in the post-AdaLN features as they hold little local information.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    }
+  ]
+}

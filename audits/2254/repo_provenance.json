@@ -1,0 +1,17 @@
+{
+  "paper_id": "2254_Differentiable_Structure_Learning_and_Causal_Discovery_for_G",
+  "title": "Differentiable Structure Learning and Causal Discovery for General Binary Data",
+  "repos": [
+    {
+      "name": "xunzheng__notears",
+      "role": "baseline",
+      "evidence": "README header 'DAGs with NO TEARS'; states 'This is an implementation of the following papers: [1] Zheng, X., Aragam, B., Ravikumar, P., & Xing, E. P. (2018) DAGs with NO TEARS (NeurIPS 2018) ... [2] Zheng, X., Dan, C., Aragam, B., Ravikumar, P., & Xing, E. P. (2020) Learning sparse nonparametric DAGs (AISTATS 2020)'. Repo owner is xunzheng (Xun Zheng), NOT an author of the 2025 paper (Chang Deng, Bryon Aragam). Module tree (notears/linear.py, nonlinear.py, locally_connected.py, lbfgsb_scipy.py, utils.py) implements classic continuous NOTEARS, with no BINOTEARS / multivariate-Bernoulli / Algorithm-4 binary-data simulation / CPDAG-MEC-SHD code. Paper cites NOTEARS-MLP only as a benchmarked baseline (Appendix D.2, paper_text.txt:2207-2210)."
+    }
+  ],
+  "core_present": "no",
+  "paper_verdict": "misclassified_missing_code",
+  "confidence": "high",
+  "rationale": "The 2025 paper's headline contribution is BINOTEARS, a two-stage differentiable structure-learning method built on a multivariate-Bernoulli parameterization for general binary data, by Chang Deng and Bryon Aragam (UChicago Booth). The single cloned repo, github.com/xunzheng/notears, is the third-party NOTEARS library (Zheng et al. 2018/2020), owned by Xun Zheng (not a paper author) and advertising different titles/venues in its README. It implements the classic continuous NOTEARS the paper uses as a baseline, not BINOTEARS, the MVB parameterization, the Algorithm-4 binary simulation, the DAG->CPDAG/SHD-between-MECs evaluation, or the Sachs experiment. The [author-cue] tag is a false positive triggered by shared co-author Bryon Aragam (a NOTEARS author). Since the ONLY cloned repo is a baseline/dependency and none is core, the paper's true status is missing-code.",
+  "audit_impact": "No adverse impact: although the clone step grabbed the wrong (baseline) repo, the audit ALREADY reached the correct conclusion. Its verified high-severity finding 'No BINOTEARS code released...' (binotears-code-absent) explicitly diagnoses the mis-tag: 'The only code in scope is the third-party NOTEARS library (github.com/xunzheng/notears), which the paper correctly cites as the NOTEARS-MLP baseline ... the audit's link-finder mis-tagged that baseline repo as author code because co-author Bryon Aragam is also a NOTEARS author.' The finding's status is correctly 'missing'. So the missing-code finding is NOT stale and is NOT written against a repo treated as core; the verdict and finding are sound.",
+  "recommended_action": "Re-tag xunzheng/notears from [author-cue] to [baseline] in code_links.txt and mark the paper source-present=NO / missing-code in coverage. No finding changes needed: binotears-code-absent already correctly characterizes the repo as a baseline and the paper as code-not-released. Optionally drop the clone from the 'AUTHOR / PRIMARY repositories' section to prevent future source-present miscounting."
+}

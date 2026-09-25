@@ -1,0 +1,10 @@
+{
+  "s-enmt__ACAVP": {
+    "repo": "https://github.com/s-enmt/ACAVP",
+    "clone_status": "cached",
+    "size_mb": 0.2,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

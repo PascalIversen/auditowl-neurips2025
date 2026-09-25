@@ -1,0 +1,9 @@
+{
+  "qa_num_victim_entries": 1,
+  "qa_victims": [
+    "food"
+  ],
+  "qa_has_target_field": false,
+  "rap_num_pairs": 9,
+  "paper_qa_pairs_claimed": 9
+}

@@ -1,0 +1,17 @@
+{
+  "paper_id": "2963_Learning_Equilibria_from_Data_Provably_Efficient_Multi_Agent",
+  "title": "Learning Equilibria from Data: Provably Efficient Multi-Agent Imitation Learning",
+  "repos": [
+    {
+      "name": "tfreihaut__Murmail",
+      "role": "core",
+      "evidence": "README states explicitly: 'This is the repository of the paper: \"Learning equilibria from data: Provably efficient Multi-Agent Imitation Learning\"'. Repo owner 'tfreihaut' matches first author Till Freihaut. Contains murmail.py (Algorithm 2 / MURMAIL), behavior_cloning.py (BC baseline), innerloop_rl.py (UCBVI inner loop), game_solver.py (Nash solver), experiment.ipynb (Figure 2 driver), and committed output PNGs Experiment_C_2/1000/10000/inf.png matching paper's four Figure 2 panels."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo tfreihaut/Murmail is unambiguously the paper's own implementation. The README directly names the paper, the repo owner matches first author Till Freihaut (tfreihaut@github / freihaut@ifi.uzh.ch), and the code implements the paper's two novel algorithms (MURMAIL and BC) with the exact experimental setup described in Section 5 and Appendix J. The audit correctly identified this as the core repo and wrote substantive findings against it (a medium-severity bug in the mirror-descent update, two low-severity differences in hyperparameters/expert generation, and two low-severity missing-code issues). No non-core repos were cloned. All findings are correctly attributed to the actual paper code.",
+  "audit_impact": "None. The audit correctly identified the core repo and produced well-grounded findings. No misclassification or misdirected findings detected.",
+  "recommended_action": "No corrective action needed. The audit is correctly scoped to the paper's own implementation. The medium-severity bug (single-sample mirror-descent update in murmail.py:390-397) and the difference finding about tuned hyperparameters are the most actionable items for the authors."
+}

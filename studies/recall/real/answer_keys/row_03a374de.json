@@ -1,0 +1,54 @@
+{
+  "discrepancy_id": "03a374de",
+  "paper_url": "https://dl.acm.org/doi/pdf/10.1145/3539618.3591626",
+  "paper_url_versioned": "https://dl.acm.org/doi/pdf/10.1145/3539618.3591626",
+  "code_url": "https://github.com/HansiZeng/UIA",
+  "code_url_versioned": "https://github.com/HansiZeng/UIA/tree/c939bb8bfcc1674f6de1ddeece0fd94b40031081",
+  "discrepancy_date": "2025-04-03T00:00:00.000Z",
+  "origin_type": "Reproducibility Paper",
+  "origin_url": "https://link.springer.com/content/pdf/10.1007/978-3-031-88717-8_10.pdf",
+  "origin_discrepancy_text": "The code performs an additional downsampling of positive/relevant items after the dataset split that is not described in the paper. Specifically, for QBE and CIR, the code samples 5 random relevant items per anchor item, and for KS it limits to 10 relevant items per query when constructing instances. This second sampling reduces dataset size and limits the influence of very popular queries/items, but it diverges from the paper\u2019s data construction procedure. The reproducibility report attributes this difference to efficiency reasons and retains it for their runs.",
+  "discrepancy_description_pooled_gpt_5": null,
+  "discrepancy_description_pooled_gemini_2_5_pro": null,
+  "discrepancy_description_pooled_gpt_oss_20b": null,
+  "is_valid_discrepancy_gemini": true,
+  "is_valid_discrepancy_gpt": true,
+  "is_valid_discrepancy_reason_gemini": "The codebase applies an explicit downsampling of positive/relevant items per anchor/query query to construct the dataset, which is not documented in the paper's mathematical description of the dataset creation.",
+  "is_valid_discrepancy_reason_gpt": "The released code performs additional subsampling of positive pairs that the paper does not describe. In particular, the data construction scripts cap the number of positive/relevant items used per anchor (for QBE and CIR) and per query (for search) after the train/validation/test split, whereas the paper describes constructing all pairs implied by the labels without such caps.",
+  "discrepancy_description_gemini": "The paper describes the dataset construction by defining instances mathematically using pairings of all valid interactions for a given request (e.g., keeping all combinations of exact matches and substitutions for the query by example task). However, the implementation in the code actively downsamples these pairings; specifically, for the query by example and complementary item recommendation interactions, it randomly samples a maximum of 5 relevant items per anchor item. In summary, the paper implies exhaustive pairing of interactions, whereas the code truncates the dataset through manual downsampling.",
+  "discrepancy_description_gpt": "The paper describes, for Amazon ESCI, building three datasets directly from the labeled relations without further caps, e.g., for QBE using all (i1, i2) pairs with i1 in E(q) and i2 in S(q), and for CIR using all (i1, i2) where i2 in C(q), and for search using all (q, i) with i in E(q). In the code, after splitting queries/anchors into train/val/test, the scripts subsample positives when creating the final training triples: for QBE and CIR they sample at most 5 relevant items per anchor (randomly, via [:5] slices), and for search they cap the number of positives per query in the constructed q\u2192item triples (different scripts use different caps, e.g., 2 or 5; the paper does not mention any such cap). This additional downsampling reduces the number of instances and alters the distribution relative to the procedure described in the paper.",
+  "relevant_paper_sections_gemini": [
+    "We used the following procedure to construct our three datasets: (1) Keyword Search: $\\{(q, i): \forall q \\in Q \\wedge i \\in I_E(q)\\}$, (2) Query by Example: $\\{(i_1, i_2): \forall q \\in Q \\wedge i_1 \\in I_E(q) \\wedge i_2 \\in I_S(q)\\}$, and (3) Complementary Item Recommendation: $\\{(i_1, i_2): \forall q \\in Q \\wedge i_1 \\in I_E(q) \\wedge i_2 \\in I_C(q)\\}$."
+  ],
+  "relevant_paper_sections_gpt": [
+    "We used the following procedure to construct our three datasets: (1) Keyword Search: {(q, i): \u2200q \u2208 Q \u2227 i \u2208 I_E(q)}, (2) Query by Example: {(i1, i2): \u2200q \u2208 Q \u2227 i1 \u2208 I_E(q) \u2227 i2 \u2208 I_S(q)}, and (3) Complementary Item Recommendation: {(i1, i2): \u2200q \u2208 Q \u2227 i1 \u2208 I_E(q) \u2227 i2 \u2208 I_C(q)}.",
+    "4.1.1 Dataset. ... We modify the data to fit our experimental setting. Each data point in KDD Cup 2022 - Task 2 is a (query, item, label) triplet. ... We used the following procedure to construct our three datasets..."
+  ],
+  "relevant_code_files_gemini": [
+    "preprocess/unified_kgc/create_unified_train.py",
+    "preprocess/unified_user/zero_shot/create_unified_kgc.py",
+    "preprocess/unified_kgc/create_similar_train.py",
+    "preprocess/unified_kgc/create_unified_kgc_train.py"
+  ],
+  "relevant_code_files_gpt": [
+    "preprocess/unified_kgc/create_unified_train.py",
+    "preprocess/unified_kgc/create_similar_train.py",
+    "preprocess/unified_user/create_user_sequential_train_test.py"
+  ],
+  "changed_code_files": {
+    "file_name": [],
+    "discrepancy_code": []
+  },
+  "changed_code_snippets": {
+    "original_file": [],
+    "original_code": [],
+    "changed_code": []
+  },
+  "discrepancy_type": "Paper Omission",
+  "discrepancy_category": "Data",
+  "arxiv_subject": "cs",
+  "arxiv_categories": [
+    "cs.IR"
+  ],
+  "arxiv_year": 2023
+}

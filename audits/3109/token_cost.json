@@ -1,0 +1,19 @@
+{
+  "folder": "3109_LeVo_High_Quality_Song_Generation_with_Multi_Preference_Alig",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 22228,
+    "output": 14437,
+    "cache_write": 251237,
+    "cache_read": 3265172
+  },
+  "total_tokens": 3553074,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 11.02
+}

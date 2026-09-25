@@ -1,0 +1,10 @@
+{
+  "findings": [
+    {
+      "id": "2212_Best_of_N_Jailbreaking/reliability-text-vision-absent",
+      "verdict": "reject",
+      "reason": "The claim is materially false because bon/attacks/run_text_bon.py implements configurable resampling and classification of successful text prompts via check_prompt_reliability, even though the scoped search found no analogous vision harness.",
+      "changed": "nothing"
+    }
+  ]
+}

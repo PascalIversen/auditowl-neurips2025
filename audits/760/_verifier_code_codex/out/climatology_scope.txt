@@ -1,0 +1,11 @@
+== step0_filter_feature.py: which years are written to the var folders ==
+  year loop: range(2017, 2025)  -> 2017..2024 inclusive
+  writes to: {output_dir}/{var}/{date}.csv  (all years mixed in one folder)
+
+== step2_climatology.py: file selection used for mean/std ==
+  csv_files = file_paths.glob('*.csv')  (no year filter)
+  any train-year / index filter present in step2? False
+  mean = np.nanmean(feature_matrix); std = np.nanstd(feature_matrix)  over ALL columns
+
+CONCLUSION: normalization mean/std are computed over all years 2017-2024,
+including the 2024 test year and 2023 validation year -> stats leak test/val distribution.

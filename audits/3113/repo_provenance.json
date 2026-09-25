@@ -1,0 +1,17 @@
+{
+  "paper_id": "3113_L_MTP_Leap_Multi_Token_Prediction_Beyond_Adjacent_Context_fo",
+  "title": "L-MTP: Leap Multi-Token Prediction Beyond Adjacent Context for Large Language Models",
+  "repos": [
+    {
+      "name": "Xiaohao-Liu__L-MTP",
+      "role": "core",
+      "evidence": "README title is 'L-MTP: Leap Multi-Token Prediction Beyond Adjacent Context for Large Language Models' with NeurIPS 2025 badge and arXiv:2505.17505; repo owner Xiaohao-Liu matches first author Xiaohao Liu; all 9 co-authors listed in README match metadata.txt exactly; paper itself states 'source code is available at https://github.com/Xiaohao-Liu/L-MTP' (paper_text.txt line 30); repo contains models/lmtp/ implementing the leap multi-token prediction core, LLaMA-Factory training integration, per-model configs, and eval/ scripts specific to this method."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "Single repo cloned is unambiguously the paper's own implementation: paper-stated URL, exact title and author match, and method-specific code (models/lmtp/, leap stride logic, two-stage training configs). All audit findings were correctly written against this core repo. No baseline, dependency, or off-paper repos were cloned.",
+  "audit_impact": "None. All findings (2 missing, 2 bug/high, 3 difference) were written against the correct core repo. The audit correctly classified the paper as source-present and its findings stand.",
+  "recommended_action": "No action required on provenance. The existing findings (missing-medusa-module, hardcoded-storage-path, skip-token-mismatch, num-heads-mismatch, speedup-measurement-missing, leap-start-offset) are all directed at the right code and remain valid for author follow-up."
+}

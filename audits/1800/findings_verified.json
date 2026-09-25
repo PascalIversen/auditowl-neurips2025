@@ -1,0 +1,67 @@
+{
+  "schema_version": "1",
+  "audit": "1800_Maximizing_the_Value_of_Predictions_in_Control_Accuracy_Is_N",
+  "audit_md": "audits/1800_Maximizing_the_Value_of_Predictions_in_Control_Accuracy_Is_N/audit.md",
+  "generated_at": "2026-05-31T11:48:01.948075+00:00",
+  "findings": [
+    {
+      "id": "1800_Maximizing_the_Value_of_Predictions_in_Control_Accuracy_Is_N/mse-fig4-computed-on-train",
+      "category": "difference",
+      "topic": "evaluation consistency (paper vs code)",
+      "title": "Figure 4 MSE-rho curve computed on training data, paper says test set",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "Example_Mismatch_1.py",
+      "line_start": 71,
+      "line_end": 79,
+      "quote": "model = LinearRegression()\nmodel.fit(pred_train.reshape((-1, n)), noise_train.reshape((-1, n)))\nreg_pred = model.predict(pred_train.reshape((-1, n)).reshape((-1, n)))\nmetric_record = []\n\nfor i in range(n):\n    mse = mean_squared_error(noise_train.reshape((-1, n))[:, i], reg_pred[:, i])\n    r2 = r2_score(noise_train.reshape((-1, n))[:, i], reg_pred[:, i])\n    metric_record.append([mse, r2])\n",
+      "claim": "The MSE/R^2 plotted in Figure 4 are computed by predicting on pred_train and comparing to noise_train, i.e. on the training split, while pred_test/noise_test are used only for the control-cost simulation.",
+      "concern": "Appendix A.5.1 states the MSE-rho curve is plotted on a 16000-sample held-out test set; the code reports in-sample (training) MSE instead, a code-vs-paper mismatch.",
+      "resolution": "Authors: confirm whether Figure 4 should report test-set MSE (predict on pred_test vs noise_test); with 64000 training samples the two values differ only at ~1e-3 (see _audit_code/out/example33.txt), so the figure and the equal-MSE conclusion are unaffected.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_example33_theta_and_mse.py",
+      "paper_ref": "Appendix A.5.1, Figure 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "mse-fig4-computed-on-train",
+      "audit": "1800_Maximizing_the_Value_of_Predictions_in_Control_Accuracy_Is_N",
+      "audit_md_line": 65,
+      "verdict": "keep",
+      "reason": "Code at lines 71-79 exactly matches the quote; `model.predict(pred_train...)` vs `noise_train` confirms in-sample MSE; check script ran successfully and shows train-test gap ~8-9e-4 consistent with the claimed ~1e-3 difference.",
+      "changed": "nothing"
+    },
+    {
+      "id": "1800_Maximizing_the_Value_of_Predictions_in_Control_Accuracy_Is_N/mgaps-lr-formula-mismatch",
+      "category": "difference",
+      "topic": "hyperparameters",
+      "title": "M-GAPS decaying learning rate in code differs from Appendix A.6 formula",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "Example_Policy_Optimization_1.py",
+      "line_start": 67,
+      "line_end": 69,
+      "quote": "# use a decay learning rate\nlr = 1e-3 / np.sqrt(1 + i / 100)\npol_opt.policy_update(lr=lr)\n",
+      "claim": "Both policy-optimization scripts use the step-size 1e-3 * (1 + t/100)^{-0.5} (same line in Example_Policy_Optimization_2.py:70).",
+      "concern": "Appendix A.6 states the decaying learning rate sequence is eta_t = (1 + t/1000)^{-0.5}; the code uses a different time constant (100 vs 1000) and an explicit 1e-3 prefactor not shown in the paper formula.",
+      "resolution": "Authors: reconcile the learning-rate schedule used to generate Figures 1-2 with the formula reported in Appendix A.6 (the code's schedule is itself a valid decaying step size, so the convergence illustration stands).",
+      "cross_refs": [],
+      "paper_ref": "Appendix A.6 ('decaying learning rate sequence eta_t = (1 + t/1000)^{-0.5}')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "mgaps-lr-formula-mismatch",
+      "audit": "1800_Maximizing_the_Value_of_Predictions_in_Control_Accuracy_Is_N",
+      "audit_md_line": 98,
+      "verdict": "keep",
+      "reason": "Code at lines 67-69 exactly matches the quote using `i / 100`; paper_text.txt line 2158 confirms the paper formula uses `(1 + t/1000)^{-0.5}`, confirming both discrepancies (time constant 100 vs 1000, and the extra 1e-3 prefactor absent from the paper formula).",
+      "changed": "nothing"
+    }
+  ]
+}

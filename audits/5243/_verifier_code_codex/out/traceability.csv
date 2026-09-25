@@ -1,0 +1,14 @@
+paper_artefact,status,evidence
+Table 1 synthetic columns,PARTIAL,model zoo + instance_metrics present; numbers not pinned (random draw)
+Table 1 UNOS-PTR columns,MISSING,no UNOS/PTR/liver/feature code: True
+Table 2 Uniform reason mech,PARTIAL,else-branch w=1/N present
+Table 2 IPW reason mech,PARTIAL,KernelDensity branch present
+Table 2 Boundary Intersection,MISSING,no 'boundary'/'intersection' code: True
+Table 3 synthetic obs-test,PARTIAL,Obs-Test rows present (some commented)
+Table 3 UNOS-PTR columns,MISSING,no UNOS code
+Table 4 Assumption-1 support,MISSING,no matching/Euclidean-support code: True
+Fig 4 confounding sweep psi,MISSING,rho fixed at single value; no sweep loop over rho/psi
+Figs 5-6 F/sigma sweep,MISSING,F_scale param exists but no loop sweeping it: True
+Table 6 / Fig 7 lambda-rho-M sweep,MISSING,single fixed configs only; no grid loop
+Hyperparam Table 7 k=3,MISMATCH,code default k_cluster=5: True
+Dependency specification,MISSING,no requirements/environment file: True

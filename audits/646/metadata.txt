@@ -1,0 +1,5 @@
+paper_number: 646
+title: RoPECraft: Training-Free Motion Transfer with Trajectory-Guided RoPE Optimization on Diffusion Transformers
+authors: Ahmet Berke Gökmen, Yiğit Ekin, Bahri Batuhan Bilecen, Aysegul Dundar
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/1f04bedf43be0ee5be9d0d42123069dc-Abstract-Conference.html
+category: empirical

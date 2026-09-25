@@ -1,0 +1,29 @@
+{
+  "datasets_present": [
+    "glass.mat",
+    "thyroid.mat",
+    "wbc.mat",
+    "wine.mat"
+  ],
+  "get_data_sh_datasets": [
+    "breastw",
+    "campaign",
+    "cardio",
+    "fraud",
+    "glass",
+    "ionosphere",
+    "mammography",
+    "optdigits",
+    "pendigits",
+    "pima",
+    "satellite",
+    "satimage",
+    "wine"
+  ],
+  "image_domain_code_hits": [],
+  "loadData_path_expr": "'/home/qxl/ddpm/UniINN/data/'",
+  "loadData_path_is_absolute_hardcoded": true,
+  "eval_called_in_training_loop": true,
+  "no_validation_set": false,
+  "best_epoch_logic": false
+}

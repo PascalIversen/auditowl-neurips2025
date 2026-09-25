@@ -1,0 +1,25 @@
+REPO = /home/author/Projects/neurips_audit/audits/1339_Embodied_Cognition_Augmented_End2End_Autonomous_Driving/code/AIR-DISCOVER__E-cubed-AD__E-VAD
+
+EXISTS   EXPECTED PATH                                                          REFERENCED FROM
+----------------------------------------------------------------------------------------------------------------------------------
+False    projects/eeg_vedio/src/data/real_car_dataset.py                        projects/eeg_vedio/src/run_model/train.py:18
+False    projects/eeg_vedio/src/data                                            projects/eeg_vedio/src/run_model/train.py:18
+False    projects/eeg_vedio/src/training/train.py                               projects/eeg_vedio/src/main.py:4
+False    projects/eeg_vedio/ckpts/Driving_thinking_model.safetensors            projects/mmdet3d_plugin/EAD/EAD.py:105
+False    projects/eeg_vedio/ckpts/eeg_encoder_base.pth                          projects/eeg_vedio/cfgs/train_config.yaml:21
+False    projects/eeg_vedio/ckpts/video_encoder_base.safetensors                projects/eeg_vedio/cfgs/train_config.yaml:25
+False    projects/eeg_vedio/ckpts/first_try/video_encoder_ft_1.safetensors      projects/eeg_vedio/cfgs/video_encoder_inference.yaml:4
+False    projects/eeg_vedio/ckpts                                               -
+False    projects/eeg_vedio/clip_info.json                                      projects/eeg_vedio/cfgs/train_config.yaml:4
+False    data/nuscenes/vad_nuscenes_infos_temporal_train.pkl                    projects/configs/EAD/EAD_based_pretrain.py:382
+
+10/10 referenced artifacts are ABSENT from the repo
+
+Actual contents of projects/eeg_vedio/src/ :
+   __init__.py
+   main.py
+   models
+   run_model
+   utils
+
+wrote /home/author/Projects/neurips_audit/audits/1339_Embodied_Cognition_Augmented_End2End_Autonomous_Driving/_verifier_code_codex/out/missing_artifacts.json

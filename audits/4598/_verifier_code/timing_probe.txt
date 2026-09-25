@@ -1,0 +1,15 @@
+### llama.py grep time/tick:
+1:import time
+
+### qep_awq.py grep time/tick:
+(no qep_awq.py at src root)
+/Users/anon/Projects/neurips_audit/audits/4598_Quantization_Error_Propagation_Revisiting_Layer_Wise_Post_Tr/code/FujitsuResearch__qep/src/qep_awq.py
+
+### Table-3 aggregation harness search across src (perf_counter, runtime, processing time, elapsed, csv aggregation):
+/Users/anon/Projects/neurips_audit/audits/4598_Quantization_Error_Propagation_Revisiting_Layer_Wise_Post_Tr/code/FujitsuResearch__qep/src/zeroShot/evaluator.py:113:            raise RuntimeError(
+
+### all time.time occurrences in src:
+/Users/anon/Projects/neurips_audit/audits/4598_Quantization_Error_Propagation_Revisiting_Layer_Wise_Post_Tr/code/FujitsuResearch__qep/src/zeroShot/models/gptq.py:66:        tick = time.time()
+/Users/anon/Projects/neurips_audit/audits/4598_Quantization_Error_Propagation_Revisiting_Layer_Wise_Post_Tr/code/FujitsuResearch__qep/src/zeroShot/models/gptq.py:131:        print('time %.2f' % (time.time() - tick))
+/Users/anon/Projects/neurips_audit/audits/4598_Quantization_Error_Propagation_Revisiting_Layer_Wise_Post_Tr/code/FujitsuResearch__qep/src/zeroShot/models/fast_trueobs.py:70:        tick = time.time()
+/Users/anon/Projects/neurips_audit/audits/4598_Quantization_Error_Propagation_Revisiting_Layer_Wise_Post_Tr/code/FujitsuResearch__qep/src/zeroShot/models/fast_trueobs.py:162:        print('time %.2f' % (time.time() - tick))

@@ -1,0 +1,5 @@
+paper_number: 245
+title: Adaptive Data-Borrowing for Improving Treatment Effect Estimation using External Controls
+authors: Qinwei Yang, Jingyi Li, Peng Wu
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/0bb9b8b55b0fd61c7788a8a4ddbd3ddd-Abstract-Conference.html
+category: empirical

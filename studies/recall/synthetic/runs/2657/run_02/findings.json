@@ -1,0 +1,174 @@
+{
+  "schema_version": "1",
+  "audit": "run_02",
+  "audit_md": "/home/author/Desktop/code/major_recall_study_export_v2/for_rebuttal/recall_experiment/major_recall_study/runs/2657/run_02/audit.md",
+  "generated_at": "2026-08-02T23:33:14.085308+00:00",
+  "findings": [
+    {
+      "id": "run_02/epoch-selection-code-missing",
+      "category": "missing",
+      "topic": "hyperparameter tuning / reproducibility",
+      "title": "Unsupervised epoch-selection (CSM) procedure not implemented; epochs are hardcoded",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/ZhongLIFR__TCCM-NIPS/FMAD/functions.py",
+      "line_start": 127,
+      "line_end": 132,
+      "quote": "elif \"skin\" in dataset_name:\n    epoch_size = 110  # Chosen first from \"100 or 1\"\n    batch_size = 1024\n    learning_rate = 0.005\nelif \"celeba\" in dataset_name:\n    epoch_size = 2  # Chosen first from \"100 or 1\"\n",
+      "claim": "TCCM's number of training epochs — its only tuned hyperparameter, ranging 1 to 5000 across datasets — is returned by a hardcoded per-dataset if/elif table (`determine_FMAD_hyperparameters`, lines 73-268); no code computes it.",
+      "concern": "Paper §B.6 says epochs are chosen by a principled, largely-automated unsupervised CSM criterion (Li et al. 2025b) requiring no labels, but that selection routine is absent from the repo and comments like 'Chosen first from \"100 or 1\"' suggest manual choice, so a reviewer cannot verify the tuning was unsupervised/fair or reproduce the values.",
+      "resolution": "Provide the CSM epoch-selection script (candidate space, criterion, and the per-dataset selected values it produces), and confirm no anomaly labels or test AUROC were used to pick epochs.",
+      "cross_refs": [
+        "no-heldout-split-leakage"
+      ],
+      "paper_ref": "Appendix B.6 'Unsupervised Epoch Selection Strategy'; Table 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "epoch-selection-code-missing",
+      "audit": "run_02",
+      "audit_md_line": 36
+    },
+    {
+      "id": "run_02/ablation-script-missing",
+      "category": "missing",
+      "topic": "ablations / result traceability",
+      "title": "AblationStudies.py (Appendix D.3 ablations, Figs 12-17) is absent from the repo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/ZhongLIFR__TCCM-NIPS/README.md",
+      "line_start": 241,
+      "line_end": 244,
+      "quote": "- `Time_Embedding_Figure_12.pdf`: time embedding variants used in TCCM\n- `Sensitivity_t_Figure_13.pdf`: sensitivity to fixed inference time `t`\n- `Noise_Injection_Figure_14.pdf`: effect of noise injection during training\n- `Contamination_Figure_TCCM.pdf`: effect of contamination in training data\n",
+      "claim": "The README's Repository Structure, Reproduction Roadmap, and Ablation section all invoke `python AblationStudies.py` to reproduce the Appendix D.3 ablations, but no `AblationStudies.py` (or any equivalent) exists in the repo.",
+      "concern": "The ablation/sensitivity results (time embedding Fig 12, inference-time Fig 13, noise-injection Fig 14, feature-normalization Fig 16, time-interpolation Fig 17, and the Fig 6 mismatch boxplots) have no producing code — e.g. TCCM training has no noise-injection option at all — so those figures cannot be reproduced or checked.",
+      "resolution": "Add the missing `AblationStudies.py` (and any noise-injection training variant) that generates the Appendix D.3 figures, or remove the reproduction claims.",
+      "cross_refs": [],
+      "paper_ref": "Appendix D.3 (Figures 12-17); README lines 80, 99, 227-244",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ablation-script-missing",
+      "audit": "run_02",
+      "audit_md_line": 65
+    },
+    {
+      "id": "run_02/explainability-code-missing",
+      "category": "missing",
+      "topic": "explainability / result traceability",
+      "title": "No code produces the feature-level explanations (Fig 4) or attribution validation (App. D.4.2)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/ZhongLIFR__TCCM-NIPS/FMAD/FlowMatchingAD.py",
+      "line_start": 47,
+      "line_end": 50,
+      "quote": "with torch.no_grad():\n    t = torch.ones(X.shape[0], 1, device=X.device, dtype=torch.float32)  # Set t to 1\n    f_xt = self.model(X, t)  # Predict contraction vectors\n    anomaly_scores = torch.norm(f_xt + X, dim=1)  # compute the anomaly score, based on Equation 5.\n",
+      "claim": "`decision_function` returns only the aggregated norm `‖f(x,1)+x‖`; nothing in the repo emits or plots the per-feature components `(f(x,1)+x)_j`, and a grep for explain/attribution/feature-wise across the code finds no such module.",
+      "concern": "Explainability is one of the paper's three headline properties (title, Fig 4 MNIST explanations, App. D.4.2 'quantitatively validates the accuracy of these feature-level attributions'), yet no code computes the feature attributions or runs the quantitative validation, so those claims are not reproducible from the repo.",
+      "resolution": "Provide the script(s) that compute the per-feature attribution scores, generate Figure 4, and run the Appendix D.4.2 attribution-accuracy validation.",
+      "cross_refs": [],
+      "paper_ref": "Section 5 / Figure 4; Appendix D.4.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "explainability-code-missing",
+      "audit": "run_02",
+      "audit_md_line": 92
+    },
+    {
+      "id": "run_02/forced-inductive-knn-not-run",
+      "category": "bug",
+      "topic": "reproduction scripts",
+      "title": "KNN_semisup (top forced-inductive detector in Fig 23) is not produced by any provided script",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/ZhongLIFR__TCCM-NIPS/bash_files/run_knn.sh",
+      "line_start": 28,
+      "line_end": 28,
+      "quote": "nohup taskset -c \"$core_id\" python Full_experiments.py -d \"$dname\" -i \"$j\" -r \"$RANDOM_SEED\" -t \"$TIME_LIMIT\" -m \"$MEMORY_LIMIT\" >> \"./logs/seed_${RANDOM_SEED}/run_${dname}_model_${j}.log\" 2>&1 &\n",
+      "claim": "run_knn.sh calls `python Full_experiments.py` (the file is `FullExperiments.py`; case mismatch fails on the paper's Linux/Ubuntu) and loops `-i {50..50}` = INNE_semisup; separately run_semisupervise.sh loops `for j in {45..50}` (line 23), which stops at index 50 and omits index 51.",
+      "concern": "MODEL_NAMES index 51 = `KNN_semisup` (verified by _audit_code/check_model_index.py), the best forced-inductive detector reported in Figure 23 (App. E), so the documented commands reproduce every forced-inductive baseline except that one; it is only obtainable by manually running `FullExperiments.py -i 51`.",
+      "resolution": "Fix the filename to `FullExperiments.py`, and extend the semisupervised range to `{45..51}` so `KNN_semisup` (index 51) is actually executed.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_model_index.py",
+      "paper_ref": "Appendix E, Figure 23",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "forced-inductive-knn-not-run",
+      "audit": "run_02",
+      "audit_md_line": 121
+    },
+    {
+      "id": "run_02/no-heldout-split-leakage",
+      "category": "methodology",
+      "topic": "data splitting / evaluation validity",
+      "title": "Main benchmark uses all normal samples for BOTH training and testing (no held-out normals)",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/ZhongLIFR__TCCM-NIPS/utils.py",
+      "line_start": 37,
+      "line_end": 44,
+      "quote": "X_train = X_normal.copy()\ny_train = y_normal.copy()\nX_test_normal = X_normal.copy()\ny_test_normal = y_normal.copy()\n\n# Test set contains both normal and abnormal data\nX_test = np.vstack((X_test_normal, X_anomalous))\ny_test = np.concatenate((y_test_normal, y_anomalous))\n",
+      "claim": "`load_adbench_npz` (used by FullExperiments.py for the main Fig 2 / Tables 6-13 benchmark) sets both `X_train` and the normal part of `X_test` to `X_normal.copy()`, i.e. the entire normal set is used for training AND appears again in the test set; `train_test_split` is imported but never called and the `test_size`/`random_state` args are dead. `_audit_code/check_main_split_leakage.py` confirms 100% of normal test rows are training rows on 4 datasets and that `random_state` has no effect.",
+      "concern": "Every normal test point was seen during training, so for inductive/deep detectors (incl. TCCM, which is explicitly trained to make `‖f(x,1)+x‖` small on the training normals) the reported AUROC/AUPRC measure in-sample fit of normals vs. unseen anomalies rather than generalization, inflating all headline numbers; this also directly contradicts the paper's stated protocol of a 50% normal split with the rest held out.",
+      "resolution": "Split the normal data into disjoint train/test halves (as the paper describes and as ContaminationStudies.py already does) and re-run the benchmark; report whether TCCM's ranking survives a genuinely held-out normal test set.",
+      "cross_refs": [
+        "contam-duplicate-normal-leakage",
+        "epoch-selection-code-missing"
+      ],
+      "check_script": "_audit_code/check_main_split_leakage.py",
+      "paper_ref": "Section 5.1 Data Processing ('50% for training and holding out the rest for testing')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-heldout-split-leakage",
+      "audit": "run_02",
+      "audit_md_line": 152
+    },
+    {
+      "id": "run_02/contam-duplicate-normal-leakage",
+      "category": "methodology",
+      "topic": "data splitting / contamination study",
+      "title": "Contamination study duplicates every normal before splitting, leaking ~50-75% of test normals",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/ZhongLIFR__TCCM-NIPS/ContaminationStudies.py",
+      "line_start": 162,
+      "line_end": 166,
+      "quote": "X_all = np.vstack([X_train, X_test])\ny_all = np.concatenate([y_train, y_test])\n\nX_normal = X_all[y_all == 0]\nX_abnormal = X_all[y_all == 1]\n",
+      "claim": "The contamination study stacks `X_train` and `X_test` from load_adbench_npz, but their normal rows are identical (see no-heldout-split-leakage), so `X_normal` contains each normal twice before the subsequent `train_test_split(X_normal, test_size=0.5)` at line 168.",
+      "concern": "Because each normal appears twice, ~50% (48-75% measured by _audit_code/check_contam_split_leakage.py) of the normal test rows have an identical copy in the training set, so the contamination-robustness curves (Fig 15) are computed with partial train/test leakage and overstate absolute AUROC/AUPRC.",
+      "resolution": "De-duplicate before splitting (build X_normal from the unique normal set, e.g. only `X_train`'s normals) so the contamination study has a clean held-out test set.",
+      "cross_refs": [
+        "no-heldout-split-leakage"
+      ],
+      "check_script": "_audit_code/check_contam_split_leakage.py",
+      "paper_ref": "Appendix D.3 training-contamination study (Figure 15)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "contam-duplicate-normal-leakage",
+      "audit": "run_02",
+      "audit_md_line": 184
+    }
+  ]
+}

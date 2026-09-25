@@ -1,0 +1,228 @@
+{
+  "schema_version": "1",
+  "audit": "4946_Gaze_VLM_Bridging_Gaze_and_VLMs_through_Attention_Regulariza",
+  "audit_md": "audits/4946_Gaze_VLM_Bridging_Gaze_and_VLMs_through_Attention_Regulariza/audit.md",
+  "generated_at": "2026-05-30T05:46:35.588787+00:00",
+  "findings": [
+    {
+      "id": "4946_Gaze_VLM_Bridging_Gaze_and_VLMs_through_Attention_Regulariza/missing-multi-arch-and-tables",
+      "category": "missing",
+      "topic": "result traceability / repository completeness",
+      "title": "Code only covers OpenFlamingo; 4 of 5 architectures and most paper tables have no code",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "open_flamingo/open_flamingo/train/data.py",
+      "line_start": 377,
+      "line_end": 377,
+      "quote": "def preprocess_gaze_attention_internvl(sample, clip_processor, tokenizer, max_images=5, max_tokens=128, input_size=448, max_num=1):\n",
+      "claim": "The repo contains an OpenFlamingo training driver (gaze_wAttention.py) and evaluator (gaze_evaluation.py), plus one InternVL preprocessing helper, but no training/evaluation driver for the Modified OpenFlamingo, LaViLa Narrator, InternVL, or OpenLLaVA rows of Table 1, and no code computing Tables 3-6, §4.8 overlap, or the appendix ablation tables (8-21).",
+      "concern": "The headline claim is generalization across five architectures (Table 1) plus OOD (Table 4), runtime (Table 5), hallucination (Table 6) and alignment (§4.8) results; none of these numbers can be reproduced because the producing code is absent.",
+      "resolution": "Authors: please provide the training and evaluation drivers for LaViLa, InternVL, OpenLLaVA, the EGTEA+ OOD evaluation, the runtime measurement, the top-10 attention-gaze overlap computation, and the human-evaluation hallucination protocol.",
+      "cross_refs": [
+        "missing-deps-and-data",
+        "teacher-forced-eval"
+      ],
+      "paper_ref": "Table 1, Table 4, Table 5, Table 6, §4.8",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-multi-arch-and-tables",
+      "audit": "4946_Gaze_VLM_Bridging_Gaze_and_VLMs_through_Attention_Regulariza",
+      "audit_md_line": 53,
+      "verdict": "keep",
+      "reason": "data.py line 377 contains exactly the quoted InternVL helper function; the train/ directory listing confirms only OpenFlamingo drivers exist with no LaViLa, InternVL, or OpenLLaVA training/evaluation scripts.",
+      "changed": "nothing"
+    },
+    {
+      "id": "4946_Gaze_VLM_Bridging_Gaze_and_VLMs_through_Attention_Regulariza/missing-deps-and-data",
+      "category": "missing",
+      "topic": "dependencies / data / reproducibility",
+      "title": "No dependency spec, no dataset/weights, ~124 'insert path' placeholders — repo not runnable",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "open_flamingo/open_flamingo/train/gaze_evaluation.py",
+      "line_start": 121,
+      "line_end": 124,
+      "quote": "checkpoint_path = os.path.join(\"insert path/open_flamingo/open_flamingo/models/review2/gaze_model.pth\")\nif os.path.isfile(checkpoint_path):\n    dist.barrier()\n    checkpoint = load_checkpoint_eval(\"insert path/open_flamingo/open_flamingo/models/review2/gaze_model.pth\")\n",
+      "claim": "There is no requirements.txt / environment.yml / setup.py anywhere in the repo (the train/README references an environment.yml that does not exist), no shared dataset or download script for the gaze-annotated Ego4D subset, no trained weights, and 124 hardcoded 'insert path' or '/home/pani3' / '/home/anupam' paths across the train/eval scripts.",
+      "concern": "The code cannot be installed or executed as shipped, and the dataset and weights underlying every reported number are absent, so no result is reproducible; the README states 'Installation: Instructions and code coming soon'.",
+      "resolution": "Authors: please add a pinned dependency file, a dataset access/build path with resolvable Ego4D gaze-subset references, the trained checkpoints, and replace placeholder paths with CLI args.",
+      "cross_refs": [
+        "missing-multi-arch-and-tables"
+      ],
+      "check_script": "_audit_code/check_teacher_forced_eval.py",
+      "paper_ref": "README.md; train/README.md line 2 (environment.yml); Appendix 'Training and Evaluation details'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-deps-and-data",
+      "audit": "4946_Gaze_VLM_Bridging_Gaze_and_VLMs_through_Attention_Regulariza",
+      "audit_md_line": 77,
+      "verdict": "keep",
+      "reason": "gaze_evaluation.py lines 121-124 match exactly with 'insert path' placeholders; a repo-wide search confirmed no requirements.txt, environment.yml, setup.py, or pyproject.toml exists anywhere in the repository.",
+      "changed": "nothing"
+    },
+    {
+      "id": "4946_Gaze_VLM_Bridging_Gaze_and_VLMs_through_Attention_Regulariza/kl-regularizer-double-softmax",
+      "category": "bug",
+      "topic": "gaze regularization loss",
+      "title": "KL_divergence double-softmaxes inputs and mishandles log_target; does not compute Eq. 6",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "open_flamingo/open_flamingo/train/train_utils_attention.py",
+      "line_start": 261,
+      "line_end": 269,
+      "quote": "# Apply softmax to the logits\ntarget_log_probs = F.softmax(target, dim=-1)\nsource_log_probs = F.softmax(source, dim=-1)\n\n# Calculate KL divergence for each pair of target and source distributions\nhold = torch.nn.functional.kl_div(source_log_probs, target_log_probs, reduction='sum', log_target=True)\nif hold <0:\n    hold =0\nkl_loss += hold\n",
+      "claim": "The gaze target (`target_dist` from calculate_gaze_proportions_batch) is already a normalized probability distribution summing to 1, yet it is passed through F.softmax again; the model attention is likewise softmaxed; then F.kl_div is called with `log_target=True` while both arguments are plain probabilities (not log-probabilities), and `torch.nn.functional.kl_div`'s first argument is expected to be log-probabilities.",
+      "concern": "The computed quantity is not the KL divergence DKL(At||H̃t) of Eq. 6 — the double softmax compresses the distributions and `log_target=True` treats the probability target as if it were a log-probability (its effective target exp(softmax(gaze)) sums to ~257, not 1, per _audit_code/out/kl_divergence.txt), so the regularizer that is the paper's core contribution is mathematically wrong.",
+      "resolution": "Authors: confirm whether the released code matches the experiments; the correct form is F.kl_div(attn.log(), gaze, reduction='sum') with already-normalized distributions and no extra softmax. Re-run with the corrected loss.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_kl_divergence.py",
+      "paper_ref": "Eq. (6), Eq. (7)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "kl-regularizer-double-softmax",
+      "audit": "4946_Gaze_VLM_Bridging_Gaze_and_VLMs_through_Attention_Regulariza",
+      "audit_md_line": 107,
+      "verdict": "keep",
+      "reason": "train_utils_attention.py lines 261-269 match exactly — F.softmax applied to both inputs producing plain probabilities, then kl_div called with log_target=True treating them as log-probabilities, which is mathematically incorrect.",
+      "changed": "nothing"
+    },
+    {
+      "id": "4946_Gaze_VLM_Bridging_Gaze_and_VLMs_through_Attention_Regulariza/checkpoint-selected-on-train-loss",
+      "category": "bug",
+      "topic": "model selection",
+      "title": "Best checkpoint chosen by lowest TRAINING loss; validation loader is commented out",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "open_flamingo/open_flamingo/train/gaze_wAttention.py",
+      "line_start": 293,
+      "line_end": 295,
+      "quote": "if( trainloss < best_loss):\n    best_loss=trainloss\n    save_checkpoint_gaze(model, optimizer, scheduler, epoch, \"/home/pani3/gaze_model2_10.pth\")\n",
+      "claim": "The training driver saves the 'best' checkpoint based on the lowest training loss, and the validation dataloader (lines 205-206) is commented out, so no validation set is used for model selection.",
+      "concern": "Selecting the checkpoint by training loss rather than a held-out validation set risks reporting an over-fit model and contradicts the 64/16/20 train/val/test split the data pipeline constructs; the validation split is built but never consumed.",
+      "resolution": "Authors: confirm which checkpoint produced the paper numbers and whether model selection used the held-out validation split rather than training loss.",
+      "cross_refs": [
+        "sliding-window-random-split-leakage"
+      ],
+      "paper_ref": "Appendix 'Training and Evaluation details'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "checkpoint-selected-on-train-loss",
+      "audit": "4946_Gaze_VLM_Bridging_Gaze_and_VLMs_through_Attention_Regulariza",
+      "audit_md_line": 141,
+      "verdict": "keep",
+      "reason": "gaze_wAttention.py lines 293-295 match exactly — checkpoint is saved when trainloss < best_loss, confirming selection by training loss, not a validation metric.",
+      "changed": "nothing"
+    },
+    {
+      "id": "4946_Gaze_VLM_Bridging_Gaze_and_VLMs_through_Attention_Regulariza/reg-value-hardcoded",
+      "category": "difference",
+      "topic": "hyperparameters / ablation",
+      "title": "Regularization strength hardcoded to 100; λ=0 and λ=1000 ablation (Table 2) not in code",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "open_flamingo/open_flamingo/train/train_utils_attention.py",
+      "line_start": 297,
+      "line_end": 297,
+      "quote": "reg_value = 100\n",
+      "claim": "The KL weight is hardcoded to 100 inside train_gaze_attention; it is not exposed as a CLI/config argument, and there is no code path that sets it to 0 or 1000.",
+      "concern": "Table 2 reports a λ ablation over {0, 100, 1000}, but only λ=100 is realizable from the shipped code, so the ablation cannot be reproduced without editing the source; the value 100 matches the paper's reported best, which is consistent.",
+      "resolution": "Authors: expose λ as an argument and provide the configs used for the λ=0 and λ=1000 rows of Table 2.",
+      "cross_refs": [
+        "missing-multi-arch-and-tables"
+      ],
+      "paper_ref": "Table 2 (λ=0/100/1000)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "reg-value-hardcoded",
+      "audit": "4946_Gaze_VLM_Bridging_Gaze_and_VLMs_through_Attention_Regulariza",
+      "audit_md_line": 169,
+      "verdict": "keep",
+      "reason": "train_utils_attention.py line 297 has `reg_value = 100` exactly as quoted, confirming the value is hardcoded with no CLI exposure.",
+      "changed": "nothing"
+    },
+    {
+      "id": "4946_Gaze_VLM_Bridging_Gaze_and_VLMs_through_Attention_Regulariza/teacher-forced-eval",
+      "category": "methodology",
+      "topic": "evaluation validity",
+      "title": "Headline SBERT scores computed by teacher-forced reconstruction of the ground-truth answer",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "open_flamingo/open_flamingo/train/train_utils_attention.py",
+      "line_start": 734,
+      "line_end": 739,
+      "quote": "images,overlays,gaze,input_ids, attention_mask, labels = prepare_batch_gaze_attention(batch, tokenizer, device_id,image_token_id,endofchunk_token_id)\noutputs,attn_weights,cosine_sim= model(images,gaze,input_ids, attention_mask, labels)\nlogits = outputs.logits \ntoken_ids = logits_to_token_ids(logits)\npredicted_text = decode_token_ids_new(tokenizer,token_ids)\nground_truth = decode_token_ids_new(tokenizer,input_ids)\n",
+      "claim": "At evaluation, `input_ids` already contains the ground-truth annotation text (data.py:289 builds combined_text = '<image>...<image>{annotations_text}<|endofchunk|>{eos}' with no separate question/prompt). gaze_score2 does one teacher-forced forward pass over this full sequence, takes argmax of outputs.logits as the 'prediction' (logits_to_token_ids), and decodes BOTH the prediction and the ground truth from the same sequence; the SBERT cosine is then computed between them. No .generate() is used in this path.",
+      "concern": "Each position's logits are conditioned on the true preceding answer tokens, so the model is scored on copying an answer it was shown rather than generating one — this inflates the absolute 'semantic similarity' scores that constitute every headline number and is not a valid measure of generation quality.",
+      "resolution": "Authors: confirm whether reported Table 1-4 scores used teacher-forced argmax decoding or autoregressive generation; if teacher-forced, re-evaluate with model.generate() over an answer-free prompt and report the gap.",
+      "cross_refs": [
+        "missing-multi-arch-and-tables"
+      ],
+      "check_script": "_audit_code/check_teacher_forced_eval.py",
+      "paper_ref": "§4 'evaluation methodology is based on semantic similarity scores'; Tables 1-4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "teacher-forced-eval",
+      "audit": "4946_Gaze_VLM_Bridging_Gaze_and_VLMs_through_Attention_Regulariza",
+      "audit_md_line": 195,
+      "verdict": "keep",
+      "reason": "train_utils_attention.py lines 734-739 match exactly — the eval loop passes full input_ids (including ground-truth answer) to the model, takes logits argmax as 'prediction', and decodes ground truth from the same input_ids, with no call to model.generate().",
+      "changed": "nothing"
+    },
+    {
+      "id": "4946_Gaze_VLM_Bridging_Gaze_and_VLMs_through_Attention_Regulariza/sliding-window-random-split-leakage",
+      "category": "methodology",
+      "topic": "data splitting / sample independence",
+      "title": "Random split over overlapping sliding-window sequences puts near-duplicate windows in train and test",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "data_obtain/loader_new.py",
+      "line_start": 70,
+      "line_end": 78,
+      "quote": "def split_data(self, sequences):\n    # Split the dataset into train+val (80%) and test (20%)\n    train_val, test = train_test_split(sequences, test_size=0.2, random_state=42)\n    \n    # Now split the 80% of train+val into train (80% of 80%) and val (20% of 80%)\n    # This results in a 64% train, 16% val, and 20% test split of the original dataset\n    train, val = train_test_split(train_val, test_size=0.2, random_state=42)\n    \n    return train, val, test\n",
+      "claim": "Sequences are generated with a stride-1 sliding window over each video's 1-fps frames (loader_new.py:56, window i and i+1 share sequence_length-1 frames), and split_data then applies a plain random train_test_split over the pooled sequences with no grouping by video or by time.",
+      "concern": "Consecutive windows from the same video are near-duplicates (5 of 5 future frames overlap with neighbors; the same future annotation recurs), so a random split places highly-overlapping train and test windows from the same clip — the test set is not independent of training, inflating the reported scores and the BASE-vs-OURS gain.",
+      "resolution": "Authors: use a video-disjoint (group) split or temporally blocked split, quantify the per-video overlap between train and test, and report scores under a leakage-aware split.",
+      "cross_refs": [
+        "teacher-forced-eval",
+        "checkpoint-selected-on-train-loss"
+      ],
+      "paper_ref": "§4.1 Dataset Construction",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "sliding-window-random-split-leakage",
+      "audit": "4946_Gaze_VLM_Bridging_Gaze_and_VLMs_through_Attention_Regulariza",
+      "audit_md_line": 226,
+      "verdict": "keep",
+      "reason": "loader_new.py lines 70-78 match exactly; line 56 confirms stride-1 sliding window (`range(len(images) - self.sequence_length - self.prediction_length + 1)` increments i by 1), and split_data uses plain train_test_split with no group_by argument.",
+      "changed": "nothing"
+    }
+  ]
+}

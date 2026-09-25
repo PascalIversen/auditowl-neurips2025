@@ -1,0 +1,5 @@
+paper_number: 263
+title: On the Closed-Form of Flow Matching: Generalization Does Not Arise from Target Stochasticity
+authors: Quentin Bertrand, Anne Gagneux, Mathurin Massias, Rémi Emonet
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/0ca819b3e8126e19a008c38cd0c371ea-Abstract-Conference.html
+category: empirical

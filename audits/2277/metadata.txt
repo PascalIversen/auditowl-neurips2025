@@ -1,0 +1,5 @@
+paper_number: 2277
+title: Weak-shot Keypoint Estimation via Keyness and Correspondence Transfer
+authors: Junjie Chen, Zeyu Luo, Zezheng Liu, Wenhui Jiang, Li Niu, Yuming Fang
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/6cda6dbd39943eba03aebb50005f2f5c-Abstract-Conference.html
+category: empirical

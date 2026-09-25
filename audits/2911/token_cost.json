@@ -1,0 +1,19 @@
+{
+  "folder": "2911_HyPlaneHead_Rethinking_Tri_plane_like_Representations_in_Ful",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 23022,
+    "output": 9562,
+    "cache_write": 166778,
+    "cache_read": 1001709
+  },
+  "total_tokens": 1201071,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 5.69
+}

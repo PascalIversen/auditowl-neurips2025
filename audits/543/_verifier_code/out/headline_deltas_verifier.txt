@@ -1,0 +1,6 @@
+math     abstract= 14.7 sec3= 15.7 table= 15.69 | abs_ok=False sec3_ok=True
+code     abstract= 13.9 sec3= 14.4 table= 14.41 | abs_ok=False sec3_ok=True
+logic    abstract= 54.8 sec3= 54.8 table= 54.82 | abs_ok=True sec3_ok=True
+stem     abstract= 25.1 sec3= 25.9 table= 25.92 | abs_ok=False sec3_ok=True
+ifeval   abstract= 18.1 sec3= 22.0 table= 21.97 | abs_ok=False sec3_ok=True
+wrote /Users/anon/Projects/neurips_audit/audits/543_ProRL_Prolonged_Reinforcement_Learning_Expands_Reasoning_Bou/_verifier_code/out/headline_deltas.csv

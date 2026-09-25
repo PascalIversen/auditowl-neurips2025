@@ -1,0 +1,176 @@
+{
+  "schema_version": "1",
+  "audit": "4090_Unifying_Reconstruction_and_Density_Estimation_via_Invertibl",
+  "audit_md": "audits/4090_Unifying_Reconstruction_and_Density_Estimation_via_Invertibl/audit.md",
+  "generated_at": "2026-05-31T12:08:08.436258+00:00",
+  "findings": [
+    {
+      "id": "4090_Unifying_Reconstruction_and_Density_Estimation_via_Invertibl/image-domain-code-missing",
+      "category": "missing",
+      "topic": "result traceability / image experiments",
+      "title": "No CIFAR-10 / MVTec image-AD code; Table 2 and Table 4 unreproducible",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "Unifying_INN/main.py",
+      "line_start": 52,
+      "line_end": 64,
+      "quote": "def main(args):\n    setup_seed(42)\n    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')\n    #data_loader\n    train_x, train_y, test_x, test_y=loadData(args.datasetname)\n    train_dataset=torch.utils.data.TensorDataset(torch.tensor(train_x))\n    train_loader = DataLoader(train_dataset, batch_size=args.batch_size)\n    test_dataset=torch.utils.data.TensorDataset(torch.tensor(test_x), torch.tensor(test_y))\n    test_loader = DataLoader(test_dataset, batch_size=args.batch_size)\n    input_dim=torch.tensor(train_x).shape[1]\n\n    #model\n    model=UniINN(input_dim=input_dim).to(device)\n",
+      "claim": "The only entrypoint loads tabular .mat features and a plain MLP encoder; nothing in the repo loads CIFAR-10, uses the DO2HSC CNN, loads MVTec AD, uses a frozen WideResNet-50 backbone, or computes pixel-level AUROC.",
+      "concern": "Table 2 (CIFAR-10 + MVTec image/pixel AUROC) and Table 4 (image ablation) — the entire visual-AD half of the paper, including the headline MVTec 99.5/98.3 — have no code that produces them.",
+      "resolution": "Authors: please add the image-domain training/evaluation code (CIFAR-10 + MVTec, backbones, pixel-AUROC computation) used for Tables 2 and 4.",
+      "cross_refs": [
+        "datasets-missing"
+      ],
+      "check_script": "_audit_code/check_repo_completeness.py",
+      "paper_ref": "Table 2; Table 4; §4.1 'Implementation Details'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "image-domain-code-missing",
+      "audit": "4090_Unifying_Reconstruction_and_Density_Estimation_via_Invertibl",
+      "audit_md_line": 41
+    },
+    {
+      "id": "4090_Unifying_Reconstruction_and_Density_Estimation_via_Invertibl/datasets-missing",
+      "category": "missing",
+      "topic": "data availability",
+      "title": "Only 4 of 20 tabular datasets bundled; fetch script covers 13 with mismatched paths",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "Unifying_INN/get_data.sh",
+      "line_start": 4,
+      "line_end": 19,
+      "quote": "#breastw\nmkdir -p data/breastw\ncurl -o data/breastw/breastw.mat https://www.dropbox.com/s/g3hlnucj71kfvq4/breastw.mat?dl=1\n\n#cardio\nmkdir -p data/cardio\ncurl -o data/cardio/cardio.mat https://www.dropbox.com/s/galg3ihvxklf0qi/cardio.mat?dl=1\n\n\n#glass\nmkdir -p data/glass\ncurl -o data/glass/glass.mat https://www.dropbox.com/s/iq3hjxw77gpbl7u/glass.mat?dl=1\n\n#ionosphere\nmkdir -p data/ionosphere\ncurl -o data/ionosphere/ionosphere.mat https://www.dropbox.com/s/lpn4z73fico4uup/ionosphere.mat?dl=1\n",
+      "claim": "Table 1 reports 20 tabular datasets, but only glass/thyroid/wbc/wine .mat files are present (see _audit_code/out/repo_completeness.json); get_data.sh fetches only 13, and it downloads into per-dataset subdirs (data/<name>/<name>.mat) whereas loadData.py reads a flat path data/<name>.mat, so even fetched files would not be found.",
+      "concern": "16 of the 20 Table-1 rows cannot be reproduced from the repo; the fetch script is both incomplete (13<20) and points to a directory layout the loader does not use.",
+      "resolution": "Authors: provide all 20 datasets (or working download links) and align get_data.sh output paths with the path loadData.py reads.",
+      "cross_refs": [
+        "hardcoded-data-path"
+      ],
+      "check_script": "_audit_code/check_repo_completeness.py",
+      "paper_ref": "Table 1 (20 tabular datasets)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "datasets-missing",
+      "audit": "4090_Unifying_Reconstruction_and_Density_Estimation_via_Invertibl",
+      "audit_md_line": 78
+    },
+    {
+      "id": "4090_Unifying_Reconstruction_and_Density_Estimation_via_Invertibl/ablation-harness-missing",
+      "category": "missing",
+      "topic": "ablations",
+      "title": "No ablation/hyperparameter-sweep code for Tables 3 and 5",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "Unifying_INN/main.py",
+      "line_start": 70,
+      "line_end": 80,
+      "quote": "for epoch in range(args.num_epoch):\n    model.train()\n    loss_list = []\n    for i, x_train in enumerate(train_loader):\n        x_raw=x_train[0].to(device).float()   \n        x1,x2,prior,post=model(x_raw)\n        loss=reconstruction_loss(x1, x2)+0.5*(prior_loss(prior)+post_loss(post))\n        optimizer.zero_grad()\n        loss.backward()\n        optimizer.step()\n        loss_list.append(loss.item())\n",
+      "claim": "The single training loop always uses the full RE+DE loss with K/R fixed in model construction (denoise_net(latent_dim, 3)); there is no flag or harness to drop the RE or DE component (Table 3) or to sweep K and R (Table 5).",
+      "concern": "Table 3 (RE/DE component ablation, incl. the headline '+11.2/4.67 vs baseline' gain) and Table 5 (K×R sweep) cannot be reproduced — the code that produces those rows is absent.",
+      "resolution": "Authors: provide the ablation driver(s) that toggle RE/DE and sweep K, R.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_repo_completeness.py",
+      "paper_ref": "Table 3; Table 5; §4.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ablation-harness-missing",
+      "audit": "4090_Unifying_Reconstruction_and_Density_Estimation_via_Invertibl",
+      "audit_md_line": 118
+    },
+    {
+      "id": "4090_Unifying_Reconstruction_and_Density_Estimation_via_Invertibl/hardcoded-data-path",
+      "category": "bug",
+      "topic": "data loading",
+      "title": "loadData reads a hardcoded absolute path on the authors' machine",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "Unifying_INN/utils/loadData.py",
+      "line_start": 5,
+      "line_end": 5,
+      "quote": "dataset=loadmat('/home/qxl/ddpm/UniINN/data/'+datasetname+'.mat')\n",
+      "claim": "The data loader always reads from the absolute path /home/qxl/ddpm/UniINN/data/<name>.mat regardless of where the repo is checked out, ignoring the bundled Unifying_INN/data/ directory and the --save_folder/cwd.",
+      "concern": "Out of the box the pipeline crashes with FileNotFoundError for every user, so none of the tabular results (Table 1) are reproducible without editing the source.",
+      "resolution": "Authors: replace the hardcoded path with a relative path (e.g. Unifying_INN/data/) or a configurable --data_dir argument.",
+      "cross_refs": [
+        "datasets-missing"
+      ],
+      "check_script": "_audit_code/check_repo_completeness.py",
+      "paper_ref": "Table 1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "hardcoded-data-path",
+      "audit": "4090_Unifying_Reconstruction_and_Density_Estimation_via_Invertibl",
+      "audit_md_line": 155
+    },
+    {
+      "id": "4090_Unifying_Reconstruction_and_Density_Estimation_via_Invertibl/cudnn-determinism-typo",
+      "category": "bug",
+      "topic": "reproducibility / seeding",
+      "title": "Typo 'deterministirc' makes cuDNN-determinism flag a silent no-op",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "Unifying_INN/main.py",
+      "line_start": 21,
+      "line_end": 21,
+      "quote": "torch.backends.cudnn.deterministirc = True\n",
+      "claim": "The misspelled attribute 'deterministirc' creates a new unused attribute on torch.backends.cudnn; the real flag torch.backends.cudnn.deterministic is never set, so cuDNN remains nondeterministic.",
+      "concern": "Combined with dropout (Encoder, p=0.2) and GPU nondeterminism, reported single-number AUROC/AP values may not be exactly reproducible; impact is small for the conclusions.",
+      "resolution": "Authors: fix the typo to torch.backends.cudnn.deterministic = True.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_repo_completeness.py",
+      "paper_ref": "§4.1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "cudnn-determinism-typo",
+      "audit": "4090_Unifying_Reconstruction_and_Density_Estimation_via_Invertibl",
+      "audit_md_line": 180
+    },
+    {
+      "id": "4090_Unifying_Reconstruction_and_Density_Estimation_via_Invertibl/test-set-model-selection",
+      "category": "methodology",
+      "topic": "hyperparameter tuning / model selection",
+      "title": "No validation set; test AUROC evaluated and printed every 5 epochs during training",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "Unifying_INN/main.py",
+      "line_start": 82,
+      "line_end": 85,
+      "quote": "if (epoch+1) % 5 == 0:\n    print('epoch: {} loss: {}'.format(epoch+1, avg_loss))\n    torch.save(model.state_dict(), os.path.join(args.save_folder, args.datasetname+'.pth'))\n    evaluation_batch(model, test_loader,device)\n",
+      "claim": "There is no validation split (loadData returns only train and test); every 5 epochs the checkpoint is overwritten and evaluation_batch runs on the test set and prints AUROC/AP, so the test metric is monitored throughout training and a user reads the best/desired printed value.",
+      "concern": "With the test set as the only signal observed during training and no held-out validation set, epoch/checkpoint selection (and the reported single number) can be biased toward the test set; the paper reports one AUROC/AP per dataset without specifying which epoch is selected.",
+      "resolution": "Authors: confirm whether the reported numbers are at a fixed final epoch (independent of the printed test AUROC) or selected using the test metric; if the latter, add a held-out validation set for model/epoch selection.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_repo_completeness.py",
+      "paper_ref": "§4.1; Table 1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "test-set-model-selection",
+      "audit": "4090_Unifying_Reconstruction_and_Density_Estimation_via_Invertibl",
+      "audit_md_line": 215
+    }
+  ]
+}

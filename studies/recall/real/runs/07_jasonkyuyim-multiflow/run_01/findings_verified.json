@@ -1,0 +1,142 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-01T10:44:50.314648+00:00",
+  "findings": [
+    {
+      "id": "/novelty-metric-not-computed",
+      "category": "missing",
+      "topic": "result traceability / evaluation metrics",
+      "title": "Table 3 novelty (TM-score to nearest PDB protein) is not computed anywhere in the repo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "line_start": null,
+      "line_end": null,
+      "quote": "novelty is the average TM-score (Zhang & Skolnick, 2005) of each sample to its most similar protein in PDB.\n",
+      "claim": "The NOV. column of Table 3 (e.g. Multiflow 0.61) is defined as the average TM-score of each designable sample to its most similar PDB protein; the repo computes diversity via FoldSeek clustering (experiments/utils.py:75-104) and PMPNN consistency/designability, but contains no PDB-search / TM-score / novelty computation.",
+      "concern": "A whole column of the headline results table (novelty for every method) has no code path that produces it, so those numbers cannot be reproduced or checked from this repo.",
+      "resolution": "Authors: please add or point to the script that searches each designable sample against PDB and computes the TM-score novelty reported in Table 3 (and Fig. 3-adjacent analyses).",
+      "cross_refs": [
+        "§6.2 Metrics",
+        "Table 3"
+      ],
+      "paper_ref": "Section 6.2 'Metrics'; Table 3 NOV columns",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "novelty-metric-not-computed",
+      "audit": "",
+      "audit_md_line": 56,
+      "verdict": "keep",
+      "reason": "Paper quote verified byte-for-byte at paper_text.txt:1064 ('TM-score (Zhang & Skolnick, 2005) of each sample to its most similar protein in PDB'); the FoldSeek clustering code cited for diversity is confirmed at multiflow/experiments/utils.py:75-104 (run_easy_cluster using foldseek easy-cluster); a repo-wide grep for novelty|tm-score|tmscore|tm_score across multiflow/ (excluding openfold/ProteinMPNN vendor dirs) returns only the unrelated foldseek '--tmscore-threshold' clustering hyperparameter (utils.py:93), so no PDB-search/TM-score-to-nearest-PDB-protein computation exists anywhere in the released code.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/text8-experiment-code-absent",
+      "category": "missing",
+      "topic": "result traceability / text experiment",
+      "title": "Text8 DFM experiment (Fig. 2, Table 5) has no code in this repository",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "line_start": null,
+      "line_end": null,
+      "quote": "Table 5. Model log-likelihoods computed on the test set of text8 in bits-per-character (BPC).\n",
+      "claim": "Section 6.1 / App. I report the DFM-vs-D3PM/SEDD text8 study: Fig. 2 (NLL-vs-entropy Pareto frontier, GPT-J-6B evaluation) and Table 5 (log-likelihood in BPC, 86M-param character transformer). A recursive grep of the repo (excluding openfold/ProteinMPNN) for text8|d3pm|sedd|gpt-?j|bpc|character finds no matching source; this repo is protein-only.",
+      "concern": "The paper's first contribution (DFMs outperform discrete-diffusion baselines) is validated only by the text8 experiment, and none of that experiment's code (data prep, training, NLL/entropy evaluation, BPC bound) ships in the audited artefact — Fig. 2 and Table 5 are not reproducible from here.",
+      "resolution": "Authors: confirm whether the text8 code lives in the linked repo (andrew-cr/discrete_flow_models) and, if so, add a pointer / commit hash for the exact Fig. 2 / Table 5 scripts; otherwise release them.",
+      "cross_refs": [
+        "§6.1",
+        "Fig. 2",
+        "Table 5",
+        "App. I"
+      ],
+      "paper_ref": "Section 6.1; Fig. 2; Table 5 (BPC)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "text8-experiment-code-absent",
+      "audit": "",
+      "audit_md_line": 80,
+      "verdict": "keep",
+      "reason": "Paper quote verified byte-for-byte at paper_text.txt:7581. Repeated the repo-wide search: grep -riE 'text8|d3pm|sedd|gpt-?j|bpc|character' over code/jasonkyuyim__multiflow (excluding openfold/ and ProteinMPNN/) hits only unrelated uses of the generic word 'character' in comments/docstrings (protein.py, mmcif_parsing.py, utils.py, residue_constants.py) -- no text8 data, D3PM/SEDD baseline code, GPT-J evaluation, or BPC computation exists; the shipped repo is confirmed protein-only.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/dispersion-stats-not-computed",
+      "category": "missing",
+      "topic": "statistical integrity / result traceability",
+      "title": "Reported dispersion stats (Table 4 std, Table 6 SEM, 3-seed averaging) not produced by any script",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "multiflow/experiments/inference_se3_flows.py",
+      "line_start": 220,
+      "line_end": 220,
+      "quote": "'Average_bb_rmsd': top_sample_csv.bb_rmsd.mean(),\n",
+      "claim": "The metric aggregators compute only means (e.g. compute_inverse_folding_metrics / compute_forward_folding_metrics use .mean(); a grep for .std()/.sem()/stderr over multiflow/ finds no dispersion computation). Yet Table 4 reports 'mean ± std' (2.2 ± 2.6, 15.3 ± 4.5), Table 3 is 'the average of three seeds', and Table 6 reports standard error.",
+      "concern": "The uncertainty numbers (std / standard error) and the three-seed averaging that the paper reports are not produced by any released code, so a reader cannot regenerate the ± values or the multi-seed aggregation from the repo.",
+      "resolution": "Authors: add the script that aggregates per-sample bb_rmsd into std (Table 4) and runs/averages the three seeds with standard error (Tables 3/6), or document the exact off-repo procedure.",
+      "cross_refs": [
+        "Table 3",
+        "Table 4",
+        "Table 6",
+        "dispersion"
+      ],
+      "check_script": "_audit_code/check_train_counts.py",
+      "paper_ref": "Table 4 caption 'mean ± std'; Sec 6.2.1 'average of three seeds ... Table 6 ... standard error'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "dispersion-stats-not-computed",
+      "audit": "",
+      "audit_md_line": 104,
+      "verdict": "keep",
+      "reason": "Code quote verified byte-for-byte at inference_se3_flows.py:220 inside compute_inverse_folding_metrics, which (along with compute_forward_folding_metrics) only calls .mean() on every metric column. Repo-wide grep for '.std()|.sem()|stderr|standard error' over multiflow/ returns only unrelated subprocess.PIPE/subprocess.STDOUT hits, confirming no dispersion computation exists. Paper quotes independently verified: 'mean ± std' Table 4 caption (paper_text.txt:1241) with values 2.2±2.6 / 15.3±4.5 (lines 1254-55), 'average of three seeds' (line 1099), and 'Table. 6 ... with standard error' (lines 7723-24). Note: the cited check_script (_audit_code/check_train_counts.py) actually tests training-set counts (it is the correct script for the sibling distillation-set-count-mismatch finding, not this one) -- an apparent citation copy-paste error in the original audit -- but it does not affect this finding's verdict because the actual applicable check for an absence claim (repo-wide grep) was performed directly and independently confirms the claim.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/distillation-set-count-mismatch",
+      "category": "difference",
+      "topic": "training data / distillation",
+      "title": "Released synthetic distillation set has 6550 examples, not the paper's stated 4179",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "multiflow/data/datasets.py",
+      "line_start": 302,
+      "line_end": 315,
+      "quote": "if self._dataset_cfg.use_synthetic:\n    self.synthetic_csv = pd.read_csv(self._dataset_cfg.synthetic_csv_path)\n    self._synthetic_pdb_to_cluster = _read_clusters(self._dataset_cfg.synthetic_cluster_path, synthetic=True)\n\n    # offset all the cluster numbers by the number of real data clusters\n    num_real_clusters = metadata_csv['cluster'].max() + 1\n    def synthetic_cluster_lookup(pdb):\n        pdb = pdb.upper()\n        if pdb not in self._synthetic_pdb_to_cluster:\n            raise ValueError(f\"Synthetic example {pdb} not in synthetic cluster file!\")\n        return self._synthetic_pdb_to_cluster[pdb] + num_real_clusters\n    self.synthetic_csv['cluster'] = self.synthetic_csv['pdb_name'].map(synthetic_cluster_lookup)\n\n    metadata_csv = pd.concat([metadata_csv, self.synthetic_csv])\n",
+      "claim": "With use_synthetic:True (datasets.yaml:27, on for pdb_codesign training), the entire synthetic_csv (./metadata/distillation_metadata.csv) is concatenated into the training set with no length/quality filter (pdb_filter_metadata only filters the real raw_csv). That file has 6550 rows. Replicating the real-set filters (check_train_counts.py) yields 18684 real proteins pre-redesign (matching the paper exactly) but 16313 after the use_redesigned best_rmsd<2.0 merge.",
+      "concern": "Sec 6.2 states 'we needed to add only an extra 4179 examples to the original set of 18684 proteins'; the released distillation set actually adds 6550 (and the redesign step drops the real set to 16313), so the paper's stated distillation composition does not match the shipped data — undercutting the 'only 4179 extra' efficiency claim, even though the two decompositions happen to share the same 22863 total.",
+      "resolution": "Authors: clarify whether 4179 counts examples, clusters, or an earlier distillation round, and reconcile it with the 6550-row distillation_metadata.csv actually consumed by use_synthetic (and the 16313 real examples after use_redesigned).",
+      "cross_refs": [
+        "§6.2 Distillation",
+        "datasets.yaml:25-27"
+      ],
+      "check_script": "_audit_code/check_train_counts.py",
+      "paper_ref": "Section 6.2 'Distillation' (4179 / 18684)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "distillation-set-count-mismatch",
+      "audit": "",
+      "audit_md_line": 139,
+      "verdict": "keep",
+      "reason": "Code quote byte-verified at datasets.py:302-315. datasets.yaml:27 confirms use_synthetic: True for pdb_dataset (the pdb_codesign training config). distillation_metadata.csv has 6551 lines incl. header = 6550 rows, matching the claim exactly. Ran the cited check_script (_audit_code/check_train_counts.py, copied to _verifier_code/) against the repo's own metadata CSVs; it completed without error and reproduced: 18684 real proteins pre-redesign filter (exact paper match), 16313 after the use_redesigned best_rmsd<2.0 merge, 6550 synthetic rows, and a combined total of 22863 = paper's 18684+4179 -- exactly as the finding describes. Paper quote 'we needed to add only an extra 4179 examples to the original set of 18684 proteins' verified byte-for-byte at paper_text.txt:1085-86.",
+      "changed": "nothing"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+coin_table1_prefill_harness: 0 file(s) -> []
+tom_table4_intervention_harness: 1 file(s) -> ['GeodesicResearch__mars-steg/mars_steg/dataset/theory_of_mind.csv']
+tom_fig3_plot_or_label_pipeline: 12 file(s) -> ['GeodesicResearch__mars-steg/index.html', 'GeodesicResearch__mars-steg/docs/build/html/mars_steg.task.html', 'GeodesicResearch__mars-steg/docs/build/html/searchindex.js', 'GeodesicResearch__mars-steg/README.md', 'GeodesicResearch__mars-steg/mars_steg/accelerate_training.py', 'GeodesicResearch__mars-steg/mars_steg/task/base_task.py', 'GeodesicResearch__mars-steg/mars_steg/task/README.md', 'GeodesicResearch__mars-steg/mars_steg/model/base_model.py', 'GeodesicResearch__mars-steg/mars_steg/model/README.md', 'GeodesicResearch__mars-steg/mars_steg/train.py', 'GeodesicResearch__mars-steg/mars_steg/prompts/README.md', 'GeodesicResearch__mars-steg/mars_steg/train_shortening.py']
+
+Headline 7B run script uses: config_override.yaml -> nouns_penalisation_type=objects, mode=unseen_object
+(Paper Fig.3 headline ToM experiment penalises CHARACTER NAMES.)

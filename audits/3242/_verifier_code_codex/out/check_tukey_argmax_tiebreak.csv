@@ -1,0 +1,4 @@
+panel,grid_res,max_depth,plateau_cells,plateau_area_frac,plateau_width_x,plateau_width_y,argmax_x,argmax_y,centroid_x,centroid_y,dist_argmax_to_truemean,dist_centroid_to_truemean,argmax_closer_to_truth,argmax_centroid_gap,gap_in_grid_cells,max_abs_err_vs_authors_tukey_depth
+(A) uniform,1000,0.42,37,3.7e-05,0.035,0.0701,1.6386,1.7538,1.6532,1.7962,2.4002,2.4412,True,0.0449,9.0,0.0
+(B) threshold,1000,0.4,4825,0.004825,0.7007,0.5405,0.2122,-0.2032,0.5352,0.1533,0.2938,0.5567,True,0.481,96.1,0.0
+(C) optimal-linear,1000,0.409036,25,2.5e-05,0.045,0.0701,0.3574,0.0921,0.3838,0.1365,0.369,0.4073,True,0.0517,10.3,0.0

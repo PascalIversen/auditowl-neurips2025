@@ -1,0 +1,229 @@
+{
+  "schema_version": "1",
+  "audit": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap",
+  "audit_md": "audits/1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap/audit.md",
+  "generated_at": "2026-05-31T12:09:30.605161+00:00",
+  "findings": [
+    {
+      "id": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap/visual-reasoning-code-missing",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No code/data for the visual-reasoning pass@k results (Fig. 4 right)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "We use the EasyR1 framework [31] to train Qwen2.5-VL7B [32] on Geometry3K [33], and evaluate its visual reasoning capabilities on filtered MathVistaTestMini [34] and MathVision-TestMini [35]\n",
+      "claim": "The repo ships only math (`math/`) and DeepCoder code-RL training (`code/DeepCoder/`); a recursive grep for mathvista/mathvision/easyr1/geometry3k/qwen2.5-vl finds no eval, data, or training code for the visual-reasoning experiments.",
+      "concern": "The visual-reasoning pass@k curves (Fig. 4 right), a third of the paper's cross-modality evidence, cannot be reproduced or traced to any artefact in the repo.",
+      "resolution": "Authors: release (or link) the EasyR1 multimodal training config, the MathVista/MathVision filtered eval data, and the pass@k computation for the visual setting.",
+      "cross_refs": [
+        "§3 RLVR for Visual Reasoning"
+      ],
+      "paper_ref": "Section 'RLVR for Visual Reasoning'; Figure 4 (right)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "visual-reasoning-code-missing",
+      "audit": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap",
+      "audit_md_line": 35,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap/codegen-passk-eval-missing",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No eval harness for code-generation pass@k (HumanEval+/MBPP+, Fig. 4 left)",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "Figure 4: Pass@k curves of base and RLVR models. (Left) Code Generation. (Right) Visual Reasoning.\n",
+      "claim": "The repo's `code/` tree contains only the DeepCoder/verl training framework; there is no HumanEval+/MBPP+ evaluation harness that produces the Fig. 4 (left) pass@k curves for Coder-R1-Zero. The README only credits Code-R1 (external) for code eval.",
+      "concern": "The code-generation pass@k results cannot be reproduced from this repo; the per-sample correctness used for pass@k on HumanEval+/MBPP+ is computed by an external/unshipped harness.",
+      "resolution": "Authors: include or link the exact HumanEval+/MBPP+ generation + unit-test scoring + pass@k script used for Fig. 4 (left).",
+      "cross_refs": [
+        "codegen-passk-eval-missing"
+      ],
+      "paper_ref": "Figure 4 (left), §RLVR for Code Generation",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "codegen-passk-eval-missing",
+      "audit": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap",
+      "audit_md_line": 57,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap/coverage-overlap-code-missing",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No script computes the base-vs-RL solvable-set overlap (Tables 2, 5, 6)",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "Table 2: We evaluate on AIME24 (k = 1024)\nand MATH500 (k = 128). The table reports the\nsolvable/unsolvable fraction of problems falling\ninto four categories.\n",
+      "claim": "`evaluate.py`/`pass@k.py` produce per-problem score matrices, but no script in the repo intersects the base-model and RL-model solvable sets to produce the four-cell coverage fractions of Table 2 (e.g. 63.3%/13.3%/0.0%/23.3% on AIME24) or the 'RL-solved is nearly a subset of base-solved' Tables 5/6.",
+      "concern": "The set-overlap statistics that underpin the paper's core 'reasoning paths already present in the base model' conclusion are not traceable to any computing artefact.",
+      "resolution": "Authors: provide the script that, given the two saved score jsonls, computes the four-cell coverage table and the subset/overlap statistics.",
+      "cross_refs": [
+        "§3 Solvable-Problem Coverage Analysis",
+        "§D.7"
+      ],
+      "paper_ref": "Table 2; Tables 5, 6",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "coverage-overlap-code-missing",
+      "audit": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap",
+      "audit_md_line": 79,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap/perplexity-code-missing",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No perplexity-computation code for the §4.1 perplexity analysis",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "PPLm(Y | x) = exp\n \n−1\nT\nT\nX\nt=1\nlog P (yt | x, y1, . . . , yt−1)\n",
+      "claim": "The paper's perplexity analysis (a load-bearing argument that RL-model responses lie within the base model's distribution) requires per-token log-likelihood scoring; a recursive grep for perplexity/log_likelihood/logprob over `math/` and `code/scripts` finds no such computation.",
+      "concern": "The perplexity-based evidence for the 'reasoning paths already present in base models' claim cannot be reproduced from the repo.",
+      "resolution": "Authors: release the script that computes PPL_m(Y|x) for base/RL/distilled models on the response sets reported in §4.1.",
+      "cross_refs": [
+        "§4.1 Reasoning Paths Already Present in Base Models"
+      ],
+      "paper_ref": "Section 4.1, Perplexity Analysis",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "perplexity-code-missing",
+      "audit": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap",
+      "audit_md_line": 104,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap/manual-cot-check-missing",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "Manual CoT-validity check (§3.1) has no code; relies on human inspection",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "To address this, we\nmanually check the correctness of CoT for a subset of model outputs as detailed in Section 3.1.\n",
+      "claim": "The paper mitigates the 'lucky-guess' threat to pass@k by manually inspecting CoTs of the hardest problems; this is an off-code human procedure with no script, selection criterion file, or annotation artefact in the repo.",
+      "concern": "The reader cannot independently verify which outputs were inspected or how guess-only correct answers were excluded, so the guessing-correction step is unauditable.",
+      "resolution": "Authors: release the inspected-sample IDs and annotation outcomes (even as a CSV) so the CoT-validity claim can be checked.",
+      "cross_refs": [
+        "§3.1",
+        "§D.2"
+      ],
+      "paper_ref": "Section 3.1 Random Guessing Issue; Section D.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "manual-cot-check-missing",
+      "audit": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap",
+      "audit_md_line": 133,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap/eval-deps-unlisted",
+      "category": "missing",
+      "topic": "dependencies / reproducibility",
+      "title": "Math-eval imports (wandb, pandas, matplotlib) not in requirements.txt",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/LeapLabTHU__limit-of-RLVR/math/requirements.txt",
+      "line_start": 1,
+      "line_end": 17,
+      "quote": "accelerate\ncodetiming\ndatasets\ndill\nhydra-core==1.4.0.dev1\nomegaconf==2.4.0.dev3\nnumpy\npybind11\nray[default]==2.10.0\ntensordict\ntransformers<4.48\nvllm<=0.6.3\npeft\nliger-kernel\nword2number\nmath-verify[antlr4_11_0]==0.6.0\n",
+      "claim": "`collect_results.py` imports `pandas`, `matplotlib`, and `wandb` (unconditionally) and `eval.sh` runs `math_eval.py` which transitively needs `pebble`/`jieba`/`sympy`/`antlr4`; none of pandas/matplotlib/wandb appear in requirements.txt (pebble/jieba/sympy/antlr4 are installed ad hoc inside `math_eval.sh`).",
+      "concern": "A clean `pip install -e .` does not yield a runnable evaluation+aggregation environment; the result-collection step fails on import without manually adding the missing packages.",
+      "resolution": "Authors: add pandas, matplotlib, wandb (and the math_eval.sh-installed pebble/jieba/sympy/antlr4 pins) to requirements.txt, or document them.",
+      "cross_refs": [],
+      "paper_ref": "N/A (repo packaging)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "eval-deps-unlisted",
+      "audit": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap",
+      "audit_md_line": 156
+    },
+    {
+      "id": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap/context-cap-truncates-generation",
+      "category": "bug",
+      "topic": "generation length",
+      "title": "vLLM max_model_len hardcoded to 4096, contradicting documented max_tokens=16000",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "code/LeapLabTHU__limit-of-RLVR/math/examples/math_eval/math_eval.py",
+      "line_start": 131,
+      "line_end": 140,
+      "quote": "if args.use_vllm:\n    llm = LLM(\n        model=args.model_name_or_path,\n        tensor_parallel_size=len(available_gpus) // args.pipeline_parallel_size,\n        pipeline_parallel_size=args.pipeline_parallel_size,\n        trust_remote_code=True,\n        seed=args.seed,\n        gpu_memory_utilization=0.9,\n        max_model_len=4096,\n    )\n",
+      "claim": "The vLLM engine's total context length (prompt + generation) is hardcoded to 4096, while the script accepts `--max_tokens 16000` (README/eval_math_nodes.sh) and forwards it as `SamplingParams(max_tokens=args.max_tokens_per_call)` at line 307; vLLM can only emit up to `4096 - prompt_len` new tokens regardless of the requested 16000.",
+      "concern": "Long reasoning chains on hard benchmarks (AIME/Olympiad at large k) are silently truncated to <4096 tokens instead of the documented 16000, which can suppress exactly the long-CoT correct samples that the large-k coverage comparison depends on.",
+      "resolution": "Authors: confirm the max_model_len used for the reported runs; if 4096 was actually used, reconcile it with the README's `--max_tokens 16000`, or expose max_model_len as a CLI argument tied to max_tokens.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_context_cap.py",
+      "paper_ref": "README eval_math_nodes.sh (--max_tokens 16000)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "context-cap-truncates-generation",
+      "audit": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap",
+      "audit_md_line": 197
+    },
+    {
+      "id": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap/special-benchmark-comment-stale",
+      "category": "difference",
+      "topic": "evaluation consistency",
+      "title": "eval.sh comment claims aime24/amc23 use n_sampling=8, code uses the passed N_SAMPLING",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/LeapLabTHU__limit-of-RLVR/math/examples/math_eval/sh/eval.sh",
+      "line_start": 64,
+      "line_end": 79,
+      "quote": "# Run special benchmarks (aime24, amc23) with n_sampling=8\nif [ ${#SPECIAL_BENCHMARKS[@]} -gt 0 ]; then\n    SPECIAL_BENCHMARKS_STR=$(IFS=,; echo \"${SPECIAL_BENCHMARKS[*]}\")\n    TOKENIZERS_PARALLELISM=false \\\n    python -u math_eval.py \\\n        --model_name_or_path ${MODEL_NAME_OR_PATH} \\\n        --data_name ${SPECIAL_BENCHMARKS_STR} \\\n        --output_dir ${OUTPUT_DIR} \\\n        --split ${SPLIT} \\\n        --prompt_type ${PROMPT_TYPE} \\\n        --num_test_sample ${NUM_TEST_SAMPLE} \\\n        --max_tokens_per_call ${max_tokens} \\\n        --seed ${seed} \\\n        --temperature ${temperature} \\\n        --n_sampling ${N_SAMPLING} \\\n        --top_p ${top_p} \\\n",
+      "claim": "The comment says special benchmarks (aime24/amc23) run with n_sampling=8, but the actual invocation passes `--n_sampling ${N_SAMPLING}`, i.e. whatever was given on the command line (32, 256, 512, …) — identical to the regular branch.",
+      "concern": "The stale comment could mislead a reproducer into thinking aime24/amc23 are forced to a different sampling count than other benchmarks; the code in fact does not differ on this axis (only the temperature=0 special-casing differs).",
+      "resolution": "Authors: delete or correct the `n_sampling=8` comment; confirm the per-benchmark n values (paper uses n=1024 for AIME24/AMC23) were set via the CLI.",
+      "cross_refs": [],
+      "paper_ref": "§A.2 (n=1024 for AMC23/AIME24)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "special-benchmark-comment-stale",
+      "audit": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap",
+      "audit_md_line": 233
+    }
+  ]
+}

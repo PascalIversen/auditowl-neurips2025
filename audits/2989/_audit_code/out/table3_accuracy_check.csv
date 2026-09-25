@@ -1,0 +1,6 @@
+label,mmlu,mtbench,reported_acc,computed_acc,abs_diff,match_2dp
+Baseline,80.73,8.87,84.71,84.715,0.005,False
+Step1,80.64,8.72,83.92,83.92,0.0,True
+Step2,80.29,8.54,82.84,82.845,0.005,True
+Step3,80.39,8.3,81.69,81.695,0.005,True
+Step4,79.98,8.25,81.24,81.24,0.0,True

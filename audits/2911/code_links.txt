@@ -1,0 +1,6 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/aigc3d/HyPlaneHead	[author-org: Tongyi Lab/Alibaba 3D team (Qiu/Zuo/Dong); repo title = paper title, NeurIPS 2025, arXiv 2509.16748; located post-audit 2026-05-31]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/lhyfst/HyPlaneHead	[author-announced on project page lhyfst.github.io/hyplanehead but returns 404; the same code is public under the aigc3d org instead]
+https://github.com/Kuuuube/Circular_Area	[unrelated -- osu! tablet-area footnote citation, not author code]

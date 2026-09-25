@@ -1,0 +1,18 @@
+Paper Figures 1-4 captions all state '95 %c.i.'
+
+ci2 in plots/run_estimation_err_plot.py uses conf=0.90, n passed = 10 or 20
+ci2 in plots/run_regret_plot.py     uses conf=0.85, n passed = num_experiments
+
+[est-err main (n hardcoded=10)] conf=0.9 n=10: t.ppf(1-conf=0.10, df=9) = -1.3830  (SIGN NEGATIVE -> band inverted); correct two-sided 95% t = 2.2622
+[est-err custom (n hardcoded=20)] conf=0.9 n=20: t.ppf(1-conf=0.10, df=19) = -1.3277  (SIGN NEGATIVE -> band inverted); correct two-sided 95% t = 2.0930
+[regret (n=num_experiments=5)] conf=0.85 n=5: t.ppf(1-conf=0.15, df=4) = -1.1896  (SIGN NEGATIVE -> band inverted); correct two-sided 95% t = 2.7764
+[regret pomdp1 (n=3)] conf=0.85 n=3: t.ppf(1-conf=0.15, df=2) = -1.3862  (SIGN NEGATIVE -> band inverted); correct two-sided 95% t = 4.3027
+
+CONCLUSIONS:
+1) t.ppf(1-conf, ...) with conf>0.5 returns a NEGATIVE quantile, so
+   lower_bound = mean - t*std/sqrt(n) is actually ABOVE the mean and
+   upper_bound BELOW it: the shaded 'CI' band is inverted/swapped.
+2) The confidence level used (0.90 / 0.85) does not match the captioned 95%.
+3) The 'n' fed to ci2 in the estimation plot is a hardcoded constant
+   (confidence=10 or 20), not the true number of runs in the data.
+

@@ -1,0 +1,17 @@
+{
+  "paper_id": "261_RiOSWorld_Benchmarking_the_Risk_of_Multimodal_Computer_Use_A",
+  "title": "RiOSWorld: Benchmarking the Risk of Multimodal Computer-Use Agents",
+  "repos": [
+    {
+      "name": "yjyddq__RiOSWorld",
+      "role": "core",
+      "evidence": "README states '[NeurIPS'25] RiOSWorld: Benchmarking the Risk of Multimodal Computer-Use Agents', arXiv:2506.00618, accepted NeurIPS 2025. Repo owner 'yjyddq' matches first author 'Jingyi Yang' (GitHub handle). Contains the paper's 492 risky task configs (evaluation_risk_examples/), OSWorld-derived desktop environment + rule-based risk evaluator (desktop_env/), agent runners (run*.py, multi_llm_run.sh), LLM-as-a-judge intention evaluator (evaluate/safety_evaluation.py), trajectory aggregator (evaluate/evaluate_traj_by_step.py), and environmental risk utilities (env_risk_utils/). All core artefacts for the benchmark match the paper's described contributions exactly."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo yjyddq__RiOSWorld is unambiguously the paper's own implementation: the README names the exact NeurIPS 2025 paper title and arXiv id (2506.00618), the repo owner aligns with the first author, and the code structure (492 task JSONs, desktop environment, rule-based evaluator, LLM judge, agent runners) matches every core contribution described in the paper. The audit correctly identified this as the core repo and wrote all findings against it. No non-core repos were cloned. All findings concern real defects in the evaluation tooling (missing imports, CLI arg mismatch, flag mismatch on resume, missing aggregation script, undocumented auto-pass rule) and legitimate missing data (trajectories released post-submission on HuggingFace). No 'no code' claim was made. The paper verdict is correct.",
+  "audit_impact": "None. The cloned repo is the correct core implementation. All findings were written against the right codebase and concern genuine defects in the evaluation/aggregation pipeline. No re-classification needed.",
+  "recommended_action": "No action required on repo provenance. The audit findings stand as-is."
+}

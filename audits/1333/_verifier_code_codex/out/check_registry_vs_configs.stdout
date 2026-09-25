@@ -1,0 +1,6 @@
+Registered arch classes: ['LoRAConv2d', 'RAVAEHFLora', 'RAVAE_EQ', 'UNetDiscriminatorSN']
+Registered model classes: ['EQVAEModel', 'SRModel', 'VAEadapter']
+Registered loss classes: ['CharbonnierLoss', 'EQLoss', 'EncoderLoss', 'FFTLoss', 'GANFeatLoss', 'GANLoss', 'KlLoss', 'L1Loss', 'LPIPSLoss', 'MSELoss', 'MultiScaleGANLoss', 'PerceptualLoss', 'WeightedTVLoss']
+
+UNRESOLVED type references in configs (not registered, not builtin):
+  stage2_hflora.yml:42  type: RAVAE

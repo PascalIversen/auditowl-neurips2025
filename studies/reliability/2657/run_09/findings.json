@@ -1,0 +1,236 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T10:22:41.825043+00:00",
+  "findings": [
+    {
+      "id": "/explainability-code-absent",
+      "category": "missing",
+      "topic": "result traceability / explainability",
+      "title": "No code for the explainability experiments (Fig 4 MNIST, Table 3 ExactMatch/Jaccard)",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "We use digit 1 as the normal class and digit 7\nas the anomaly (achieving an AUROC of 0.76). As shown in Figure 4, the model highlights the\nadditional horizontal stroke that distinguishes 7 from 1\n",
+      "claim": "Explainability is one of the paper's three headline contributions (title: 'Explainable'); it is validated by the MNIST 1-vs-7 case study (Fig 4, AUROC 0.76) and the synthetic ExactMatch/Jaccard study (Table 3, App. D.4.2). No script in the repo loads MNIST 1/7, computes per-feature residual importance, selects top-k features, or computes ExactMatch/Jaccard; greps for 'jaccard', 'exact match', 'importance', and digit/MNIST attribution return nothing in the author code.",
+      "concern": "A headline contribution and its two reported result artefacts (Figure 4 and Table 3) cannot be reproduced because no code computes the feature-level attributions or the explanation-accuracy metrics.",
+      "resolution": "Authors: please add the explanation-attribution code (top-k feature selection from the residual vector, ExactMatch/Jaccard computation, the MNIST 1-vs-7 experiment) used for Figure 4 and Table 3.",
+      "cross_refs": [
+        "§5.1",
+        "App. D.4.2",
+        "Table 3",
+        "Figure 4"
+      ],
+      "paper_ref": "Section 5.1 Effectiveness/Explainability; Appendix D.4.2; Table 3; Figure 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "explainability-code-absent",
+      "audit": "",
+      "audit_md_line": 63,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/epoch-selection-protocol-absent",
+      "category": "missing",
+      "topic": "hyperparameter selection",
+      "title": "Unsupervised epoch-selection procedure (CSM) not in repo; only hardcoded epochs shipped",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "FMAD/functions.py",
+      "line_start": 73,
+      "line_end": 78,
+      "quote": "def determine_FMAD_hyperparameters(dataset_name_raw):\n    dataset_name = dataset_name_raw.lower()\n    if \"census\" in dataset_name:\n        epoch_size = 5\n        batch_size = 1024\n        learning_rate = 0.005\n",
+      "claim": "The paper (App. B.3/B.6) states the per-dataset training epochs were chosen by an unsupervised hyperparameter-selection method (Improved Contrast Score Margin / CSM criterion, Li et al. 2025b) that 'requires no access to anomaly labels' and is computed from the model-output distribution. The repo contains no implementation of this CSM search (greps for 'csm', 'contrast', 'margin', 'epoch select' return nothing); only the resulting per-dataset epoch constants are hardcoded in a long if/elif chain.",
+      "concern": "The data-dependent hyperparameter selection that the paper presents as 'principled and largely automated' cannot be reproduced or audited; a reviewer cannot check whether the epoch search was label-free or what data it was run on.",
+      "resolution": "Authors: please release the CSM-based epoch-selection script (including which dataset it evaluates the criterion on) so the Table 5 epoch values can be reproduced.",
+      "cross_refs": [
+        "possible-test-set-epoch-selection",
+        "App. B.3",
+        "App. B.6",
+        "Table 5"
+      ],
+      "paper_ref": "Appendix B.3 (Configurations) and B.6 (Unsupervised Epoch Selection Strategy); Table 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "epoch-selection-protocol-absent",
+      "audit": "",
+      "audit_md_line": 87
+    },
+    {
+      "id": "/stat-tests-code-absent",
+      "category": "missing",
+      "topic": "statistical integrity",
+      "title": "Friedman + Nemenyi significance tests (App. D.5, Figs 21/22) have no code",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "We report the results using critical difference diagrams (see Figure 21 and 22). For AUPRC, the\nNemenyi test indicates that there are no statistically significant differences among the top-performing\ngroup, which includes TCCM (ranked 5.8)\n",
+      "claim": "The paper reports Friedman + Nemenyi tests on detector ranks (App. D.5) with critical-difference diagrams (Figs 21, 22). No script in the repo computes a Friedman or Nemenyi test or a CD diagram (greps for 'friedman', 'nemenyi', 'critical difference' return nothing in the author code); AggregateResults.py only computes mean ranks.",
+      "concern": "The reported significance test (and its conclusion that differences in the top group are not significant) cannot be reproduced from the released code.",
+      "resolution": "Authors: please add the script that performs the Friedman/Nemenyi tests and produces Figures 21/22 from the per-seed rank tables.",
+      "cross_refs": [
+        "App. D.5"
+      ],
+      "paper_ref": "Appendix D.5 Statistical Tests; Figures 21 and 22",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "stat-tests-code-absent",
+      "audit": "",
+      "audit_md_line": 116,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/semisup-loop-off-by-one",
+      "category": "bug",
+      "topic": "experiment driver / reproduction",
+      "title": "run_semisupervise.sh runs 6 of 7 force-inductive models; INNE_semisup skipped",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "bash_files/run_semisupervise.sh",
+      "line_start": 23,
+      "line_end": 23,
+      "quote": "for j in {45..50}; do # 7 models\n",
+      "claim": "MODEL_NAMES indices 45-51 are the seven force-inductive (semisup) baselines ABOD_semisup … INNE_semisup. The loop `for j in {45..50}` is inclusive 45..50 = 6 values, so index 51 (INNE_semisup) is never launched, despite the inline comment '7 models'. Confirmed by _audit_code/check_semisup_index_range.py. The same `{45..50}` appears at all four dataset blocks (lines 23, 58, 98, 138).",
+      "concern": "INNE_semisup never produces a results file; under the default `--semi_only` aggregation it is back-filled with AUC=-1 (AggregateResults.py:198) and pinned to the worst rank for every dataset, distorting the 45-detector rank distribution (Figure 2) that includes TCCM.",
+      "resolution": "Change the loop bound to `{45..51}` (and the inline comment) so all seven force-inductive baselines run, then regenerate the Figure 2 rankings; or confirm INNE_semisup was run separately and supply its results.",
+      "cross_refs": [
+        "Figure 2"
+      ],
+      "check_script": "_audit_code/check_semisup_index_range.py",
+      "paper_ref": "Figure 2 (45 anomaly detectors over 47 datasets)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "semisup-loop-off-by-one",
+      "audit": "",
+      "audit_md_line": 142
+    },
+    {
+      "id": "/run-knn-dead-filename",
+      "category": "bug",
+      "topic": "experiment driver",
+      "title": "run_knn.sh invokes non-existent Full_experiments.py",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "bash_files/run_knn.sh",
+      "line_start": 28,
+      "line_end": 28,
+      "quote": "nohup taskset -c \"$core_id\" python Full_experiments.py -d \"$dname\" -i \"$j\" -r \"$RANDOM_SEED\" -t \"$TIME_LIMIT\" -m \"$MEMORY_LIMIT\" >> \"./logs/seed_${RANDOM_SEED}/run_${dname}_model_${j}.log\" 2>&1 &\n",
+      "claim": "run_knn.sh calls `python Full_experiments.py` (underscore, lower-case 'e') at every dataset block, but the actual file is `FullExperiments.py` (camelCase, no underscore); no `Full_experiments.py` exists in the repo. The script would fail with 'No such file or directory' for every job.",
+      "concern": "This helper script cannot run as written; it will silently produce no KNN results (errors land only in per-job logs).",
+      "resolution": "Rename the invocation to `python FullExperiments.py`. (KNN/KNN_semisup are also reachable via the main scripts, so impact on the paper is limited.)",
+      "cross_refs": [],
+      "paper_ref": "Reproduction (KNN baseline)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "run-knn-dead-filename",
+      "audit": "",
+      "audit_md_line": 167
+    },
+    {
+      "id": "/goad-nonzero-default-epochs",
+      "category": "difference",
+      "topic": "baselines / hyperparameters",
+      "title": "GOAD baseline given n_epoch=25 in code; paper says baselines use default configs",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "FullExperiments.py",
+      "line_start": 263,
+      "line_end": 264,
+      "quote": "elif mname == \"GOAD\":\n    parameters = {\"n_epoch\": 25}\n",
+      "claim": "FullExperiments.py overrides GOAD's number of epochs to 25; GOAD's own default is n_epoch=1 (baselines/goad.py:50,124). The paper states 'For all baseline detectors, we use their default configurations and hyperparameters as provided by their source implementations.'",
+      "concern": "The paper's blanket claim of default baseline hyperparameters is contradicted for GOAD; the override raises GOAD's training (more epochs is generally favourable to the baseline), so it does not unfairly disadvantage GOAD, but the description is inaccurate.",
+      "resolution": "Authors: state that GOAD used n_epoch=25 (not its default 1), and confirm whether any other baseline deviates from defaults.",
+      "cross_refs": [],
+      "paper_ref": "Appendix B.3, 'For all baseline detectors, we use their default configurations…'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "goad-nonzero-default-epochs",
+      "audit": "",
+      "audit_md_line": 193
+    },
+    {
+      "id": "/fig2-pdf-not-produced",
+      "category": "difference",
+      "topic": "result aggregation / outputs",
+      "title": "AggregateResults.py never writes Rank_ROC.pdf / Rank_PR.pdf the README promises",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "AggregateResults.py",
+      "line_start": 269,
+      "line_end": 273,
+      "quote": "df_aggregated.to_csv(os.path.join(f\"{base_metric_path}/{split}\", f\"Results_{split}.csv\"))\norder_roc = df_aggregated.groupby(\"Detector\")[\"Rank_ROC\"].mean().sort_values()\norder_roc.to_csv(os.path.join(f\"{base_metric_path}/{split}\", f\"Results_{split}_rank.csv\"))\norder_pr = df_aggregated.groupby(\"Detector\")[\"Rank_PR\"].mean().sort_values()\norder_pr.to_csv(os.path.join(f\"{base_metric_path}/{split}\", f\"Results_{split}_rank_PR.csv\"))\n",
+      "claim": "The README's reproduction roadmap states `python AggregateResults.py --semi_only` produces `Rank_ROC.pdf` and `Rank_PR.pdf`, but the script imports no plotting library and writes only CSV files (confirmed: no matplotlib/savefig/.pdf in AggregateResults.py). The Figure 2 box plots themselves are not generated by the released code.",
+      "concern": "The plot artefact promised by the README is not produced; only the underlying rank values are written. (Per Rule G a plotting script is not required, since the values that drive Figure 2 are computed.)",
+      "resolution": "Authors: either add the box-plot generation to AggregateResults.py or correct the README to list only the CSV outputs.",
+      "cross_refs": [
+        "semisup-loop-off-by-one",
+        "Figure 2"
+      ],
+      "paper_ref": "README Reproduction Roadmap; Figure 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "fig2-pdf-not-produced",
+      "audit": "",
+      "audit_md_line": 218
+    },
+    {
+      "id": "/possible-test-set-epoch-selection",
+      "category": "methodology",
+      "topic": "hyperparameter tuning / leakage",
+      "title": "Cannot rule out epoch selection on the test set (CSM criterion needs anomalies)",
+      "severity": "medium",
+      "confidence": "low",
+      "status": "question",
+      "file": "paper.pdf",
+      "quote": "Within this space, we apply the unsupervised hyperparameter tuning\nmethod introduced by Li et al. (2025b), based on the Improved Contrast Score Margin (CSM) criterion.\nThis criterion evaluates the margin between top-k predicted anomalous and normal samples solely\nfrom the distribution of model outputs, without requiring any ground-truth labels\n",
+      "claim": "The CSM criterion that selects the per-dataset epoch count is computed from the separation between top-k predicted anomalies and the rest of a dataset's scores. The training split in utils.load_adbench_npz contains only normal samples, so a meaningful 'top-k anomalous vs inlier' margin must be evaluated on data that contains anomalies — i.e. the test split. If epochs were chosen by maximising CSM on the test set, that is test-set-dependent model selection (a form of leakage) even though no labels are used. The selection code is not in the repo (see epoch-selection-protocol-absent), so the data it ran on cannot be confirmed.",
+      "concern": "If the per-dataset epochs (Table 5) were tuned to maximise score separation on the test set, the headline AUROC/AUPRC could be optimistically biased for TCCM relative to baselines that used fixed defaults.",
+      "resolution": "Authors: confirm on which split the CSM epoch-selection criterion was evaluated (held-out normal-only data vs the test set), and release that code; if a separate held-out fold was used, state how it was constructed.",
+      "cross_refs": [
+        "epoch-selection-protocol-absent"
+      ],
+      "paper_ref": "Appendix B.6 Epoch Selection Protocol",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": false,
+        "condition_satisfiable": true
+      },
+      "id_local": "possible-test-set-epoch-selection",
+      "audit": "",
+      "audit_md_line": 248,
+      "line_start": null,
+      "line_end": null
+    }
+  ]
+}

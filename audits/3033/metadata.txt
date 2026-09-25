@@ -1,0 +1,5 @@
+paper_number: 3033
+title: One-Step is Enough: Sparse Autoencoders for Text-to-Image Diffusion Models
+authors: Viacheslav Surkov, Chris Wendler, Antonio Mari, Mikhail Terekhov, Justin Deschenaux, Robert West, Caglar Gulcehre, David Bau
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/90291c8d685db65a8a1e32fd2b66f8bb-Abstract-Conference.html
+category: empirical

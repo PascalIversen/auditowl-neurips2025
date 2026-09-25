@@ -1,0 +1,19 @@
+{
+  "findings": [
+    {
+      "id": "2818_Scaling_Up_Parameter_Generation_A_Recurrent_Diffusion_Approa/readme-generalization-script-commented-out",
+      "verdict": "reject",
+      "reason": "The README explicitly launches workspace/condition/generalization.py, whose training loop and __main__ block are active, so the cited commented-out workspace/classinput/generalization.py does not support the claimed README reproduction hazard.",
+      "changed": "nothing"
+    },
+    {
+      "id": "2818_Scaling_Up_Parameter_Generation_A_Recurrent_Diffusion_Approa/condition-only-head-tokens",
+      "verdict": "lowered",
+      "reason": "The condition is gated to the final eight tokens, but the cache maps those tokens to norm.bias plus head parameters rather than only the classifier head, and the documented generators disable rather than randomly sample the permutation state.",
+      "changed": "nothing",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding"
+    }
+  ]
+}

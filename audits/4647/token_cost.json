@@ -1,0 +1,19 @@
+{
+  "folder": "4647_Dynam3D_Dynamic_Layered_3D_Tokens_Empower_VLM_for_Vision_and",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 30645,
+    "output": 23667,
+    "cache_write": 625822,
+    "cache_read": 6248910
+  },
+  "total_tokens": 6929044,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 23.34
+}

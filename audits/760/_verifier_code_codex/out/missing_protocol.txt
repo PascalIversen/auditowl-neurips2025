@@ -1,0 +1,6 @@
+== Generalization half-station split (paper §4.3 / Table 4 / Fig 3) ==
+  POSSIBLE: dataset/test.py:46  pattern='randperm'  match='randperm'
+  POSSIBLE: models/layers/prop_conv.py:18  pattern='half'  match='half'
+  POSSIBLE: models/layers/prop_conv.py:18  pattern='half'  match='half'
+== Persistence baseline (Tables 1,2,4; Figs 4,6) ==
+  NO 'persistence' baseline code found in core repo.

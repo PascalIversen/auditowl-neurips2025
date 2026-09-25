@@ -1,0 +1,17 @@
+=== LR / batch-size config dump ===
+{'cfg': 'configs/train_coco.yaml', 'BASE_LR': '0.0001', 'IMS_PER_BATCH': '8', 'GRAD_ACCUM': '2', 'BACKBONE_MULTIPLIER': '0.1'}
+{'cfg': 'configs/train_sa1b.yaml', 'BASE_LR': '0.0001', 'IMS_PER_BATCH': '4', 'GRAD_ACCUM': '2', 'BACKBONE_MULTIPLIER': '0.1'}
+{'cfg': 'configs/config.yaml', 'BASE_LR': '0.0002', 'IMS_PER_BATCH': '4', 'GRAD_ACCUM': '1', 'BACKBONE_MULTIPLIER': '0.1'}
+
+Paper says: lr = 1e-05 (1e-5); effective batch size = 16
+
+=== LR comparison ===
+configs/train_coco.yaml: BASE_LR=0.0001  (x backbone_mult 0.1 = 1e-05)  | paper lr=1e-5  -> BASE_LR matches paper? False
+configs/train_sa1b.yaml: BASE_LR=0.0001  (x backbone_mult 0.1 = 1e-05)  | paper lr=1e-5  -> BASE_LR matches paper? False
+configs/config.yaml: BASE_LR=0.0002  (x backbone_mult 0.1 = 2e-05)  | paper lr=1e-5  -> BASE_LR matches paper? False
+
+=== effective batch size (IMS_PER_BATCH * GRAD_ACCUM) ===
+configs/train_coco.yaml: IMS_PER_BATCH=8 * GRAD_ACCUM=2 = 16  | paper effective bs=16 -> matches? True
+configs/train_sa1b.yaml: IMS_PER_BATCH=4 * GRAD_ACCUM=2 = 8  | paper effective bs=16 -> matches? False
+
+wrote out/hparams.json

@@ -1,0 +1,155 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-02T09:45:13.395271+00:00",
+  "findings": [
+    {
+      "id": "/missing-stratified-split-code",
+      "category": "missing",
+      "topic": "data splitting",
+      "title": "Headline distribution-preserving subject split not implemented in repo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/inventec-ai-center__bp-benchmark/code/process/data_splitting.py",
+      "line_start": 33,
+      "line_end": 33,
+      "quote": "        ksplitter = KFold(n_splits=config.param_split.fold, shuffle=True, random_state=config.param_split.random_state)",
+      "claim": "The only in-repo cross-validation splitter (`data_splitting.py`, cv branch) partitions the unique patients with a plain `KFold` and, at lines 28-30, warns the user it 'does not preserve the BP distributions between the folds' and to 'refer to Figshare split datasets or Scientific Data paper for self-implementation'. No code performs the paper's iterative multi-label stratification (confirmed absent by `_audit_code/check_missing_gen_code.py`).",
+      "concern": "The paper's central methodological contribution — a subject-level split that also preserves the joint SBP/DBP distribution via iterative stratification for multi-label data — has no implementation in the repository, so the split procedure cannot be reproduced or verified from the code (only the resulting Figshare splits are provided).",
+      "resolution": "Authors: please release the iterative-stratification split-generation script (the code that produced the `label_class`/`agg_ohe` columns and the Figshare `*_fold` files), or confirm the fold files are the sole artefact.",
+      "cross_refs": [
+        "§Validation strategies",
+        "missing-significance-experiment-code"
+      ],
+      "check_script": "_audit_code/check_missing_gen_code.py",
+      "paper_ref": "Methods — 'Validation strategies' (iterative stratification for multi-label data)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-stratified-split-code",
+      "audit": "",
+      "audit_md_line": 57
+    },
+    {
+      "id": "/missing-featimp-gen-code",
+      "category": "missing",
+      "topic": "feature selection / result traceability",
+      "title": "Feature-importance computation (RF + Extra-Trees, Gini) absent; only pickles shipped",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "The feature importance is the normalized mean decrease of the Gini impurity achieved across the ensembles.",
+      "claim": "The training pipeline loads precomputed importances from `feat_importance/<dataset>/featImportance-{SP,DP}.pkl` (`core/loaders/feat_loader.py:94-101`) and selects the top `rate_features` fraction, but no code in the repo trains the fully-grown RF + Extra-Trees (500 trees) ensembles or computes the Gini importances (no `RandomForest`/`ExtraTrees`/`feature_importances_` anywhere — see `_audit_code/check_missing_gen_code.py`).",
+      "concern": "Fig. 3 and the Results claims about which PPG feature subgroups/individual features are most important rest entirely on eight precomputed pickle files whose generating procedure is not in the repo, so the feature-selection step and its ranking cannot be reproduced or audited.",
+      "resolution": "Authors: please add the script that fits the RF/Extra-Trees ensembles and writes the `featImportance-*.pkl` files, so the importance ranking (and Fig. 3) is reproducible.",
+      "cross_refs": [
+        "Fig. 3",
+        "missing-stratified-split-code"
+      ],
+      "check_script": "_audit_code/check_missing_gen_code.py",
+      "paper_ref": "Methods — Feat2Lab feature selection; Results — 'Feature importance in Feat2Lab models'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-featimp-gen-code",
+      "audit": "",
+      "audit_md_line": 81,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/missing-significance-experiment-code",
+      "category": "missing",
+      "topic": "statistical integrity / result traceability",
+      "title": "No code for Fig. 2 significance (bootstrap+Bonferroni) or Fig. 4/5 experiments",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "The custom code used for data visualization is available from the corresponding authors upon request.",
+      "claim": "The comparative conclusions rest on Fig. 2 (bootstrap confidence intervals and Bonferroni-corrected pairwise significance lines) and on the Fig. 4 (leak vs no-leak) and Fig. 5 (distribution before/after) experiments; a repo-wide grep finds no bootstrap/Bonferroni/significance/leak-experiment code (`_audit_code/check_missing_gen_code.py` and grep for `bootstrap|bonferroni|wilcoxon|significan|leak` return nothing). The code-availability statement defers this code to 'upon request'.",
+      "concern": "The paper's headline model-ranking claims ('SVR/ResNet/U-Net significantly outperforms ...') and its two leakage/distribution demonstrations cannot be reproduced or verified from the repository; 'available on request' is not a resolvable artefact.",
+      "resolution": "Authors: please release the significance-testing code (bootstrap CIs + Bonferroni comparisons for Fig. 2) and the Fig. 4/Fig. 5 experiment scripts, rather than providing them only on request.",
+      "cross_refs": [
+        "Fig. 2",
+        "Fig. 4",
+        "Fig. 5"
+      ],
+      "check_script": "_audit_code/check_missing_gen_code.py",
+      "paper_ref": "Code availability; Results — Figs. 2, 4, 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-significance-experiment-code",
+      "audit": "",
+      "audit_md_line": 103,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/earlystop-patience-10-vs-15",
+      "category": "difference",
+      "topic": "hyperparameter tuning / early stopping",
+      "title": "Early-stopping patience is 10 in every DL config; paper states 15",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/inventec-ai-center__bp-benchmark/code/train/core/config/dl/resnet/resnet_bcg.yaml",
+      "line_start": 30,
+      "line_end": 30,
+      "quote": "  patience: 10",
+      "claim": "Every deep-learning config sets `param_early_stop.patience: 10` (all 24 `dl/**` configs; verified by grep), whereas the Methods section states early stopping used a patience of 15 epochs on the validation loss.",
+      "concern": "A shorter early-stopping patience than reported can change which epoch/checkpoint is selected and thus the reported DL numbers, though the effect is small and both values are individually valid; the discrepancy is a faithfulness mismatch, not a leak (monitor is validation, `mode min`).",
+      "resolution": "Authors: confirm the patience actually used for the reported DL results (paper says 15, configs say 10) and reconcile the configs or the text.",
+      "cross_refs": [],
+      "paper_ref": "Methods — 'Hyperparameter tuning' ('early stopping with the patience of 15 epochs in the validation loss')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "earlystop-patience-10-vs-15",
+      "audit": "",
+      "audit_md_line": 134
+    },
+    {
+      "id": "/tune-selects-on-test",
+      "category": "methodology",
+      "topic": "hyperparameter tuning / data leakage",
+      "title": "Hydra/Optuna tuning objective is the TEST-fold MAE, not validation",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/inventec-ai-center__bp-benchmark/code/train/tune.py",
+      "line_start": 100,
+      "line_end": 100,
+      "quote": "    return cv_metrics[\"test/sbp_mae\"]",
+      "claim": "Both hyperparameter-search entrypoints return the aggregated TEST-fold MAE as the value Optuna minimizes: `tune.py:100` returns `cv_metrics[\"test/sbp_mae\"]` and `tune_ml.py:97` returns `cv_metrics[f\"ts/{target}_mae\"]`; the Optuna sweeper is `direction: minimize` (`core/config/tune/ml/lgb_sensors_SP.yaml:22`). `solver.evaluate()` also computes a validation aggregate (`val/..._mae`) that is available to return instead. Cached-run reuse is likewise keyed on the test MAE (`tune.py:59-61`, `tune_ml.py:57-60`). Verified by `_audit_code/check_tuning_objective.py`.",
+      "concern": "Hyperparameters are chosen to minimize error on exactly the folds whose error is reported as the benchmark result, so Table 2's test MAE/ME/SD/MASE are optimistically biased by test-set model selection — contradicting the paper's own statement that tuning monitored 'the MAE performance of validation sets' and undermining the benchmark's purpose of fair comparison.",
+      "resolution": "Authors: change the tuning objective to the validation aggregate (`val/..._mae`) and re-run the search, or confirm whether the Table 2 configs' hyperparameters were in fact selected by this test-minimizing search; report the gap between validation-selected and test-selected results.",
+      "cross_refs": [
+        "§Hyperparameter tuning",
+        "earlystop-patience-10-vs-15"
+      ],
+      "check_script": "_audit_code/check_tuning_objective.py",
+      "paper_ref": "Methods — 'Hyperparameter tuning' ('monitoring the MAE performance of validation sets')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "tune-selects-on-test",
+      "audit": "",
+      "audit_md_line": 159
+    }
+  ]
+}

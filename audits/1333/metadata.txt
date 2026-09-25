@@ -1,0 +1,5 @@
+paper_number: 1333
+title: Latent Harmony: Synergistic Unified UHD Image Restoration via Latent Space Regularization and Controllable Refinement
+authors: Yidi Liu, Xueyang Fu, Jie Huang, Jie Xiao, Dong Li, Wenlong Zhang, LEI BAI, Zheng-Jun Zha
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/3ef61f7e4afacf9a2c5b71c726172b86-Abstract-Conference.html
+category: empirical

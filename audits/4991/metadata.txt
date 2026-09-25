@@ -1,0 +1,5 @@
+paper_number: 4991
+title: Data Efficient Adaptation in Large Language Models via Continuous Low-Rank Fine-Tuning
+authors: Xiao Han, ZIMO ZHAO, Wanyu Wang, Maolin Wang, Zitao Liu, Yi Chang, Xiangyu Zhao
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/f14c87dcab0d2869a28d6400b2c5e084-Abstract-Conference.html
+category: empirical

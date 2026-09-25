@@ -1,0 +1,19 @@
+{
+  "folder": "5202_Graph_Neural_Network_Based_Action_Ranking_for_Planning",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 9897,
+    "output": 11798,
+    "cache_write": 380786,
+    "cache_read": 9288257
+  },
+  "total_tokens": 9690738,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 22.11
+}

@@ -1,0 +1,65 @@
+{
+  "local_module_present": {
+    "parse_functools": false,
+    "vision_score_gpt2_0105_func": false,
+    "cfgs": false,
+    "cfgs.asmd_cfg": false
+  },
+  "import_sites": {
+    "parse_functools": [
+      "main_sr.py:49: from parse_functools import param_init, build_hierarchical_dict, get_param_dict, random_update_hierarchical_dict",
+      "main_gp.py:49: from parse_functools import param_init, build_hierarchical_dict, get_param_dict, random_update_hierarchical_dict"
+    ],
+    "vision_score_gpt2_0105_func": [
+      "utils/main_utils.py:1: from vision_score_gpt2_0105_func import get_structure_sim_response, get_mean_sim_response, get_confidence_sim_response"
+    ],
+    "cfgs": [
+      "utils/analyzer_utils.py:16: from cfgs.asmd_cfg import parse_asmd_cfg as parse_kernel",
+      "utils/vision_score_utils.py:14: from cfgs.asmd_cfg import parse_asmd_cfg"
+    ],
+    "cfgs.asmd_cfg": [
+      "utils/analyzer_utils.py:16: from cfgs.asmd_cfg import parse_asmd_cfg as parse_kernel",
+      "utils/vision_score_utils.py:14: from cfgs.asmd_cfg import parse_asmd_cfg"
+    ]
+  },
+  "hardcoded_path_lines": 63,
+  "hardcoded_path_sample": [
+    "main_sr.py:1",
+    "main_sr.py:108",
+    "main_sr.py:109",
+    "main_sr.py:110",
+    "main_sr.py:111",
+    "main_sr.py:112",
+    "main_sr.py:113",
+    "main_sr.py:115",
+    "main_sr.py:116",
+    "main_sr.py:117",
+    "main_sr.py:118",
+    "main_sr.py:119"
+  ],
+  "load_gp_data_path": "/home/mok/module/icml25/gpss-research/data/tsdlr_9010_csv/mok",
+  "load_gp_data_path_exists": false,
+  "repo_data_csv_count": 13,
+  "rmse_defs": [
+    "utils/dataload_utils.py:361"
+  ],
+  "rmse_call_sites": [],
+  "r2_score_defs": [
+    "utils/dataload_utils.py:364"
+  ],
+  "r2_score_call_sites": [],
+  "baseline_impl_hits": {
+    "arima": [],
+    "prophet": [],
+    "boxlm": [],
+    "pmdarima": [],
+    "auto_arima": [],
+    "statsmodels": [],
+    "llm-sr": [],
+    "llm_sr": [],
+    "icsr": [],
+    "sga": []
+  },
+  "colorlog_imported_in_code": true,
+  "colorlog_in_requirements": false
+}

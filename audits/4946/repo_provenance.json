@@ -1,0 +1,17 @@
+{
+  "paper_id": "4946_Gaze_VLM_Bridging_Gaze_and_VLMs_through_Attention_Regulariza",
+  "title": "Gaze-VLM: Bridging Gaze and VLMs through Attention Regularization for Egocentric Understanding",
+  "repos": [
+    {
+      "name": "anupampani__Gaze-VLM",
+      "role": "partial_core",
+      "evidence": "README states: 'Repository for NeurIPS 2025 Paper \"Gaze-VLM: Bridging Gaze and VLMs via Attention Regularization for Egocentric Understanding\"' and links arXiv 2510.21356. Repo owner 'anupampani' matches first author Anupam Pani (apani3@connect.hku.hk). Contains gaze-regularized OpenFlamingo training (gaze_wAttention.py, train_utils_attention.py with KL_divergence function), evaluation (gaze_evaluation.py), gaze heatmap processing (gaze_dist.py), and dataset pipeline (data_obtain/). However, training/eval drivers for 4 of 5 architectures (Modified OpenFlamingo, LaViLa, InternVL, OpenLLaVA) are absent, Tables 3-6 and §4.8 have no code, no dependency spec exists, ~124 'insert path' placeholders remain, and README says 'Instructions and code coming soon'."
+    }
+  ],
+  "core_present": "partial",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo (anupampani/Gaze-VLM) is unambiguously this paper's own code: the README explicitly names the NeurIPS 2025 paper title and arXiv id 2510.21356, and the repo owner 'anupampani' matches first author Anupam Pani. The repo contains the core gaze-regularized attention mechanism (KL_divergence in train_utils_attention.py, Eq. 6), the OpenFlamingo training and evaluation drivers, and the dataset construction pipeline (data_obtain/). The audit correctly classified this as source-present. The partial_core designation reflects that only OpenFlamingo has full training/eval code — 4 of 5 architectures, most tables, and all dependencies are missing — but the headline method is implemented. No non-core repo was mistakenly cloned. All audit findings (kl-regularizer-double-softmax, teacher-forced-eval, sliding-window-random-split-leakage, missing-multi-arch-and-tables, missing-deps-and-data, checkpoint-selected-on-train-loss) were written against the correct author repo.",
+  "audit_impact": "None: the cloned repo is correctly identified as the author's own implementation. All findings stand and were written against the right codebase. No misclassification or contamination detected.",
+  "recommended_action": "No action needed on repo provenance. The partial_core status (4 of 5 architectures unimplemented, ~124 path placeholders, no deps/weights) is already documented in the high-severity 'missing-multi-arch-and-tables' and 'missing-deps-and-data' findings. Those findings accurately describe the incompleteness of the released code."
+}

@@ -1,0 +1,798 @@
+{
+  "source": "final",
+  "runs_per_paper": 2,
+  "n_seeds": 40,
+  "n_trials": 80,
+  "n_unassigned_findings": 0,
+  "detection_at_1": {
+    "k": 52,
+    "n": 80,
+    "rate": 0.65,
+    "ci95": [
+      0.5408,
+      0.7455
+    ]
+  },
+  "detection_at_K": {
+    "k": 29,
+    "n": 40,
+    "rate": 0.725,
+    "ci95": [
+      0.5716,
+      0.8389
+    ]
+  },
+  "mechanism_correct_at_K": {
+    "k": 29,
+    "n": 40,
+    "rate": 0.725,
+    "ci95": [
+      0.5716,
+      0.8389
+    ]
+  },
+  "by_category_at_1": {
+    "bug": {
+      "k": 7,
+      "n": 20,
+      "rate": 0.35,
+      "ci95": [
+        0.1812,
+        0.5671
+      ]
+    },
+    "difference": {
+      "k": 14,
+      "n": 20,
+      "rate": 0.7,
+      "ci95": [
+        0.481,
+        0.8545
+      ]
+    },
+    "methodology": {
+      "k": 16,
+      "n": 20,
+      "rate": 0.8,
+      "ci95": [
+        0.584,
+        0.9193
+      ]
+    },
+    "missing": {
+      "k": 15,
+      "n": 20,
+      "rate": 0.75,
+      "ci95": [
+        0.5313,
+        0.8881
+      ]
+    }
+  },
+  "by_category_at_K": {
+    "bug": {
+      "k": 4,
+      "n": 10,
+      "rate": 0.4,
+      "ci95": [
+        0.1682,
+        0.6873
+      ]
+    },
+    "difference": {
+      "k": 8,
+      "n": 10,
+      "rate": 0.8,
+      "ci95": [
+        0.4902,
+        0.9433
+      ]
+    },
+    "methodology": {
+      "k": 9,
+      "n": 10,
+      "rate": 0.9,
+      "ci95": [
+        0.5958,
+        0.9821
+      ]
+    },
+    "missing": {
+      "k": 8,
+      "n": 10,
+      "rate": 0.8,
+      "ci95": [
+        0.4902,
+        0.9433
+      ]
+    }
+  },
+  "leave_one_paper_out": {
+    "without_1023": {
+      "detection_at_1": 0.6389,
+      "detection_at_K": 0.7222
+    },
+    "without_913": {
+      "detection_at_1": 0.6528,
+      "detection_at_K": 0.7222
+    },
+    "without_2657": {
+      "detection_at_1": 0.6667,
+      "detection_at_K": 0.75
+    },
+    "without_2578": {
+      "detection_at_1": 0.6111,
+      "detection_at_K": 0.6944
+    },
+    "without_2167": {
+      "detection_at_1": 0.6528,
+      "detection_at_K": 0.6944
+    },
+    "without_1717": {
+      "detection_at_1": 0.6389,
+      "detection_at_K": 0.7222
+    },
+    "without_1908": {
+      "detection_at_1": 0.6389,
+      "detection_at_K": 0.7222
+    },
+    "without_4090": {
+      "detection_at_1": 0.6667,
+      "detection_at_K": 0.75
+    },
+    "without_1171": {
+      "detection_at_1": 0.6389,
+      "detection_at_K": 0.7222
+    },
+    "without_3463": {
+      "detection_at_1": 0.6944,
+      "detection_at_K": 0.75
+    }
+  },
+  "category_confusion": {
+    "bug->bug": 5,
+    "bug->methodology": 2,
+    "difference->bug": 4,
+    "difference->difference": 7,
+    "difference->methodology": 2,
+    "methodology->bug": 1,
+    "methodology->methodology": 15,
+    "missing->bug": 1,
+    "missing->missing": 14
+  },
+  "per_paper": {
+    "1023": {
+      "n_seeds": 4,
+      "seeds_detected_at_K": 3,
+      "would_look_clean": false,
+      "baseline_findings": 4,
+      "baseline_redetected": 0,
+      "emergent_per_run": {
+        "run_01": 0,
+        "run_02": 1
+      }
+    },
+    "913": {
+      "n_seeds": 4,
+      "seeds_detected_at_K": 3,
+      "would_look_clean": false,
+      "baseline_findings": 9,
+      "baseline_redetected": 0,
+      "emergent_per_run": {
+        "run_01": 2,
+        "run_02": 2
+      }
+    },
+    "2657": {
+      "n_seeds": 4,
+      "seeds_detected_at_K": 2,
+      "would_look_clean": false,
+      "baseline_findings": 5,
+      "baseline_redetected": 0,
+      "emergent_per_run": {
+        "run_01": 0,
+        "run_02": 0
+      }
+    },
+    "2578": {
+      "n_seeds": 4,
+      "seeds_detected_at_K": 4,
+      "would_look_clean": false,
+      "baseline_findings": 5,
+      "baseline_redetected": 0,
+      "emergent_per_run": {
+        "run_01": 3,
+        "run_02": 2
+      }
+    },
+    "2167": {
+      "n_seeds": 4,
+      "seeds_detected_at_K": 4,
+      "would_look_clean": false,
+      "baseline_findings": 8,
+      "baseline_redetected": 0,
+      "emergent_per_run": {
+        "run_01": 7,
+        "run_02": 3
+      }
+    },
+    "1717": {
+      "n_seeds": 4,
+      "seeds_detected_at_K": 3,
+      "would_look_clean": false,
+      "baseline_findings": 12,
+      "baseline_redetected": 0,
+      "emergent_per_run": {
+        "run_01": 0,
+        "run_02": 0
+      }
+    },
+    "1908": {
+      "n_seeds": 4,
+      "seeds_detected_at_K": 3,
+      "would_look_clean": false,
+      "baseline_findings": 7,
+      "baseline_redetected": 0,
+      "emergent_per_run": {
+        "run_01": 2,
+        "run_02": 0
+      }
+    },
+    "4090": {
+      "n_seeds": 4,
+      "seeds_detected_at_K": 2,
+      "would_look_clean": false,
+      "baseline_findings": 6,
+      "baseline_redetected": 0,
+      "emergent_per_run": {
+        "run_01": 2,
+        "run_02": 1
+      }
+    },
+    "1171": {
+      "n_seeds": 4,
+      "seeds_detected_at_K": 3,
+      "would_look_clean": false,
+      "baseline_findings": 5,
+      "baseline_redetected": 0,
+      "emergent_per_run": {
+        "run_01": 2,
+        "run_02": 0
+      }
+    },
+    "3463": {
+      "n_seeds": 4,
+      "seeds_detected_at_K": 2,
+      "would_look_clean": false,
+      "baseline_findings": 8,
+      "baseline_redetected": 0,
+      "emergent_per_run": {
+        "run_01": 0,
+        "run_02": 3
+      }
+    }
+  },
+  "per_seed": [
+    {
+      "paper": "1023",
+      "sid": "S01",
+      "category": "missing",
+      "title": "ROCKETMAN experiment pipeline absent",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "1023",
+      "sid": "S03",
+      "category": "difference",
+      "title": "GCN replaces the claimed diffusion convolution",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "1023",
+      "sid": "S06",
+      "category": "methodology",
+      "title": "Real-world checkpoint selection reads the test set",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "1023",
+      "sid": "S07",
+      "category": "bug",
+      "title": "Regression readout clamps all negative outputs",
+      "n_runs": 2,
+      "n_detected": 0,
+      "detected_runs": [],
+      "n_mechanism_correct": 0,
+      "detected_at_all": false
+    },
+    {
+      "paper": "913",
+      "sid": "S01",
+      "category": "missing",
+      "title": "Remove the complete TS-GAT experiment implementation",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "913",
+      "sid": "S03",
+      "category": "difference",
+      "title": "Replace node-wise L2 normalization with graph-wide feature standardization",
+      "n_runs": 2,
+      "n_detected": 1,
+      "detected_runs": [
+        "run_02"
+      ],
+      "n_mechanism_correct": 1,
+      "detected_at_all": true
+    },
+    {
+      "paper": "913",
+      "sid": "S06",
+      "category": "methodology",
+      "title": "Expose official test labels as training labels",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "913",
+      "sid": "S07",
+      "category": "bug",
+      "title": "Clamp final class logits before cross-entropy",
+      "n_runs": 2,
+      "n_detected": 0,
+      "detected_runs": [],
+      "n_mechanism_correct": 0,
+      "detected_at_all": false
+    },
+    {
+      "paper": "2657",
+      "sid": "S01",
+      "category": "missing",
+      "title": "Remove the complete time-conditioning ablation pipeline",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "2657",
+      "sid": "S03",
+      "category": "difference",
+      "title": "Run a bottleneck autoencoder under the NormalizingFlow label",
+      "n_runs": 2,
+      "n_detected": 0,
+      "detected_runs": [],
+      "n_mechanism_correct": 0,
+      "detected_at_all": false
+    },
+    {
+      "paper": "2657",
+      "sid": "S05",
+      "category": "methodology",
+      "title": "Reuse every normal training sample in the test set",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "2657",
+      "sid": "S07",
+      "category": "bug",
+      "title": "Bypass MCM's learned masks during reconstruction",
+      "n_runs": 2,
+      "n_detected": 0,
+      "detected_runs": [],
+      "n_mechanism_correct": 0,
+      "detected_at_all": false
+    },
+    {
+      "paper": "2578",
+      "sid": "S01",
+      "category": "missing",
+      "title": "Remove the entire stage-2 pixel-space refinement implementation",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "2578",
+      "sid": "S03",
+      "category": "difference",
+      "title": "Train an x0-prediction Transformer instead of the claimed v-prediction denoiser",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "2578",
+      "sid": "S05",
+      "category": "methodology",
+      "title": "Train stage-1 directly on the UDM10 test ground truths",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "2578",
+      "sid": "S07",
+      "category": "bug",
+      "title": "Independently crop LQ and HQ time windows in paired training",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "2167",
+      "sid": "S01",
+      "category": "missing",
+      "title": "Remove the NICE arm of the flow-architecture ablation",
+      "n_runs": 2,
+      "n_detected": 1,
+      "detected_runs": [
+        "run_02"
+      ],
+      "n_mechanism_correct": 1,
+      "detected_at_all": true
+    },
+    {
+      "paper": "2167",
+      "sid": "S03",
+      "category": "difference",
+      "title": "Implement RealNVP coupling layers inside the claimed MAF model",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "2167",
+      "sid": "S05",
+      "category": "methodology",
+      "title": "Train the Bank pipeline on its held-out test records",
+      "n_runs": 2,
+      "n_detected": 1,
+      "detected_runs": [
+        "run_02"
+      ],
+      "n_mechanism_correct": 1,
+      "detected_at_all": true
+    },
+    {
+      "paper": "2167",
+      "sid": "S07",
+      "category": "bug",
+      "title": "Convert classifier logits with normalized ReLU instead of softmax",
+      "n_runs": 2,
+      "n_detected": 1,
+      "detected_runs": [
+        "run_02"
+      ],
+      "n_mechanism_correct": 1,
+      "detected_at_all": true
+    },
+    {
+      "paper": "1717",
+      "sid": "S01",
+      "category": "missing",
+      "title": "Remove the ResNet50 backbone experiment implementation",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "1717",
+      "sid": "S04",
+      "category": "difference",
+      "title": "Replace ROI cross-attention with a convolutional global token mixer",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "1717",
+      "sid": "S06",
+      "category": "methodology",
+      "title": "Fit the regression baselines jointly on training and test fMRI",
+      "n_runs": 2,
+      "n_detected": 0,
+      "detected_runs": [],
+      "n_mechanism_correct": 0,
+      "detected_at_all": false
+    },
+    {
+      "paper": "1717",
+      "sid": "S08",
+      "category": "bug",
+      "title": "Clear all gradients immediately before every optimizer step",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "1908",
+      "sid": "S01",
+      "category": "missing",
+      "title": "Remove the complete 5G CSI experiment pipeline",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "1908",
+      "sid": "S04",
+      "category": "difference",
+      "title": "Replace depth-sorted orthographic splatting with global RBF regression",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "1908",
+      "sid": "S05",
+      "category": "methodology",
+      "title": "Evaluate BLE RSSI on transmitter positions used for training",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "1908",
+      "sid": "S07",
+      "category": "bug",
+      "title": "Cancel Gaussian rotations when constructing covariance matrices",
+      "n_runs": 2,
+      "n_detected": 0,
+      "detected_runs": [],
+      "n_mechanism_correct": 0,
+      "detected_at_all": false
+    },
+    {
+      "paper": "4090",
+      "sid": "S02",
+      "category": "missing",
+      "title": "Remove the industrial-image contraction-flow model",
+      "n_runs": 2,
+      "n_detected": 0,
+      "detected_runs": [],
+      "n_mechanism_correct": 0,
+      "detected_at_all": false
+    },
+    {
+      "paper": "4090",
+      "sid": "S03",
+      "category": "difference",
+      "title": "Replace contraction units with affine coupling flows",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "4090",
+      "sid": "S05",
+      "category": "methodology",
+      "title": "Select anomaly-score transforms on test labels",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "4090",
+      "sid": "S07",
+      "category": "bug",
+      "title": "Make every contraction unit non-invertible with ReLU",
+      "n_runs": 2,
+      "n_detected": 0,
+      "detected_runs": [],
+      "n_mechanism_correct": 0,
+      "detected_at_all": false
+    },
+    {
+      "paper": "1171",
+      "sid": "S01",
+      "category": "missing",
+      "title": "Remove the only MEL architecture behind the Stanford Dogs ablation",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "1171",
+      "sid": "S03",
+      "category": "difference",
+      "title": "Use a plain twelve-layer convolutional backbone instead of ResNet-12",
+      "n_runs": 2,
+      "n_detected": 0,
+      "detected_runs": [],
+      "n_mechanism_correct": 0,
+      "detected_at_all": false
+    },
+    {
+      "paper": "1171",
+      "sid": "S06",
+      "category": "methodology",
+      "title": "Use held-out Stanford Dogs images as every incremental support set",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "1171",
+      "sid": "S07",
+      "category": "bug",
+      "title": "Silently leave the ResNet-12 feature extractor untrained",
+      "n_runs": 2,
+      "n_detected": 2,
+      "detected_runs": [
+        "run_01",
+        "run_02"
+      ],
+      "n_mechanism_correct": 2,
+      "detected_at_all": true
+    },
+    {
+      "paper": "3463",
+      "sid": "S01",
+      "category": "missing",
+      "title": "Remove all released AP-10K and PF-Pascal data-pipeline support",
+      "n_runs": 2,
+      "n_detected": 0,
+      "detected_runs": [],
+      "n_mechanism_correct": 0,
+      "detected_at_all": false
+    },
+    {
+      "paper": "3463",
+      "sid": "S03",
+      "category": "difference",
+      "title": "Replace transformer self-attention with a local convolutional token mixer",
+      "n_runs": 2,
+      "n_detected": 1,
+      "detected_runs": [
+        "run_01"
+      ],
+      "n_mechanism_correct": 1,
+      "detected_at_all": true
+    },
+    {
+      "paper": "3463",
+      "sid": "S06",
+      "category": "methodology",
+      "title": "Select the released checkpoint using test-set PCK metrics",
+      "n_runs": 2,
+      "n_detected": 1,
+      "detected_runs": [
+        "run_01"
+      ],
+      "n_mechanism_correct": 1,
+      "detected_at_all": true
+    },
+    {
+      "paper": "3463",
+      "sid": "S07",
+      "category": "bug",
+      "title": "Clamp all extracted DiTF channels to nonnegative values",
+      "n_runs": 2,
+      "n_detected": 0,
+      "detected_runs": [],
+      "n_mechanism_correct": 0,
+      "detected_at_all": false
+    }
+  ]
+}

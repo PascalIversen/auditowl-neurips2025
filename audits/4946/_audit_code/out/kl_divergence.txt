@@ -1,0 +1,4 @@
+Correct KL(attn||gaze) when attn==gaze (should be 0): 0.0
+Repo KL_divergence value when attn==gaze (should be 0 if correct): 0.0
+max|softmax(gaze) - gaze| (0 would mean no distortion): 0.004234143067151308
+sum of effective target exp(softmax(gaze)) (should be 1 for a valid distribution): 257.001953125

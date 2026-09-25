@@ -1,0 +1,17 @@
+{
+  "paper_id": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_",
+  "title": "Few-Shot Knowledge Distillation of LLMs With Counterfactual Explanations",
+  "repos": [
+    {
+      "name": "FaisalHamman__CoD",
+      "role": "core",
+      "evidence": "README title is 'Few-Shot Knowledge Distillation of LLMs With Counterfactual Explanations (CoD)'; lists authors Faisal Hamman, Pasan Dissanayake, Yanjun Fu, Sanghamitra Dutta at UMD — exact match to paper authors. README states 'Published at the 39th Conference on Neural Information Processing Systems (NeurIPS 2025)'. Paper text (line 27) says 'Our code is available at https://github.com/FaisalHamman/CoD'. Repo contains cfx-generator/ (counterfactual generation), text-classification/ (KD/LWD/TED distillation scripts), scripts_cfx/ (run orchestration) — all named after the paper's core method COD."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo FaisalHamman__CoD is the paper's own official implementation, linked directly by the paper's abstract ('Our code is available at https://github.com/FaisalHamman/CoD'). The README title, author list, and NeurIPS 2025 venue all match the paper exactly. The repo owner (FaisalHamman) is the paper's first author. Directory structure maps to the paper's framework: cfx-generator/ for CFE generation, text-classification/ for distillation, scripts_cfx/ for orchestration. All audit findings are written against this correct repo and are substantive methodology/reproducibility findings (no 'no code' claim). The audit was done correctly against the right repository.",
+  "audit_impact": "None — the audit correctly identified the paper's own repo and wrote all findings against the correct code. No misclassification or contamination. All 8 findings in findings_verified.json have verdict='keep' and are substantive (missing teacher-validation of CFEs, missing ablation drivers, eval-on-validation vs. test-set discrepancy, model-selection on the reported split). Audit verdict is correct.",
+  "recommended_action": "No action needed. The repo is the paper's own core implementation. Findings stand as written."
+}

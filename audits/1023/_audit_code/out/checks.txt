@@ -1,0 +1,71 @@
+=== Repo file inventory (non-.git) ===
+  .gitignore
+  README.md
+  conda_env.yml
+  config/default.yaml
+  config/realworld.yaml
+  config/run_copy_time.yaml
+  config/run_realworld.yaml
+  config/run_realworld_engrad.yaml
+  config/run_realworld_gwnet.yaml
+  config/run_space_vs_time.yaml
+  config/logger/neptune.yaml
+  config/logger/none.yaml
+  config/logger/wandb.yaml
+  config/optimizer/adam.yaml
+  config/lr_scheduler/cosine.yaml
+  config/lr_scheduler/none.yaml
+  config/dataset/bay.yaml
+  config/dataset/engrad.yaml
+  config/dataset/la.yaml
+  config/dataset/memory.yaml
+  config/dataset/rocketman.yaml
+  config/model/gwnet.yaml
+  config/model/gwnet_tts.yaml
+  config/model/mptcn.yaml
+  config/model/mptcn_diff.yaml
+  config/model/mptcn_gcn.yaml
+  config/model/mptcn_gconv.yaml
+  config/model/gnn/diffconv.yaml
+  config/model/gnn/gcn.yaml
+  config/model/gnn/gconv.yaml
+  experiments/run_prediction.py
+  experiments/run_realworld.py
+  lib/__init__.py
+  lib/nn/__init__.py
+  lib/nn/layers/__init__.py
+  lib/nn/layers/encoder.py
+  lib/nn/layers/utils.py
+  lib/nn/models/__init__.py
+  lib/nn/models/convolution_disjoint.py
+  lib/nn/models/gnn_mixin.py
+  lib/nn/models/gwnet_tts.py
+  lib/nn/models/stgnn_base.py
+  lib/datasets/__init__.py
+  lib/datasets/memory.py
+  lib/datasets/syntethic.py
+  lib/utils/__init__.py
+  lib/utils/experiments.py
+  lib/utils/graphs.py
+  assets/poster.jpg
+
+=== FOSR / RGCN search (Table 2 rewiring) ===
+  hits: 0
+
+=== Success-rate / 0.001 threshold / table-building search (Fig3/4,Tab1/2) ===
+  raw hits: 5
+    ('config/optimizer/adam.yaml', 6, '    lr: 0.001')
+    ('config/dataset/la.yaml', 11, '    threshold: 0.1')
+    ('config/dataset/engrad.yaml', 19, '    threshold: 0.1')
+    ('config/dataset/bay.yaml', 11, '    threshold: 0.1')
+    ('experiments/run_prediction.py', 91, '        stopping_threshold=1e-3,')
+
+=== '+task' multi-seed sweep line (commented?) ===
+    commented=True  ('config/run_realworld_engrad.yaml', 40, '      #      +task: 1,2,3,4,5,6,7,8,9,10  # number of seeds per config')
+    commented=True  ('config/run_realworld.yaml', 39, '      #      +task: 1,2,3,4,5,6,7,8,9,10  # number of seeds per config')
+    commented=True  ('config/run_realworld_gwnet.yaml', 22, '      #      +task: 1,2,3,4,5,6,7,8,9,10  # number of seeds per config')
+    commented=True  ('config/run_copy_time.yaml', 49, '      #      +task: 1,2,3,4,5,6,7,8,9,10  # number of seeds per config')
+    commented=True  ('config/run_space_vs_time.yaml', 45, '      #      +task: 1,2,3,4,5,6,7,8,9,10  # number of seeds per config')
+
+=== aggregation artefacts (notebooks/csv/plot scripts) ===
+  hits: []

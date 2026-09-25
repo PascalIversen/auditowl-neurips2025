@@ -1,0 +1,35 @@
+author_correctness,human_correctness,author_relevance,human_relevance
+Correct,Partially true,Minor point,Minor
+Correct,True,,Relevant
+Correct,True,Irrelevant,Minor
+Correct,True,Irrelevant,Unverifiable
+Correct,True,Minor point,Minor
+Correct,True,Minor point,Minor
+Correct,True,Minor point,Minor
+Correct,True,Minor point,Minor
+Correct,True,Minor point,Relevant
+Correct,True,Minor point,Relevant
+Correct,True,Minor point,Relevant
+Correct,True,Minor point,Trivial
+Correct,True,Relevant,Minor
+Correct,True,Relevant,Relevant
+Correct,True,Relevant,Relevant
+Correct,True,Relevant,Relevant
+Correct,True,Relevant,Relevant
+Incorrect,Partially true,Relevant,Unverifiable
+Incorrect,True,Relevant,Relevant
+Partially correct,Partially true,Minor point,Relevant
+Partially correct,Partially true,Minor point,Trivial
+Partially correct,Partially true,Relevant,Unverifiable
+Partially correct,True,,Minor
+Partially correct,True,,Relevant
+Partially correct,True,Irrelevant,Minor
+Partially correct,True,Irrelevant,Relevant
+Partially correct,True,Irrelevant,Relevant
+Partially correct,True,Irrelevant,Trivial
+Partially correct,True,Minor point,Minor
+Partially correct,True,Minor point,Minor
+Partially correct,True,Minor point,Minor
+Partially correct,True,Minor point,Relevant
+Partially correct,True,Relevant,Minor
+Partially correct,True,Relevant,Relevant

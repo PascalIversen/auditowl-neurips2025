@@ -1,0 +1,118 @@
+{
+  "schema_version": "1",
+  "audit": "3101_When_Does_Closeness_in_Distribution_Imply_Representational_S",
+  "audit_md": "audits/3101_When_Does_Closeness_in_Distribution_Imply_Representational_S/audit.md",
+  "generated_at": "2026-05-30T05:14:08.300025+00:00",
+  "findings": [
+    {
+      "id": "3101_When_Does_Closeness_in_Distribution_Imply_Representational_S/cifar-checkpoints-missing",
+      "category": "missing",
+      "topic": "result traceability / artefacts",
+      "title": "CIFAR-10 ResNet checkpoints absent; embedding-visualization plots cannot be reproduced",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 12,
+      "line_end": 12,
+      "quote": "Some checkpoints from models on synthetic data have been included as examples in the \"checkpoints\" folder. \n",
+      "claim": "Only synthetic SmallMLP checkpoints (subset: 4/6 classes, widths 16/32/64/128) ship in checkpoints/; there are zero CIFAR/ResNet checkpoints. plots/cifar10_embeddings_can_be_permuted.py (the cifar10_reps plot, which renders Fig. 3-left and Appendix F.5) calls load_trained_model() from checkpoints/ for ResNetCIFAR10 models, so it fails out of the box.",
+      "concern": "The CIFAR embedding-permutation figures (Fig. 3 left, App. F.5) cannot be regenerated from the shipped repo without first retraining all 10 ResNet18 seeds; the underlying numbers (mCCA, KL, losses) are however shipped as result files and do reproduce the paper, so this only blocks the visual plots, not the headline numbers.",
+      "resolution": "Ship the trained CIFAR-10 ResNet checkpoints (or the cached embedding tensors the plots consume), or state in the README that CIFAR figures require retraining and give the expected runtime.",
+      "cross_refs": [
+        "cifar-mcca-no-entrypoint"
+      ],
+      "check_script": "_audit_code/check_bound.py",
+      "paper_ref": "Section 5.1, Figure 3 (left), Appendix F.5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "cifar-checkpoints-missing",
+      "audit": "3101_When_Does_Closeness_in_Distribution_Imply_Representational_S",
+      "audit_md_line": 57
+    },
+    {
+      "id": "3101_When_Does_Closeness_in_Distribution_Imply_Representational_S/cifar-mcca-no-entrypoint",
+      "category": "missing",
+      "topic": "result traceability / wiring",
+      "title": "Script computing CIFAR mCCA (Fig. 3-left 0.55, Fig. 5) has no run.py entry point",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "experiments/measure_cca_for_cifar_models.py",
+      "line_start": 182,
+      "line_end": 197,
+      "quote": "def get_and_save_mcca_for_cifar_models(final_dimension, device):\n    \"\"\"\n    Get and save mean canonical correlations for CIFAR-10 models with the given \n    representational dimension. \n    \"\"\"\n    \n    file_name = f'mcca_cifar_fd{final_dimension}.json'\n\n    result_folder = 'results'\n    file_path = os.path.join(result_folder, file_name)\n\n    batch_size=32\n    mcca_dict = get_mcca_scores_cifar_models(\n        final_dimension, batch_size, device, file_path=file_path)\n\n    save_as_json(mcca_dict, file_path)\n",
+      "claim": "get_and_save_mcca_for_cifar_models / get_mcca_scores_cifar_models produce results/mcca_cifar_fd{2,3,5}.json, the source of the reported mCCA=0.55 (Fig. 3-left) and the loss-diff-vs-mCCA scatter (Fig. 5). grep shows these functions are defined but never imported or called from run.py or any other module — they have no CLI/documented entry point.",
+      "concern": "The computation that produces a reported headline number (mCCA=0.55) is present but cannot be invoked through the documented run.py interface; a reviewer can only re-derive the value by importing the module manually.",
+      "resolution": "Add a make-plot/run.py case (or get-cifar-mcca command) that calls get_and_save_mcca_for_cifar_models so the mCCA values are regenerable through the documented interface.",
+      "cross_refs": [
+        "cifar-checkpoints-missing"
+      ],
+      "paper_ref": "Section 5.1 (mCCA 0.55); Appendix F.4, Figure 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "cifar-mcca-no-entrypoint",
+      "audit": "3101_When_Does_Closeness_in_Distribution_Imply_Representational_S",
+      "audit_md_line": 83
+    },
+    {
+      "id": "3101_When_Does_Closeness_in_Distribution_Imply_Representational_S/dependencies-unpinned",
+      "category": "missing",
+      "topic": "environment / dependencies",
+      "title": "Dependencies listed but unpinned (no versions for torch/sklearn/numpy/etc.)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "conda_environment.txt",
+      "line_start": 9,
+      "line_end": 9,
+      "quote": "conda install matplotlib docopt h5py scikit-learn tqdm scipy sympy pandas\n",
+      "claim": "Neither conda_environment.txt nor README pins any package version (no requirements.txt / environment.yml with versions); only python=3.11 is fixed. The mSVD/mCCA numbers depend on sklearn's PLSSVD/CCA, whose numerical behaviour can shift across versions.",
+      "concern": "Without pinned versions the environment cannot be rebuilt deterministically, which is the only thing standing between the shipped result files and a clean re-run; PLSSVD convergence warnings already appear, so version drift is a realistic reproducibility risk.",
+      "resolution": "Provide a pinned environment.yml / requirements.txt (exact torch, scikit-learn, numpy, scipy, pandas versions used to produce the results).",
+      "cross_refs": [],
+      "paper_ref": "N/A (repo environment)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "dependencies-unpinned",
+      "audit": "3101_When_Does_Closeness_in_Distribution_Imply_Representational_S",
+      "audit_md_line": 123
+    },
+    {
+      "id": "3101_When_Does_Closeness_in_Distribution_Imply_Representational_S/table1-label-mismatch-mcca-vs-dsvd",
+      "category": "difference",
+      "topic": "evaluation consistency (paper vs code)",
+      "title": "KL_table latex emits mCCA column, not the max dSVD the Table 1 caption describes",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "question",
+      "file": "experiments/kl_to_zero_dissimilar_reps.py",
+      "line_start": 162,
+      "line_end": 168,
+      "quote": "def make_latex_table_from_dict(table_dict):\n    \"\"\" Make a latex table from a dictionary \"\"\"\n    table_dict.pop('mCCA_g', None)\n    table_dict.pop('max_d_rep_g', None)\n\n    df = pd.DataFrame.from_dict(table_dict)\n    latex = df.to_latex(index=False, float_format=\"{:.4f}\".format)\n",
+      "claim": "make_latex_table_from_dict drops mCCA_g and max_d_rep_g but keeps g_length, KL_div, d_prob, mCCA_f, and max_d_rep_f. The emitted latex therefore has columns (ρ, dKL, dλ_LLV, mCCA_f, max_d_rep_f). The printed Table 1 in the paper shows columns ρ, dKL, dλ_LLV, mCCA, max dSVD.",
+      "concern": "The code's auto-generated table includes BOTH mCCA and max dSVD (max_d_rep_f) for the embeddings f, which is consistent with the paper's Table 1; this is at most a column-labelling/ordering nuance, but I could not fully confirm the paper's 'max dSVD' column equals the code's max_d_rep_f vs a separately-reported quantity, so I file it as a question.",
+      "resolution": "Confirm that Table 1's 'max dSVD' column corresponds to max_d_rep_f (= max over chosen sets of 1 - mean PLS-SVD covariance of the f embeddings) as emitted by make_latex_table_from_dict, and that the mCCA column is mCCA_f.",
+      "cross_refs": [],
+      "check_script": "_audit_code/run_kl_table.py",
+      "paper_ref": "Table 1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "table1-label-mismatch-mcca-vs-dsvd",
+      "audit": "3101_When_Does_Closeness_in_Distribution_Imply_Representational_S",
+      "audit_md_line": 158
+    }
+  ]
+}

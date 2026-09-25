@@ -1,0 +1,13 @@
+=== channel discard ===
+  'discard' occurrences in .py: 0
+  channel-zeroing patterns ([..]=0): 3
+=== DINOv2 integration ===
+  case-insensitive 'dinov2'/'dino' identifiers used as a model: 0
+=== PCA fusion ===
+  pca_feature_pair defined: 1, called: 0
+  q (output dim) in def: 1024
+=== pyc-only modules ===
+  feat_flux_v1.py present: False
+  feat_flux_v1_class_free.py present: False
+  feat_flux_cross_image.py present: False
+  feat_dinov2.py present: False

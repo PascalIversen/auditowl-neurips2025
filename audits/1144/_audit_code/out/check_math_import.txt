@@ -1,0 +1,7 @@
+top-level imports: ['torch']
+uses 'math.': True -> math imported: False
+uses 'logger.': True -> logger defined/imported: False
+method 'sqrt' calls math: True
+method 'squared' calls math: True
+method 'arccos' calls math: True
+method 'cosine' calls math: True

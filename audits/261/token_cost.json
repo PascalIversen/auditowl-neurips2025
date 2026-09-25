@@ -1,0 +1,19 @@
+{
+  "folder": "261_RiOSWorld_Benchmarking_the_Risk_of_Multimodal_Computer_Use_A",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 11002,
+    "output": 23185,
+    "cache_write": 195422,
+    "cache_read": 6187041
+  },
+  "total_tokens": 6416650,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 14.85
+}

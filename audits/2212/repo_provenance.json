@@ -1,0 +1,17 @@
+{
+  "paper_id": "2212_Best_of_N_Jailbreaking",
+  "title": "Best-of-N Jailbreaking",
+  "repos": [
+    {
+      "name": "jplhughes__bon-jailbreaking",
+      "role": "core",
+      "evidence": "Repo owner/CODEOWNERS is @jplhughes = first author John Hughes; paper's stated official URL is 'https://jplhughes.github.io/bon-jailbreaking' (paper_text.txt line 54). README titled 'BoN Jailbreaking' and says 'To replicate the experiments in the paper, run the scripts in the experiments directory'. Layout implements the paper's named method across all three modalities: bon/attacks/{run_text_bon.py,run_image_bon.py,run_audio_bon.py}, run_prepair.py (composition), run_baseline.py; bon/classifiers/run_harmbench_classifier.py (HarmBench GPT-4o grader, matching Method §2); data/direct_request.jsonl (159 HarmBench requests), audio_files/, power-law plotting notebooks. Audit's own check_released_csv_asr.py confirms implied ASRs match the paper for 4/5 models (Sonnet 78%, GPT-4o 87%, Gemini Pro ~50%, Llama3 94%)."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "Exactly one repo was cloned and it is unambiguously this paper's own core implementation: the GitHub owner jplhughes is the paper's first author, the repo URL is the official code link printed in the paper, and the module structure (text/image/audio BoN runners, HarmBench classifier, PrePAIR composition, power-law fitter, the 159 HarmBench direct requests and vocalized audio) directly implements the paper's named Best-of-N Jailbreaking method and its headline experiments. The audit itself concludes 'This is the official repo.' No baseline/dependency/different-paper/mirror/stub repo was cloned.",
+  "audit_impact": "None of the audit's findings are mis-targeted. They are all written against the confirmed core repo and are nuanced, legitimate gaps (missing analysis code for the forecasting error and composition section, missing PAIR/TAP baseline runners, uncommitted exp/ outputs gated behind paid nondeterministic commercial APIs, a dead import in 2_plot_powerlaw.ipynb, a non-ASCII recasing bug, and bootstrap-count / CSV-ASR discrepancies). No finding falsely claims 'no code exists'; the audit explicitly affirms provenance. Source-present classification is justified.",
+  "recommended_action": "No change. Keep paper classified source-present with verdict 'correct'. The existing findings stand as legitimate reproducibility gaps against the genuine author repo."
+}

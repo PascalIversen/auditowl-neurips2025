@@ -1,0 +1,19 @@
+Datasets directories present in repo (of 19 used in paper Table 2):
+  as-skitter
+  count = 1
+
+Result .npz files committed under datasets/**/results/: 0
+
+Plot scripts that consume a results/ directory (active line):
+  com_dblp_plot_convergence.py:20  path = './datasets/com-dblp/results'
+  plot_R_with_alpha.py:29  results_dir = os.path.join(dataset_path, 'results')
+  plot_aesp_accelerate_boxplot.py:17  path = './datasets/com-dblp/results'
+  plot_aesp_accelerate_lineplot.py:12  path = './datasets/com-dblp/results'
+  plot_convergence.py:20  path = './datasets/method/results'
+  plot_fast_method.py:21  path = './datasets/com-dblp/results'
+  plot_from_old_four_plot.py:97  path = '/mnt/data/binbin/git/ICML_2025_code_review/results/ogb-mag240m'
+  plot_from_old_res.py:95  path = '/mnt/data/binbin/git/ICML_2025_code_review/results/ogb-mag240m'
+  plot_init_strategy.py:11  path_y = './datasets/com-dblp/results/yinit_node_20_alpha_0.01_eps_1e-07.npz'
+  plot_small_eps_convergence.py:103  path = '/mnt/data/binbin/git/NIPS2025/datasets/ogbn-arxiv/results'
+  plot_vol_gamma.py:46  results_dir = os.path.join(dataset_path, 'results')
+  plot_vol_gamma_upper_bound.py:18  path = './datasets/com-dblp/results/aespappr_node_0_alpha_0.01_eps_1e-08.npz'

@@ -1,0 +1,5 @@
+paper_number: 1576
+title: Spectral Learning for Infinite-Horizon Average-Reward POMDPs
+authors: Alessio Russo, Alberto Maria Metelli, Marcello Restelli
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/4b5f30bbb4e7568f0326fba2da7516cc-Abstract-Conference.html
+category: empirical

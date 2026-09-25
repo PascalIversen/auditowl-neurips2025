@@ -1,0 +1,5 @@
+paper_number: 1792
+title: Ada-R1: Hybrid-CoT via Bi-Level Adaptive Reasoning Optimization
+authors: Haotian Luo, Haiying He, Yibo Wang, Jinluan Yang, Rui Liu, Naiqiang Tan, Xiaochun Cao, Dacheng Tao, Li Shen
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/558da25ef295121e2d79209a95e45436-Abstract-Conference.html
+category: empirical

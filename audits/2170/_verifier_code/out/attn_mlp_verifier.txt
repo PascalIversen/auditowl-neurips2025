@@ -1,0 +1,11 @@
+=== undisclosed AttentionScoreLayer (attn_mlp) head in MAGNET training ===
+  [PASS] train_coco.yaml USE_ATTN_MLP: True
+  [PASS] train_sa1b.yaml USE_ATTN_MLP: True
+  [PASS] trainer instantiates self.attn_mlp = AttentionScoreLayer()
+  [PASS] attn_mlp params set requires_grad=True (trained)
+  [PASS] attn_mlp applied with residual in training forward
+  [PASS] AttentionScoreLayer is a 3-layer Conv2d net
+  [PASS] README release mentions only lora_weights.pth
+  [PASS] README does NOT mention attn_mlp / AttentionScoreLayer weights
+
+wrote out/attn_mlp.txt

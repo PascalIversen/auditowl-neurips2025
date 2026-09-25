@@ -1,0 +1,5 @@
+paper_number: 1829
+title: OLinear: A Linear Model for Time Series Forecasting in Orthogonally Transformed Domain
+authors: Wenzhen Yue, Yong Liu, Hao Wang, Haoxuan Li, Xianghua Ying, Ruohao Guo, Bowei Xing, Ji Shi
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/571c7e164fb1ffbcf2f84a63784451ec-Abstract-Conference.html
+category: empirical

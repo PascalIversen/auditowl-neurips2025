@@ -1,0 +1,5 @@
+metric,value
+reported_CW-SSIM_(Average_Non-zero),0.6
+naive_mean_over_all_(Average_All),0.36
+compile_ratio_(non_zero_ratio),0.6
+notebook_divides_by_non_zero_count,True

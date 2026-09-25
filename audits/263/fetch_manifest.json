@@ -1,0 +1,23 @@
+{
+  "annegnx__PnP-Flow": {
+    "repo": "https://github.com/annegnx/PnP-Flow",
+    "clone_status": "cached",
+    "size_mb": 1.9,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  },
+  "atong01__conditional-flow-matching": {
+    "repo": "https://github.com/atong01/conditional-flow-matching",
+    "clone_status": "cached",
+    "size_mb": 81.9,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  },
+  "generativemodels__closedformfm": {
+    "repo": "https://github.com/generativemodels/closedformfm",
+    "clone_status": "recloned_post_provenance_pass",
+    "note": "Paper's real core repo (paper L11). Audit ran against it but it was absent from the snapshot; re-cloned 2026-06-04 to restore reproducibility. The other two dirs (PnP-Flow, conditional-flow-matching) are non-core (different_paper / dependency) \u2014 see repo_provenance.json."
+  }
+}

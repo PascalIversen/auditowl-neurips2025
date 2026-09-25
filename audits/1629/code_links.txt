@@ -1,0 +1,5 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/laminair/mess-plus	[author-cue]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/ibm-granite/granite-3.0-language-models	[no-author-signal]

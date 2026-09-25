@@ -1,0 +1,10 @@
+# AUTHOR / PRIMARY repositories (cloned):
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/JXYin24/MCM	[no-author-signal]
+https://github.com/Minqi824/ADBench	[no-author-signal]
+https://github.com/ZhongLIFR/TCCM-NIPS	[no-author-signal]
+https://github.com/lironber/GOAD	[baseline-cue]
+https://github.com/microsoft/EdgeML	[known-org:microsoft]
+https://github.com/vicliv/DTE	[no-author-signal]
+https://github.com/xuhongzuo/scale-learning	[no-author-signal]

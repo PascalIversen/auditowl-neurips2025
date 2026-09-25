@@ -1,0 +1,7 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/marshka/spatiotemporal-oversquashing	[author-cue]
+
+# Other code links found (NOT cloned -- baseline/dependency):
+https://github.com/PyTorchLightning/pytorch-lightning	[no-author-signal]
+https://github.com/TorchSpatiotemporal/tsl	[no-author-signal]
+https://github.com/facebookresearch/hydra	[known-org:facebookresearch]

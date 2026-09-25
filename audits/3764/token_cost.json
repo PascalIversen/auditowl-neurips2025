@@ -1,0 +1,19 @@
+{
+  "folder": "3764_DNAEdit_Direct_Noise_Alignment_for_Text_Guided_Rectified_Flo",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 7539,
+    "output": 3230,
+    "cache_write": 240407,
+    "cache_read": 1981143
+  },
+  "total_tokens": 2232319,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 7.83
+}

@@ -1,0 +1,5 @@
+paper_number: 5239
+title: SD-KDE: Score-Debiased Kernel Density Estimation
+authors: Elliot Epstein, Rajat Vadiraj Dwaraknath, Thanawat Sornwanee, John Winnicki, Jerry Liu
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/fd8548947a14f68375d7e6235ab493ec-Abstract-Conference.html
+category: empirical

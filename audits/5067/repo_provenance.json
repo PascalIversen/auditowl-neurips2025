@@ -1,0 +1,17 @@
+{
+  "paper_id": "5067_Learning_to_Better_Search_with_Language_Models_via_Guided_Re",
+  "title": "Learning to Better Search with Language Models via Guided Reinforced Self-Training",
+  "repos": [
+    {
+      "name": "snu-mllab__guided-rest",
+      "role": "core",
+      "evidence": "README line 1-3: 'This is the code for the paper [Learning to Better Search with Language Models via Guided Reinforced Self-Training](https://arxiv.org/abs/2410.02992) accepted to NeurIPS 2025.' Repo owner 'snu-mllab' matches Seoul National University ML Lab (authors Moon, Song). Contains recipe/countdown/ and recipe/code_repair/ implementing the Guided-ReST algorithm (core_algos.py, main_gen.py, main_data.py, main_eval.py), plus custom verl additions hgae/hppo (operation-level PPO from §3.3). Paper itself states 'We release the source code at https://github.com/snu-mllab/guided-rest' (paper_text.txt line 24)."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo is the paper's official author release, confirmed by: (1) the README explicitly names this paper and its NeurIPS 2025 venue; (2) the GitHub org 'snu-mllab' corresponds to the Seoul National University ML Lab of the two SNU authors; (3) the paper itself cites https://github.com/snu-mllab/guided-rest as the code URL; (4) the repo contains the complete Guided-ReST pipeline (data generation, SFT, RL, evaluation) for both Countdown and code-repair tasks as described in the paper. The repo is a fork of the verl RL framework, but the paper's own contributions (recipe/ folders, hgae/hppo additions) are substantively present. All audit findings are correctly written against this repo—they concern missing baseline/ablation code and a training objective discrepancy, not a misidentification of the repo.",
+  "audit_impact": "None. The audit correctly identified the core repo and wrote findings against it. No findings were written against a wrong repo. The paper's source-present classification is justified.",
+  "recommended_action": "No action required. Audit is consistent and accurate."
+}

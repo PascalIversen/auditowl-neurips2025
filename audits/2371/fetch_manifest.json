@@ -1,0 +1,18 @@
+{
+  "IBM__fms-dgt": {
+    "repo": "https://github.com/IBM/fms-dgt",
+    "clone_status": "cached",
+    "size_mb": 56.0,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  },
+  "SDForger__neurips_supplemental": {
+    "repo": "https://papers.nips.cc/paper_files/paper/2025/file/70fb27f33beefef137e09bbd875c28ad-Supplemental-Conference.zip",
+    "clone_status": "extracted-from-supplemental-zip",
+    "size_mb": 294.0,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "paper_id": "4376_HiFlow_Training_free_High_Resolution_Image_Generation_with_F",
+  "title": "HiFlow: Training-free High-Resolution Image Generation with Flow-Aligned Guidance",
+  "repos": [
+    {
+      "name": "Bujiazi__HiFlow",
+      "role": "core",
+      "evidence": "README explicitly states 'This is official code of HiFlow' and lists identical title/authors/NeurIPS 2025 venue and arXiv:2504.06232. Repo owner 'Bujiazi' is first author Jiazi Bu. Core method (flow-aligned guidance: initialization, direction, acceleration alignment) implemented in flux_pipeline_hiflow.py:flowmatch_step, matching paper Algorithm 1."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "A single repo was cloned (Bujiazi__HiFlow) and it is unambiguously the official author implementation: the README declares it so, the repo owner matches the first author (Jiazi Bu / bujiazi), the paper title/venue/arXiv ID match exactly, and the core algorithm (flowmatch_step with init/direction/acceleration alignment) is faithfully present. The audit's findings are all written against this correct repo and concern missing evaluation infrastructure (no FID/IS/CLIP pipeline, no baselines, no prompt/reference data) and two low-severity config mismatches — none involve a wrong-repo error. No contamination by non-core repos exists.",
+  "audit_impact": "None. The audit correctly identified Bujiazi__HiFlow as the author repo. All findings (no-evaluation-pipeline, no-baseline-implementations, eval-prompt-set-missing, default-loads-lora-not-table1-config, default-cascade-skips-3k-stage) are written against the correct target repo. No findings need to be retracted or redirected.",
+  "recommended_action": "No action required. The audit is correctly scoped to the one cloned repo, which is the paper's own official implementation."
+}

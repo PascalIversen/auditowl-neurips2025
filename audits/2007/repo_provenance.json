@@ -1,0 +1,17 @@
+{
+  "paper_id": "2007_Table2LaTeX_RL_High_Fidelity_LaTeX_Code_Generation_from_Tabl",
+  "title": "Table2LaTeX-RL: High-Fidelity LaTeX Code Generation from Table Images via Reinforced Multimodal Language Models",
+  "repos": [
+    {
+      "name": "newLLing__Table2LaTeX-RL",
+      "role": "core",
+      "evidence": "Exact URL the paper advertises ('Code and dataset are available at https://github.com/newLLing/Table2LaTeX-RL'). README title is verbatim the paper title; cites the full author list (Jun Ling, Yao Qi, Tao Huang, ... Heng Tao Shen, Peng Wang) and arXiv 2509.17589; owner 'newLLing' matches lead author Jun Ling. The paper's headline method VSGRPO is implemented in examples/train/grpo/plugin/plugin.py (846 lines): imports TEDS, renders LaTeX via pdflatex, computes CW-SSIM (calculate_cwssim averaging wavelet-band SSIM), and registers dual reward funcs external_table2latex_acc + external_table2latex_form, invoked by run_external_rm.sh ('--reward_funcs external_table2latex_acc external_table2latex_form'). Repo is a fork of ms-swift (README: 'training codes built on ms-swift'), which explains the swift/ dir; the paper-specific code (plugin.py, qwenvl_test.py, cw_ssim.ipynb, table.ipynb, arxiv_papers_get.py) is grafted on top."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "Exactly one repo was cloned and it is the paper's own author repo: the README title, full author list, arXiv id 2509.17589, and owner handle (newLLing = lead author Jun Ling) all match, and the repo implements the paper's named VSGRPO dual-reward (structure-level TEDS + visual CW-SSIM on rendered LaTeX) in examples/train/grpo/plugin/plugin.py plus the inference (qwenvl_test.py), metric (cw_ssim.ipynb), and dataset-crawl (arxiv_papers_get.py, table.ipynb) code. The swift/ tree is the acknowledged ms-swift framework the authors fork and extend, not a wrong-repo dependency clone. Source-present is justified.",
+  "audit_impact": "No audit findings need to be flipped. All six verified findings (complexity-classifier script missing, test-split/RL-set sampling missing, hardcoded /data/shared paths in qwenvl_test.py, README 'pythoh' typo, unpinned metric/RL deps, CW-SSIM/TEDS averaged over compile-successful predictions only) are legitimate reproducibility nitpicks written correctly AGAINST the paper's own core repo. None claims 'no code exists' and none targets a non-core repo. The 'missing complexity-classification' and 'missing sampling-script' findings are gaps within the genuine author code, not wrong-repo artifacts; they remain valid.",
+  "recommended_action": "No change. Keep paper as source-present (verdict correct). The single cloned repo is the paper's own core implementation including the VSGRPO reward plugin. Existing missing/methodology findings are correctly scoped to the author code and should stand as-is."
+}

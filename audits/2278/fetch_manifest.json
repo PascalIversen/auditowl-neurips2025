@@ -1,0 +1,10 @@
+{
+  "VITA-MLLM__VITA": {
+    "repo": "https://github.com/VITA-MLLM/VITA",
+    "clone_status": "cached",
+    "size_mb": 9.7,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

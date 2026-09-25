@@ -1,0 +1,8 @@
+chosen_model_id assigned at lines: [417]
+explore-branch assignment (len(label_cols)-1) at: [417]
+MODEL_CHOSEN_LIST.append(chosen_model_id) at: [418, 468]
+exploit branch span (approx): 433..474
+assignments to chosen_model_id INSIDE exploit branch: []
+
+VERDICT: BUG CONFIRMED -- exploit branch appends/logs chosen_model_id with no assignment in that branch; value is stale from last exploration step (model index = largest model) or undefined on a first-step exploit.
+Note: simulator.py (used for the paper's main tables) instead correctly sets `chosen_model_id = self.labels.index(model_category_chosen)` (simulator.py:198).

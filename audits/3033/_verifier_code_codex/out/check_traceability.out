@@ -1,0 +1,13 @@
+- Fig2/Fig3/training EV (explained_variance fn): FOUND in scripts/train_sae.py
+- Fig3 feature-overlap cosine similarity across timesteps: *** NONE ***
+- Fig5 LPIPS metric (RIEBench): *** NONE ***
+- Fig5 CLIP-similarity metric (RIEBench): FOUND in retrieval.py
+- Fig5/Fig6 grounded SAM2 masks: *** NONE ***
+- Fig5/Fig6 RIEBench / PIEBench harness: *** NONE ***
+- Fig5/Fig6 feature-selection score eq.(8)/(9): *** NONE ***
+- Table1 per-block ablation LPIPS (ablate_block): FOUND in utils/hooks.py
+- Table5 reconstruction (reconstruct_sae_hook): FOUND in utils/hooks.py
+- Table5 pixel Manhattan distance (mean/median): *** NONE ***
+- FLUX SAE training / layer-18 activations: *** NONE ***
+- Data collection (collect_latents): FOUND in SDLens/hooked_sd_pipeline.py, app.py, example.ipynb::codecells, scripts/collect_latents_dataset.py
+- SAE training loop: FOUND in scripts/train_sae.py

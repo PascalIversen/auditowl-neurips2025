@@ -1,0 +1,285 @@
+{
+  "schema_version": "1",
+  "audit": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel",
+  "audit_md": "audits/3759_Self_supervised_learning_for_in_vivo_localization_of_microel/audit.md",
+  "generated_at": "2026-05-31T12:12:24.180192+00:00",
+  "findings": [
+    {
+      "id": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel/missing-data-pickles",
+      "category": "missing",
+      "topic": "result traceability / data availability",
+      "title": "No input data in repo; all entry points read hardcoded /scratch & /vast paths",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "script/wav2vec_random_init.py",
+      "line_start": 874,
+      "line_end": 876,
+      "quote": "elif data == \"Neuronexus\":\n    sessions_list = ['AD_HF01_1', 'AD_HF02_2', 'AD_HF02_4', 'AD_HF03_1', 'AD_HF03_2', 'NN_syn_01', 'NN_syn_02']\n    pickle_path = f'/scratch/th3129/region_decoding/data/Neuronexus/lfp'\n",
+      "claim": "The headline training/eval scripts load preprocessed data from absolute cluster paths (e.g. /scratch/th3129/..., /vast/th3129/..., /scratch/cl7201/...); _audit_code/check_setup_completeness.py confirms 0 .pkl/.pickle data files and none of the README-promised data/<DS>/{lfp,raw,spectrogram} directories exist in the repo.",
+      "concern": "None of the figures' underlying values can be recomputed from the repo as shipped: the preprocessed inputs the scripts read are absent and the paths are non-portable.",
+      "resolution": "Authors: ship the preprocessed pickles (or a fetch+preprocess command that writes to repo-relative paths) so the *_results.pickle files consumed by the notebooks can be regenerated.",
+      "cross_refs": [
+        "hardcoded-cluster-paths",
+        "missing-pretrained-weights"
+      ],
+      "check_script": "_audit_code/check_setup_completeness.py",
+      "paper_ref": "Checklist Q5 'open access to data and code'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-data-pickles",
+      "audit": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel",
+      "audit_md_line": 61
+    },
+    {
+      "id": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel/missing-pretrained-weights",
+      "category": "missing",
+      "topic": "expected code completeness",
+      "title": "Pretrained Lfp2vec weights promised in abstract/checklist but absent",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "\"By releasing our code and pretrained weights, we aim to spur further work on domain adaptation, spatiotemporal regularization, and ethical deployment of ML methods for neural data.\"\n",
+      "claim": "The abstract, Broader Impact, and checklist answers Q5/Q13 promise pretrained Lfp2vec checkpoints; _audit_code/check_setup_completeness.py finds 0 weight files (*.bin/*.safetensors/*.pt/*.pth/*.ckpt) anywhere in the repo, and scripts re-train from facebook/wav2vec2-base each run.",
+      "concern": "Pretraining (50 epochs SSL on large LFP corpora) is expensive and the run is nondeterministic, so absence of released weights blocks reproduction of the zero-shot/transfer results without large compute.",
+      "resolution": "Authors: release the pretrained Lfp2vec checkpoints referenced in the abstract and checklist.",
+      "cross_refs": [
+        "missing-data-pickles"
+      ],
+      "check_script": "_audit_code/check_setup_completeness.py",
+      "paper_ref": "Broader Impact; Checklist Q5, Q13",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-pretrained-weights",
+      "audit": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel",
+      "audit_md_line": 88,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel/silhouette-linprobe-missing",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No code computes the Fig 2a Silhouette (0.576) or linear-probing (0.921) values",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "\"Lfp2vec achieved a markedly higher Silhouette score for region clustering (0.576±0.026) than the spectrogram (–0.054±0.015), SimCLR (–0.062±0.050), and BrainBERT (0.146±0.026) baselines, while showing no meaningful clustering by session (–0.053±0.009) or probe identity (–0.266±0.006).\"\n",
+      "claim": "The reported Silhouette scores and the 0.921±0.004 linear-probing accuracy in Fig 2a (right) have no producing script: a repo-wide search finds `silhouette` only inside embedded plotly/d3 output JSON in experiments.ipynb (no code cell calls silhouette_score), and the only LinearProber (wav2vec_random_init.py) is a per-epoch SSL diagnostic that does not report the headline value.",
+      "concern": "A central quantitative claim distinguishing Lfp2vec from baselines (anatomy clusters but session/probe do not) is not traceable to any computation in the repo.",
+      "resolution": "Authors: provide the script that computes the per-model Silhouette scores and linear-probing accuracies with their error bars.",
+      "cross_refs": [],
+      "paper_ref": "Section 6.1; Figure 2a right",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "silhouette-linprobe-missing",
+      "audit": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel",
+      "audit_md_line": 111,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel/ablation-trialcount-missing",
+      "category": "missing",
+      "topic": "ablations",
+      "title": "Fig 5 ablation over number of pretraining trials has no driver script",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "question",
+      "file": "paper.pdf",
+      "quote": "\"on the Neuronexus dataset, the audio-initialized model with only a small amount of LFP pre-training (6k trials) already matches the performance of a randomly-initialized model trained on over 400k trials.\"\n",
+      "claim": "The repo exposes --ssl and --rand_init flags (init choice) but no script varies the amount of self-supervised pretraining data (6k…400k trials); the curve in Fig 5 has no producing driver I could locate.",
+      "concern": "The ablation supporting the paper's central 'audio init + in-domain SSL' claim cannot be reproduced from the repo without the (absent) sweep harness.",
+      "resolution": "Authors: point to or add the script that sweeps the number of unlabeled pretraining trials and records decoding accuracy.",
+      "cross_refs": [
+        "missing-data-pickles"
+      ],
+      "paper_ref": "Section 6.5; Figure 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "ablation-trialcount-missing",
+      "audit": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel",
+      "audit_md_line": 133,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel/readme-setup-path-broken",
+      "category": "missing",
+      "topic": "expected code completeness / reproducibility",
+      "title": "README setup commands reference a nonexistent env file and preprocessing dir; no pip step",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 12,
+      "line_end": 18,
+      "quote": "conda env create -f environment.yml\nconda activate lfp2vec\n```\n\n## Data\n\nThe repository expects LFP data and corresponding labels in the following structure, stored as `.pkl` files. And the preprocessing script is stored in script/dataset_preprocessing/\n",
+      "claim": "README instructs `conda env create -f environment.yml`, but no environment.yml exists (only blind_localization.yml); the README never instructs `pip install -r requirements.txt`, yet transformers/evaluate/datasets/accelerate are absent from blind_localization.yml (verified by _audit_code/check_setup_completeness.py); and the referenced script/dataset_preprocessing/ directory does not exist.",
+      "concern": "The documented installation/preprocessing path fails as written, so a reader cannot rebuild the environment or locate preprocessing code from the README.",
+      "resolution": "Authors: fix the env filename, add the pip-install step (or merge HF deps into the conda yml), and correct the preprocessing-directory path.",
+      "cross_refs": [
+        "missing-data-pickles"
+      ],
+      "check_script": "_audit_code/check_setup_completeness.py",
+      "paper_ref": "README",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "readme-setup-path-broken",
+      "audit": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel",
+      "audit_md_line": 155
+    },
+    {
+      "id": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel/missing-torch-import",
+      "category": "bug",
+      "topic": "runtime correctness",
+      "title": "w2v2_across_session.py calls torch.* without importing torch (NameError)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "script/w2v2_across_session.py",
+      "line_start": 233,
+      "line_end": 235,
+      "quote": "print(torch.cuda.is_available())\ndevice = torch.device(\"cuda\" if torch.cuda.is_available() else \"cpu\")\nmodel.to(device)\n",
+      "claim": "torch is used at lines 233-234 but is never imported in this module and there is no `from ... import *` that would inject it (verified by _audit_code/check_torch_import.py, which excludes the spectrogram/simclr scripts that receive torch via star-imports of modules that `import torch`).",
+      "concern": "Running this across-session script raises NameError: name 'torch' is not defined the first time it reaches the device-setup line, so it cannot run as shipped.",
+      "resolution": "Add `import torch` to script/w2v2_across_session.py.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_torch_import.py",
+      "paper_ref": "n/a",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-torch-import",
+      "audit": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel",
+      "audit_md_line": 188
+    },
+    {
+      "id": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel/hardcoded-cluster-paths",
+      "category": "bug",
+      "topic": "portability",
+      "title": "Result-producing notebooks hardcode absolute /scratch result/data paths",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "script/post_processing.ipynb",
+      "line_start": 185,
+      "line_end": 185,
+      "quote": "\"    walk_dir = '/scratch/mkp6112/LFP/region_decoding/results/Neuronexus/spectrogram/wave2vec2/across_session/'\\n\",\n",
+      "claim": "The notebook that produces the confusion matrices, per-class accuracies, and post-processing accuracy reads result pickles exclusively from absolute cluster paths (/scratch/mkp6112/..., /scratch/th3129/...) for all three data modes; ripple .mat files and raw pickles are likewise absolute.",
+      "concern": "Even if a user regenerates result pickles, the figure code points at another user's filesystem and will not find them without editing every path.",
+      "resolution": "Parameterise the result/data directories (CLI arg or repo-relative default).",
+      "cross_refs": [
+        "missing-data-pickles"
+      ],
+      "paper_ref": "Figures 2b, 2d, 6, 7",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "hardcoded-cluster-paths",
+      "audit": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel",
+      "audit_md_line": 215
+    },
+    {
+      "id": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel/metric-balacc-f1-not-computed",
+      "category": "difference",
+      "topic": "evaluation consistency",
+      "title": "Paper reports balanced accuracy & macro-F1; checked-in figure code reports plain accuracy",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "script/post_processing.ipynb",
+      "line_start": 215,
+      "line_end": 217,
+      "quote": "\"    logits, labels, trials, channels, acc = load_results(walk_dir, session)\\n\",\n\"    pred = np.argmax(logits, axis=1)\\n\",\n\"    results[session] = np.mean(pred == labels)\\n\",\n",
+      "claim": "Section 5.2 says 'We report both balanced accuracy and macro F1'; the wav2vec2 training scripts compute plain accuracy via evaluate.load(\"accuracy\") and store test_acc, and post_processing.ipynb computes np.mean(pred==labels) plus per-class accuracy — not balanced accuracy or macro-F1. Balanced-acc/F1 helpers exist in the repo (utils.py, decoder.py, visualizer.py) but are wired only to the non-wav2vec baseline decoders, not to the Lfp2vec result pickles.",
+      "concern": "The headline Fig 2a/3b/4a metric the figures plot for Lfp2vec is not produced by any checked-in script consuming the model's result pickles, so the reported balanced-acc/F1 values are not reproducible from the repo and may differ from plain accuracy on these imbalanced classes.",
+      "resolution": "Authors: provide the exact script that converts the stored logits/labels into the reported balanced accuracy and macro-F1 (with error bars) for the wav2vec2 models.",
+      "cross_refs": [
+        "missing-data-pickles"
+      ],
+      "paper_ref": "Section 5.2; Figures 2a, 3b, 4a",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "metric-balacc-f1-not-computed",
+      "audit": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel",
+      "audit_md_line": 241
+    },
+    {
+      "id": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel/postproc-class-weights",
+      "category": "difference",
+      "topic": "post-processing",
+      "title": "Post-processing applies an undocumented hand-tuned class weighting [1,1,5,2,1]",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "script/post_processing.ipynb",
+      "line_start": 402,
+      "line_end": 410,
+      "quote": "\"class_weights = [1,1,5,2,1]\\n\",\n\"\\n\",\n\"for ch in unique_channels:\\n\",\n\"    logits_of_interest = logits[channels == ch]\\n\",\n\"\\n\",\n\"    # average logits from all trials of same channel with weights, to get the max logits\\n\",\n\"    average_logits = np.mean(logits_of_interest, axis=0)\\n\",\n\"    weighted_average_logits = average_logits * class_weights\\n\",\n\"    majority_vote = np.argmax(weighted_average_logits)\\n\",\n",
+      "claim": "The post-processing (Fig 2d / Fig 7) multiplies per-channel averaged logits by a fixed hand-set vector [1,1,5,2,1] (up-weighting CA2 ×5, CA3 ×2) before argmax.",
+      "concern": "The paper (§4.4 / Appendix D) describes the prior πc as 'uniform or estimated empirically from the training distribution', not an ad-hoc per-class weight; this hand-tuned weighting boosts exactly the underrepresented CA2/CA3 classes the paper highlights as improved, and is set on the same data being scored, so the post-processing improvement may be partly hand-fitting rather than the described principled smoothing.",
+      "resolution": "Authors: clarify how [1,1,5,2,1] was chosen (and on which split), or replace it with the uniform/empirical prior described in the paper and re-report post-processing accuracy.",
+      "cross_refs": [],
+      "paper_ref": "Section 4.4; Appendix D",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "postproc-class-weights",
+      "audit": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel",
+      "audit_md_line": 267
+    },
+    {
+      "id": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel/disease-session-level-label",
+      "category": "methodology",
+      "topic": "sample independence / evaluation validity",
+      "title": "Disease classification scored per-trial over n=7 session-level labels (1 healthy mouse in test)",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "script/wav2vec_disease.py",
+      "line_start": 403,
+      "line_end": 404,
+      "quote": "def session_to_disease(session):\n    return int(\"AD\" in session)\n",
+      "claim": "The AD/healthy label is a constant function of the session name; with 7 sessions (5 AD, 2 healthy) the test set is one AD + one healthy session (test_sess = random.choice(AD) + random.choice(healthy)), and accuracy/F1 are computed over every channel×trial in those sessions as if independent.",
+      "concern": "All channels/trials within a session share one label and strong within-session correlations, so per-trial scoring inflates the effective n and the disease claim rests on a single held-out healthy mouse — the metric measures session discriminability, not generalizable AD vs control classification.",
+      "resolution": "Authors: report subject-level (per-session) performance with leave-one-subject-out across all 7 mice, and state the number of independent animals behind the Fig 4a error bars.",
+      "cross_refs": [],
+      "paper_ref": "Section 6.4; Figure 4a",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "disease-session-level-label",
+      "audit": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel",
+      "audit_md_line": 301
+    }
+  ]
+}

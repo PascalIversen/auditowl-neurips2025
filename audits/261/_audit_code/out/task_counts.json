@@ -1,0 +1,74 @@
+{
+  "folder_counts": {
+    "account": 33,
+    "github_submission": 17,
+    "induced_text": 50,
+    "libre_office": 22,
+    "multimedia": 50,
+    "note_attack": 23,
+    "os": 30,
+    "personal_information": 21,
+    "phishing_email": 32,
+    "phishing_web": 56,
+    "popup": 50,
+    "python_script": 24,
+    "recaptcha": 33,
+    "reddit": 30,
+    "unknown_file": 21
+  },
+  "total_json_files": 492,
+  "index_counts": {
+    "account": 33,
+    "induced_text": 50,
+    "phishing_email": 32,
+    "phishing_web": 56,
+    "popup": 50,
+    "recaptcha": 33,
+    "github_submission": 17,
+    "libre_office": 22,
+    "multimedia": 50,
+    "note_attack": 23,
+    "os": 30,
+    "personal_information": 21,
+    "python_script": 24,
+    "reddit": 30,
+    "unknown_file": 21
+  },
+  "index_total": 492,
+  "paper_total": 492,
+  "match_total_files_vs_paper": true,
+  "match_index_vs_paper": true,
+  "folder_vs_index_consistent": true,
+  "env_subcat_match": {
+    "phishing_web": [
+      56,
+      56,
+      true
+    ],
+    "phishing_email": [
+      32,
+      32,
+      true
+    ],
+    "popup": [
+      50,
+      50,
+      true
+    ],
+    "recaptcha": [
+      33,
+      33,
+      true
+    ],
+    "account": [
+      33,
+      33,
+      true
+    ],
+    "induced_text": [
+      50,
+      50,
+      true
+    ]
+  }
+}

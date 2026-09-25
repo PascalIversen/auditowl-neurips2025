@@ -1,0 +1,4 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/Huang-KT/WarpGAN
+
+# Other code links found (NOT cloned -- baseline/dependency):

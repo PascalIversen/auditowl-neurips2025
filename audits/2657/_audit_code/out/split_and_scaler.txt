@@ -1,0 +1,5 @@
+scaler_mean_equals_TRAIN_mean (good): True
+scaler_mean_equals_FULL_mean (would be leakage): False
+train_is_all_normal: True
+all_anomalies_in_test_only: True
+train/test-normal row overlap (expect 0): 0

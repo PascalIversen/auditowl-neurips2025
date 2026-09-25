@@ -1,0 +1,8 @@
+# AUTHOR / PRIMARY repositories (cloned):
+# (none) -- ProRL released the trained MODEL weights only
+#   (https://huggingface.co/nvidia/Nemotron-Research-Reasoning-Qwen-1.5B);
+#   no ProRL *training-code* repository is cited in the paper.
+
+# Other code links found (cloned by fetch but a DEPENDENCY, not the contribution):
+https://github.com/open-thought/reasoning-gym	[dependency: the third-party RL task/environment suite [19] used for training/eval, not ProRL's own code]
+https://github.com/huggingface/Math-Verify	[dependency: math answer verifier]

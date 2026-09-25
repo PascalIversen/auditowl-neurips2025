@@ -1,0 +1,5 @@
+paper_number: 3287
+title: Context-Aware Regularization with Markovian Integration for Attention-Based Nucleotide Analysis
+authors: Mohammad Saleh Refahi, Mahdi Abavisani, Bahrad Sokhansanj, James R Brown, Gail Rosen
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/9bf45b822d99001512149b985511f260-Abstract-Conference.html
+category: empirical

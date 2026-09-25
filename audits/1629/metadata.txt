@@ -1,0 +1,5 @@
+paper_number: 1629
+title: MESS+: Dynamically Learned Inference-Time LLM Routing in Model Zoos with Service Level Guarantees
+authors: Herbert Woisetschläger, Ryan Zhang, Shiqiang Wang, Hans Arno Jacobsen
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/4dd1d9b841712bd37b833559f041530c-Abstract-Conference.html
+category: empirical

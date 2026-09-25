@@ -1,0 +1,5 @@
+paper_number: 3787
+title: Building 3D Representations and Generating Motions From a Single Image via Video-Generation
+authors: Weiming Zhi, Ziyong Ma, Tianyi Zhang, Matthew Johnson-Roberson
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/b610aefa3de4380fd255151ae97511eb-Abstract-Conference.html
+category: empirical

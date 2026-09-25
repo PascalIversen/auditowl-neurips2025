@@ -1,0 +1,11 @@
+waveletLoRAAdapter.py defines LinearWaveletFilter: True
+T5_run_wavelet.py defines its OWN LinearWaveletFilter:    True
+Llama3_run_wavelet.py defines its OWN LinearWaveletFilter: True
+uie_trainer_lora.py imports LinearWaveletFilter FROM waveletLoRAAdapter: True
+T5_run_wavelet.py instantiates its OWN LinearWaveletFilter:    True
+Llama3_run_wavelet.py instantiates its OWN LinearWaveletFilter: True
+T5_run_wavelet imports adapter's LinearWaveletFilter:    False
+Llama3_run_wavelet imports adapter's LinearWaveletFilter: False
+
+VERDICT: isinstance() guard in trainer can NEVER match model modules = True
+=> reg_loss stays 0; the lambda1/lambda2 regularization (Eq.12) is never applied.

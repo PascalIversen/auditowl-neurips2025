@@ -1,0 +1,5 @@
+paper_number: 768
+title: A High-Dimensional Statistical Method for Optimizing Transfer Quantities in Multi-Source Transfer Learning
+authors: Qingyue Zhang, Haohao Fu, Guanbo Huang, Yaoyuan Liang, Chang Chu, Tianren Peng, Yanru Wu, Qi Li, Yang Li, Shao-Lun Huang
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/2459ff8e62f8be569d91e870139e16dd-Abstract-Conference.html
+category: empirical

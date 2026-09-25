@@ -1,0 +1,9 @@
+policy[s]            = [0.2 0.3 0.5]
+code single-sample   = [0.17766403 0.37817589 0.44416008]
+code batch(size=1)   = [0.18167818 0.42739216 0.39092965]
+paper full MD step   = [0.18167818 0.42739216 0.39092965]
+
+single == paper ? False
+batch  == paper ? True
+single == batch ? False
+actions in state s whose prob changed (single-sample) = 3 of 3

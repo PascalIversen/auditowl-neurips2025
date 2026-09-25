@@ -1,0 +1,98 @@
+{
+  "paper": "1717",
+  "repo": "Hosseinadeli__transformer_brain_encoder",
+  "design": "major_recall_study DESIGN.md",
+  "seeds": [
+    {
+      "id": "S01",
+      "slot": "MAJOR-MISS",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/models/resnet.py",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the ResNet50 backbone experiment implementation",
+      "description": "Delete the sole ResNet backbone module. The repository would no longer contain the feature-extraction implementation needed to train or evaluate the ResNet50 versions reported in Table 3, including the claimed replication of the DINOv2 ordering with a fully convolutional backbone.",
+      "expected_reasoning": "The paper reports a complete ResNet50-backbone comparison and interprets it as evidence that TBEn works with convolutional as well as transformer features. In models/backbone.py, every resnet architecture is dispatched to resnet_model imported from models/resnet.py. Deleting that module removes the only ResNet feature pipeline; no remaining path can produce Table 3. The resulting import failure is also direct evidence of absence rather than a runnable but incorrect substitute.",
+      "paper_anchor": "To examine whether our results depend on the specific choice of the transformer backbone architecture, we tested all the encoding models on the ResNet50 backbone features (a fully convolutional network).",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": false
+    },
+    {
+      "id": "S04",
+      "slot": "MAJOR-DIFF",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/models/transformer.py",
+          "line": 292,
+          "action": "replace"
+        },
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/models/transformer.py",
+          "line": 313,
+          "action": "replace"
+        },
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/models/transformer.py",
+          "line": 335,
+          "action": "replace"
+        },
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/models/transformer.py",
+          "line": 397,
+          "action": "replace"
+        }
+      ],
+      "title": "Replace ROI cross-attention with a convolutional global token mixer",
+      "description": "Replace the decoder's multi-head cross-attention with a trainable two-layer 1D convolution over the rasterized backbone tokens, global average pooling, and a learned query projection. This is a coherent convolutional integration model with real gradients, but it is not the content-dependent ROI cross-attention claimed by the paper.",
+      "expected_reasoning": "The central method requires each ROI query to form attention scores over image tokens and dynamically route a different weighted token set. After the patch, TransformerDecoderLayer contains no multi-head cross-attention. Instead, all ROIs receive the same globally pooled convolutional image summary, combined with fixed learned query projections and a feedforward network. Following the forward_pre path used by the default pre_norm setting reveals a functional alternative architecture whose computation cannot yield the claimed query-key attention routing or interpretable attention maps.",
+      "paper_anchor": "The attention scores are then used to aggregate all the image tokens that are relevant to predict the brain activity in that ROI.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    {
+      "id": "S06",
+      "slot": "MAJOR-METH",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/visualize_results.ipynb",
+          "line": 417,
+          "action": "replace"
+        }
+      ],
+      "title": "Fit the regression baselines jointly on training and test fMRI",
+      "description": "In the result-generation notebook's linear-regression path, concatenate held-out test features and test fMRI with the training samples before fitting both hemispheric regressions. The test targets are therefore part of the fitted main baseline models whose test predictions are reported.",
+      "expected_reasoning": "evaluate_model loads lh_test_fmri.npy and rh_test_fmri.npy before entering the learn_reg branch. The patched branch builds features_fit and fMRI targets by concatenating training and test arrays, fits LinearRegression on this combined data, and predicts those same test features. A careful paper-code comparison therefore establishes that the supposedly held-out future responses were used in fitting, violating the stated split and invalidating baseline comparisons in the main tables.",
+      "paper_anchor": "We use the train/test split that was introduced in the Algonauts benchmark [17] where the last three sessions for each subject were held out to ensure that no test data were accessed during the model development and to make the prediction task as natural as possible (predicting the future responses).",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    },
+    {
+      "id": "S08",
+      "slot": "MAJOR-BUG",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "Hosseinadeli__transformer_brain_encoder/engine.py",
+          "line": 53,
+          "action": "replace"
+        }
+      ],
+      "title": "Clear all gradients immediately before every optimizer step",
+      "description": "Move gradient clearing to after backpropagation and clipping but before optimizer.step(). The loop still runs, reports losses, calls backward, and calls the optimizer, yet every step sees empty gradients and no trainable weight is ever updated.",
+      "expected_reasoning": "The paper's core result depends on jointly training ROI queries, the decoder, and linear mappings with Adam. Tracing the patched train_one_epoch ordering shows that losses.backward() computes gradients, clipping may inspect them, and optimizer.zero_grad() then discards them immediately before optimizer.step(). Thus the apparent training loop is a substantive no-training stub despite looking structurally complete, so none of the claimed learned routing or prediction results can be produced by it.",
+      "paper_anchor": "The ROI queries, transformer decoder layer and the linear mappings are trained with the Adam optimizer [25] using mean-squared-error loss between the prediction and the ground truth fMRI activity for each image.",
+      "placement": "central",
+      "selection_rule": "author pick (manual review)",
+      "no_paper_suspicion": true
+    }
+  ]
+}

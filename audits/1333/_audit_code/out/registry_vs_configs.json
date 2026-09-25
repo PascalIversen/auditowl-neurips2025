@@ -1,0 +1,157 @@
+{
+  "registered": {
+    "arch": [
+      "LoRAConv2d",
+      "RAVAEHFLora",
+      "RAVAE_EQ",
+      "UNetDiscriminatorSN"
+    ],
+    "model": [
+      "EQVAEModel",
+      "SRModel",
+      "VAEadapter"
+    ],
+    "loss": [
+      "CharbonnierLoss",
+      "EQLoss",
+      "EncoderLoss",
+      "FFTLoss",
+      "GANFeatLoss",
+      "GANLoss",
+      "KlLoss",
+      "L1Loss",
+      "LPIPSLoss",
+      "MSELoss",
+      "MultiScaleGANLoss",
+      "PerceptualLoss",
+      "WeightedTVLoss"
+    ],
+    "dataset": [
+      "PairedImageDataset"
+    ]
+  },
+  "config_type_refs": [
+    {
+      "config": "stage1_eqvae.yml",
+      "line": 9,
+      "type": "PairedImageDataset"
+    },
+    {
+      "config": "stage1_eqvae.yml",
+      "line": 13,
+      "type": "disk"
+    },
+    {
+      "config": "stage1_eqvae.yml",
+      "line": 24,
+      "type": "PairedImageDataset"
+    },
+    {
+      "config": "stage1_eqvae.yml",
+      "line": 28,
+      "type": "disk"
+    },
+    {
+      "config": "stage1_eqvae.yml",
+      "line": 34,
+      "type": "RAVAE_EQ"
+    },
+    {
+      "config": "stage1_eqvae.yml",
+      "line": 68,
+      "type": "L1Loss"
+    },
+    {
+      "config": "stage1_eqvae.yml",
+      "line": 72,
+      "type": "KlLoss"
+    },
+    {
+      "config": "stage1_eqvae.yml",
+      "line": 106,
+      "type": "Adam"
+    },
+    {
+      "config": "stage1_eqvae.yml",
+      "line": 111,
+      "type": "CosineAnnealingRestartLR"
+    },
+    {
+      "config": "stage2_hflora.yml",
+      "line": 9,
+      "type": "PairedImageDataset"
+    },
+    {
+      "config": "stage2_hflora.yml",
+      "line": 13,
+      "type": "disk"
+    },
+    {
+      "config": "stage2_hflora.yml",
+      "line": 24,
+      "type": "PairedImageDataset"
+    },
+    {
+      "config": "stage2_hflora.yml",
+      "line": 28,
+      "type": "disk"
+    },
+    {
+      "config": "stage2_hflora.yml",
+      "line": 34,
+      "type": "RAVAEHFLora"
+    },
+    {
+      "config": "stage2_hflora.yml",
+      "line": 42,
+      "type": "RAVAE"
+    },
+    {
+      "config": "stage2_hflora.yml",
+      "line": 63,
+      "type": "UNetDiscriminatorSN"
+    },
+    {
+      "config": "stage2_hflora.yml",
+      "line": 89,
+      "type": "L1Loss"
+    },
+    {
+      "config": "stage2_hflora.yml",
+      "line": 93,
+      "type": "GANLoss"
+    },
+    {
+      "config": "stage2_hflora.yml",
+      "line": 98,
+      "type": "Adam"
+    },
+    {
+      "config": "stage2_hflora.yml",
+      "line": 102,
+      "type": "Adam"
+    },
+    {
+      "config": "stage2_hflora.yml",
+      "line": 106,
+      "type": "Adam"
+    },
+    {
+      "config": "stage2_hflora.yml",
+      "line": 110,
+      "type": "Adam"
+    },
+    {
+      "config": "stage2_hflora.yml",
+      "line": 115,
+      "type": "CosineAnnealingRestartLR"
+    }
+  ],
+  "unresolved_arch_model_loss_types": [
+    {
+      "config": "stage2_hflora.yml",
+      "line": 42,
+      "type": "RAVAE"
+    }
+  ]
+}

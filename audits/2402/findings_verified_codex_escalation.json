@@ -1,0 +1,13 @@
+{
+  "findings": [
+    {
+      "id": "2402_Advanced_Sign_Language_Video_Generation_with_Compressed_and_/baseline-code-absent",
+      "verdict": "lowered",
+      "reason": "The repository lacks baseline-specific implementations, configurations, or evaluation invocations for the compared methods, but it does contain substantial generic ControlNet implementation code, so the original categorical claim is overbroad.",
+      "changed": "nothing",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding"
+    }
+  ]
+}

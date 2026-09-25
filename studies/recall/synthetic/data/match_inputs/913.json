@@ -1,0 +1,231 @@
+{
+  "paper": "913",
+  "seeds": [
+    {
+      "sid": "S01",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/models/triton_nn/gat.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/models/triton_kernels/gat.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/models/triton_kernels/gat3d.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/triton_tests/gat.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/triton_tests/test2d_gat.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/triton_tests/test3d_gat.py",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the complete TS-GAT experiment implementation",
+      "description": "Delete every released GAT implementation and its supporting kernels/tests, leaving the advertised GAT option with imports and routing but no executable aggregation code. This removes the pipeline behind the TS-GAT column of Table 1 rather than replacing it with a stub."
+    },
+    {
+      "sid": "S03",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/transforms/normalize.py",
+          "line": 13,
+          "action": "replace"
+        }
+      ],
+      "title": "Replace node-wise L2 normalization with graph-wide feature standardization",
+      "description": "Use a complete, differentiable z-score preprocessing method that centers and scales each feature using all nodes in a graph. The implementation is numerically guarded and functional, but it is a different preprocessing geometry from the paper's per-node L2 projection."
+    },
+    {
+      "sid": "S06",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/helpers/datasets.py",
+          "line": 78,
+          "action": "replace"
+        },
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/helpers/datasets.py",
+          "line": 294,
+          "action": "replace"
+        }
+      ],
+      "title": "Expose official test labels as training labels",
+      "description": "For datasets that provide official masks, merge the test mask into the train mask during loading. Test-node labels then enter both least-squares fitting and the visible-label input used by the main model, while evaluation still scores those same nodes."
+    },
+    {
+      "sid": "S07",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/helpers/constants.py",
+          "line": 2,
+          "action": "replace"
+        },
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/helpers/constants.py",
+          "line": 5,
+          "action": "replace"
+        }
+      ],
+      "title": "Clamp final class logits before cross-entropy",
+      "description": "Wrap the central task loss so it applies ReLU to final class scores before CrossEntropyLoss. Training and evaluation still run, but every negative logit is collapsed to zero before the softmax implicit in cross-entropy."
+    }
+  ],
+  "baseline": [
+    {
+      "id": "913/baselines-not-in-repo",
+      "category": "missing",
+      "file": "helpers/gnn_type.py",
+      "line_start": 29,
+      "line_end": 59,
+      "title": "No code for GraphAny, end-to-end MeanGNN/GAT, or symmetry-ablation baselines"
+    },
+    {
+      "id": "913/nonparam-ls-table3-no-driver",
+      "category": "missing",
+      "file": "transforms/least_squares.py",
+      "line_start": 16,
+      "line_end": 52,
+      "title": "Table 3 non-parametric least-squares accuracies have no evaluation driver"
+    },
+    {
+      "id": "913/no-dependency-spec-and-hard-neptune-dep",
+      "category": "missing",
+      "file": "experiment.py",
+      "line_start": 45,
+      "line_end": 45,
+      "title": "No requirements file; Neptune (with placeholder token) is a hard run-time dependency"
+    },
+    {
+      "id": "913/split-index-modulo-ndim",
+      "category": "bug",
+      "file": "helpers/split_data.py",
+      "line_start": 59,
+      "line_end": 68,
+      "title": "Per-seed split selection uses `% ndim` (==2) instead of `% shape[1]`, using only 2 of ~10 splits"
+    },
+    {
+      "id": "913/str-print-mislabel",
+      "category": "bug",
+      "file": "helpers/utils.py",
+      "line_start": 50,
+      "line_end": 54,
+      "title": "Console str_print zips 3 split names against a length-2 metric tensor, mislabeling printed metrics"
+    },
+    {
+      "id": "913/adamw-vs-adam",
+      "category": "difference",
+      "file": "experiment.py",
+      "line_start": 158,
+      "line_end": 158,
+      "title": "Code uses AdamW; paper states Adam"
+    },
+    {
+      "id": "913/splits-claim-vs-official",
+      "category": "difference",
+      "file": "helpers/split_data.py",
+      "line_start": 43,
+      "line_end": 53,
+      "title": "Paper says 'official / standard splits'; for several datasets the code synthesizes 20-per-class splits"
+    },
+    {
+      "id": "913/pca-fit-on-full-graph",
+      "category": "methodology",
+      "file": "transforms/pca.py",
+      "line_start": 15,
+      "line_end": 19,
+      "title": "PCA fit on the full graph's node features before train/test split (full-cora, co-cs, co-physics)"
+    },
+    {
+      "id": "913/hyperparam-selection-criterion-undocumented",
+      "category": "methodology",
+      "file": "experiment.py",
+      "line_start": 159,
+      "line_end": 166,
+      "title": "No model-selection script; criterion for choosing README 'best configs' / epoch not in repo"
+    }
+  ],
+  "unassigned": [
+    {
+      "fid": "run_01/single-train-graph-hardcoded-cora",
+      "run": "run_01",
+      "category": "missing",
+      "loc": "helpers/train_test_setup.py:29",
+      "title": "No way to train on a single non-cora graph (Table 2 / Table 5 setup)",
+      "claim": "The only single-graph training set is cora: `trainset1` returns `[DataSet.cora]`, and `inc_trainset` with train_size=1 uses TRAIN_MULTISETS[0]=[] \u2192 also `[cora]`. There is no CLI/enum path to train on a single graph other than cora.",
+      "concern": "Table 2 (pretraining-source sensitivity: cora / chameleon / roman-empire / wiki-cs) and Table 5 (trained on cora / roman-empire / chameleon / wiki-cs) require training on single non-cora graphs, which the shipped code cannot do without editing the source."
+    },
+    {
+      "fid": "run_01/baseline-code-absent",
+      "run": "run_01",
+      "category": "missing",
+      "loc": "main.py:4",
+      "title": "End-to-end MeanGNN/GAT and GraphAny baselines (3 of 5 Table 1 columns) not in repo",
+      "claim": "The only entrypoint builds and evaluates the TS-GNN (GFM). There is no code path for the three comparison columns in Table 1: the end-to-end MeanGNN baseline, the end-to-end GAT baseline, or GraphAny.",
+      "concern": "3 of the 5 Table 1 columns (and the GraphAny curves in Figure 3 / Table 2) cannot be regenerated from this repo; GraphAny is an external repo, but the two end-to-end GNN baselines have no training script here."
+    },
+    {
+      "fid": "run_01/deps-unlisted",
+      "run": "run_01",
+      "category": "missing",
+      "loc": "helpers/datasets.py:16",
+      "title": "No requirements file; ogb and scikit-learn imported but not in install instructions",
+      "claim": "The repo has no requirements.txt / environment.yml / setup.py / pyproject.toml (verified by `find`). The README install block (README.md:8-14) lists torch, torchvision/audio, torch_scatter/sparse/cluster/spline, torch-geometric, neptune, triton \u2014 but not `ogb` (imported here) or `scikit-learn` (used in transforms/pca.py, transforms/least_squares.py, helpers/split_data.py).",
+      "concern": "`import ogb` and `import sklearn` will fail on a clean environment built only from the README, and no pinned dependency manifest exists, so the environment cannot be rebuilt deterministically."
+    },
+    {
+      "fid": "run_01/ablation-bias-toggle-not-exposed",
+      "run": "run_01",
+      "category": "missing",
+      "loc": "transforms/least_squares.py:106",
+      "title": "No CLI toggle for the 'plain' / 'no-bias' LS ablations (Tables 3\u20134)",
+      "claim": "The pool\u2192label/feature LS operators (with a bias term `_b`) are always computed and always applied (equiv_layer.py:67-71). `ls_num_layers < 0` disables only the extra ls2x/ls2y layers, and there is no argument to remove the bias term. Tables 3\u20134 report 'plain' (no LS, no bias) and 'LS-only' (no bias) variants.",
+      "concern": "The exact ablation configurations in Tables 3 and 4 do not appear to be selectable through the provided CLI, so they may have required manual source edits \u2014 I could not confirm how they were produced."
+    },
+    {
+      "fid": "run_02/env-not-reproducible",
+      "run": "run_02",
+      "category": "missing",
+      "loc": "README.md:9",
+      "title": "No dependency manifest; ogb & scikit-learn undeclared; Neptune logging is mandatory with a placeholder token",
+      "claim": "The only dependency spec is this README block (no requirements.txt / setup.py / environment.yml exists). It omits `ogb` (imported at helpers/datasets.py:16) and `scikit-learn` (imported at transforms/pca.py:3, transforms/least_squares.py:11, helpers/split_data.py:4), and does not pin neptune/triton.",
+      "concern": "The environment cannot be rebuilt turn-key, and even once built the run cannot start: experiment.py:45 calls `neptune.init_run(project=args.project, api_token=API_TOKEN)` unconditionally with `API_TOKEN = \"...\"` (constants.py:15) and a required --project, with no offline/disable path."
+    },
+    {
+      "fid": "run_02/readme-hidden-dim-invalid-flag",
+      "run": "run_02",
+      "category": "bug",
+      "loc": "README.md:44",
+      "title": "Documented 'best config' commands use an undefined --hidden_dim flag and omit --ls_num_layers",
+      "claim": "The README 'best configs' pass `--hidden_dim 16`, but arguments.py defines `--hid_channel` (there is no `--hidden_dim`); the commands also never pass `--ls_num_layers`, so it stays at the default -1 (LS mixing disabled).",
+      "concern": "Run verbatim, the documented command aborts with `error: unrecognized arguments: --hidden_dim 16`, and even after renaming the flag it runs the no-least-squares variant rather than the LS-enabled model the paper highlights."
+    },
+    {
+      "fid": "run_02/pca-co-physics-1024-vs-2048",
+      "run": "run_02",
+      "category": "difference",
+      "loc": "helpers/datasets.py:226",
+      "title": "co-physics is PCA-reduced to 1024 components in code but 2048 in the paper",
+      "claim": "The code reduces full_cora and co_cs to 2048 PCA components but co_physics to 1024.",
+      "concern": "The paper states full-Cora, co-cs, and co-physics are all reduced 'with PCA to 2048 components'; the code uses 1024 for co-physics, a code\u2194paper discrepancy in the input dimensionality for that dataset."
+    }
+  ]
+}

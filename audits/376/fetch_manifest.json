@@ -1,0 +1,10 @@
+{
+  "tsinghua-fib-lab__SparseDiff": {
+    "repo": "https://github.com/tsinghua-fib-lab/SparseDiff",
+    "clone_status": "cached",
+    "size_mb": 14.4,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

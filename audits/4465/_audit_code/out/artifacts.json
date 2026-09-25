@@ -1,0 +1,9 @@
+{
+  "result_analysis_ipynb_found": [],
+  "get_model_answer_has_check_answer_match": false,
+  "get_model_answer_has_accuracy": false,
+  "calls_get_last_layer_attribute_state": 1,
+  "defines_get_last_layer_attribute_state": false,
+  "defines_get_last_layer_decomposed_state": true,
+  "requirements_files": []
+}

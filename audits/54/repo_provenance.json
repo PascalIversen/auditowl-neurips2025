@@ -1,0 +1,17 @@
+{
+  "paper_id": "54_EVOREFUSE_Evolutionary_Prompt_Optimization_for_Evaluation_an",
+  "title": "EVOREFUSE: Evolutionary Prompt Optimization for Evaluation and Mitigation of LLM Over-Refusal to Pseudo-Malicious Instructions",
+  "repos": [
+    {
+      "name": "FishT0ucher__EVOREFUSE",
+      "role": "core",
+      "evidence": "README states 'If you find this code or dataset useful, please cite our NeurIPS 2025 paper' with exact BibTeX title matching the paper. Owner 'FishT0ucher' matches the paper's stated GitHub URL (https://github.com/FishT0ucher/EVOREFUSE). Repo contains framework/evorefuse.py (the core evolutionary algorithm), datasets/evo_test.jsonl (582 pseudo-malicious instructions), datasets/evo_align.json (3,085 SFT/DPO pairs), metric/ scripts (PRR, CRR, lexical, LongPPL), finetune/ YAMLs (SFT/DPO), and analysis/visualization scripts — directly implementing all paper contributions."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo FishT0ucher__EVOREFUSE is unambiguously the paper's own implementation: the paper itself states the code URL as https://github.com/FishT0ucher/EVOREFUSE, the README cites the exact NeurIPS 2025 paper, and all paper components (evolutionary framework, datasets, metrics, fine-tuning configs, analysis scripts) are present. The audit's findings are legitimately written against the correct repo and concern runnability bugs and metric discrepancies within the author's own code, not a mis-identified repo.",
+  "audit_impact": "None — the audit correctly identified the core repo and all findings are validly scoped to it. No finding claims 'no code' or 'code missing'; the findings are about runnability issues (undefined openai.generate, placeholder paths) and metric discrepancies within the confirmed author repo.",
+  "recommended_action": "No correction needed. The provenance is clean: one core repo, correctly identified. Findings remain valid and should be retained as-is."
+}

@@ -1,0 +1,10 @@
+{
+  "py_files_scanned": 205,
+  "hits": {
+    "FID/Frechet/Inception": [],
+    "ID-similarity-metric": [],
+    "LPIPS-as-metric (eval loop)": [],
+    "generic-metric-aggregation": []
+  },
+  "any_metric_computation_found": false
+}

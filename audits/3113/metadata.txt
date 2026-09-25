@@ -1,0 +1,5 @@
+paper_number: 3113
+title: L-MTP: Leap Multi-Token Prediction Beyond Adjacent Context for Large Language Models
+authors: Xiaohao Liu, Xiaobo Xia, Weixiang Zhao, Manyi Zhang, Xianzhi Yu, Xiu Su, Shuo Yang, See-Kiong Ng, Tat-Seng Chua
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/94688d323a78c2f4979eb742f7050c42-Abstract-Conference.html
+category: empirical

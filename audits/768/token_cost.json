@@ -1,0 +1,19 @@
+{
+  "folder": "768_A_High_Dimensional_Statistical_Method_for_Optimizing_Transfe",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 8375,
+    "output": 18024,
+    "cache_write": 258978,
+    "cache_read": 5875115
+  },
+  "total_tokens": 6160492,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 15.15
+}

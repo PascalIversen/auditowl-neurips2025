@@ -1,0 +1,80 @@
+{
+  "runs_per_paper": 10,
+  "papers": [
+    {
+      "paper": "1829",
+      "runs": [
+        "_robustness_new/1829/run_01",
+        "_robustness_new/1829/run_02",
+        "_robustness_new/1829/run_03",
+        "_robustness_new/1829/run_04",
+        "_robustness_new/1829/run_05",
+        "_robustness_new/1829/run_06",
+        "_robustness_new/1829/run_07",
+        "_robustness_new/1829/run_08",
+        "_robustness_new/1829/run_09",
+        "_robustness_new/1829/run_10"
+      ]
+    },
+    {
+      "paper": "1333",
+      "runs": [
+        "_robustness_new/1333/run_01",
+        "_robustness_new/1333/run_02",
+        "_robustness_new/1333/run_03",
+        "_robustness_new/1333/run_04",
+        "_robustness_new/1333/run_05",
+        "_robustness_new/1333/run_06",
+        "_robustness_new/1333/run_07",
+        "_robustness_new/1333/run_08",
+        "_robustness_new/1333/run_09",
+        "_robustness_new/1333/run_10"
+      ]
+    },
+    {
+      "paper": "2657",
+      "runs": [
+        "_robustness_new/2657/run_01",
+        "_robustness_new/2657/run_02",
+        "_robustness_new/2657/run_03",
+        "_robustness_new/2657/run_04",
+        "_robustness_new/2657/run_05",
+        "_robustness_new/2657/run_06",
+        "_robustness_new/2657/run_07",
+        "_robustness_new/2657/run_08",
+        "_robustness_new/2657/run_09",
+        "_robustness_new/2657/run_10"
+      ]
+    },
+    {
+      "paper": "2578",
+      "runs": [
+        "_robustness_new/2578/run_01",
+        "_robustness_new/2578/run_02",
+        "_robustness_new/2578/run_03",
+        "_robustness_new/2578/run_04",
+        "_robustness_new/2578/run_05",
+        "_robustness_new/2578/run_06",
+        "_robustness_new/2578/run_07",
+        "_robustness_new/2578/run_08",
+        "_robustness_new/2578/run_09",
+        "_robustness_new/2578/run_10"
+      ]
+    },
+    {
+      "paper": "2371",
+      "runs": [
+        "_robustness_new/2371/run_01",
+        "_robustness_new/2371/run_02",
+        "_robustness_new/2371/run_03",
+        "_robustness_new/2371/run_04",
+        "_robustness_new/2371/run_05",
+        "_robustness_new/2371/run_06",
+        "_robustness_new/2371/run_07",
+        "_robustness_new/2371/run_08",
+        "_robustness_new/2371/run_09",
+        "_robustness_new/2371/run_10"
+      ]
+    }
+  ]
+}

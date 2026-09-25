@@ -1,0 +1,19 @@
+{
+  "data_splits": {
+    "data/toxicity_pairwise/split_0.jsonl": false,
+    "data/toxicity_pairwise/split_1.jsonl": false
+  },
+  "toxicity_pairwise_dir_contents": [
+    "down.txt"
+  ],
+  "exp_dir_exists": false,
+  "imported_but_not_in_req": [
+    "datasets",
+    "lm_eval",
+    "numpy",
+    "peft",
+    "wandb"
+  ],
+  "detoxify_checkpoint_arg": "todo/toxic_original-c1212f89.ckpt",
+  "detoxify_checkpoint_exists": false
+}

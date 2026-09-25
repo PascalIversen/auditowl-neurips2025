@@ -1,0 +1,17 @@
+{
+  "paper_id": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs",
+  "title": "Spectral Learning for Infinite-Horizon Average-Reward POMDPs",
+  "repos": [
+    {
+      "name": "alesnow97__Spectral_Learning_POMDP",
+      "role": "core",
+      "evidence": "README.md: 'official implementation of the paper *Spectral Learning for Infinite-Horizon Average-Reward POMDPs* published at the 39th Conference on Neural Information Processing Systems (NeurIPS 2025)' — exact title + venue match. Git commit author 'Alessio <aleruss97@gmail.com>' and owner 'alesnow97' match first author Alessio Russo (Politecnico di Milano). strategy/Mixed_Spectral_ucrl/ holds MXUCRL_algorithm.py (class MixedSpectralUCRLAlgorithm) and SD_strategy_mixed_spectral_for_regret.py — the paper's headline Mixed Spectral Estimation / Mixed Spectral UCRL method. run_estimation_error_experiments.py + run_regret_experiments.py reproduce the paper's two experiment types (Section 7); NeurIPS_experiments/ holds the saved runs. SEEU/SMUCRL/Oracle subdirs are the Table-1 baselines, correctly placed as comparison methods."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo is unambiguously the authors' own core implementation: its README names this exact paper title and NeurIPS 2025 venue as the 'official implementation', the repo owner/commit author (alesnow97 / Alessio aleruss97@gmail.com) matches first author Alessio Russo, and it contains the named headline method (Mixed Spectral UCRL in strategy/Mixed_Spectral_ucrl/MXUCRL_algorithm.py) plus the estimation-error and regret experiment drivers matching Section 7. Source-present is fully justified.",
+  "audit_impact": "None adverse. The audit's findings are bug/traceability concerns written against a confirmed core repo (inverted t-quantile CI band in plots/run_regret_plot.py:ci2; get_base_path() looping on absent dir 'NeurIPS_Average_Reward_POMDP'; Fig.4 assumption-violating regret data not separately labeled). No finding asserts 'no code'; the repo was correctly classified as the paper's own code and the findings target real artifacts within it.",
+  "recommended_action": "No change. Keep paper as source-present with core repo alesnow97/Spectral_Learning_POMDP; existing bug/traceability findings stand as written against the author code."
+}

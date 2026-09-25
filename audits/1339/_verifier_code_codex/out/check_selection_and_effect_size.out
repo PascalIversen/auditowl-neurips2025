@@ -1,0 +1,51 @@
+=== (a) Tab. A.4 sweep (framework 3) vs the headline Tab. 1 row ===
+
+ layers  dropout  heads |  L2 avg  Col avg    
+----------------------------------------------------
+      4      0.1      8 |    0.62     0.20  
+      1      0.1      8 |    0.72     0.20  
+      2      0.1      8 |    0.61     0.21  <- min L2
+      6      0.1      8 |    0.66     0.22  
+      4     0.05      8 |    0.70     0.21  
+      4     0.15      8 |    0.63     0.21  
+      4      0.1      4 |    0.64     0.18  <- min collision
+      4      0.1      2 |    0.62     0.20  
+
+Tab. 1 'E3AD(VAD-Base)' row = L2 (0.35, 0.62, 0.96, 0.64), Col (0.06, 0.13, 0.36, 0.18)
+  -> matches Tab. A.4 sweep row(s): [(4, 0.1, 4)]
+  -> that row has the MINIMUM collision (0.18) but NOT the minimum L2 (0.64 vs best 0.61)
+
+projects/configs/EAD/EAD_based_pretrain.py eeg_decoder (lines 116-131): num_layers=4, dropout=0.1, num_heads=4
+  -> the ONE released config is exactly the best-collision sweep row (4, 0.1, 4).
+
+Total configurations the appendix reports on this split: 8 (A.4) + 6 (A.3) + 3 (A.5) + 3 frameworks (Tab. 4) = 20
+
+=== (b) which annotation file do val and test read? ===
+
+   379|     train=dict(
+   382|         ann_file=data_root + 'vad_nuscenes_infos_temporal_train.pkl',
+   398|     val=dict(type=dataset_type,
+   401|              ann_file=data_root + 'vad_nuscenes_infos_temporal_val.pkl',
+   405|              map_ann_file=data_root + 'nuscenes_map_anns_val.json',
+   410|     test=dict(type=dataset_type,
+   413|               ann_file=data_root + 'vad_nuscenes_infos_temporal_val.pkl',
+   417|               map_ann_file=data_root + 'nuscenes_map_anns_val.json',
+
+  -> val and test both point at 'vad_nuscenes_infos_temporal_val.pkl': 2 of 5 ann_file lines.
+  -> there is no third, held-out split; the split the sweep is scored on IS
+     the split Tab. 1 reports.
+
+=== (c) how many collision events does the headline gain represent? ===
+
+COMPARISON                                      delta pp    n=6019    n=5000    n=4819    n=4000
+------------------------------------------------------------------------------------------------
+VAD-Base -> E3AD(VAD-Base), avg collision           0.04       2.4       2.0       1.9       1.6
+VAD-Base -> E3AD(VAD-Base), 3 s collision           0.05       3.0       2.5       2.4       2.0
+UniAD -> E3AD(UniAD), avg collision                 0.08       4.8       4.0       3.9       3.2
+best vs 2nd-best sweep row (A.4), avg col           0.02       1.2       1.0       1.0       0.8
+
+  -> cells are the number of scored samples whose collision verdict must flip
+     to produce the reported difference. Every headline open-loop gain in the
+     paper is a single-seed difference of ~2-5 collision events.
+
+wrote /home/author/Projects/neurips_audit/audits/1339_Embodied_Cognition_Augmented_End2End_Autonomous_Driving/_verifier_code_codex/out/selection_and_effect_size.csv

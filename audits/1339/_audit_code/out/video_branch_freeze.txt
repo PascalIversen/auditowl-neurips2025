@@ -1,0 +1,1 @@
+hardcoded trainable video keys proj.0/proj.2 match ZERO real params (proj.1/proj.3) for both mlp configs; under 'missing_trainable' the video branch is fully frozen, contradicting paper Eq.(4)/§3.2.

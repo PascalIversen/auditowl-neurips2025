@@ -1,0 +1,5 @@
+paper_number: 1023
+title: Over-squashing in Spatiotemporal Graph Neural Networks
+authors: Ivan Marisca, Jacob Bamberger, Cesare Alippi, Michael Bronstein
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/30cdb8f140341beda5f7a8767a4b102d-Abstract-Conference.html
+category: empirical

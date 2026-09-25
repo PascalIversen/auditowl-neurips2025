@@ -1,0 +1,246 @@
+{
+  "paper": "913",
+  "seeds": [
+    {
+      "sid": "S01",
+      "slot": "MAJOR-MISS",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/models/triton_nn/gat.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/models/triton_kernels/gat.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/models/triton_kernels/gat3d.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/triton_tests/gat.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/triton_tests/test2d_gat.py",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/triton_tests/test3d_gat.py",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the complete TS-GAT experiment implementation",
+      "description": "Delete every released GAT implementation and its supporting kernels/tests, leaving the advertised GAT option with imports and routing but no executable aggregation code. This removes the pipeline behind the TS-GAT column of Table 1 rather than replacing it with a stub.",
+      "paper_anchor": "Further to this, we provide zero-shot experiments with TS-Mean and TS-GAT, which are TS-GNNs using MeanGNN and GAT, respectively (as their aggregation function)."
+    },
+    {
+      "sid": "S03",
+      "slot": "MAJOR-DIFF",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/transforms/normalize.py",
+          "line": 13,
+          "action": "replace"
+        }
+      ],
+      "title": "Replace node-wise L2 normalization with graph-wide feature standardization",
+      "description": "Use a complete, differentiable z-score preprocessing method that centers and scales each feature using all nodes in a graph. The implementation is numerically guarded and functional, but it is a different preprocessing geometry from the paper's per-node L2 projection.",
+      "paper_anchor": "Lastly, we apply L2 normalization to each node\u2019s feature vector."
+    },
+    {
+      "sid": "S06",
+      "slot": "MAJOR-METH",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/helpers/datasets.py",
+          "line": 78,
+          "action": "replace"
+        },
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/helpers/datasets.py",
+          "line": 294,
+          "action": "replace"
+        }
+      ],
+      "title": "Expose official test labels as training labels",
+      "description": "For datasets that provide official masks, merge the test mask into the train mask during loading. Test-node labels then enter both least-squares fitting and the visible-label input used by the main model, while evaluation still scores those same nodes.",
+      "paper_anchor": "Datasets. We use an ensemble of 29 node classification datasets and their respective official splits."
+    },
+    {
+      "sid": "S07",
+      "slot": "MAJOR-BUG",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/helpers/constants.py",
+          "line": 2,
+          "action": "replace"
+        },
+        {
+          "file": "benfinkelshtein__EquivarianceEverywhere/helpers/constants.py",
+          "line": 5,
+          "action": "replace"
+        }
+      ],
+      "title": "Clamp final class logits before cross-entropy",
+      "description": "Wrap the central task loss so it applies ReLU to final class scores before CrossEntropyLoss. Training and evaluation still run, but every negative logit is collapsed to zero before the softmax implicit in cross-entropy.",
+      "paper_anchor": "Finally, the label projection map \u03a0C is applied to obtain node-wise predictions."
+    }
+  ],
+  "candidates": [
+    {
+      "fid": "run_01/gat-modules-missing",
+      "run": "run_01",
+      "anchor_candidate": "seed:S01",
+      "status": "finding",
+      "category": "missing",
+      "file": "helpers/gnn_type.py",
+      "line_start": 14,
+      "title": "gnn_type.py imports two GAT modules that do not exist; nothing imports",
+      "claim": "The top of helpers/gnn_type.py imports `triton_tests.gat.GATConv` and `models.triton_nn.gat.TritonGAT`, but neither `triton_tests/gat.py` nor `models/triton_nn/gat.py` exists in the repo (a full-tree `find` and a `grep -rn 'class GATConv|class TritonGAT'` return nothing).",
+      "concern": "These are module-level imports, and helpers/arguments.py imports helpers.gnn_type, which main.py imports first \u2014 so every entrypoint raises ModuleNotFoundError before any experiment starts, and the GAT / TS-GAT results (Table 1 TS-GAT column, GAT baseline) have no runnable code."
+    },
+    {
+      "fid": "run_01/single-train-graph-hardcoded-cora",
+      "run": "run_01",
+      "anchor_candidate": "unassigned",
+      "status": "finding",
+      "category": "missing",
+      "file": "helpers/train_test_setup.py",
+      "line_start": 29,
+      "title": "No way to train on a single non-cora graph (Table 2 / Table 5 setup)",
+      "claim": "The only single-graph training set is cora: `trainset1` returns `[DataSet.cora]`, and `inc_trainset` with train_size=1 uses TRAIN_MULTISETS[0]=[] \u2192 also `[cora]`. There is no CLI/enum path to train on a single graph other than cora.",
+      "concern": "Table 2 (pretraining-source sensitivity: cora / chameleon / roman-empire / wiki-cs) and Table 5 (trained on cora / roman-empire / chameleon / wiki-cs) require training on single non-cora graphs, which the shipped code cannot do without editing the source."
+    },
+    {
+      "fid": "run_01/baseline-code-absent",
+      "run": "run_01",
+      "anchor_candidate": "unassigned",
+      "status": "finding",
+      "category": "missing",
+      "file": "main.py",
+      "line_start": 4,
+      "title": "End-to-end MeanGNN/GAT and GraphAny baselines (3 of 5 Table 1 columns) not in repo",
+      "claim": "The only entrypoint builds and evaluates the TS-GNN (GFM). There is no code path for the three comparison columns in Table 1: the end-to-end MeanGNN baseline, the end-to-end GAT baseline, or GraphAny.",
+      "concern": "3 of the 5 Table 1 columns (and the GraphAny curves in Figure 3 / Table 2) cannot be regenerated from this repo; GraphAny is an external repo, but the two end-to-end GNN baselines have no training script here."
+    },
+    {
+      "fid": "run_01/deps-unlisted",
+      "run": "run_01",
+      "anchor_candidate": "unassigned",
+      "status": "finding",
+      "category": "missing",
+      "file": "helpers/datasets.py",
+      "line_start": 16,
+      "title": "No requirements file; ogb and scikit-learn imported but not in install instructions",
+      "claim": "The repo has no requirements.txt / environment.yml / setup.py / pyproject.toml (verified by `find`). The README install block (README.md:8-14) lists torch, torchvision/audio, torch_scatter/sparse/cluster/spline, torch-geometric, neptune, triton \u2014 but not `ogb` (imported here) or `scikit-learn` (used in transforms/pca.py, transforms/least_squares.py, helpers/split_data.py).",
+      "concern": "`import ogb` and `import sklearn` will fail on a clean environment built only from the README, and no pinned dependency manifest exists, so the environment cannot be rebuilt deterministically."
+    },
+    {
+      "fid": "run_01/test-label-leakage-align-masks",
+      "run": "run_01",
+      "anchor_candidate": "seed:S06",
+      "status": "finding",
+      "category": "methodology",
+      "file": "helpers/datasets.py",
+      "line_start": 86,
+      "title": "align_masks folds test_mask into train_mask; test labels enter the label-prop input at eval",
+      "claim": "For any dataset that ships train+test masks, align_masks sets train_mask = train_mask | test_mask (test nodes become members of train_mask), while test_mask is left unchanged. At evaluation, experiment.py:243-244 builds `train_y` = labels of all `train_mask` nodes, gfm.py:80 sets `lp_mask = train_mask` (is_batch=False) and propagates those labels; accuracy is then scored on `data.test_mask` (experiment.py:249,256) \u2014 i.e. the test nodes' own ground-truth labels are fed to the model that predicts them.",
+      "concern": "This is a leakage channel on the ~15 datasets with official splits (heterophilous, planetoid pubmed/citeseer, wiki-net, WebKB, texas, wiki-cs, arxiv): the evaluated test nodes have their true labels in the model's label input (and the LS/pool operators in transforms/least_squares.py:106-112,122-123 are fit on `data.train_mask` = train\u222atest), whereas the val split is excluded \u2014 so val and test are not evaluated under the same protocol. Because the headline Table 1 margin of TS-Mean over GraphAny is only ~0.2% (65.78 vs 65.56), even small leakage-driven inflation on the official-split datasets could account for the claimed advantage. (Ambiguity: the model is trained with target labels masked, so it is not explicitly trained to copy self-labels, and the reported per-dataset numbers on leaked datasets are not obviously ceiling-inflated \u2014 the magnitude is unverified without a GPU run.)"
+    },
+    {
+      "fid": "run_01/ablation-bias-toggle-not-exposed",
+      "run": "run_01",
+      "anchor_candidate": "unassigned",
+      "status": "question",
+      "category": "missing",
+      "file": "transforms/least_squares.py",
+      "line_start": 106,
+      "title": "No CLI toggle for the 'plain' / 'no-bias' LS ablations (Tables 3\u20134)",
+      "claim": "The pool\u2192label/feature LS operators (with a bias term `_b`) are always computed and always applied (equiv_layer.py:67-71). `ls_num_layers < 0` disables only the extra ls2x/ls2y layers, and there is no argument to remove the bias term. Tables 3\u20134 report 'plain' (no LS, no bias) and 'LS-only' (no bias) variants.",
+      "concern": "The exact ablation configurations in Tables 3 and 4 do not appear to be selectable through the provided CLI, so they may have required manual source edits \u2014 I could not confirm how they were produced."
+    },
+    {
+      "fid": "run_02/missing-triton-gat-import-crash",
+      "run": "run_02",
+      "anchor_candidate": "seed:S01",
+      "status": "finding",
+      "category": "missing",
+      "file": "helpers/gnn_type.py",
+      "line_start": 14,
+      "title": "gnn_type.py imports two GAT modules absent from the repo; every run crashes at import",
+      "claim": "gnn_type.py unconditionally imports `triton_tests.gat.GATConv` and `models.triton_nn.gat.TritonGAT`, but no `gat.py` exists anywhere in the repo (only `triton_tests/test2d_mean.py`, `models/triton_nn/mean_gnn.py`, `models/triton_kernels/mean.py` are present).",
+      "concern": "Because main.py -> helpers.arguments -> helpers.gnn_type, `python main.py` raises ModuleNotFoundError at import for EVERY --gnn_type (MEAN_GNN and GAT), so no result in the paper can be reproduced; additionally TS-GAT (Table 1, Table 4) has no backbone implementation at all."
+    },
+    {
+      "fid": "run_02/env-not-reproducible",
+      "run": "run_02",
+      "anchor_candidate": "unassigned",
+      "status": "finding",
+      "category": "missing",
+      "file": "README.md",
+      "line_start": 9,
+      "title": "No dependency manifest; ogb & scikit-learn undeclared; Neptune logging is mandatory with a placeholder token",
+      "claim": "The only dependency spec is this README block (no requirements.txt / setup.py / environment.yml exists). It omits `ogb` (imported at helpers/datasets.py:16) and `scikit-learn` (imported at transforms/pca.py:3, transforms/least_squares.py:11, helpers/split_data.py:4), and does not pin neptune/triton.",
+      "concern": "The environment cannot be rebuilt turn-key, and even once built the run cannot start: experiment.py:45 calls `neptune.init_run(project=args.project, api_token=API_TOKEN)` unconditionally with `API_TOKEN = \"...\"` (constants.py:15) and a required --project, with no offline/disable path."
+    },
+    {
+      "fid": "run_02/readme-hidden-dim-invalid-flag",
+      "run": "run_02",
+      "anchor_candidate": "unassigned",
+      "status": "finding",
+      "category": "bug",
+      "file": "README.md",
+      "line_start": 44,
+      "title": "Documented 'best config' commands use an undefined --hidden_dim flag and omit --ls_num_layers",
+      "claim": "The README 'best configs' pass `--hidden_dim 16`, but arguments.py defines `--hid_channel` (there is no `--hidden_dim`); the commands also never pass `--ls_num_layers`, so it stays at the default -1 (LS mixing disabled).",
+      "concern": "Run verbatim, the documented command aborts with `error: unrecognized arguments: --hidden_dim 16`, and even after renaming the flag it runs the no-least-squares variant rather than the LS-enabled model the paper highlights."
+    },
+    {
+      "fid": "run_02/feature-norm-not-l2",
+      "run": "run_02",
+      "anchor_candidate": "seed:S03",
+      "status": "finding",
+      "category": "difference",
+      "file": "transforms/normalize.py",
+      "line_start": 13,
+      "title": "Paper says per-node L2 normalization; code applies per-feature z-scoring across nodes",
+      "claim": "`NormalizeTransform` applies `normalize` to `data.x` (normalize.py:24), which subtracts the per-feature mean over nodes (dim=0) and divides by the per-feature std \u2014 i.e. column-wise z-scoring across nodes.",
+      "concern": "The paper states 'we apply L2 normalization to each node's feature vector', which is a per-node (dim=1) unit-norm rescaling; the code implements a different operation (per-feature standardization), a code\u2194paper mismatch in a core preprocessing step of a feature-invariance method."
+    },
+    {
+      "fid": "run_02/pca-co-physics-1024-vs-2048",
+      "run": "run_02",
+      "anchor_candidate": "unassigned",
+      "status": "finding",
+      "category": "difference",
+      "file": "helpers/datasets.py",
+      "line_start": 226,
+      "title": "co-physics is PCA-reduced to 1024 components in code but 2048 in the paper",
+      "claim": "The code reduces full_cora and co_cs to 2048 PCA components but co_physics to 1024.",
+      "concern": "The paper states full-Cora, co-cs, and co-physics are all reduced 'with PCA to 2048 components'; the code uses 1024 for co-physics, a code\u2194paper discrepancy in the input dimensionality for that dataset."
+    },
+    {
+      "fid": "run_02/test-label-leakage-align-masks",
+      "run": "run_02",
+      "anchor_candidate": "seed:S06",
+      "status": "finding",
+      "category": "methodology",
+      "file": "helpers/datasets.py",
+      "line_start": 86,
+      "title": "align_masks unions train+test, so evaluated nodes' labels are fed to the model at test time",
+      "claim": "For every dataset with predefined splits, `align_masks` sets `train_mask = train_mask | test_mask` (leaving `test_mask` unchanged), so `test_mask \u2286 train_mask`. Downstream, `train_mask` is the model's visible label/support set: the least-squares mixers are fit on `data.*[data.train_mask]` (least_squares.py:108,112,122-132), and at eval `train_y[~data.train_mask]=0` (experiment.py:243-244) with `lp_mask = train_mask` (gfm.py:74,80) feeds those labels through the layers (each backbone has a self/root term); the same nodes are then scored via `test_mask` (experiment.py:249).",
+      "concern": "The labels of the evaluated (test) nodes are visible to the model \u2014 both as least-squares targets and as propagated labels \u2014 while those nodes are scored, so the reported 'zero-shot test accuracy' on the ~15 predefined-split datasets (citeseer, pubmed, roman-empire, amazon-ratings, minesweeper, tolokers, questions, chameleon, squirrel, cornell, wisconsin, texas, actor, wiki-cs, arxiv) is not a clean held-out estimate; the ~13 datasets that instead use `graphany_mask_splits` (disjoint 20\u00b7C train nodes) are unaffected."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "findings": [
+    {
+      "id": "3457_Understanding_and_Rectifying_Safety_Perception_Distortion_in/utility-benchmark-code-absent",
+      "verdict": "keep",
+      "reason": "The cited README pipeline spans lines 41–84, with its heading one line before the nominal range, and both the required check script and a repository-wide search confirm that no MME, MMBench, MM-Vet, or MOSSBench preparation or scoring code is present.",
+      "changed": "verdict restored from reject to keep because the one-line citation offset does not invalidate the substantive evidence"
+    },
+    {
+      "id": "3457_Understanding_and_Rectifying_Safety_Perception_Distortion_in/hf-backend-llava-only",
+      "verdict": "lowered",
+      "reason": "The HF activation and steering path hardcodes LlavaForConditionalGeneration and the public model map exposes only LLaVA checkpoints, but an unregistered generation-only QwenVL vLLM class exists, so the core reproducibility concern holds while the claim that Qwen-VL is wholly unimplemented is overstated.",
+      "changed": "nothing",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding"
+    }
+  ]
+}

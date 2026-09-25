@@ -1,0 +1,6 @@
+model,unique_success_idx,implied_asr_pct,paper_asr_pct,verdict
+Claude 3.5 Sonnet,124,78.0,78,MATCH
+GPT-4o,139,87.4,87,MATCH
+Gemini Pro,75,47.2,50,MATCH
+Llama3 8B,149,93.7,94,MATCH
+Circuit Breaking,59,37.1,52,MISMATCH

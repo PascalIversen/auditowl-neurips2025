@@ -1,0 +1,202 @@
+{
+  "schema_version": "1",
+  "audit": "run_01",
+  "audit_md": "/home/author/Projects/neurips_audit/for_rebuttal/recall_experiment/major_recall_study/runs/1171/run_01/audit.md",
+  "generated_at": "2026-08-03T01:33:46.125865+00:00",
+  "findings": [
+    {
+      "id": "run_01/network-module-absent",
+      "category": "missing",
+      "topic": "repository provenance / model definition",
+      "title": "Core model models/mel/Network.py (MYNET) is absent; nothing runs",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "models/mel/fscil_trainer.py",
+      "line_start": 7,
+      "line_end": 7,
+      "quote": "from .Network import MYNET\n",
+      "claim": "fscil_trainer.py imports MYNET from a sibling module models/mel/Network.py and instantiates it at line 30 (self.model = MYNET(self.args)), but no Network.py (or any definition of MYNET) exists anywhere in the repo — models/mel/ contains only fscil_trainer.py and helper.py. A recursive grep for MYNET/Network finds only these two import/use sites.",
+      "concern": "The entire proposed model — the ResNet-12 wrapper, the meta-category vector m (referenced as model.module.attention), the mask-generation conv g_phi (Eq. 5), the transformation block h_phi (Eq. 10), the classifiers fc/part_fc, update_fc, encode1, and the forward pass producing (logits1, logits2, x1, part) — is missing, so the code cannot run and no result (Tables 1–6, Figs 3–9) is reproducible or traceable.",
+      "resolution": "Authors: please add models/mel/Network.py defining MYNET, or confirm which file defines the model and how logits1/logits2 (S_high/S_low) and the meta-category vector are constructed.",
+      "cross_refs": [
+        "encoder-frozen-in-base-optimizer",
+        "dataset-loaders-absent"
+      ],
+      "paper_ref": "Section 3.3 (Eqs. 4-15); Figure 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "network-module-absent",
+      "audit": "run_01",
+      "audit_md_line": 53
+    },
+    {
+      "id": "run_01/dataset-loaders-absent",
+      "category": "missing",
+      "topic": "expected code completeness / datasets",
+      "title": "Dataset loaders for CUB200, Stanford Cars, FGVCAircraft are absent (only Stanford Dogs present)",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "dataloader/data_utils.py",
+      "line_start": 6,
+      "line_end": 7,
+      "quote": "if args.dataset == 'cub200':\n    import dataloader.cub200.cub200 as Dataset\n",
+      "claim": "set_up_datasets imports dataloader.cub200.cub200 (line 7), dataloader.StanfordCar.StanfordCar (line 24), and dataloader.Aircraft.Aircraft (line 32), but dataloader/ contains only the StanfordDog package (StanfordDog.py + autoaugment.py); the cub200/, StanfordCar/, and Aircraft/ loader modules do not exist. Selecting any of those three datasets raises ModuleNotFoundError at set_up_datasets.",
+      "concern": "Three of the four benchmark datasets cannot be loaded, so the CUB200 / Stanford Cars / FGVCAircraft columns of Table 1 and all of Tables 3, 5, 6 and Figure 3(a,c,d) are unreproducible from this repo.",
+      "resolution": "Authors: please add the cub200, StanfordCar, and Aircraft dataloader modules (the paper reports results on all four datasets).",
+      "cross_refs": [
+        "network-module-absent"
+      ],
+      "paper_ref": "Section 4.1; Tables 1,3,5,6",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "dataset-loaders-absent",
+      "audit": "run_01",
+      "audit_md_line": 77
+    },
+    {
+      "id": "run_01/unlisted-unused-hard-dependency",
+      "category": "missing",
+      "topic": "dependencies / reproducibility",
+      "title": "No dependency spec; helper.py hard-imports torch_dct (unlisted, never used)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "models/mel/helper.py",
+      "line_start": 5,
+      "line_end": 5,
+      "quote": "import torch_dct as dct\n",
+      "claim": "helper.py (imported by fscil_trainer -> train.py) unconditionally imports the third-party package torch_dct at module load, yet dct is never referenced anywhere (grep for 'dct.' returns nothing). The repo ships no requirements.txt / environment.yml / setup.py, so torch, torchvision, tqdm, and torch_dct are neither pinned nor listed.",
+      "concern": "Running train.py fails with ModuleNotFoundError unless torch_dct is installed even though it serves no purpose, and with no dependency manifest the environment cannot be rebuilt to the versions used for the paper's numbers.",
+      "resolution": "Authors: remove the unused torch_dct import and add a pinned requirements.txt (torch/torchvision/tqdm/etc. versions).",
+      "cross_refs": [],
+      "paper_ref": "Checklist Q5 (open access to code); Appendix A.3",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "unlisted-unused-hard-dependency",
+      "audit": "run_01",
+      "audit_md_line": 102
+    },
+    {
+      "id": "run_01/incremental-train-from-test-split",
+      "category": "methodology",
+      "topic": "data splitting / train-test leakage",
+      "title": "Incremental few-shot TRAIN set is drawn from test.csv and overlaps the eval test set",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "dataloader/StanfordDog/StanfordDog.py",
+      "line_start": 98,
+      "line_end": 116,
+      "quote": "def SelectfromTxt(self, data2label, index_path):\n    index = [x.strip().split('/')[2] for x in open(index_path, 'r').readlines()]\n    target_by_class = {}\n    for name in index:\n        img_path = os.path.join(self.IMAGE_PATH, name)\n        target_by_class[name.split('_')[0]] = data2label[img_path]\n\n    csv_path = osp.join(self.SPLIT_PATH, 'test.csv')\n    lines = [x.strip() for x in open(csv_path, 'r').readlines()][1:]\n    data_tmp = []\n    targets_tmp = []\n    for class_name, target in target_by_class.items():\n        names = [line.split(';')[0] for line in lines\n                 if line.split(';')[0].split('_')[0] == class_name][:5]\n        for name in names:\n            data_tmp.append(os.path.join(self.IMAGE_PATH, name))\n            targets_tmp.append(target)\n\n    return data_tmp, targets_tmp\n",
+      "claim": "SelectfromTxt (the incremental-session training loader, called by get_new_dataloader for sessions >= 1) uses the session_N.txt few-shot list only to recover the set of novel-class wnids, then selects the first 5 images per class from test.csv (line 105) as the training data. _audit_code/check_incremental_leakage.py confirms on the shipped files: train.csv (8200) and test.csv (12380) are disjoint; for session_2..session_8 the intended few-shot images are all in train.csv, yet all 175 loaded training images (25 per session) come from test.csv and none from train.csv, and train/test wnid ordering is identical so labels align.",
+      "concern": "Every incremental novel class is trained (prototype in update_fc and the meta-category evolution in Eq. 9) on images that are themselves in the evaluation test set, so all incremental-session and novel-class accuracies — the paper's central FSCIL claim — are inflated by direct train/test leakage.",
+      "resolution": "Authors: SelectfromTxt should load the exact few-shot images listed in session_N.txt (which live in train.csv), not 5 images per class from test.csv; please re-run Stanford Dogs after fixing the source split and report the change.",
+      "cross_refs": [
+        "base-model-selected-on-test"
+      ],
+      "check_script": "_audit_code/check_incremental_leakage.py",
+      "paper_ref": "Section 4.1 / Appendix A.3 (5-way 5-shot); Tables 1,2,4; Figs 4-7",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "incremental-train-from-test-split",
+      "audit": "run_01",
+      "audit_md_line": 141
+    },
+    {
+      "id": "run_01/base-model-selected-on-test",
+      "category": "methodology",
+      "topic": "hyperparameter tuning / model selection on test",
+      "title": "Base checkpoint (and reported base accuracy) selected by best TEST accuracy",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "models/mel/fscil_trainer.py",
+      "line_start": 71,
+      "line_end": 79,
+      "quote": "tsl, tsa = test(self.model, testloader, epoch, args, session)\n\n# save better model\nif (tsa * 100) >= self.trlog['max_acc'][session]:\n    self.trlog['max_acc'][session] = float('%.3f' % (tsa * 100))\n    self.trlog['max_acc_epoch'] = epoch\n    save_model_dir = os.path.join(args.save_path, 'session' + str(session) + '_max_acc.pth')\n    torch.save(dict(params=self.model.state_dict()), save_model_dir)\n    self.best_model_dict = deepcopy(self.model.state_dict())\n",
+      "claim": "During the 400-epoch base session the model is evaluated on the test loader every epoch, and the checkpoint kept (best_model_dict) plus the reported max_acc[0] is the epoch with the highest TEST accuracy. There is no separate validation split; testloader is built from test.csv (get_base_dataloader) and is the same set that is reported. best_model_dict is then carried into every incremental session (load_state_dict at line 62).",
+      "concern": "Selecting the checkpoint/epoch by test-set accuracy biases the reported base-session number upward and propagates an optimistically-selected backbone into all incremental sessions; the reported accuracies are a max over 400 epochs of test performance rather than a held-out estimate.",
+      "resolution": "Authors: select the checkpoint on a held-out validation split (not the test set) and report the resulting accuracies; confirm whether baselines were selected the same way.",
+      "cross_refs": [
+        "incremental-train-from-test-split"
+      ],
+      "paper_ref": "Tables 1,3-6 (session 0 column)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "base-model-selected-on-test",
+      "audit": "run_01",
+      "audit_md_line": 184
+    },
+    {
+      "id": "run_01/encoder-frozen-in-base-optimizer",
+      "category": "methodology",
+      "topic": "optimization / trainable parameters",
+      "title": "Base optimizer excludes module.encoder.* — backbone may never train (needs missing MYNET to confirm)",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "question",
+      "file": "utils.py",
+      "line_start": 209,
+      "line_end": 222,
+      "quote": "excluded = set()\nexcluded.add('module.attention')\n\nparams = [\n    param\n    for name, param in model.named_parameters()\n    if name not in excluded and not name.startswith('module.encoder.')\n]\n\noptimizer = torch.optim.SGD(\n    [{'params': params, 'lr': args.lr_base},\n     {'params': model.module.attention, 'lr': args.lr_base / 10}],\n    momentum=args.momentum, nesterov=True,\n    weight_decay=args.decay)\n",
+      "claim": "get_optimizer builds the base-session SGD with two param groups: `params` (every parameter EXCEPT module.attention and EXCEPT anything whose name starts with 'module.encoder.') and module.attention. Any parameter named module.encoder.* is therefore in no group and receives no gradient step. This is the only optimizer used by base_train.",
+      "concern": "If module.encoder is the from-scratch ResNet-12 backbone (models/resnet12_encoder.py; replace_base_fc also uses a mode='encoder'), then under the documented command (no -model_dir, random init) the backbone is never updated and stays at Kaiming random init, which cannot yield the reported ~65% base accuracy — contradicting the paper's core claim of evolving/trained fine-grained feature extraction. I cannot confirm module.encoder is that backbone because MYNET (Network.py) is missing, so this is filed as a question.",
+      "resolution": "Authors: confirm whether module.encoder is the trainable ResNet-12 backbone and, if so, why it is excluded from the base optimizer (is it intended to be pretrained/frozen, and if so from which checkpoint?).",
+      "cross_refs": [
+        "network-module-absent"
+      ],
+      "paper_ref": "Section 3.3.1 (Insight 0); Appendix A.3",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "encoder-frozen-in-base-optimizer",
+      "audit": "run_01",
+      "audit_md_line": 216
+    },
+    {
+      "id": "run_01/cub200-accavg-prose-mismatch",
+      "category": "methodology",
+      "topic": "statistical integrity / arithmetic consistency",
+      "title": "Prose 'AccAvg 1.21% higher than CLOSER on CUB200' disagrees with Table 1 (gap = 1.48)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "our method achieves a 1.21% higher average accuracy (AccAvg) than CLOSER on the CUB200\n",
+      "claim": "Table 1 (and per-session Table 3, whose rows I re-averaged: Ours = 45.44, CLOSER = 43.95) gives a CUB200 AccAvg gap of 45.44 - 43.95 = 1.48/1.49, not 1.21. The companion AccT claim in the same sentence (4.26%) matches exactly (36.00 - 31.74 = 4.26), so the 1.21 figure is the inconsistent one.",
+      "concern": "Minor arithmetic inconsistency between the prose and the paper's own tables; it does not change the ranking (Ours still leads on CUB200), but the stated margin is understated.",
+      "resolution": "Authors: correct the CUB200 AccAvg margin (should be ~1.48-1.49%) or clarify what '1.21%' refers to.",
+      "cross_refs": [],
+      "paper_ref": "Section 4.2; Table 1 / Table 3 CUB200 columns",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "cub200-accavg-prose-mismatch",
+      "audit": "run_01",
+      "audit_md_line": 253,
+      "line_start": null,
+      "line_end": null
+    }
+  ]
+}

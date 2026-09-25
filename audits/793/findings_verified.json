@@ -1,0 +1,134 @@
+{
+  "schema_version": "1",
+  "audit": "793_Mixture_of_Inputs_Text_Generation_Beyond_Discrete_Token_Samp",
+  "audit_md": "audits/793_Mixture_of_Inputs_Text_Generation_Beyond_Discrete_Token_Samp/audit.md",
+  "generated_at": "2026-05-30T06:23:31.735607+00:00",
+  "findings": [
+    {
+      "id": "793_Mixture_of_Inputs_Text_Generation_Beyond_Discrete_Token_Samp/benchmark-harness-absent",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "Repo lacks the harness for almost all paper tables/figures (only 2 of 4 benchmarks, no stats/ablation/throughput code)",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "example/README.md",
+      "line_start": 66,
+      "line_end": 72,
+      "quote": "## Results\n\nResults are stored in the `results/` directory as JSON files with naming convention:\n```\n{model_name}={dataset_name}={top_p}={temperature}.json\n```\nWe provide results for 2 sample runs.\n",
+      "claim": "The repo provides eval drivers only for AIME and CountDown4 (example/aime_moi.py, example/tinyzero_moi.py) and ships exactly 2 sample result JSONs; there is no code for GPQA-Diamond, LiveCodeBench, the McNemar tests (Table A3), the 64-run variance study (Table A4), the throughput analysis (Table 3), the prompt-blending case study (Table 2 / §7.2), MT-Bench (Table A2), or the hyperparameter-importance analysis (Fig. 2, best-of-N + RandomForestRegressor).",
+      "concern": "Most headline numbers (Table 1's GPQA/LiveCodeBench columns, all appendix tables, both analysis figures, and every reported statistical test) cannot be reproduced from this repository, and there is no grid-search/seed-averaging driver to regenerate Table 1 itself.",
+      "resolution": "Authors: please release the GPQA (lm-eval-harness) and LiveCodeBench drivers, the grid-search/seed-averaging script that produces Table 1, and the scripts computing Tables 2–A4 and Figs. 2–3.",
+      "cross_refs": [
+        "§5",
+        "§6",
+        "§7",
+        "Appendix A-G"
+      ],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "benchmark-harness-absent",
+      "audit": "793_Mixture_of_Inputs_Text_Generation_Beyond_Discrete_Token_Samp",
+      "audit_md_line": 53,
+      "verdict": "keep",
+      "reason": "Quote at README.md:66-72 matches exactly; example/ contains only aime_moi.py and tinyzero_moi.py, and results/ holds exactly the 2 claimed JSONs, with no GPQA/LiveCodeBench/stats/ablation scripts present anywhere in the repo.",
+      "changed": "nothing"
+    },
+    {
+      "id": "793_Mixture_of_Inputs_Text_Generation_Beyond_Discrete_Token_Samp/example-scripts-omit-logprobs-rely-on-patch-default",
+      "category": "missing",
+      "topic": "reproducibility / required configuration",
+      "title": "Example drivers never request logprobs; MOI silently depends on the patch's hidden default of 20",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "example/aime_moi.py",
+      "line_start": 147,
+      "line_end": 151,
+      "quote": "sampling_params = SamplingParams(\n    temperature=args.temperature,\n    max_tokens=args.max_new_tokens,\n    top_p=args.top_p,\n)\n",
+      "claim": "The example SamplingParams omit `logprobs=`, so MOI's mixing support is entirely determined by the patch's hard-coded fallback of 20 logprobs in gpu_input_batch.py:330; the number of candidate tokens mixed is never surfaced as a documented, tunable experimental knob.",
+      "concern": "A reader reproducing the paper has no in-script signal that the method only mixes over the top-20 tokens, and changing this number (which materially affects the entropy term, see topk-truncation-vs-paper) requires editing patched vLLM internals.",
+      "resolution": "Authors: document the effective top-k used for mixing and expose it as a configurable parameter, or confirm all reported numbers used the default 20.",
+      "cross_refs": [
+        "topk-truncation-vs-paper"
+      ],
+      "check_script": "_audit_code/check_moi_formula.py",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "example-scripts-omit-logprobs-rely-on-patch-default",
+      "audit": "793_Mixture_of_Inputs_Text_Generation_Beyond_Discrete_Token_Samp",
+      "audit_md_line": 82,
+      "verdict": "keep",
+      "reason": "Quote at aime_moi.py:147-151 matches exactly with no logprobs= parameter; gpu_input_batch.py:327-330 confirms the hard-coded fallback of 20 when logprobs is None.",
+      "changed": "nothing"
+    },
+    {
+      "id": "793_Mixture_of_Inputs_Text_Generation_Beyond_Discrete_Token_Samp/topk-truncation-vs-paper",
+      "category": "difference",
+      "topic": "method faithfulness / entropy",
+      "title": "Mixing and entropy use top-20 logprobs, not the full vocabulary V the paper's Eq.(1)(2) define",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "mixinputs/gpu_model_runner.py",
+      "line_start": 1202,
+      "line_end": 1209,
+      "quote": "prior_probs = torch.softmax(logprobs_slice, dim=-1)\n\nn = prior_probs.size(-1)\n# add eps for numerical stability\nlogp = torch.log(prior_probs.clamp_min(1e-12))\nH = -(prior_probs * logp).sum(dim=-1)\nH_max = torch.log(torch.tensor(float(n), device=prior_probs.device))\nnormalized_entropy = (H / H_max).view(-1, 1, 1)\n",
+      "claim": "`prior_probs` is a softmax over only the top-k retained logprobs (k defaults to 20 via gpu_input_batch.py:327-330), then renormalized; the normalized entropy uses H_max=log(n=k), and the embedding mixture (lines 1218-1228) sums over only these k tokens. The paper's Eq.(1) sums over all V vocabulary tokens and Eq.(2) normalizes entropy by log V.",
+      "concern": "Computing H over the renormalized top-20 instead of the full vocab inflates the normalized entropy by ~2× in peaked distributions (verified, _audit_code/out/moi_formula_check.txt), and H is exactly the coefficient that interpolates between the distribution and the sampled token (Eq.5), so the implemented interpolation differs systematically from the one described — even though the truncated procedure is itself a valid, sound approximation.",
+      "resolution": "Authors: clarify in the paper that mixing/entropy are computed over the top-k (default 20) tokens, and report sensitivity to k; or compute H over the full vocabulary to match Eq.(2).",
+      "cross_refs": [
+        "example-scripts-omit-logprobs-rely-on-patch-default",
+        "moi-weights-match-paper"
+      ],
+      "check_script": "_audit_code/check_moi_formula.py",
+      "paper_ref": "Eq. (1), (2); Section 4.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "topk-truncation-vs-paper",
+      "audit": "793_Mixture_of_Inputs_Text_Generation_Beyond_Discrete_Token_Samp",
+      "audit_md_line": 120,
+      "verdict": "keep",
+      "reason": "Quote at gpu_model_runner.py:1202-1209 matches exactly; H_max = log(n) where n = prior_probs.size(-1) (the truncated top-k slice defaulting to 20), confirming the entropy normalization is over k not V as the paper's Eq.(2) specifies.",
+      "changed": "nothing"
+    },
+    {
+      "id": "793_Mixture_of_Inputs_Text_Generation_Beyond_Discrete_Token_Samp/vllm-pin-too-loose",
+      "category": "difference",
+      "topic": "dependencies / reproducibility",
+      "title": "setup.py pins vllm>=0.8.5 but the patch copies version-specific private vLLM internals",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "setup.py",
+      "line_start": 11,
+      "line_end": 13,
+      "quote": "requirements = [\n    'vllm>=0.8.5',\n]\n",
+      "claim": "The package declares `vllm>=0.8.5`, but mixinputs/gpu_model_runner.py and gpu_input_batch.py are verbatim copies of vLLM 0.8.5's private `vllm.v1.worker` classes with the MOI hook spliced in, and vllm_patch.py monkey-patches those exact symbols; the README itself states 'Requires vllm == 0.8.5 or vllm == 0.8.5.post1'.",
+      "concern": "An open `>=0.8.5` range will install newer vLLM versions whose refactored internals break the patch, so a naive `pip install` does not reproduce the paper's environment despite the README's tighter (but non-enforced) instruction.",
+      "resolution": "Authors: pin `vllm==0.8.5` (or `==0.8.5.post1`) in setup.py to match the README and the copied internals.",
+      "cross_refs": [],
+      "paper_ref": "Appendix G (vLLM implementation)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "vllm-pin-too-loose",
+      "audit": "793_Mixture_of_Inputs_Text_Generation_Beyond_Discrete_Token_Samp",
+      "audit_md_line": 153,
+      "verdict": "keep",
+      "reason": "Quote at setup.py:11-13 matches exactly (vllm>=0.8.5); README line 37 explicitly states 'Requires vllm == 0.8.5 or vllm == 0.8.5.post1', confirming the mismatch between the enforced constraint and the documented requirement.",
+      "changed": "nothing"
+    }
+  ]
+}

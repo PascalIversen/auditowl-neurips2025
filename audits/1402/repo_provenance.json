@@ -1,0 +1,17 @@
+{
+  "paper_id": "1402_Memory_Injection_Attacks_on_LLM_Agents_via_Query_Only_Intera",
+  "title": "Memory Injection Attacks on LLM Agents via Query-Only Interaction",
+  "repos": [
+    {
+      "name": "dsh3n77__MINJA",
+      "role": "core",
+      "evidence": "README.md header reads 'Memory Injection Attacks on LLM Agents via Query-Only Interaction (NeurIPS 2025)' and its BibTeX lists all 8 paper authors (Dong, Xu, He, Li, Tang, Liu, Liu, Xiang). git remote = github.com/dsh3n77/MINJA; owner 'dsh3n77' encodes 1st author Shen Dong (dongshe1@msu.edu). Layout matches the paper's three agents (rap/=RAP+WebShop, EHR/=medical, QA/). rap/minja.py implements the named method: victim/target terms, inject_num, indication_prompts, and 'malicious_instructions (attack queries & indication prompts & PSS)' where PSS = the paper's Progressive Shortening Strategy; rap/indication_prompt_template.json and rap/victim_target_pair/ present."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo is unambiguously the authors' own MINJA implementation: README states this exact paper title + NeurIPS 2025, the citation enumerates the full author list, the GitHub owner maps to the first author, and the source (rap/minja.py et al.) implements the paper's named primitives (indication prompt, bridging steps, progressive shortening strategy / PSS) across the three reported agents. The rap/README's note that MINJA is 'implemented on top of' the third-party RAP framework and WebShop environment marks those as dependencies, but minja.py itself is the paper's own attack code, not a baseline or library. Only the [no-author-signal]-tagged URL was a weak prior; the README/citation override it decisively.",
+  "audit_impact": "None of the audit's 9 findings is mis-targeted. All are 'missing-piece' or 'difference' findings written against the genuine author core (e.g. 'No code computes the Utility-Drop (UD) metric reported in every Table 1 row', 'Table 3 retrieval-noise ablation has no implementing code', 'QA agent ships 1 of the 9 reported victim-target pairs', 'QA driver hardcodes gpt-4o'). No finding asserts 'no code exists', so there is no stale-no-code error and no wrong-repo contamination. The findings stand as legitimate reproducibility gaps against the real implementation.",
+  "recommended_action": "Keep paper as source-present (verdict correct). No reclassification needed. The existing missing/difference findings remain valid against the core repo; no finding needs retargeting."
+}

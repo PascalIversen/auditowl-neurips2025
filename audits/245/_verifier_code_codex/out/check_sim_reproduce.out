@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/author/Projects/neurips_audit/audits/245_Adaptive_Data_Borrowing_for_Improving_Treatment_Effect_Estim/_verifier_code_codex/check_sim_reproduce.py", line 11, in <module>
+    import simulate_data as sd  # noqa
+ModuleNotFoundError: No module named 'simulate_data'

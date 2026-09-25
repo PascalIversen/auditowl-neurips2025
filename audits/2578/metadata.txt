@@ -1,0 +1,5 @@
+paper_number: 2578
+title: DOVE: Efficient One-Step Diffusion Model for Real-World Video Super-Resolution
+authors: Zheng Chen, Zichen Zou, Kewei Zhang, Xiongfei Su, Xin Yuan, Yong Guo, Yulun Zhang
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/7b04ec5f2b89d7f601382c422dfe07af-Abstract-Conference.html
+category: empirical

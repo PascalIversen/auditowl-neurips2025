@@ -1,0 +1,17 @@
+{
+  "paper_id": "4465_DePass_Unified_Feature_Attributing_by_Simple_Decomposed_Forw",
+  "title": "DePass: Unified Feature Attributing by Simple Decomposed Forward Pass",
+  "repos": [
+    {
+      "name": "TsinghuaC3I__Decomposed-Forward-Pass",
+      "role": "core",
+      "evidence": "README states 'official implementation of [NeurIPS 2025] DePass: Unified Feature Attributing by Simple Decomposed Forward Pass'; repo owner TsinghuaC3I matches paper institution (Tsinghua University, C3I lab); contains DePass/manager.py implementing decomposed forward pass, experiment folders matching all paper sections (Input-Level, Model-Component-Level, Subspace-Level); paper text at line 19 cites exactly 'https://github.com/TsinghuaC3I/Decomposed-Forward-Pass'."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "A single repo was cloned (TsinghuaC3I__Decomposed-Forward-Pass) and it is unambiguously the paper's own official implementation: the README explicitly names the NeurIPS 2025 paper title and venue, the repo owner matches the paper's institutional affiliation (Tsinghua C3I), and the paper's text at line 19 directly links to this URL. The repo structure maps exactly onto the paper's experiment sections. All audit findings were written against this correct repo and are substantive code-quality/reproducibility issues (missing scoring script for Table 1, missing aggregation notebook, subspace-projection mismatch, broken API call), not misidentification errors. No non-core repos were cloned.",
+  "audit_impact": "None. The audit correctly identified the core repo and all findings are against the right codebase. No findings need to be reassigned or invalidated.",
+  "recommended_action": "No action needed on repo provenance. The existing findings (especially high-severity table1-accuracy-no-script and medium-severity subspace-projection-mismatch) remain valid and are directed at the correct repo."
+}

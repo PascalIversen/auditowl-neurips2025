@@ -1,0 +1,22 @@
+{
+  "paper_id": "1339_Embodied_Cognition_Augmented_End2End_Autonomous_Driving",
+  "title": "Embodied Cognition Augmented End2End Autonomous Driving (E³AD / E-Cubed-AD)",
+  "repos": [
+    {
+      "name": "AIR-DISCOVER__E-cubed-AD (main branch)",
+      "role": "stub",
+      "evidence": "README.md is 14 bytes: '# Embodied Cognition Augmented End2End Autonomous Driving / $$E^3AD$$: E-Cubed-AD / code coming soon'. Only README.md is tracked on the default main branch; no training/eval/method code. This is the shallow snapshot the ORIGINAL audit cloned and wrongly read as 'no code'."
+    },
+    {
+      "name": "AIR-DISCOVER__E-cubed-AD__E-VAD (non-default E-VAD branch)",
+      "role": "core",
+      "evidence": "git remote = https://github.com/AIR-DISCOVER/E-cubed-AD (the EXACT URL stated in the paper abstract, p.1), owner org AIR-DISCOVER = the authors' lab (Tsinghua AIR). 364 .py files. Stage-1 'Driving-Thinking Model': projects/eeg_vedio/src/models/contrastive_model.py (CLIP-style InfoNCE), eeg_encoder/labram.py (the LaBraM EEG large model cited [13]), video_encoder/video_encoder.py (Video Swin). Stage-2: projects/mmdet3d_plugin/EAD/EAD.py registers class EAD(MVXTwoStageDetector) docstring 'EAD model. Driving_think based VAD', importing the frozen VideoEncoder 'driving_thinking model' — exactly the paper's embodied-cognition-augmented E2E planner. Open-loop nuScenes metrics in EAD/planner/metric_stp3.py. This IS the paper's own core implementation."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "stale_no_code_finding",
+  "confidence": "high",
+  "rationale": "The paper's own core (both stages of E³AD) is present on the AIR-DISCOVER/E-cubed-AD E-VAD branch, owned by the authors and matching the code URL printed in the abstract. The original audit cloned only the shallow default main branch (a 14-byte 'code coming soon' README) and emitted four high-severity 'no code / no training / no eval / no ablation' findings — i.e. it asserted no code exists while the author core was in fact published on a non-default branch. This is the classic stale-no-code failure mode. The second clone (E-VAD) is the author core; the main-branch clone is a stub, not a different paper / baseline / dependency, so this is stale_no_code rather than contamination.",
+  "audit_impact": "CORRECTED by the in-place re-audit dated 2026-06-03: audit.md and findings_verified.json fetched the E-VAD branch and marked the four absence findings (repo-only-readme-placeholder, training-code-absent, eval-code-absent-openloop-closedloop, ablation-code-absent) as supplement_verdict='false_positive' (code exists), excluding them from severity totals. That pass's surviving findings were themselves superseded by a final re-audit on 2026-08-05, which re-verified the E-VAD code end to end and replaced them with a new set of 9 in-scope findings under new ids -- see findings_verified.json in this folder for the current, authoritative list (e.g. the dataset-absence and closed-loop-harness gaps persist under the ids missing-stage1-dataset-and-loader and missing-closedloop-code). No high-severity 'missing code' finding remains wrongly written against a non-core repo.",
+  "recommended_action": "No further flip needed: the paper is source-present/core-present. The current in-scope findings (findings_verified.json, dated 2026-08-05) are the authoritative record of genuine code-vs-claim gaps against the E-VAD branch; any older finding-id list is historical. Optionally tighten the clone tooling to fetch non-default branches so the original stale-no-code error does not recur for other papers."
+}

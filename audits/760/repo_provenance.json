@@ -1,0 +1,17 @@
+{
+  "paper_id": "760_Mesh_Interpolation_Graph_Network_for_Dynamic_and_Spatially_I",
+  "title": "Mesh Interpolation Graph Network for Dynamic and Spatially Irregular Global Weather Forecasting",
+  "repos": [
+    {
+      "name": "compasszzn__MIGN",
+      "role": "core",
+      "evidence": "README states 'This is the official PyTorch Lightning implementation of the paper: Mesh Interpolation Graph Network for Dynamic and Spatially Irregular Global Weather Forecasting, accepted at NeurIPS 2025.' Repo owner 'compasszzn' matches first author Zinan Zheng (email zzheng078@..., username compasszzn). Contains models/model.py (MIGN Lightning module), models/hgnn_gcn_edge_wo_sh.py (core network), main.py entry-point, configs/hgnn_gcn_edge.yaml, and data pipeline scripts — all corresponding directly to the paper's MIGN method. Paper (line 136) states 'The code is available at the link: https://github.com/compasszzn/MIGN'."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo (compasszzn__MIGN) is unambiguously the official implementation: README declares it the official NeurIPS 2025 implementation, repo owner matches first author, arXiv link (2509.20911) references this paper, and the paper itself points to this GitHub URL. All findings in audit.md were written against this correct repo. No non-core repos were cloned.",
+  "audit_impact": "None. The cloned repo is the correct author implementation. All findings (generalization-split-missing, persistence-baseline-missing, etc.) were written against the right code and remain valid.",
+  "recommended_action": "No action needed on repo provenance. The audit findings stand as written."
+}

@@ -1,0 +1,1156 @@
+{
+  "assignments": [
+    {
+      "paper": "1023",
+      "run": "run_01",
+      "fid": "run_01/realworld-model-selection-on-test",
+      "assigned_to": "seed:S06",
+      "method": "adjudicated",
+      "mechanism_correct": true,
+      "justification": "Same file/line (run_realworld.py:200), same mechanism: test loader fed as val_dataloader, checkpoint selection reads test."
+    },
+    {
+      "paper": "1023",
+      "run": "run_01",
+      "fid": "run_01/mptcn-diff-uses-gcnconv",
+      "assigned_to": "seed:S03",
+      "method": "adjudicated",
+      "mechanism_correct": true,
+      "justification": "Same file/line (gnn_mixin.py:26), same mechanism: DiffConv imported but never used, GCNConv substituted."
+    },
+    {
+      "paper": "1023",
+      "run": "run_01",
+      "fid": "run_01/rocketman-driver-config-missing",
+      "assigned_to": "seed:S01",
+      "method": "adjudicated",
+      "mechanism_correct": true,
+      "justification": "Claim explicitly names the memory.py dump-term change (an S01 edit site) and describes the missing ROCKETMAN sweep; status:question (self-flagged low-confidence) but mechanism is correct -> counts as a hit per author's 2026-08-02 call (question = hit, guides reviewer attention)."
+    },
+    {
+      "paper": "1023",
+      "run": "run_01",
+      "fid": "run_01/table2-fosr-rgcn-missing",
+      "assigned_to": "baseline:adjudicated",
+      "method": "adjudicated",
+      "mechanism_correct": null,
+      "justification": "Re-detects the pre-existing missing FOSR/RGCN Table-2 baseline gap, not a planted seed."
+    },
+    {
+      "paper": "1023",
+      "run": "run_01",
+      "fid": "run_01/temporal-tree-neighboursmatch-missing",
+      "assigned_to": "baseline:adjudicated",
+      "method": "adjudicated",
+      "mechanism_correct": null,
+      "justification": "Re-detects the pre-existing missing TemporalTreeNeighboursMatch/Table-5 baseline gap, not a planted seed."
+    },
+    {
+      "paper": "2167",
+      "run": "run_01",
+      "fid": "/maf-is-actually-realnvp",
+      "assigned_to": "seed:S03",
+      "method": "adjudicated",
+      "mechanism_correct": true,
+      "justification": "Same file/line (maf.py:130), same mechanism: MaskedAutoregressiveFlow built from SimpleRealNVP, not MAF."
+    },
+    {
+      "paper": "2167",
+      "run": "run_01",
+      "fid": "/hypervolume-diversity-not-computed",
+      "assigned_to": "emergent",
+      "method": "adjudicated",
+      "mechanism_correct": null,
+      "justification": "Missing hypervolume-diversity metric is a real gap unrelated to any of 2167's 4 seeded mechanisms."
+    },
+    {
+      "paper": "2167",
+      "run": "run_01",
+      "fid": "/baselines-not-in-repo",
+      "assigned_to": "emergent",
+      "method": "adjudicated",
+      "mechanism_correct": null,
+      "justification": "Missing DiCE/CCHVAE/ReViSE/TABCF/Wachter baselines is unrelated to any seed."
+    },
+    {
+      "paper": "2167",
+      "run": "run_01",
+      "fid": "/classification-probability-not-computed",
+      "assigned_to": "emergent",
+      "method": "adjudicated",
+      "mechanism_correct": null,
+      "justification": "Claims metrics.py never CALLS predict_proba at all (a metrics-harness gap) -- a different mechanism from S07 (predict_proba itself uses ReLU instead of softmax); not a match."
+    },
+    {
+      "paper": "2167",
+      "run": "run_01",
+      "fid": "/actionability-masks-absent",
+      "assigned_to": "emergent",
+      "method": "adjudicated",
+      "mechanism_correct": null,
+      "justification": "Missing actionability masks for Tables 2/6 is unrelated to any seed."
+    },
+    {
+      "paper": "2167",
+      "run": "run_01",
+      "fid": "/hardcoded-foreign-syspath",
+      "assigned_to": "emergent",
+      "method": "adjudicated",
+      "mechanism_correct": null,
+      "justification": "Hardcoded author sys.path entries are unrelated to any seed."
+    },
+    {
+      "paper": "2167",
+      "run": "run_01",
+      "fid": "/epsilon-sparsity-absolute-not-relative",
+      "assigned_to": "emergent",
+      "method": "adjudicated",
+      "mechanism_correct": null,
+      "justification": "Epsilon-sparsity metric formula deviation is a real but unseeded issue."
+    },
+    {
+      "paper": "2167",
+      "run": "run_01",
+      "fid": "/adult-subsampled-to-2000",
+      "assigned_to": "emergent",
+      "method": "adjudicated",
+      "mechanism_correct": null,
+      "justification": "Adult dataset subsampling (2000 vs 32000) is a real but unseeded issue."
+    },
+    {
+      "paper": "2167",
+      "run": "run_02",
+      "fid": "/nice-import-breaks-package",
+      "assigned_to": "seed:S01",
+      "method": "adjudicated",
+      "mechanism_correct": true,
+      "justification": "Explicitly confirms 'no nice.py exists in the repo' -- direct evidence of S01's deletion, miscategorized as bug instead of missing but mechanism is correct."
+    },
+    {
+      "paper": "2167",
+      "run": "run_02",
+      "fid": "/mlp-predict-proba-relu-not-softmax",
+      "assigned_to": "seed:S07",
+      "method": "adjudicated",
+      "mechanism_correct": true,
+      "justification": "Same file, adjacent line (multilayer_perceptron.py:95 vs seed's 98), same mechanism: predict_proba uses ReLU instead of softmax."
+    },
+    {
+      "paper": "2167",
+      "run": "run_02",
+      "fid": "/maf-class-builds-realnvp",
+      "assigned_to": "seed:S03",
+      "method": "adjudicated",
+      "mechanism_correct": true,
+      "justification": "Same file/line (maf.py:130), same mechanism as run_01's match."
+    },
+    {
+      "paper": "2167",
+      "run": "run_02",
+      "fid": "/bank-train-test-leakage",
+      "assigned_to": "seed:S05",
+      "method": "adjudicated",
+      "mechanism_correct": true,
+      "justification": "Same file, adjacent line (bank.py:36 vs seed's 34), same mechanism: test concatenated into train before preprocessing."
+    },
+    {
+      "paper": "2167",
+      "run": "run_02",
+      "fid": "/hypervolume-metric-not-implemented",
+      "assigned_to": "emergent",
+      "method": "adjudicated",
+      "mechanism_correct": null,
+      "justification": "Same unseeded hypervolume-metric gap as run_01."
+    },
+    {
+      "paper": "2167",
+      "run": "run_02",
+      "fid": "/sparsity-metric-absolute-not-relative",
+      "assigned_to": "emergent",
+      "method": "adjudicated",
+      "mechanism_correct": null,
+      "justification": "Same unseeded epsilon-sparsity formula issue as run_01."
+    },
+    {
+      "paper": "2167",
+      "run": "run_02",
+      "fid": "/adult-subsampled-to-2000",
+      "assigned_to": "emergent",
+      "method": "adjudicated",
+      "mechanism_correct": null,
+      "justification": "Same unseeded Adult-subsampling issue as run_01."
+    },
+    {
+      "paper": "1023",
+      "run": "run_02",
+      "fid": "run_02/test-set-model-selection",
+      "assigned_to": "seed:S06",
+      "justification": "Claim matches S06 exactly: test dataloader fed to trainer.fit as val_dataloaders, so val_MAE-based early stopping/checkpointing selects on the test set.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1023",
+      "run": "run_02",
+      "fid": "run_02/diffconv-is-actually-gcn",
+      "assigned_to": "seed:S03",
+      "justification": "Claim matches S03 exactly: DiffConvMixin sets gnn_class = GCNConv, byte-identical to GCNMixin.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1023",
+      "run": "run_02",
+      "fid": "run_02/fosr-rgcn-rewiring-absent",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Already present in the paper's original pre-seed audit as fosr-rgcn-missing; unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1023",
+      "run": "run_02",
+      "fid": "run_02/tree-neighboursmatch-absent",
+      "assigned_to": "emergent",
+      "justification": "Distinct, genuine gap (missing tree generator/classification target for Table 5) not in original audit findings or any seed mechanism.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1023",
+      "run": "run_02",
+      "fid": "run_02/rocketman-config-missing",
+      "assigned_to": "seed:S01",
+      "justification": "Question-status but mechanism matches S01 precisely: no rocketman config/sweep exists anywhere in the repo.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "913",
+      "run": "run_01",
+      "fid": "run_01/gat-modules-missing",
+      "assigned_to": "seed:S01",
+      "justification": "Identifies the exact deleted GAT files causing the TS-GAT pipeline to have no executable code.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "913",
+      "run": "run_01",
+      "fid": "run_01/single-train-graph-hardcoded-cora",
+      "assigned_to": "emergent",
+      "justification": "Unrelated single-graph training-set limitation, matches no seed and absent from original baseline findings.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_01",
+      "fid": "run_01/baseline-code-absent",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Re-detects original audit's pre-existing 'baselines-not-in-repo' finding.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_01",
+      "fid": "run_01/deps-unlisted",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Re-detects original audit's pre-existing 'no-dependency-spec' finding.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_01",
+      "fid": "run_01/test-label-leakage-align-masks",
+      "assigned_to": "seed:S06",
+      "justification": "Describes exactly S06's mechanism: align_masks unions test_mask into train_mask.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "913",
+      "run": "run_01",
+      "fid": "run_01/ablation-bias-toggle-not-exposed",
+      "assigned_to": "emergent",
+      "justification": "Distinct mechanism (missing CLI bias-toggle) from the baseline's missing-driver-script finding; not tied to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_02",
+      "fid": "run_02/missing-triton-gat-import-crash",
+      "assigned_to": "seed:S01",
+      "justification": "Same as run_01: deleted GAT triton modules cause import crash, matching S01.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "913",
+      "run": "run_02",
+      "fid": "run_02/env-not-reproducible",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Re-detects original audit's 'no-dependency-spec-and-hard-neptune-dep' finding.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_02",
+      "fid": "run_02/readme-hidden-dim-invalid-flag",
+      "assigned_to": "emergent",
+      "justification": "Genuinely new observation (README flag mismatch), not in seed list or original baseline findings.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_02",
+      "fid": "run_02/feature-norm-not-l2",
+      "assigned_to": "seed:S03",
+      "justification": "Matches S03 exactly: per-feature z-scoring across nodes instead of per-node L2 normalization.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "913",
+      "run": "run_02",
+      "fid": "run_02/pca-co-physics-1024-vs-2048",
+      "assigned_to": "emergent",
+      "justification": "New PCA-dimensionality discrepancy not covered by any seed or original baseline findings.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_02",
+      "fid": "run_02/test-label-leakage-align-masks",
+      "assigned_to": "seed:S06",
+      "justification": "Same align_masks train/test mask union leakage mechanism as run_01's S06 match.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "2657",
+      "run": "run_01",
+      "fid": "run_01/ablation-script-missing",
+      "assigned_to": "seed:S01",
+      "justification": "AblationStudies.py referenced by README but absent from the repo, matching the planted deletion.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "2657",
+      "run": "run_01",
+      "fid": "run_01/epoch-selection-not-implemented",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Matches original audit's 'csm-epoch-selection-missing' finding; unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2657",
+      "run": "run_01",
+      "fid": "run_01/no-holdout-split",
+      "assigned_to": "seed:S05",
+      "justification": "Precisely describes load_adbench_npz setting X_train and X_test_normal to the same X_normal copy, matching S05.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "2657",
+      "run": "run_02",
+      "fid": "run_02/epoch-selection-code-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Same CSM/hardcoded-epoch issue as run_01, unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2657",
+      "run": "run_02",
+      "fid": "run_02/ablation-script-missing",
+      "assigned_to": "seed:S01",
+      "justification": "Same as run_01: AblationStudies.py absent, matching the planted deletion.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "2657",
+      "run": "run_02",
+      "fid": "run_02/no-heldout-split-leakage",
+      "assigned_to": "seed:S05",
+      "justification": "load_adbench_npz reuses all normals for train and test, train_test_split never called, matching S05.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "2657",
+      "run": "run_02",
+      "fid": "run_02/contam-duplicate-normal-leakage",
+      "assigned_to": "seed:S05",
+      "justification": "Same S05-planted duplication propagating into ContaminationStudies.py, same underlying defect surfaced a second time.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1717",
+      "run": "run_01",
+      "fid": "/optimizer-zero-grad-before-step",
+      "assigned_to": "seed:S08",
+      "justification": "zero_grad() called after backward() and before step(), matching the planted defect exactly.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1717",
+      "run": "run_01",
+      "fid": "/decoder-no-cross-attention",
+      "assigned_to": "seed:S04",
+      "justification": "Conv1d token_mixer + global mean-pool replacing multi-head cross-attention, matching S04 exactly.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1717",
+      "run": "run_01",
+      "fid": "/missing-models-resnet",
+      "assigned_to": "seed:S01",
+      "justification": "models/resnet.py absent, matching the planted file deletion.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1717",
+      "run": "run_02",
+      "fid": "run_02/resnet-module-missing",
+      "assigned_to": "seed:S01",
+      "justification": "Same mechanism as run_01's match: backbone.py imports the deleted models/resnet.py.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1717",
+      "run": "run_02",
+      "fid": "run_02/bert-backbone-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Re-detects the pre-existing missing-BERT-backbone/Table-6 finding; unrelated to any of the four seeds.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1717",
+      "run": "run_02",
+      "fid": "run_02/optimizer-zerograd-discards-grads",
+      "assigned_to": "seed:S08",
+      "justification": "Same planted zero_grad-before-step mechanism as run_01's match.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1717",
+      "run": "run_02",
+      "fid": "run_02/decoder-token-mixer-not-attention",
+      "assigned_to": "seed:S04",
+      "justification": "Same planted conv-mixer-replaces-cross-attention mechanism as run_01's match.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1908",
+      "run": "run_02",
+      "fid": "/csi-experiment-driver-missing",
+      "assigned_to": "seed:S01",
+      "justification": "run_csi.sh/main_csi.py/inference_csi.py absent while CSI support modules are orphaned, matching S01's deletion mechanism.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1908",
+      "run": "run_02",
+      "fid": "/table1-ablation-variants-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Re-detects pre-existing 'ablation-code-missing' finding (Table 1 SH-vs-FLE/phase-off/no-Fourier-loss); unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_02",
+      "fid": "/ble-test-subset-of-train",
+      "assigned_to": "seed:S05",
+      "justification": "Test indices taken from the front of the shuffled array overlap the train prefix, matching S05's leakage mechanism.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1908",
+      "run": "run_02",
+      "fid": "/rfid-render-not-cuda-tracer",
+      "assigned_to": "seed:S04",
+      "justification": "Confirmed by reading the seeded code: softmax-over-Mahalanobis weighting is the planted RBF regression; ComplexGaussianTracer imported but never invoked, matching S04's expected_reasoning exactly.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1908",
+      "run": "run_01",
+      "fid": "/csi-experiment-not-runnable",
+      "assigned_to": "seed:S01",
+      "justification": "README's run_csi.sh/main_csi.py/inference_csi.py all absent, matching S01's three-file deletion exactly.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1908",
+      "run": "run_01",
+      "fid": "/rfid-sparse-density-protocol-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Matches original audit's pre-existing 'density-experiment-missing' finding (Fig 3/6 density sweep absent); unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_01",
+      "fid": "/render-path-not-complex-ray-tracing",
+      "assigned_to": "seed:S04",
+      "justification": "Same file/site as S04 (gaussian_renderer/__init__.py render_rfid) and identical mechanism to run_02's confirmed match: ComplexGaussianTracer imported but never called, softmax blend substituted.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1908",
+      "run": "run_01",
+      "fid": "/transmittance-real-not-complex",
+      "assigned_to": "emergent",
+      "justification": "Different file (scene/gaussian_model.py, not S04's gaussian_renderer/__init__.py site); attenuation-as-real-scalar appears to be a native repo characteristic, not part of S04's specific compositing-replacement patch.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_01",
+      "fid": "/ble-rssi-aggregation-mean-l2-vs-paper-sum-l1",
+      "assigned_to": "emergent",
+      "justification": "Real discrepancy (mean+L2 vs paper's sum+L1 for BLE) not matching any of the 4 seeds and not found in the original audit's baseline findings.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_01",
+      "fid": "/ble-train-test-leakage",
+      "assigned_to": "seed:S05",
+      "justification": "Test indices are a prefix of the shuffled train indices, matching S05's exact leakage mechanism.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "2578",
+      "run": "run_02",
+      "fid": "/sft-predict-sample-wrong-target",
+      "assigned_to": "seed:S03",
+      "justification": "Same mechanism as prior runs' matches: Stage-1 SFT trainer regresses velocity not x0, matching S03's wrapper-algebra defect.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "2578",
+      "run": "run_02",
+      "fid": "/paired-crop-temporal-misalign",
+      "assigned_to": "seed:S07",
+      "justification": "Exact match: paired_random_crop_video draws an independent LQ temporal index, matching S07's site (datasets/utils.py:480) and mechanism precisely. First detection of S07 across all 2578 runs so far.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "2578",
+      "run": "run_02",
+      "fid": "/dover-eval-off-by-one",
+      "assigned_to": "emergent",
+      "justification": "Same recurring real-but-unseeded DOVER off-by-one bug found in every prior 2578 run; not a planted seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_02",
+      "fid": "/stage2-refinement-trainer-missing",
+      "assigned_to": "seed:S01",
+      "justification": "Stage-2 pixel-space trainer and DISTS/frame losses absent, matching S01's deletion mechanism.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "2578",
+      "run": "run_02",
+      "fid": "/ewarp-fastervqa-metric-missing",
+      "assigned_to": "emergent",
+      "justification": "Same recurring real-but-unseeded E*warp/FasterVQA absence found in the earlier max-effort test run; not a planted seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_02",
+      "fid": "/stage1-launcher-trains-on-udm10-testset",
+      "assigned_to": "seed:S05",
+      "justification": "Question-status but mechanism matches S05 precisely: Stage-1 launcher points training data at the UDM10 evaluation set. First detection of S05 across all 2578 runs so far -- both prior runs explicitly claimed 'no leakage found'.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/visual-experiments-absent",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Original audit already found main.py's entrypoint never loads CIFAR-10/MVTec at all (image-domain-code-missing), independent of denoise_net.py's existence -- this re-detects that pre-existing gap, not S02's specific deletion.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/tabular-data-incomplete",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Matches original audit's pre-existing 'datasets-missing' finding (only 4/20 tabular datasets present); unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/ablation-configs-no-driver",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Matches original audit's pre-existing 'ablation-harness-missing' finding; unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/readme-repro-instructions",
+      "assigned_to": "emergent",
+      "justification": "Real but unseeded README-completeness observation, not in the original audit's baseline list.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/hardcoded-data-path",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Exact ID match to the original audit's pre-existing 'hardcoded-data-path' finding; unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/prob-predictor-loop-no-thread",
+      "assigned_to": "emergent",
+      "justification": "Real, distinct bug (log-det/z threading across flow modules) not in the original audit's baseline and not S07's mechanism (S07 is the LipSwish->ReLU activation swap at a different file).",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/affine-coupling-not-contraction",
+      "assigned_to": "seed:S03",
+      "justification": "Exact match: denet.py:56 affine coupling (RealNVP) replaces the paper's i-DenseNet contraction mapping, matching S03's mechanism precisely.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/metric-max-over-transforms",
+      "assigned_to": "seed:S05",
+      "justification": "Exact match: aucPerformance selects best of {s,-s,|s|,s^2} using test labels at utils.py:24, matching S05's mechanism precisely.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/test-eval-during-training-no-val",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Matches original audit's pre-existing 'test-set-model-selection' finding (no val split, test-set monitored during training at main.py:82) almost verbatim; distinct mechanism from S05's score-transform selection at utils.py:24.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/visual-ad-code-absent",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Same pre-existing image-domain-code-missing baseline re-detection as run_01's equivalent finding.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/tabular-datasets-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Same pre-existing datasets-missing baseline re-detection as run_01.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/ablation-sweep-code-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Same pre-existing ablation-harness-missing baseline re-detection as run_01.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/density-loglik-not-chained",
+      "assigned_to": "emergent",
+      "justification": "Same real, distinct log-det/z-threading bug as run_01's equivalent finding; not S07's mechanism.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/hardcoded-abs-data-path",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Same pre-existing hardcoded-data-path baseline re-detection as run_01.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/cudnn-determinism-typo",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Exact ID match to the original audit's pre-existing 'cudnn-determinism-typo' finding; unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/affine-coupling-not-contraction",
+      "assigned_to": "seed:S03",
+      "justification": "Same mechanism as run_01's confirmed S03 match.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/auc-orientation-selection",
+      "assigned_to": "seed:S05",
+      "justification": "Same mechanism as run_01's confirmed S05 match.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/test-set-hparam-selection",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Same pre-existing test-set-model-selection baseline re-detection as run_01's equivalent finding; distinct from S05's mechanism.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_01",
+      "fid": "run_01/network-module-absent",
+      "assigned_to": "seed:S01",
+      "justification": "Core model Network.py (MYNET) absent, matching S01's deletion mechanism exactly.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1171",
+      "run": "run_01",
+      "fid": "run_01/dataset-loaders-absent",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Matches original audit's pre-existing 'missing-dataset-loaders' finding; unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_01",
+      "fid": "run_01/unlisted-unused-hard-dependency",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Matches original audit's pre-existing 'no-dependency-spec' finding; unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_01",
+      "fid": "run_01/incremental-train-from-test-split",
+      "assigned_to": "seed:S06",
+      "justification": "Same file/line as S06 (StanfordDog.py:98), same mechanism: incremental support drawn from test.csv.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1171",
+      "run": "run_01",
+      "fid": "run_01/base-model-selected-on-test",
+      "assigned_to": "emergent",
+      "justification": "Real, distinct methodology observation (base checkpoint selected by test accuracy) not in the original audit's baseline and not matching any of the 4 seeds' mechanisms.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_01",
+      "fid": "run_01/encoder-frozen-in-base-optimizer",
+      "assigned_to": "seed:S07",
+      "justification": "Question-status but mechanism matches S07 precisely: base optimizer excludes module.encoder.* parameters, matching utils.py:212 within window.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1171",
+      "run": "run_01",
+      "fid": "run_01/cub200-accavg-prose-mismatch",
+      "assigned_to": "emergent",
+      "justification": "Real prose-vs-table numeric mismatch, not in original audit baseline and not matching any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_02",
+      "fid": "/mynet-model-file-missing",
+      "assigned_to": "seed:S01",
+      "justification": "Same mechanism as run_01's confirmed S01 match.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1171",
+      "run": "run_02",
+      "fid": "/dataset-loaders-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Same pre-existing missing-dataset-loaders baseline re-detection as run_01.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_02",
+      "fid": "/broader-experiments-no-code",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Matches original audit's pre-existing 'missing-aux-experiments' finding (Fig 8/9/4 alternate benchmarks/backbones/strategies); a DIFFERENT gap from S03's specific residual-connection removal in the default ResNet-12 backbone, which no finding in either run mentions.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_02",
+      "fid": "/no-dependency-spec",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Exact ID match to the original audit's pre-existing 'no-dependency-spec' finding; unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_02",
+      "fid": "/incremental-support-from-test-split",
+      "assigned_to": "seed:S06",
+      "justification": "Same mechanism as run_01's confirmed S06 match.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "1171",
+      "run": "run_02",
+      "fid": "/base-encoder-maybe-frozen",
+      "assigned_to": "seed:S07",
+      "justification": "Same mechanism as run_01's confirmed S07 match (question status again, mechanism correct).",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "run_01/attention-not-attention",
+      "assigned_to": "seed:S03",
+      "justification": "Exact match: math.attention() at math.py:7 computes avg-pool + self-gate instead of self-attention, matching S03's mechanism precisely.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "run_01/metrics-json-missing-crash",
+      "assigned_to": "seed:S06",
+      "justification": "Same root cause as the confirmed S06 match: util.py's patched load_flow_model reads results/flux/metrics.json for checkpoint selection, matching S06's site/mechanism (crash framing rather than leak framing of the same code change).",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "run_01/ensemble-chunk-crash",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Exact match to original audit's pre-existing 'chunk2-cfg-crash' finding; unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "run_01/test-set-checkpoint-selection",
+      "assigned_to": "seed:S06",
+      "justification": "Exact match: checkpoint selected by maximizing SPair test-set PCK at util.py:125, matching S06's mechanism precisely.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "run_01/onlyflux-other-dits-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Matches original audit's pre-existing 'nonflux-and-otherdataset-evals-missing' finding; unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "run_01/dinov2-fusion-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Matches original audit's pre-existing 'dinov2-pca-fusion-missing' finding; unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "run_01/channel-discard-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Exact ID match to original audit's pre-existing 'channel-discard-missing' finding; unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "run_01/nonspair-benchmarks-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Original audit's pre-existing 'nonflux-and-otherdataset-evals-missing' finding explicitly already covers 'no script for PF-Pascal, AP-10K' before any seeding -- this re-detects that pre-existing gap, not S01's specific feat_utils.py deletion (seed/baseline collision, same pattern as 4090's S02).",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "run_01/othertasks-analysis-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Matches original audit's pre-existing 'nonflux-and-otherdataset-evals-missing' finding (also covers ADE20K/HPatches/temporal); unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "run_01/repro-infra-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Matches original audit's pre-existing 'no-readme-no-deps' finding; unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "run_01/img-size-768-vs-960",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Exact match to original audit's pre-existing 'imgsize-768-vs-960' finding; unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/nonflux-dit-extractors-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Same pre-existing nonflux-and-otherdataset-evals-missing baseline re-detection as run_01.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/dinov2-integration-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Same pre-existing dinov2-pca-fusion-missing baseline re-detection as run_01.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/ap10k-pfpascal-eval-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Same seed/baseline collision as run_01's nonspair-benchmarks-missing: the pre-existing nonflux-and-otherdataset-evals-missing finding already covers AP-10K/PF-Pascal absence before any seeding.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/channel-discard-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Same pre-existing channel-discard-missing baseline re-detection as run_01.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/ablation-harness-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Matches original audit's pre-existing 'ablation-toggles-missing' finding; unrelated to any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/aux-tasks-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Same pre-existing nonflux-and-otherdataset-evals-missing baseline re-detection as run_01's othertasks-analysis-missing.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/deps-readme-missing",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Same pre-existing no-readme-no-deps baseline re-detection as run_01.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/analysis-viz-missing",
+      "assigned_to": "emergent",
+      "justification": "Real but unseeded observation (no massive-activation analysis/figure code); not in the original audit's baseline list and not matching any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/pck-single-threshold-missing",
+      "assigned_to": "emergent",
+      "justification": "Real but unseeded observation (only PCK@0.10 computed, not @0.01/@0.05); not in the original audit's baseline list and not matching any seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/chunk2-unpack-crash",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Same pre-existing chunk2-cfg-crash baseline re-detection as run_01's ensemble-chunk-crash.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/img-size-960-vs-768",
+      "assigned_to": "baseline:adjudicated",
+      "justification": "Same pre-existing imgsize-768-vs-960 baseline re-detection as run_01.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/hyperparam-search-split",
+      "assigned_to": "emergent",
+      "justification": "Real but distinct methodology observation (grid-search split for t/k not stated); different mechanism from S06's specific metrics.json-driven checkpoint selection, and not in the original baseline.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_01",
+      "fid": "/stage2-refinement-not-implemented",
+      "assigned_to": "seed:S01",
+      "justification": "Stage-2 pixel refinement (DISTS + frame + image/video mix) has no trainer or loss code, matching S01's deletion mechanism exactly.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "2578",
+      "run": "run_01",
+      "fid": "/vqa-temporal-metric-scripts-unreproducible",
+      "assigned_to": "emergent",
+      "justification": "Recurring real-but-unseeded E*warp/FasterVQA absence (same as earlier 2578 runs); not a planted seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_01",
+      "fid": "/paired-crop-temporal-misalignment",
+      "assigned_to": "seed:S07",
+      "justification": "Exact match: paired_random_crop_video uses independent temporal offsets for HQ vs LQ at datasets/utils.py:480, matching S07's site and mechanism precisely.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "2578",
+      "run": "run_01",
+      "fid": "/sft-x0-vs-inference-vpred-mismatch",
+      "assigned_to": "seed:S03",
+      "justification": "SFT training predicts x0 directly while inference applies v-prediction get_velocity, matching S03's wrapper-algebra defect.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    },
+    {
+      "paper": "2578",
+      "run": "run_01",
+      "fid": "/infer-sh-wrong-gt-path",
+      "assigned_to": "emergent",
+      "justification": "Recurring real-but-unseeded inference.sh-compares-wrong-GT bug (same as earlier 2578 runs); different file/mechanism from S05.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_01",
+      "fid": "/dover-per-sample-off-by-one",
+      "assigned_to": "emergent",
+      "justification": "Recurring real-but-unseeded DOVER off-by-one bug found in every 2578 run; not a planted seed.",
+      "method": "adjudicated",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_01",
+      "fid": "/stage1-config-trains-on-udm10",
+      "assigned_to": "seed:S05",
+      "justification": "Question-status but mechanism matches S05 precisely: train_ddp_one_s1.sh:27 points data_root at the UDM10 evaluation set, same site as before.",
+      "method": "adjudicated",
+      "mechanism_correct": true
+    }
+  ]
+}

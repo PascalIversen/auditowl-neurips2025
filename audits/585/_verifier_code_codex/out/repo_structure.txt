@@ -1,0 +1,10 @@
+ReplaceMe/__init__.py exists: False
+ReplaceMe/init.py exists (misnamed?): True
+LowerTriangularLinear self.* attributes defined: ['weight']
+'triangular_weight' referenced in utils.py: True
+'triangular_weight' defined as attribute: False
+dataset handler keys: ['HuggingFaceFW/fineweb', 'allenai/c4', 'arcee-ai/sec-data-mini', 'wikitext', 'Open-Orca/SlimOrca', 'fineweb_and_orca']
+paper-mentioned calibration sources: ['FineWeb', 'SlimOrca', 'orca_generated', 'Arcee', 'Aya', '4K SlimOrca + 4K Fineweb (fineweb_and_orca)']
+orca_generated handler present: False
+Aya / 66-language handler present: False
+files mentioning CLIP/ViT/vision/coco/eurosat/mimic: ['setup.py']

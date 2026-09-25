@@ -1,0 +1,5 @@
+paper_number: 2911
+title: HyPlaneHead: Rethinking Tri-plane-like Representations in Full-Head Image Synthesis
+authors: Heyuan Li, Kenkun Liu, Lingteng Qiu, Qi Zuo, Keru Zheng, Zilong Dong, Xiaoguang Han
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/8a1d8759bfaeaad3946798e65543c07c-Abstract-Conference.html
+category: empirical

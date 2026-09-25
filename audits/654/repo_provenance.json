@@ -1,0 +1,17 @@
+{
+  "paper_id": "654_Unveiling_Transformer_Perception_by_Exploring_Input_Manifold",
+  "title": "Unveiling Transformer Perception by Exploring Input Manifolds",
+  "repos": [
+    {
+      "name": "alessiomarta__transformers_equivalence_classes",
+      "role": "core",
+      "evidence": "README states 'This repository contains the official implementation of the paper Unveiling Transformer Perception by Exploring Input Manifolds (https://arxiv.org/abs/2410.06019)'. Repo owner 'alessiomarta' matches author Alessio Marta. BibTeX in README lists all five paper authors (Benfenati, Ferrara, Marta, Riva, Rocchetti). The `simec/` package implements SiMEC and SiMExp—the paper's two named algorithms. The paper itself (line 114) points to this exact GitHub URL. Paper PDF and supplementary PDF are bundled in the repo's `paper/` directory."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo (alessiomarta__transformers_equivalence_classes) is unambiguously the authors' official implementation: the README names the exact paper title and arXiv id (2410.06019), lists all five authors, and the paper itself (footnote 1, line 114 of paper_text.txt) gives this GitHub URL. The `simec/` package implements the core SiMEC/SiMExp algorithms; `experiments/` and `analysis/` reproduce Section-4 results; `baselines/` implements the comparison method. All audit findings (wasserstein-not-computed, res-results-missing, vit-weights-not-shipped, volume-pvalue-mismatch, welch-test-mislabeled) were correctly written against this core repo and concern genuine reproducibility gaps (missing result files, metric mislabeling, statistical claim mismatch)—not a wrong-repo confusion.",
+  "audit_impact": "None. The cloned repo is correct. All five findings are legitimate and were written against the right codebase. No re-classification is needed.",
+  "recommended_action": "No action required on repo provenance. Findings stand as audited."
+}

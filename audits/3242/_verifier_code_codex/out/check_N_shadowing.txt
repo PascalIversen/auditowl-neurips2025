@@ -1,0 +1,16 @@
+after cell 4  (N = 50; generate_data):        N = 50  len(lambd) = 50
+after cell 6  ((B) threshold weights):        N = 11   <-- global N CLOBBERED
+              threshold t = 0.311970, |{i: lambda_i <= t}| = 10
+after cell 7  ((C) optimal-linear weights):   k = 10  (loop ran over range(1,11))
+
+cell 7 re-run with N = len(lambd) = 50:       k = 21
+
+weights identical?            False
+nonzero weights  as-run: 27   corrected: 22
+sum(w)           as-run: 1.607453   corrected: 1.000000
+max|w_asrun - w_fixed|:       3.300e-02
+
+NOTE: cell 8 (plot_combined_depth_maps, the function that saves
+      combined_depth_maps.png = paper Figure 1) sets `N = len(lambd)` at
+      .ipynb line 334 BEFORE its optimal-linear loop, so Figure 1 itself
+      is computed with the correct N. Only the standalone cells are affected.

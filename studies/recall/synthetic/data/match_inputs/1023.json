@@ -1,0 +1,154 @@
+{
+  "paper": "1023",
+  "seeds": [
+    {
+      "sid": "S01",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "marshka__spatiotemporal-oversquashing/lib/datasets/__init__.py",
+          "line": 1,
+          "action": "replace"
+        },
+        {
+          "file": "marshka__spatiotemporal-oversquashing/lib/datasets/__init__.py",
+          "line": 8,
+          "action": "replace"
+        },
+        {
+          "file": "marshka__spatiotemporal-oversquashing/lib/datasets/memory.py",
+          "line": 99,
+          "action": "replace"
+        },
+        {
+          "file": "marshka__spatiotemporal-oversquashing/config/dataset/rocketman.yaml",
+          "line": null,
+          "action": "delete_file"
+        },
+        {
+          "file": "marshka__spatiotemporal-oversquashing/config/run_space_vs_time.yaml",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "ROCKETMAN experiment pipeline absent",
+      "description": "Remove the ROCKETMAN dataset implementation, its registration and dataset configuration, and the only sweep that generates the Ring/Lollipop distance grids in Figures 4 and 7. The remaining synthetic pipeline still supports the COPY tasks, but there is no executable dataset or experiment path for the paper's central joint space-time validation."
+    },
+    {
+      "sid": "S03",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "marshka__spatiotemporal-oversquashing/lib/nn/models/gnn_mixin.py",
+          "line": 26,
+          "action": "replace"
+        },
+        {
+          "file": "marshka__spatiotemporal-oversquashing/config/model/gnn/diffconv.yaml",
+          "line": 7,
+          "action": "replace"
+        }
+      ],
+      "title": "GCN replaces the claimed diffusion convolution",
+      "description": "Keep the public mptcn_diff model path and all experiment sweeps intact, but make that path instantiate a normalized one-hop GCN with matching GCN hyperparameters instead of the bidirectional two-hop diffusion convolution claimed by the paper. This is a fully trainable graph convolution with real gradients, but its propagation operator and receptive field are materially different."
+    },
+    {
+      "sid": "S06",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "marshka__spatiotemporal-oversquashing/experiments/run_realworld.py",
+          "line": 200,
+          "action": "replace"
+        }
+      ],
+      "title": "Real-world checkpoint selection reads the test set",
+      "description": "Feed the real-world test loader to Lightning as the validation loader during fitting. Early stopping and save-top-k still monitor val_MAE, but those validation-step metrics are now computed on METR-LA, PEMS-BAY, or EngRAD test windows; the selected checkpoint is then evaluated on the same test loader."
+    },
+    {
+      "sid": "S07",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "marshka__spatiotemporal-oversquashing/lib/nn/models/stgnn_base.py",
+          "line": 146,
+          "action": "replace"
+        }
+      ],
+      "title": "Regression readout clamps all negative outputs",
+      "description": "Apply ReLU after the shared decoder in the base STGNN readout. Every MPTCN prediction is forced nonnegative even though the paper specifies a linear regression projection and the traffic targets are standardized around zero during optimization, so negative normalized forecasts become impossible and receive zero gradient through the clamp."
+    }
+  ],
+  "baseline": [
+    {
+      "id": "1023/fosr-rgcn-missing",
+      "category": "missing",
+      "file": "_audit_code/out/checks.txt",
+      "line_start": 52,
+      "line_end": 53,
+      "title": "No FOSR rewiring or RGCN model code; Table 2 cannot be reproduced"
+    },
+    {
+      "id": "1023/succrate-aggregation-missing",
+      "category": "missing",
+      "file": "_audit_code/out/checks.txt",
+      "line_start": 55,
+      "line_end": 61,
+      "title": "No code computes success-rate (MSE<0.001) or assembles any table/figure"
+    },
+    {
+      "id": "1023/copyfirst-config-missing",
+      "category": "missing",
+      "file": "config/run_copy_time.yaml",
+      "line_start": 22,
+      "line_end": 26,
+      "title": "Committed copy-time config produces only COPYLAST, not the COPYFIRST half of Fig. 3"
+    },
+    {
+      "id": "1023/multi-run-seed-commented",
+      "category": "difference",
+      "file": "config/run_realworld.yaml",
+      "line_start": 39,
+      "line_end": 40,
+      "title": "Multi-seed replication (`+task`) is commented out in every sweep config"
+    }
+  ],
+  "unassigned": [
+    {
+      "fid": "run_01/table2-fosr-rgcn-missing",
+      "run": "run_01",
+      "category": "missing",
+      "loc": "paper.pdf:None",
+      "title": "No code for Table 2 (FOSR rewiring and RGCN combined-rewiring experiment)",
+      "claim": "Table 2 reports EngRAD MAE for the 'original graph' vs 'FOSR rewiring' with an RGCN and a DCNN message-passing layer, but the repo contains no FOSR rewiring, no RGCN layer, and no rewiring machinery (grep for fosr/rgcn/rewir/relational returns 0 hits), and no config selects such an experiment.",
+      "concern": "The paper's combined spatial+temporal rewiring result \u2014 used to argue temporal rewiring contributes the largest marginal gain \u2014 cannot be reproduced from the provided code."
+    },
+    {
+      "fid": "run_01/temporal-tree-neighboursmatch-missing",
+      "run": "run_01",
+      "category": "missing",
+      "loc": "paper.pdf:None",
+      "title": "No code reproduces Table 5 (TemporalTreeNeighboursMatch accuracy)",
+      "claim": "Appendix D / Table 5 reports test accuracy on a fixed-tree TemporalTreeNeighboursMatch classification task, but the repo has no tree graph generator (generators are identity/ring/crossed_ring/path/lollipop/<k>_reg/<n>_barbell/community) and no classification machinery (grep for tree/neighboursmatch/accuracy/cross_entropy/argmax returns 0 hits; losses/metrics are regression MSE/MAE).",
+      "concern": "The appendix task and its Table 5 accuracies are not reproducible from the released code, contradicting the checklist claim that code to reproduce the experiments is available."
+    },
+    {
+      "fid": "run_02/fosr-rgcn-rewiring-absent",
+      "run": "run_02",
+      "category": "missing",
+      "loc": "lib/nn/models/__init__.py:9",
+      "title": "No FOSR rewiring and no RGCN model anywhere in the repo (Table 2 unreproducible)",
+      "claim": "The model registry offers only GCN/GraphConv/DiffConv-named MPTCNs and GWNet; there is no RGCN model, and a repo-wide search finds zero occurrences of `fosr`, `rewir`, or `rgcn` (`_audit_code/out/missing_components.json`).",
+      "concern": "Table 2 ('FOSR rewiring' \u00d7 {RGCN, DCNN}, with/without row-normalization on EngRAD) \u2014 which supports the paper's contribution that combining spatial and temporal rewiring mitigates over-squashing \u2014 cannot be reproduced because neither the FOSR rewiring step nor the RGCN model exists in the code."
+    },
+    {
+      "fid": "run_02/tree-neighboursmatch-absent",
+      "run": "run_02",
+      "category": "missing",
+      "loc": "lib/datasets/syntethic.py:196",
+      "title": "No tree graph generator and no NeighboursMatch classification task (Table 5 unreproducible)",
+      "claim": "`generate_graph` enumerates identity/ring/crossed_ring/path/lollipop/*_reg/*barbell/community and raises for anything else; there is no 'tree' generator (`_audit_code/out/missing_components.json`: `tree_generator_present=false`). `MemoryTestDataset.generate_y` implements only regression targets (memorize/dump averaging); no classification target, `cross_entropy`, or `accuracy` metric exists anywhere (all counts 0).",
+      "concern": "Appendix D / Table 5 (TEMPORALTREENEIGHBOURSMATCH: test accuracy on a fixed TREE topology with a match-and-route classification target) cannot be generated or evaluated from the repo \u2014 the tree topology and the classification task/metric are both absent."
+    }
+  ]
+}

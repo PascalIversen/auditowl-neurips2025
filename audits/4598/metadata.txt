@@ -1,0 +1,5 @@
+paper_number: 4598
+title: Quantization Error Propagation: Revisiting Layer-Wise Post-Training Quantization
+authors: Yamato Arai, Yuma Ichikawa
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/df2034a516cbd617a96492cc476276c9-Abstract-Conference.html
+category: empirical

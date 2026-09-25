@@ -1,0 +1,16 @@
+{
+  "findings": [
+    {
+      "id": "1829_OLinear_A_Linear_Model_for_Time_Series_Forecasting_in_Orthog/qmatrix-regen-notebook-hardcoded-paths",
+      "verdict": "keep",
+      "reason": "The notebook contains the quoted Windows absolute path at physical JSON line 182, exposes manually edited dataset paths and the 0.7/0.6 ratio switch, the main benchmark dataset directories and Q-matrices are absent, and no other Q-matrix generator was found, so the substantive claim is supported despite the notebook-level line-1 citation.",
+      "changed": "verdict changed from reject to keep"
+    },
+    {
+      "id": "1829_OLinear_A_Linear_Model_for_Time_Series_Forecasting_in_Orthog/multiseed-std-harness-absent",
+      "verdict": "reject",
+      "reason": "Thirty-three released OLinear/OLinear-C shell scripts use --itr 7, robust scripts pair it with --fix_seed 0, and run.py iterates over range(args.itr), directly contradicting the single fixed-seed-run claim.",
+      "changed": "nothing"
+    }
+  ]
+}

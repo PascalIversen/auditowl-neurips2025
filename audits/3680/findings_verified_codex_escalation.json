@@ -1,0 +1,22 @@
+{
+  "findings": [
+    {
+      "id": "3680_Mitigating_Instability_in_High_Residual_Adaptive_Sampling_fo/no-result-aggregation-or-figures",
+      "verdict": "keep",
+      "reason": "The first-pass rejection is reversed because the quoted import is present in executable cell 0 and repository-wide inspection confirms that the ten training notebooks save per-run curves without any loader, aggregation, plotting, or Appendix G/H/J experiment driver.",
+      "changed": "reverted reject to keep after semantic notebook-cell and repository-wide verification"
+    },
+    {
+      "id": "3680_Mitigating_Instability_in_High_Residual_Adaptive_Sampling_fo/no-rng-seed-control",
+      "verdict": "keep",
+      "reason": "The first-pass rejection is reversed because the repeat loop is present at executable-source lines 453-454, while the mandated checker and a broader scan find zero seed calls in all ten notebooks and show that the loop index appears only in output names.",
+      "changed": "reverted reject to keep after running the cited checker and independently confirming seed APIs and loop-index dataflow"
+    },
+    {
+      "id": "3680_Mitigating_Instability_in_High_Residual_Adaptive_Sampling_fo/las-k-exponent-unused",
+      "verdict": "keep",
+      "reason": "The first-pass rejection is reversed because the quoted LAS update is present in executable cell 0, accepts no k, unit-normalizes the hardcoded squared-residual gradient so its direction is independent of a positive residual exponent away from zero, and routes the notebook's k variable only to RAD despite the paper presenting k=2 as LAS configuration.",
+      "changed": "reverted reject to keep after tracing the executable LAS and RAD dataflow against the paper's method and configuration text"
+    }
+  ]
+}

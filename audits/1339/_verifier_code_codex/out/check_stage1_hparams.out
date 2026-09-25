@@ -1,0 +1,24 @@
+Stage-1 (Driving-Thinking) hyperparameters: paper Sec. 4.1 vs released code
+
+SETTING            PAPER (Sec. 4.1 / Sec. 3.2)                CODE                                                           EVIDENCE
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+epochs             120                                        30                                                             cfgs/train_config.yaml:12
+batch size         16                                         16                                                             cfgs/train_config.yaml:13
+learning rate      2e-5                                       1e-4                                                           cfgs/train_config.yaml:14
+weight decay       1e-5                                       0 (torch.optim.Adam default; no weight_decay arg passed)       projects/eeg_vedio/src/run_model/train.py:58
+dropout            0.01                                       absent from config -> VideoEncoder sets self.dropout=None -> create_mlp adds no Dropout cfgs/train_config.yaml (video_encoder block, lines 24-28)
+clip duration      2 s                                        0.2 s                                                          cfgs/train_config.yaml:6
+clip frame rate    2 fps                                      10 fps (version_identifier='duration_0.2_fps_10')              cfgs/train_config.yaml:9
+temperature        learnable log-temperature beta             fixed constant 0.1 from config                                 cfgs/train_config.yaml:15 / projects/eeg_vedio/src/models/contrastive_model.py:78
+trainable params   both backbones + adapters (lr ratio 1:1)   fine_tuning_policy='missing_trainable' -> only the un-restored keys train cfgs/train_config.yaml:16 + contrastive_model.py:33-44
+adapter width      two-layer MLP -> 200-d                     mlp_layers=[512, 200]                                          cfgs/train_config.yaml:28
+
+Verbatim optimiser line   -> projects/eeg_vedio/src/run_model/train.py:58 : optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+Verbatim temperature line -> projects/eeg_vedio/src/models/contrastive_model.py:78 : similarity_matrix = similarity_matrix / self.temperature # (N, N)
+
+video_encoder config block keys: ['ckpt_load_path', 'ckpt_save_path', 'mlp_layers']   ('dropout' present? -> False )
+
+train.py lines mentioning any split/validation construct: NONE
+DataLoader construction -> projects/eeg_vedio/src/run_model/train.py:51 train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+  -> the full RealCarDataset is used as the training loader; the paper's
+     80:10:10 train/val/test partition is not constructed anywhere in the released stage-1 code.

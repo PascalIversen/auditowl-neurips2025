@@ -1,0 +1,27 @@
+=== Prompter classes defined in models/prompters.py ===
+['ACAVP']
+
+=== Config files in configs/ ===
+['ACAVP.yaml']
+
+=== Dependency spec files present? ===
+  requirements.txt: False
+  environment.yml: False
+  pyproject.toml: False
+  setup.py: False
+  Pipfile: False
+  poetry.lock: False
+  conda.yml: False
+
+=== Paper compares against these methods (Tables 2,3,4,8) ===
+['VP', 'EVP', 'AutoVP', 'Coordinator', 'ACAVP']
+  prompter class present for each: {'VP': False, 'EVP': False, 'AutoVP': False, 'Coordinator': False, 'ACAVP': True}
+  config present for each: {'VP': False, 'EVP': False, 'AutoVP': False, 'Coordinator': False, 'ACAVP': True}
+
+=== Paper ablation variants (Table 5) ===
+['Affine', 'Color', 'Affine+Color', 'Resize+Additive+Color', 'Affine+Additive'] -> any dedicated config? []
+
+=== Paper overfitting-mitigation techniques (Table 6) ===
+['Dropout', 'MSE Loss', 'Weight decay', 'TrivialAugment', 'RandAugment', 'IPMix']
+
+Wrote out/repo_completeness.csv

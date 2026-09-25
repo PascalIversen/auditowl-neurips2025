@@ -1,0 +1,10 @@
+{
+  "findings": [
+    {
+      "id": "4468_Execution_Guided_Line_by_Line_Code_Generation/missing-rsr-script",
+      "verdict": "keep",
+      "reason": "Tables 1-4 report RSR and README line 102 defines it, while an independent search of all tracked Python files finds no RSR computation, so the core traceability claim holds despite the quote being attributed to paper.pdf and the cited check script being unrelated.",
+      "changed": "reverted the first-pass reject to keep after locating the definition at the cited README line and independently confirming the missing computation"
+    }
+  ]
+}

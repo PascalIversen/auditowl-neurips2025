@@ -1,0 +1,19 @@
+azure          0
+geocode        0
+geocoding      0
+haversine      0
+great_circle   0
+geopy          0
+nominatim      0
+radians        0
+atan2          0
+math.cos       0
+math.sin       0
+1km            0
+25km           0
+200km          0
+750km          0
+2500km         0
+distance       0
+
+Geocode/distance hits across globe/ dir: NONE

@@ -1,0 +1,22 @@
+{
+  "paper_id": "5239_SD_KDE_Score_Debiased_Kernel_Density_Estimation",
+  "title": "SD-KDE: Score-Debiased Kernel Density Estimation",
+  "repos": [
+    {
+      "name": "Elliotepsteino__SD-KDE",
+      "role": "partial_core",
+      "evidence": "README states 'This repository contains the code for the paper \"Score-Debiased Kernel Density Estimation\"'; repo owner 'Elliotepsteino' matches first author Elliot Epstein; contains shrinkage_kde_gaussian.py, shrinkage_kde_laplace.py, and visualize_score.py (1D Gaussian/Laplace mixture experiments, Figures 2-4, 8-13) but lacks the 2D/diffusion and MNIST code. README references './minDiffusion/README.md' for diffusion experiments, which is absent in this GitHub clone — that content only exists in the supplemental ZIP."
+    },
+    {
+      "name": "SD-KDE__neurips_supplemental",
+      "role": "core",
+      "evidence": "NeurIPS 2025 Supplemental ZIP for the same paper (hash fd8548947a14f68375d7e6235ab493ec matches paper abstract URL). README identical to the GitHub repo. Contains the full reproduction package: shrinkage_kde_gaussian.py + shrinkage_kde_laplace.py + visualize_score.py (1D experiments) plus minDiffusion/ subtree with train_2d.py, train_mnist.py, train_cifar10.py, notebooks/2d.py, pretrained best_model_*.pth checkpoints, and UCI processing pipeline. Paper's official code URL (https://github.com/Elliotepsteino/SD-KDE) points to the first author's GitHub; supplemental is the complete counterpart."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "Both cloned repos are unambiguously the paper's own code. The GitHub repo (Elliotepsteino__SD-KDE) is the partial release by first author Elliot Epstein, explicitly named after the paper's method and matching the paper's official code URL cited in the text (footnote 1, p.3). The supplemental ZIP is the full reproduction package for the same NeurIPS 2025 submission. Together they constitute the author's core implementation. The audit correctly identified both as author code and wrote substantive (not 'missing code') findings: two medium-severity missing-experiment findings (iterated SD-KDE Fig 7, MNIST density ranking Fig 16), one medium-severity bug (hardcoded /scratch paths in 2d.py), and one low-severity paper/code mismatch (Fig 3 n=100 vs n=200). All four findings are against the genuine author code. No non-core repo was cloned.",
+  "audit_impact": "No impact on audit validity. Both repos are correctly identified as the paper's own code. The findings are substantive and written against the correct artefacts. The paper's source-present classification is justified.",
+  "recommended_action": "No corrective action needed for repo provenance. The two medium-severity missing-code findings (iterated-sdkde-missing, mnist-density-ranking-missing) are legitimate and should remain. Optionally flag that the GitHub partial clone is superseded by the supplemental ZIP for completeness."
+}

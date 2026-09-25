@@ -1,0 +1,5 @@
+paper_number: 2006
+title: Same Task, Different Circuits: Disentangling Modality-Specific Mechanisms in VLMs
+authors: Yaniv Nikankin, Dana Arad, Yossi Gandelsman, Yonatan Belinkov
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/5fcd540792da599adf1b932624e98f1f-Abstract-Conference.html
+category: empirical

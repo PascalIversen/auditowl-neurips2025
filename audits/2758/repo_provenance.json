@@ -1,0 +1,17 @@
+{
+  "paper_id": "2758_Enhancing_Visual_Prompting_through_Expanded_Transformation_S",
+  "title": "Enhancing Visual Prompting through Expanded Transformation Space and Overfitting Mitigation",
+  "repos": [
+    {
+      "name": "s-enmt__ACAVP",
+      "role": "core",
+      "evidence": "README states 'pytorch implementation of the following paper [NeurIPS]' with citation block exactly matching paper title and author Shohei Enomoto. Repo owner 's-enmt' matches author email 'shohei.enomoto@ntt.com'. Contains models/prompters.py defining the ACAVP class (affine + color + additive prompter), main.py training loop, configs/ACAVP.yaml, and augmentations/strategy_augment.py — all implementing the paper's proposed method. The paper's own code URL 'https://github.com/s-enmt/ACAVP' matches the clone source."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo (s-enmt/ACAVP) is unambiguously the paper's own implementation: the README cites the exact paper title and NeurIPS venue, the repo owner matches the sole author, and the code implements the paper's named method (ACAVP) including its three transformation components. The paper itself states 'Our code is available at https://github.com/s-enmt/ACAVP'. All audit findings were written against this correct repo and concern missing baseline/ablation code and absent dependency specs — legitimate reproducibility findings, not provenance errors.",
+  "audit_impact": "None. The core method repo was correctly identified. The audit findings (baselines absent, ablation harness missing, no requirements file, robustness eval missing) are valid reproducibility findings written against the correct target.",
+  "recommended_action": "No provenance correction needed. Audit findings stand as-is."
+}

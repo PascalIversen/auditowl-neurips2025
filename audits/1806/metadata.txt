@@ -1,0 +1,5 @@
+paper_number: 1806
+title: BayeSQP: Bayesian Optimization through Sequential Quadratic Programming
+authors: Paul Brunzema, Sebastian Trimpe
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/564ccf9de3a2a959d3d338889bad9d88-Abstract-Conference.html
+category: empirical

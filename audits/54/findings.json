@@ -1,0 +1,202 @@
+{
+  "schema_version": "1",
+  "audit": "54_EVOREFUSE_Evolutionary_Prompt_Optimization_for_Evaluation_an",
+  "audit_md": "audits/54_EVOREFUSE_Evolutionary_Prompt_Optimization_for_Evaluation_an/audit.md",
+  "generated_at": "2026-05-30T06:23:10.751230+00:00",
+  "findings": [
+    {
+      "id": "54_EVOREFUSE_Evolutionary_Prompt_Optimization_for_Evaluation_an/missing-requirements",
+      "category": "missing",
+      "topic": "dependencies / reproducibility",
+      "title": "No dependency specification file; README lists an impossible numpy version",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 13,
+      "line_end": 20,
+      "quote": "# Python Version\npython == 3.8.18\n\n# Core Dependencies\nnumpy == 1.12.5\ntransformers == 4.43.1\n",
+      "claim": "The repo ships no requirements.txt / environment.yml / setup.py / pyproject.toml; the only dependency hint is the README, which pins numpy==1.12.5 — a version that does not exist (numpy never released a 1.12.5; 1.12.x stopped at 1.12.1). The scripts additionally import torch, pandas, lexical_diversity, sentence-transformers and openai, none of which are listed.",
+      "concern": "The environment cannot be rebuilt from the repo: there is no machine-readable dependency list and the one human-readable version pin is invalid, so reproducing any reported number is blocked at install time.",
+      "resolution": "Provide a requirements.txt / environment.yml pinning all actually-used packages (torch, transformers, pandas, lexical_diversity, sentence-transformers, openai client, etc.) with valid versions.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_undefined_and_paths.py",
+      "paper_ref": "README Requirements section",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-requirements",
+      "audit": "54_EVOREFUSE_Evolutionary_Prompt_Optimization_for_Evaluation_an",
+      "audit_md_line": 55
+    },
+    {
+      "id": "54_EVOREFUSE_Evolutionary_Prompt_Optimization_for_Evaluation_an/placeholder-paths",
+      "category": "missing",
+      "topic": "runnability / data wiring",
+      "title": "Every input/output/model path across the pipeline is a literal placeholder",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "framework/evorefuse.py",
+      "line_start": 66,
+      "line_end": 68,
+      "quote": "model_path = \"path\"\ntokenizer = AutoTokenizer.from_pretrained(model_path)\nmodel = AutoModelForCausalLM.from_pretrained(model_path)\n",
+      "claim": "Model paths, classifier paths, input data paths, and output file paths are hardcoded to placeholder strings ('path', 'file', 'file.jsonl') throughout the repo (23 files flagged by the scan, including framework/, metric/, generation/, mining/, analysis/, visual/, and finetune/*.yaml dataset/model fields).",
+      "concern": "No script can locate its inputs, model weights, or write its outputs as shipped, so the generation/evaluation/fine-tuning pipeline cannot be executed to reproduce any table without the author re-supplying every path by hand.",
+      "resolution": "Replace placeholders with real relative paths (or CLI args/config) and document which dataset and model each script consumes; e.g. wire metric scripts to datasets/evo_test.jsonl.",
+      "cross_refs": [
+        "undefined-openai-symbol"
+      ],
+      "check_script": "_audit_code/check_undefined_and_paths.py",
+      "paper_ref": "Tables 1-3, Figures 1-2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "placeholder-paths",
+      "audit": "54_EVOREFUSE_Evolutionary_Prompt_Optimization_for_Evaluation_an",
+      "audit_md_line": 86
+    },
+    {
+      "id": "54_EVOREFUSE_Evolutionary_Prompt_Optimization_for_Evaluation_an/prr-crr-driver-not-self-contained",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "Headline refusal-rate tables depend on a closed GPT-4O loop with no reproducible driver",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "metric/crr.py",
+      "line_start": 22,
+      "line_end": 30,
+      "quote": "for num, line in enumerate(input_data.readlines()):\n    one_data = json.loads(line)\n    instruction = one_data[\"instruction\"]\n    response = one_data[\"response\"]\n    benchmark = one_data[\"benchmark\"]\n\n    prompt = system_prefix + response\n    results = openai.generate(prompt)\n",
+      "claim": "CRR (Table 1/Table 3) is computed by sending each response to an undefined `openai.generate` LLM-as-judge; the response files it consumes (`one_data['response']`, `one_data['benchmark']`) are not produced by any wired-up script in the repo and are not shipped, and the judge is a non-deterministic commercial API.",
+      "concern": "The CRR/PRR numbers cannot be regenerated: the intermediate response files are absent and the judge is a closed, non-deterministic API with no version pin, so Table 1 and Table 3 are not traceable to runnable code.",
+      "resolution": "Ship the intermediate response JSONL files (or a script that produces them with real paths), pin the judge model/version, and document determinism settings.",
+      "cross_refs": [
+        "undefined-openai-symbol",
+        "placeholder-paths"
+      ],
+      "paper_ref": "Table 1, Table 3",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "prr-crr-driver-not-self-contained",
+      "audit": "54_EVOREFUSE_Evolutionary_Prompt_Optimization_for_Evaluation_an",
+      "audit_md_line": 114
+    },
+    {
+      "id": "54_EVOREFUSE_Evolutionary_Prompt_Optimization_for_Evaluation_an/undefined-openai-symbol",
+      "category": "bug",
+      "topic": "runnability",
+      "title": "`openai.generate(...)` is called in 7 files but `openai` is never defined or imported",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "framework/evorefuse.py",
+      "line_start": 285,
+      "line_end": 285,
+      "quote": "mut_response = openai.generate(prompt)\n",
+      "claim": "The mutation, recombination, judge, CRR, tactic-mining and several generation scripts all invoke `openai.generate(...)`, but no file imports or defines an `openai` symbol exposing a `.generate` method (the scan finds 0 of 7 such files import/define it; the real OpenAI SDK exposes `OpenAI().chat.completions.create`, not `openai.generate`). The one file that does `from openai import OpenAI` (generation/other_llm.py) then calls an undefined `client` variable.",
+      "concern": "Every script that drives mutation/recombination/judging/CRR raises NameError on the first GPT-4O call, so the core EVOREFUSE generation loop and the CRR metric do not run as shipped.",
+      "resolution": "Add the missing `openai` wrapper module (or replace with `OpenAI().chat.completions.create`) and define the `client` used in generation/other_llm.py.",
+      "cross_refs": [
+        "placeholder-paths"
+      ],
+      "check_script": "_audit_code/check_undefined_and_paths.py",
+      "paper_ref": "Algorithm 1; Section 3.3",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "undefined-openai-symbol",
+      "audit": "54_EVOREFUSE_Evolutionary_Prompt_Optimization_for_Evaluation_an",
+      "audit_md_line": 148
+    },
+    {
+      "id": "54_EVOREFUSE_Evolutionary_Prompt_Optimization_for_Evaluation_an/recombination-skips-safety-judge",
+      "category": "bug",
+      "topic": "safety verification",
+      "title": "Recombined instructions are never safety-checked; code reuses a stale judge verdict",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "framework/evorefuse.py",
+      "line_start": 318,
+      "line_end": 326,
+      "quote": "cross_instruction, reason = get_instruction_reason(cross_response)\n\n\nprompt_judge_suffix = \"##Instruction: \" + cross_instruction + \" \" + \"##Reason: \" + reason\nprompt_judge = prompt_judge_prefix + prompt_judge_suffix\n\n\nif judge_response == \"safe\":\n    cross.append(cross_instruction)\n",
+      "claim": "In the recombination loop the code builds `prompt_judge` for the recombined instruction (line 322) but never calls `openai.generate(prompt_judge)`; the `if judge_response == \"safe\"` test on line 325 reads the `judge_response` variable left over from the last iteration of the mutation while-loop above, so the recombined instruction's own safety justification is never evaluated.",
+      "concern": "The paper claims every recombined instruction 'passes through the same safety verification process' (Section 3.3, Recombination); in the released code that check is a no-op driven by an unrelated stale verdict, so unsafe recombined instructions can enter the candidate pool — undermining the safety guarantee central to the benchmark's validity.",
+      "resolution": "Insert `judge_response = openai.generate(prompt_judge)` before the `if` on line 325, matching the mutation branch (lines 291-296).",
+      "cross_refs": [
+        "undefined-openai-symbol"
+      ],
+      "paper_ref": "Section 3.3 'Recombination'; Algorithm 1 line 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "recombination-skips-safety-judge",
+      "audit": "54_EVOREFUSE_Evolutionary_Prompt_Optimization_for_Evaluation_an",
+      "audit_md_line": 174
+    },
+    {
+      "id": "54_EVOREFUSE_Evolutionary_Prompt_Optimization_for_Evaluation_an/longppl-not-longppl",
+      "category": "difference",
+      "topic": "metrics",
+      "title": "metric/longppl.py computes thresholded instruction log-prob, not LongPPL of responses",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "question",
+      "file": "metric/longppl.py",
+      "line_start": 6,
+      "line_end": 32,
+      "quote": "def calculate_token_probabilities(model, tokenizer, instruction, threshold):\n\n    inputs = tokenizer(instruction, return_tensors=\"pt\").to(\"cuda:0\")\n    with torch.no_grad():\n        outputs = model(**inputs)\n    logits = outputs.logits[0, :-1, :]\n    probs = torch.softmax(logits, dim=-1)\n    log_probs = torch.log(probs)\n    input_ids = inputs.input_ids[0][1:]\n    token_log_probs = []\n    valid_log_probs = []\n    for i in range(len(input_ids)):\n        token_id = input_ids[i].item()\n        log_prob = log_probs[i, token_id].item()\n        token = tokenizer.convert_ids_to_tokens([token_id])[0]\n        token_log_probs.append((token, log_prob))\n        if log_prob > threshold:\n            valid_log_probs.append(log_prob)\n    if len(valid_log_probs) == 0:\n        num = 0\n        valid_log_probs.append(num)\n    if valid_log_probs:\n        average_log_prob = -sum(valid_log_probs) / len(valid_log_probs)\n    else:\n        average_log_prob = None\n    return token_log_probs, average_log_prob\n",
+      "claim": "The script named after LongPPL averages per-token negative log-probabilities over the **instruction** text, keeping only tokens with log-prob above a fixed threshold (-2.8). Table 2 reports LongPPL(y|x), i.e. the response y given x, computed by the LongPPL key-token contrastive procedure of ref [43]; this code computes neither the response perplexity nor LongPPL's long-vs-short-context key-token selection.",
+      "concern": "If this is the script that produced the Table 2 LongPPL column, the reported quantity is a thresholded instruction-perplexity rather than the cited LongPPL(y|x), so the column does not measure what the paper states.",
+      "resolution": "Authors: confirm whether Table 2's LongPPL column was produced by this script; if so, explain the divergence from ref [43]'s LongPPL and from the (y|x) conditioning shown in the table header.",
+      "cross_refs": [],
+      "paper_ref": "Table 2, LongPPL(y|x) column; ref [43]",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "longppl-not-longppl",
+      "audit": "54_EVOREFUSE_Evolutionary_Prompt_Optimization_for_Evaluation_an",
+      "audit_md_line": 209
+    },
+    {
+      "id": "54_EVOREFUSE_Evolutionary_Prompt_Optimization_for_Evaluation_an/lexical-only-msttr",
+      "category": "difference",
+      "topic": "metrics",
+      "title": "lexical.py computes only MSTTR; HDD and MTLD (also in Table 2) are commented out",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "metric/lexical.py",
+      "line_start": 24,
+      "line_end": 33,
+      "quote": "flt = ld.flemmatize(all_instructions)\n# print(file_path)\n# print(ld.ttr(flt))\n\n# print(file_path)\n# print(ld.root_ttr(flt))\n\n\nprint(file_path)\nprint(ld.msttr(flt,window_length=800))\n",
+      "claim": "Table 2 reports three diversity metrics (MSTTR, HDD, MTLD), but the shipped lexical script only computes and prints `ld.msttr(...)`; no call to `ld.hdd` or `ld.mtld` exists anywhere in the repo (the other ld.* calls present are commented out and are ttr/root_ttr, not HDD/MTLD).",
+      "concern": "The HDD and MTLD columns of Table 2 are not traceable to any computation in the repo, so two of the three reported diversity metrics cannot be reproduced.",
+      "resolution": "Add the HDD and MTLD computations (e.g. ld.hdd and ld.mtld) used for Table 2, or point to where they were computed.",
+      "cross_refs": [],
+      "paper_ref": "Table 2, HDD and MTLD columns",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "lexical-only-msttr",
+      "audit": "54_EVOREFUSE_Evolutionary_Prompt_Optimization_for_Evaluation_an",
+      "audit_md_line": 259
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "folder": "4465_DePass_Unified_Feature_Attributing_by_Simple_Decomposed_Forw",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 8103,
+    "output": 17374,
+    "cache_write": 393829,
+    "cache_read": 6445961
+  },
+  "total_tokens": 6865267,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 18.48
+}

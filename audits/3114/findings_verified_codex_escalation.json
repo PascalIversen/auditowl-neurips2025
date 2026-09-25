@@ -1,0 +1,16 @@
+{
+  "findings": [
+    {
+      "id": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput/fig4-dead-mnt-paths",
+      "verdict": "keep",
+      "reason": "Active code at the cited lines iterates the four hardcoded absolute /mnt result directories and saves a four-panel convergence plot matching Figure 4's datasets, so the paths/path_list quote transcription error does not undermine the claim.",
+      "changed": "reverted the first-pass reject to keep because the non-whitespace quote mismatch is immaterial to the evidenced behavior"
+    },
+    {
+      "id": "3114_Accelerated_Evolving_Set_Processes_for_Local_PageRank_Comput/dataset-stats-m-mismatch",
+      "verdict": "keep",
+      "reason": "The copied cited check script reproduces exactly the two claimed edge-count mismatches, which are directly confirmed by the committed tables/graph_statistic.csv and paper Table 2.",
+      "changed": "reverted the first-pass reject to keep because the missing generated out path does not negate the underlying committed-CSV and check-script evidence"
+    }
+  ]
+}

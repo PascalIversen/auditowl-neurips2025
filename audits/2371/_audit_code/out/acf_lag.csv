@@ -1,0 +1,3 @@
+check,result,note
+acf_runs_without_error,True,
+output_shape,"(40, 1)",stack of max_lag autocorr values

@@ -1,0 +1,56 @@
+--- test-time clip tensor built here (hardcoded HxW): projects/mmdet3d_plugin/EAD/EAD.py:29-35
+     29|     def get_queue_tensor(self):    
+     30|         filled_queue = torch.zeros((self.max_length, 3, 736, 1280), dtype=torch.float32)  
+     31|         # filled_queue = torch.zeros((self.max_length, 3, 384, 640), dtype=torch.float32)   
+     32|         for i in range(len(self.queue)):  
+     33|             filled_queue[i] = self.queue[i]  
+     34| 
+     35|         return filled_queue.unsqueeze(0).to('cuda')  
+
+--- clip goes straight into the cognition encoder, unmodified: projects/mmdet3d_plugin/EAD/EAD.py:171-179
+    171|     def extract_brain_visual_feat(self,img):
+    172|         B = img.size(0)
+    173|         if img is not None:          
+    174|             B, N, C, H, W = img.size()
+    175|         else:
+    176|             return None
+    177|         video_embeddings = self.cognitive_video_encoder(img)
+    178|         device = video_embeddings.device  
+    179|         return video_embeddings.unsqueeze(0)
+
+--- VideoEncoder.forward: permute then Swin3D-B, no resize/renormalise: projects/eeg_vedio/src/models/video_encoder/video_encoder.py:57-62
+     57|     def forward(self, x):
+     58|         x = x.permute(0, 2, 1, 3, 4)  # Change shape from (B, T, C, H, W) to (B, C, T, H, W)
+     59|         x = self.swin_transformer(x)  # Process the video input through the transformer
+     60|         x = self.proj_norm(x)  # Normalize the output
+     61|         x = self.proj(x)  # Generate the output vector representation
+     62|         return x
+
+--- the ONLY resize/ImageNet-normalise in the repo -- commented out: projects/mmdet3d_plugin/EAD/EAD.py:93-99
+     93|         # self.transform = transforms.Compose([  
+     94|         #     transforms.ToPILImage(),    
+     95|         #     transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),  
+     96|         #     transforms.CenterCrop((224, 224)),  
+     97|         #     transforms.ToTensor(),  
+     98|         #     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  
+     99|         # ])  
+
+--- img_norm_cfg the front frames have already been through: projects/configs/EAD/EAD_based_pretrain.py:16-17
+     16| img_norm_cfg = dict(
+     17|    mean=[103.530, 116.280, 123.675], std=[1.0, 1.0, 1.0], to_rgb=False)
+
+swin3d_b geometry (vision15/models/video/swin_transformer.py): patch_size=('2', '4', '4'), window_size=('8', '7', '7')
+
+INPUT CLIP                                            STAGE-1 TOKENS
+----------------------------------------------------------------------
+E3AD stage 2, as wired (ImageQueue 4x3x736x1280)             117,760
+standard Swin3D-B Kinetics clip (16x3x224x224)                25,088
+the commented-out 224 centre-crop, 4 frames                    6,272
+
+As-wired / standard-Kinetics token ratio :   4.69x
+As-wired / commented-out-crop  ratio    :  18.78x
+
+Swin window attention is ~linear in token count, so the per-sample cost of the
+cognition branch is roughly the ratio above times a full Swin3D-B forward pass,
+added to every nuScenes sample at both train and test time.
+Paper Tab. 1 reports the E3AD(VAD-Base) FPS cost as 3.8 -> 3.7 (2.6%).

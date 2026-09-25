@@ -1,0 +1,13 @@
+{
+  "findings": [
+    {
+      "id": "713_How_Patterns_Dictate_Learnability_in_Sequential_Data/lambda-table-not-reproduced",
+      "verdict": "lowered",
+      "reason": "The cited code and copied check confirm the Lambda mismatch for the committed M=100,000 result and the near-invariant values in Tables 5-7, but Table 8 reports a materially different curve, so the all-four-block-sizes scope is unsupported.",
+      "changed": "nothing",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding"
+    }
+  ]
+}

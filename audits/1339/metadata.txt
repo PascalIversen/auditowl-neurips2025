@@ -1,0 +1,5 @@
+paper_number: 1339
+title: Embodied Cognition Augmented End2End Autonomous Driving
+authors: Ling Niu, Xiaoji Zheng, han wang, Ziyuan Yang, Chen Zheng, Bokui Chen, Jiangtao Gong
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/3f28c4340f6172c94f28ad913e7c92a6-Abstract-Conference.html
+category: empirical

@@ -1,0 +1,17 @@
+{
+  "paper_id": "646_RoPECraft_Training_Free_Motion_Transfer_with_Trajectory_Guid",
+  "title": "RoPECraft: Training-Free Motion Transfer with Trajectory-Guided RoPE Optimization on Diffusion Transformers",
+  "repos": [
+    {
+      "name": "berkegokmen1__RoPECraft",
+      "role": "core",
+      "evidence": "README states exact paper title and 'Accepted to NeurIPS 2025'; lists all four paper authors (Ahmet Berke Gokmen, Yigit Ekin, Bahri Batuhan Bilecen, Aysegul Dundar) matching metadata.txt exactly; arXiv id 2505.13344 matches; repo owner 'berkegokmen1' is lead author Ahmet Berke Gokmen. generate.py implements motion-augmented RoPE with flow-matching+Fourier-phase optimization on Wan2.1-1.3B backbone (core §4 method); ftd.py implements the proposed FTD metric (§5.2)."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo is the official author release of this paper: title, venue, all four authors, and arXiv id all match. The repo implements both core contributions — motion-augmented RoPE inference (generate.py) and the FTD metric (ftd.py). The audit correctly identified the repo as the paper's own code and wrote substantive findings (missing eval harness, bugs, hyperparameter differences) against it. No non-core repos were cloned. The paper's classification as source-present is justified.",
+  "audit_impact": "None. All findings were written against the correct author repo. The high-severity finding 'no-eval-harness-baselines-metrics' correctly identifies that the repo ships only single-video inference and single-pair FTD with no aggregation harness, baseline code, or CD-FVD/CLIP/MF scripts — a legitimate reproducibility gap, not a provenance error.",
+  "recommended_action": "No reclassification needed. Findings stand as written. Authors should be asked to release the evaluation harness (CD-FVD, CLIP, MF aggregation), DAVIS prompt list, baseline implementations, and fix the --frames 81 bug."
+}

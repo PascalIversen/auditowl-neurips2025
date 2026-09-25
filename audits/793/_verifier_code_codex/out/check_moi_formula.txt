@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/author/Projects/neurips_audit/audits/793_Mixture_of_Inputs_Text_Generation_Beyond_Discrete_Token_Samp/_verifier_code_codex/check_moi_formula.py", line 51, in <module>
+    with open("out/moi_formula_check.txt","w") as f:
+FileNotFoundError: [Errno 2] No such file or directory: 'out/moi_formula_check.txt'

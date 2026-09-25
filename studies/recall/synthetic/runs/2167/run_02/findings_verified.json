@@ -1,0 +1,228 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-02T23:53:26.018463+00:00",
+  "findings": [
+    {
+      "id": "/hypervolume-metric-not-implemented",
+      "category": "missing",
+      "topic": "result traceability / diversity",
+      "title": "Hypervolume (headline diversity metric) has no implementation in the repo",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "counterfactuals/metrics/metrics.py",
+      "line_start": 359,
+      "line_end": 373,
+      "quote": "        metrics = {\n            \"coverage\": self.coverage(),\n            \"validity\": self.validity(),\n            \"actionability\": self.actionability(),\n            \"sparsity\": self.sparsity(eps=self.sparsity_eps),\n            # \"target_distance\": self.target_distance(),\n            # \"proximity_categorical_hamming\": self.feature_distance(\n            #     categorical_metric=\"hamming\"\n            # ),\n            # \"proximity_categorical_jaccard\": self.feature_distance(\n            #     categorical_metric=\"jaccard\"\n            # ),\n            \"proximity_continuous_manhattan\": self.feature_distance(\n                continuous_metric=\"cityblock\"\n            ),\n",
+      "claim": "calc_all_metrics (the only metric aggregator, called from evaluate_counterfactuals) computes coverage/validity/actionability/sparsity/proximity/LOF/log-density but no hypervolume; a repo-wide grep for hypervol|pareto|dominat returns no matches.",
+      "concern": "Diversity via Hypervolume is a headline metric reported in Tables 1, 3, 6 and 8 and underpins the paper's central 'superior diversity' claim, yet nothing in the repository computes it, so those numbers cannot be reproduced or checked.",
+      "resolution": "Authors: please add or point to the script that computes the Hypervolume (diversity) column for every table; state the reference point and objective axes used.",
+      "cross_refs": [
+        "§4.2",
+        "Table 1",
+        "Table 3"
+      ],
+      "paper_ref": "Table 1 'Hypervol. log scale', Appendix C 'Diversity'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "hypervolume-metric-not-implemented",
+      "audit": "",
+      "audit_md_line": 56,
+      "verdict": "keep",
+      "reason": "Quote at lines 359-373 matches exactly and a repo-wide grep for hypervol, pareto, and dominat returns zero hits confirming no hypervolume implementation exists.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/nice-import-breaks-package",
+      "category": "bug",
+      "topic": "dependencies / package import",
+      "title": "generative_models package imports a nonexistent nice.py, crashing on import",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "counterfactuals/generative_models/__init__.py",
+      "line_start": 5,
+      "line_end": 5,
+      "quote": "from counterfactuals.generative_models.nice import NICE\n",
+      "claim": "The package __init__ imports NICE from counterfactuals.generative_models.nice, but no nice.py exists in the repo (find -name nice.py returns nothing; the directory holds only base.py, cnf/, kde.py, maf.py, real_nvp.py).",
+      "concern": "Importing the package (which happens for any submodule, including the driver's `from counterfactuals.generative_models.maf import MaskedAutoregressiveFlow`) raises ModuleNotFoundError, so the committed code cannot run at all; it also means the NICE flow compared in Table 5 (Appendix D) has no implementation.",
+      "resolution": "Authors: restore counterfactuals/generative_models/nice.py (the NICE flow) or remove the dead import; confirm which commit reproduces Table 5.",
+      "cross_refs": [
+        "Table 5"
+      ],
+      "paper_ref": "Appendix D, Table 5 (NICE row)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "nice-import-breaks-package",
+      "audit": "",
+      "audit_md_line": 96,
+      "verdict": "keep",
+      "reason": "Line 5 of __init__.py exactly matches the quote and the generative_models directory contains only base.py, cnf/, kde.py, maf.py, real_nvp.py — nice.py is absent.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/mlp-predict-proba-relu-not-softmax",
+      "category": "bug",
+      "topic": "classifier / prediction head",
+      "title": "MLP predict_proba uses ReLU-normalised logits, not its own softmax head",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "counterfactuals/discriminative_models/multilayer_perceptron.py",
+      "line_start": 95,
+      "line_end": 105,
+      "quote": "    def predict_proba(self, X_test):\n        if isinstance(X_test, np.ndarray):\n            X_test = torch.from_numpy(X_test).float()\n        with torch.no_grad():\n            scores = torch.relu(self.forward(X_test)) + 1e-8\n            if self.target_size == 1:\n                probs = scores.clamp(max=1.0)\n                probs = torch.hstack([1 - probs, probs])\n            else:\n                probs = scores / scores.sum(dim=1, keepdim=True)\n            return probs.float()\n",
+      "claim": "The classifier is trained with CrossEntropyLoss (softmax) and defines self.final_activation = Softmax, but predict_proba turns raw logits into 'probabilities' with relu(logits)+1e-8 normalised to sum 1, and predict() takes argmax over these.",
+      "concern": "When all class logits are negative for a sample, ReLU maps them to 0 and the sample is forced to class 0 (argmax of a uniform vector), so predict() disagrees with the true argmax; these predictions define the training labels, the validity metric, and the prob_threshold neighbour filter (generic_counterfactual.py:96), biasing the whole pipeline toward class 0.",
+      "resolution": "Authors: confirm whether predict_proba should apply softmax (self.final_activation); quantify how many labels/validity decisions change between softmax and relu-normalised outputs.",
+      "cross_refs": [
+        "bank-train-test-leakage"
+      ],
+      "paper_ref": "Section 4.1 'Validity', Table 1 Validity column",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "mlp-predict-proba-relu-not-softmax",
+      "audit": "",
+      "audit_md_line": 120,
+      "verdict": "keep",
+      "reason": "Lines 95-105 exactly match the quote; relu(forward(X_test))+1e-8 normalisation is confirmed in place of softmax.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/maf-class-builds-realnvp",
+      "category": "difference",
+      "topic": "generative model / architecture",
+      "title": "MaskedAutoregressiveFlow class actually builds a RealNVP, not a MAF",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "counterfactuals/generative_models/maf.py",
+      "line_start": 130,
+      "line_end": 146,
+      "quote": "        model = _SimpleRealNVP(\n            features=features,\n            hidden_features=hidden_features,\n            context_features=context_features,\n            num_layers=num_layers,\n            num_blocks_per_layer=num_blocks_per_layer,\n            activation=activation,\n            use_volume_preserving=False,\n            dropout_probability=dropout_probability,\n            batch_norm_within_layers=batch_norm_within_layers,\n            batch_norm_between_layers=batch_norm_between_layers,\n        )\n\n        super().__init__(\n            transform=model._transform,\n            distribution=StandardNormalWithTemp([features]),\n        )\n",
+      "claim": "The class named MaskedAutoregressiveFlow — used as the flow for every reported DiCoFlex result (train_generic_counterfactual.py:20,75,182) — constructs nflows.SimpleRealNVP and uses its coupling transform; the imported MaskedAffineAutoregressiveTransform (maf.py:11) is never used.",
+      "concern": "Section 3.2 states 'we selected MAF as our normalizing flow model' and Appendix D / Table 5 justifies this by MAF's NLL (-43.30) being far better than RealNVP (26.58), yet the model the code trains is RealNVP, so the headline numbers were not produced by MAF and the model-selection ablation contradicts the shipped architecture.",
+      "resolution": "Authors: confirm whether the reported results use MAF or RealNVP; if MAF, provide the code path that instantiates MaskedAffineAutoregressiveTransform.",
+      "cross_refs": [
+        "Table 5",
+        "§3.2"
+      ],
+      "paper_ref": "Section 3.2; Appendix D, Table 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "maf-class-builds-realnvp",
+      "audit": "",
+      "audit_md_line": 156,
+      "verdict": "keep",
+      "reason": "Lines 130-146 exactly match the quote; _SimpleRealNVP is constructed inside MaskedAutoregressiveFlow confirming the wrong architecture is instantiated.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/sparsity-metric-absolute-not-relative",
+      "category": "difference",
+      "topic": "evaluation metrics / sparsity",
+      "title": "ε-sparsity computed as absolute threshold over all features, not relative per continuous feature",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "counterfactuals/metrics/metrics.py",
+      "line_start": 187,
+      "line_end": 193,
+      "quote": "        if eps > 0.0:\n            # For features with difference less than epsilon, consider them equal\n            diff = np.abs(self.X_test - self.X_cf)\n            return np.mean(diff > eps)\n        else:\n            # Traditional exact comparison\n            return (self.X_test != self.X_cf).mean()\n",
+      "claim": "The only sparsity metric (called with eps=0.05 from utils.py:94) counts, over ALL features jointly, entries whose ABSOLUTE difference exceeds 0.05.",
+      "concern": "Paper Eq. 30 defines ε-sparsity as a RELATIVE change |x−x′|/|x| > ε averaged over CONTINUOUS features only, and Eq. 29 defines a separate categorical sparsity; the implemented metric is neither (absolute, not relative; mixed cat+cont), so Table 1's 'Sparsity cat.' and 'ε-sparsity cont.' columns are not produced by this code.",
+      "resolution": "Authors: point to the code computing the per-type sparsity (Eq. 29) and the relative ε-sparsity (Eq. 30) reported in Table 1, or reconcile the definitions.",
+      "cross_refs": [
+        "hypervolume-metric-not-implemented"
+      ],
+      "paper_ref": "Appendix C, Eq. 29-30; Table 1 sparsity columns",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "sparsity-metric-absolute-not-relative",
+      "audit": "",
+      "audit_md_line": 196,
+      "verdict": "keep",
+      "reason": "Lines 187-193 match exactly; absolute np.abs difference over all features is confirmed with no per-type or relative computation.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/adult-subsampled-to-2000",
+      "category": "difference",
+      "topic": "datasets / sample size",
+      "title": "Adult loader subsamples to 2000 rows; paper reports 32,000",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "counterfactuals/datasets/DCENF/adult.py",
+      "line_start": 81,
+      "line_end": 81,
+      "quote": "        raw_data = raw_data.sample(2000)\n",
+      "claim": "The Adult loader keeps a random 2000-row sample of each of train and test; the other four loaders use their full CSVs.",
+      "concern": "Paper Table 4 states Adult uses 32,000 samples, but the committed loader uses 2000, so the many Adult-based results (Tables 1, 2, 3, 5, 6, 7) cannot be reproduced at the stated sample size and are additionally sensitive to the unseeded sample() draw.",
+      "resolution": "Authors: confirm the sample size used for the reported Adult results and whether sample() should be removed or seeded.",
+      "cross_refs": [
+        "Table 4"
+      ],
+      "paper_ref": "Appendix B, Table 4 (Adult 32,000)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "adult-subsampled-to-2000",
+      "audit": "",
+      "audit_md_line": 226,
+      "verdict": "keep",
+      "reason": "Line 81 exactly matches raw_data.sample(2000) confirming the hard-coded 2000-row subsample.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/bank-train-test-leakage",
+      "category": "methodology",
+      "topic": "data splitting / train-test leakage",
+      "title": "Bank loader concatenates test into the training set (test ⊂ train)",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "counterfactuals/datasets/DCENF/bank.py",
+      "line_start": 36,
+      "line_end": 38,
+      "quote": "        X_all = np.concatenate([self.X_train, self.X_test], axis=0)\n        y_all = np.concatenate([self.y_train, self.y_test], axis=0)\n        self.X_train, self.y_train = X_all, y_all\n",
+      "claim": "In BankDataset.__init__, X_train/y_train are replaced by the concatenation of train and test, while X_test is left as the test set, so the training set contains the entire test set; the other four loaders do not do this.",
+      "concern": "The classifier, the counterfactual flow, and the plausibility model are all trained on data that includes every test point used for evaluation (and the MinMax/OneHot/Quantile transformers are fit on train+test), so the Bank row of Table 1 (and Bank in Table 7 / Fig 3b) is measured under train/test leakage and does not reflect generalisation.",
+      "resolution": "Authors: remove the train+test concatenation and re-run Bank; report whether the Bank metrics change once the test set is excluded from training and transformer fitting.",
+      "cross_refs": [
+        "mlp-predict-proba-relu-not-softmax"
+      ],
+      "paper_ref": "Table 1 (Bank rows)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "bank-train-test-leakage",
+      "audit": "",
+      "audit_md_line": 252,
+      "verdict": "keep",
+      "reason": "Lines 36-38 exactly match; X_train is overwritten with concatenated train+test while X_test remains, confirming full train-test leakage.",
+      "changed": "nothing"
+    }
+  ]
+}

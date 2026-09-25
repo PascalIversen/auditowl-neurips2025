@@ -1,0 +1,223 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-03T00:29:21.080150+00:00",
+  "findings": [
+    {
+      "id": "/csi-experiment-driver-missing",
+      "category": "missing",
+      "topic": "result traceability / CSI experiment",
+      "title": "Entire 5G CSI experiment (Sec 5.2, Fig 7-8) has no runnable driver or SNR metric",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 125,
+      "line_end": 126,
+      "quote": "python main_csi.py --config arguments/configs/csi/exp1.yaml \\\n    --pretrained_encoder /path/to/pretrained_encoder.pth\n",
+      "claim": "README Section 5 documents CSI via `run_csi.sh`, `main_csi.py`, and `inference_csi.py`, but none of these files exist in the repo (`ls` and `grep` confirm only rfid/ble entrypoints). The CSI support modules `scene/csi_dataset.py` (load_csi_data), `scene/csi_model.py` (CSIEncoder/CSIAutoDecoder), and `gaussian_renderer/render_csi.py` are defined but never imported or called by any script (orphaned). No function computes the SNR metric of Eq. 17 (the only log10 in the repo is the PSNR helper `utils/loss_utils.py:68`).",
+      "concern": "The headline CSI result — mean SNR 20.99 dB, Fig. 7-8, 'comparable to NeRF2 with 3x less data' — cannot be reproduced or verified because there is no training entry point, no inference/evaluation script, and no SNR computation anywhere in the repo.",
+      "resolution": "Authors: please add `run_csi.sh`/`main_csi.py`/`inference_csi.py` (the two-phase autoencoder + per-antenna splatting pipeline the README describes) and the SNR (Eq. 17) computation, or confirm these were run from unreleased code.",
+      "cross_refs": [
+        "rfid-render-not-cuda-tracer"
+      ],
+      "paper_ref": "Section 5.2; Eq. 17; Figures 7-8",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "csi-experiment-driver-missing",
+      "audit": "",
+      "audit_md_line": 43
+    },
+    {
+      "id": "/ble-localization-code-missing",
+      "category": "missing",
+      "topic": "result traceability / BLE localization",
+      "title": "BLE fingerprint-KNN localization (Fig 10, Table 3 localization row) has no code",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "Figure 10 shows that GSRF\noutperforms NeRF2 by 31.40% on average.\n",
+      "claim": "The paper reports a KNN fingerprint-localization application (Fig. 10; Table 3 'Localization error (m)' row: GSRF 0.479, NeRF2 0.699, WRF-GS 0.481). No code builds a fingerprint database or runs KNN localization: `grep -ri 'knn|neighbor|localiz|fingerprint'` finds only the 3DGS `simple-knn` densification helper (distCUDA2), which is unrelated to fingerprint KNN. `main_ble.py`/`inference_ble.py` compute only RSSI MAE, not localization.",
+      "concern": "The reported 31.40% localization improvement and the Table 3 localization-error row are not reproducible from the repo — the entire localization pipeline is absent.",
+      "resolution": "Authors: please release the fingerprint-database construction and KNN localization script used for Figure 10 / Table 3.",
+      "cross_refs": [],
+      "paper_ref": "Section 5.3 (BLE-Based Localization); Figure 10; Table 3",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ble-localization-code-missing",
+      "audit": "",
+      "audit_md_line": 68,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/table1-ablation-variants-missing",
+      "category": "missing",
+      "topic": "ablations",
+      "title": "Table 1 SH-radiance and amplitude-only(phase-off) ablations have no runnable path",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "scene/gaussian_model.py",
+      "line_start": 70,
+      "line_end": 70,
+      "quote": "self.num_channels = getattr(args, 'num_channels_override', 2)\n",
+      "claim": "Table 1 (Sec 5.4) reports four ablation columns (SH-radiance, phase-removed, no-Fourier-loss, full=22.64 PSNR). The Fourier-loss column is reproducible (`lambda_dfourier=0`) and SSIM via `lambda_dssim=0`, but there is no spherical-harmonics radiance path anywhere (`eval_fle` is the only basis; grep for 'spherical/harmonic/SH' finds nothing) and no configuration disables phase: `num_channels` is hardwired to 2 (complex) with only an unused `num_channels_override` hook and no config that sets it, and the FLE eval/render assume 2 channels.",
+      "concern": "Two of the four Table 1 ablation results ('Radiance' = SH and 'Phase' = amplitude-only) cannot be reproduced because the SH-basis variant and the phase-off variant are not implemented as selectable code paths.",
+      "resolution": "Authors: please provide the SH-radiance and amplitude-only model variants (or configs/flags that select them) used to produce the Table 1 ablation columns.",
+      "cross_refs": [],
+      "paper_ref": "Section 5.4; Table 1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "table1-ablation-variants-missing",
+      "audit": "",
+      "audit_md_line": 91
+    },
+    {
+      "id": "/rfid-sparse-density-protocol-missing",
+      "category": "missing",
+      "topic": "data / sparse-density protocol",
+      "title": "RFID '220-instance / 0.8 measurements-per-ft^3' sparse protocol not implemented",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "we randomly select 220 instances from the training dataset instead of using the full training data.\n",
+      "claim": "The headline RFID comparison (Fig. 3: 21.2% PSNR / 56.4% MSE median gains) and Fig. 6 are measured on a sparse set of 220 randomly selected training instances (density 0.8 measurements/ft^3). No code performs this subsampling: `grep` for '220 / density / subsample / measurement' finds only the point-cloud grid subsample (`max_init_points`). The RFID training path (`train_rfid.py` -> `readRFSceneInfo`) always trains on the full ratio_train split of whatever is in `data/rfid/`.",
+      "concern": "Running the released code reproduces the full-data RFID setting, not the sparse 220-instance setting that the paper's headline improvement numbers (Fig. 3, Fig. 6) are computed on; the random-220 selection is not reproducible from the repo.",
+      "resolution": "Authors: please add the density/220-instance subsampling code (with the seed used), or clarify that the sparse dataset was prepared externally and provide the exact 220 indices.",
+      "cross_refs": [],
+      "paper_ref": "Section 5.1 (Overall Performance; Measurement Density); Figures 3 and 6",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "rfid-sparse-density-protocol-missing",
+      "audit": "",
+      "audit_md_line": 115,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/ble-test-subset-of-train",
+      "category": "bug",
+      "topic": "data splitting / train-test leakage",
+      "title": "BLE loader makes the test set a strict subset of the train set (100% leakage)",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "scene/ble_dataset.py",
+      "line_start": 65,
+      "line_end": 68,
+      "quote": "num_train = int(num_samples * ratio_train)\nnum_test = num_samples - num_train\ntrain_set = set(all_indices[:num_train].tolist())\ntest_set = set(all_indices[:num_test].tolist())\n",
+      "claim": "In `load_ble_per_gateway` the test set is sliced as `all_indices[:num_test]` (the FIRST num_test shuffled indices) instead of the held-out tail `all_indices[num_train:]`. Since num_test = num_samples - num_train and ratio_train>0.5, num_test < num_train, so `all_indices[:num_test]` is entirely contained in `all_indices[:num_train]`. The per-gateway loop then appends a sample to train and test independently (lines 94-97, two separate `if`s), so every test sample is also a training sample. The sibling RFID (`dataset_readers.py:82`) and CSI (`csi_dataset.py:86`) loaders correctly use `all_indices[num_train:]`, proving the intended behavior is a disjoint split.",
+      "concern": "All BLE test samples were seen during training, so the reported BLE RSSI error (Fig. 9 / Table 3: GSRF 4.09 dBm, 32.79% improvement over NeRF2) and everything derived from it (localization) are measured on training data — the BLE evaluation is invalid (train/test leakage).",
+      "resolution": "Change line 68 to `test_set = set(all_indices[num_train:].tolist())` and re-run the BLE experiments; report whether the 4.09 dBm / 32.79% numbers survive a truly held-out split.",
+      "cross_refs": [
+        "ble-localization-code-missing"
+      ],
+      "check_script": "_audit_code/check_ble_split_overlap.py",
+      "paper_ref": "Section 5.3; Figure 9; Table 3 (RSSI error row)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ble-test-subset-of-train",
+      "audit": "",
+      "audit_md_line": 139
+    },
+    {
+      "id": "/rfid-render-not-cuda-tracer",
+      "category": "difference",
+      "topic": "rendering algorithm (paper vs code)",
+      "title": "Runnable RFID/BLE path renders via PyTorch softmax, never the described CUDA ray tracer",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "gaussian_renderer/__init__.py",
+      "line_start": 93,
+      "line_end": 95,
+      "quote": "mahalanobis = torch.einsum('rni,nij,rnj->rn', offsets, precision, offsets)\nweights = torch.softmax(-0.5 * mahalanobis + log_attenuation.unsqueeze(0), dim=1)\nrendered_chunks.append(weights @ stacked_signal)\n",
+      "claim": "`render_rfid` (imported as the renderer by `train_rfid.py`, `inference_rfid.py`, `main_ble.py`, `inference_ble.py`) aggregates Gaussian contributions with a per-ray PyTorch softmax over Mahalanobis distances. It imports `ComplexGaussianTracer` (line 3) but never calls it. The CUDA `ComplexGaussianTracer` is invoked only inside `gaussian_renderer/render_csi.py:125-136`, which no entry point calls (orphaned).",
+      "concern": "The paper's third core contribution and Fig. 5 attribute RF synthesis and the 4.18 ms / 84x inference speedup to a complex-valued CUDA ray-tracing kernel, but every runnable RFID/BLE experiment uses a PyTorch softmax approximation instead — a different rendering algorithm from the one described, so the accuracy and especially the latency claims may not correspond to the released code path.",
+      "resolution": "Authors: clarify which renderer produced the paper's RFID/BLE accuracy and timing numbers, and wire the CUDA tracer into the RFID/BLE path (or explain why `render_rfid` uses softmax while the tracer is only used for CSI).",
+      "cross_refs": [
+        "csi-experiment-driver-missing"
+      ],
+      "paper_ref": "Section 4 (Complex-Valued Ray Tracing); contribution list; Figure 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "rfid-render-not-cuda-tracer",
+      "audit": "",
+      "audit_md_line": 169
+    },
+    {
+      "id": "/split-ratio-default-mismatch",
+      "category": "difference",
+      "topic": "data splitting",
+      "title": "Config default split is 80/20; paper states 70/30 for RFID and CSI",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "arguments/configs/rfid/exp1.yaml",
+      "line_start": 19,
+      "line_end": 19,
+      "quote": "ratio_train: 0.8\n",
+      "claim": "The shipped RFID config sets `ratio_train: 0.8` (and the CSI config `csi/exp1.yaml:19` also sets `ratio_train: 0.8`), i.e. an 80/20 train/test split. The paper states the RFID and CSI datasets are 'randomly split by default into 70% for training and 30% for testing'.",
+      "concern": "The released default split ratio (80/20) does not match the 70/30 split the paper describes, so the test set used by the code differs in size from the one the paper reports; reproduced numbers will be on a different split.",
+      "resolution": "Authors: set `ratio_train: 0.7` to match the paper, or correct the paper text; confirm which ratio produced the reported results.",
+      "cross_refs": [],
+      "paper_ref": "Section 5.1 DATASET; Section 5.2 DATASET",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "split-ratio-default-mismatch",
+      "audit": "",
+      "audit_md_line": 195
+    },
+    {
+      "id": "/fle-degree-default-mismatch",
+      "category": "difference",
+      "topic": "hyperparameters / FLE degree",
+      "title": "Config default FLE degree is 9 (100 coeffs); paper's main model uses L=3 (16 coeffs)",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "arguments/configs/rfid/exp1.yaml",
+      "line_start": 9,
+      "line_end": 9,
+      "quote": "fle_degree: 9                     # max Fourier-Legendre expansion degree\n",
+      "claim": "The shipped RFID config sets `fle_degree: 9`; the model uses (fle_degree+1)^2 coefficients (`gaussian_model.py:113`) = 100, and the degree ramps up to this maximum during training. The paper states the main FLE model uses 'a degree of L = 3, resulting in 16 coefficients' and Table 4 recommends L=3, so the released default does not match the degree used for the paper's main/Table-1 results.",
+      "concern": "Reproducing Table 1 / Fig. 3 with the shipped default (L=9, 100 coefficients) will not match the paper's reported L=3 (16-coefficient) configuration; the released default and the paper's stated main setting disagree.",
+      "resolution": "Authors: set the default `fle_degree` to the value used for the reported results (L=3 per Sec 5.4/Table 4), or clarify which degree produced the headline RFID numbers.",
+      "cross_refs": [],
+      "paper_ref": "Section 5.4 ('degree of L = 3, resulting in 16 coefficients'); Table 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "fle-degree-default-mismatch",
+      "audit": "",
+      "audit_md_line": 219
+    }
+  ]
+}

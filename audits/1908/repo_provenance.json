@@ -1,0 +1,23 @@
+{
+  "paper_id": "1908_GSRF_Complex_Valued_3D_Gaussian_Splatting_for_Efficient_Radi",
+  "title": "GSRF: Complex-Valued 3D Gaussian Splatting for Efficient Radio-Frequency Data Synthesis",
+  "repos": [
+    {
+      "name": "nesl__GSRF",
+      "role": "core",
+      "evidence": "git origin=github.com/nesl/GSRF (NESL = Mani Srivastava's UCLA lab, the paper's last author); latest commit by kangyang73 <yangkangyk@hotmail.com> = first author Kang Yang. README describes GSRF on the exact three datasets RFID/BLE/CSI the paper evaluates and says it is 'adapted from 3D Gaussian Splatting (3DGS) by GraphDECO/Inria', matching the paper's 'extends 3DGS'. utils/fle_utils.py implements the Fourier-Legendre Expansion (contribution 1); submodules/complex-gaussian-tracer{,-csi} are real CUDA kernels (189-line tracer_points.cu) for complex-valued ray tracing (contribution 3); scene/gaussian_model.py (566 lines) is the complex-valued Gaussian model; train_rfid.py/main_ble.py/main_csi.py + three inference_*.py cover the paper's RFID/BLE/CSI experiments."
+    },
+    {
+      "name": "nesl__GSRF/submodules/simple-knn",
+      "role": "dependency",
+      "evidence": "Standard simple-knn CUDA extension bundled from the Inria 3DGS codebase; installed via README's 'pip install -e submodules/simple-knn'. Part of the core repo's proper build, not a separately-cloned wrong repo."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "core_confidence": "high",
+  "confidence": "high",
+  "rationale": "Exactly one repo was cloned (nesl/GSRF) and it is unambiguously the paper's own core implementation: repo owner (NESL/UCLA, last author Srivastava) and top committer (Kang Yang, first author) match the author list; the README and code implement the paper's three named contributions (Fourier-Legendre radiance via fle_utils.py, complex-valued CUDA ray tracing via the complex-gaussian-tracer submodules, complex-valued Gaussian model) on the same three RF datasets (RFID/BLE/CSI). No baseline/different-paper/stub repo was mis-grabbed. The [title-match] prior in code_links.txt is correct here (it is the author repo, not a like-named library).",
+  "audit_impact": "No provenance error. The audit correctly treated nesl/GSRF as the paper's own code and its findings are scoped, accurate partial-completeness observations (missing baseline NeRF2/WRF-GS/R2F2/FIRE code, missing Table-1 ablation toggles, missing BLE localization and measurement-density experiments, FLE-degree config=9 vs paper L=3). These are NOT 'no code exists' claims written against a wrong repo; they hold against the genuine core. No finding needs to be retracted on provenance grounds; verdicts stand.",
+  "recommended_action": "No reclassification needed. Keep paper as source-present / core-present. The high-severity 'missing baseline/ablation code' findings are legitimate against the real author repo and can remain as completeness gaps (authors should supply baseline + ablation + localization + density-sweep scripts and reconcile fle_degree config with the paper's L=3 claim)."
+}

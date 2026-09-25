@@ -1,0 +1,234 @@
+{
+  "paper": "1908",
+  "n_flags": 20,
+  "flags": [
+    {
+      "file": "nesl__GSRF/scene/dataset_readers.py",
+      "line": 83,
+      "reason": "The random RFID split takes test indices from all_indices[:num_test] instead of all_indices[num_train:], so every test sample is also in the training set for the default 80/20 split.",
+      "confidence": "high"
+    },
+    {
+      "file": "nesl__GSRF/scene/ble_dataset.py",
+      "line": 68,
+      "reason": "The BLE random split takes both train and test sets from the start of the same shuffled array, making the entire default test set a subset of training.",
+      "confidence": "high"
+    },
+    {
+      "file": "nesl__GSRF/utils/loss_utils.py",
+      "line": 73,
+      "reason": "fourier_loss detaches pred before the FFT, so the configured Fourier term contributes no gradient while still reducing the L1 coefficient in the total loss.",
+      "confidence": "high"
+    },
+    {
+      "file": "nesl__GSRF/utils/fle_utils.py",
+      "line": 56,
+      "reason": "eval_fle derives its parameter count from the full coefficient tensor and uses deg only in assertions, so active_fle_degree and the documented progressive degree ramp do not change the rendered model.",
+      "confidence": "high"
+    },
+    {
+      "file": "nesl__GSRF/gaussian_renderer/render_csi.py",
+      "line": 120,
+      "reason": "CSI rendering requires 52 signal channels, but GaussianModel defaults to 2 and the CSI config never sets num_channels_override, making the reshape/output contract invalid.",
+      "confidence": "high"
+    },
+    {
+      "file": "nesl__GSRF/main_csi.py",
+      "line": null,
+      "reason": "The README advertises two-phase CSI training through main_csi.py, but that training entry point is absent.",
+      "confidence": "high"
+    },
+    {
+      "file": "nesl__GSRF/inference_csi.py",
+      "line": null,
+      "reason": "The README documents CSI inference with inference_csi.py, but no such inference implementation is included.",
+      "confidence": "high"
+    },
+    {
+      "file": "nesl__GSRF/inference_ble.py",
+      "line": null,
+      "reason": "The README documents pretrained BLE inference with inference_ble.py, but the file is absent.",
+      "confidence": "high"
+    },
+    {
+      "file": "nesl__GSRF/run_csi.sh",
+      "line": null,
+      "reason": "The README's primary CSI command is bash run_csi.sh, but that launcher is absent.",
+      "confidence": "high"
+    },
+    {
+      "file": "nesl__GSRF/gaussian_renderer/__init__.py",
+      "line": 56,
+      "reason": "render_rfid reads T_rx but never uses it, so predictions are invariant to receiver/gateway position for a fixed transmitter and model.",
+      "confidence": "high"
+    },
+    {
+      "file": "nesl__GSRF/gaussian_renderer/render_csi.py",
+      "line": 95,
+      "reason": "render_csi likewise reads but never uses the receiver/antenna position T_rx, despite CSI being defined per base-station antenna.",
+      "confidence": "high"
+    },
+    {
+      "file": "nesl__GSRF/scene/gaussian_model.py",
+      "line": 112,
+      "reason": "GaussianModel looks for _fle_init_scale on itself but never copies it from args, so the RFID/BLE configured initialization scales are ignored in favor of 0.1.",
+      "confidence": "high"
+    },
+    {
+      "file": "nesl__GSRF/main_ble.py",
+      "line": 297,
+      "reason": "BLE training forcibly sets gene_init_point=True for the first gateway, contradicting and bypassing the config value false.",
+      "confidence": "high"
+    },
+    {
+      "file": "nesl__GSRF/scene/csi_dataset.py",
+      "line": 48,
+      "reason": "CSI normalization means and variances are computed over the full dataset before splitting, leaking test-set statistics into training.",
+      "confidence": "medium"
+    },
+    {
+      "file": "nesl__GSRF/train_rfid.py",
+      "line": 170,
+      "reason": "The optimizer step is skipped on the final iteration, so the gradient computed for the advertised final iteration is never applied.",
+      "confidence": "high"
+    },
+    {
+      "file": "nesl__GSRF/main_ble.py",
+      "line": 187,
+      "reason": "BLE also skips optimizer.step on the final iteration while saving and evaluating beforehand, so the final gradient is discarded and checkpoints are pre-update states.",
+      "confidence": "high"
+    },
+    {
+      "file": "nesl__GSRF/train_rfid.py",
+      "line": 142,
+      "reason": "At non-final checkpoints the PLY and validation are produced before optimizer.step while the same-numbered checkpoint is written after it, so artifacts with one iteration label represent different model states.",
+      "confidence": "high"
+    },
+    {
+      "file": "nesl__GSRF/README.md",
+      "line": 15,
+      "reason": "The documented environment omits pandas even though BLE loading imports it unconditionally, so the advertised setup is insufficient for BLE training.",
+      "confidence": "high"
+    },
+    {
+      "file": "nesl__GSRF/scene/csi_dataset.py",
+      "line": 11,
+      "reason": "CSI samples contain no transmitter coordinates, so the advertised autoencoder phase has no supervision tying its 3D latent to actual TX positions rather than an arbitrary reconstruction code.",
+      "confidence": "medium"
+    },
+    {
+      "file": "nesl__GSRF/run_rfid.sh",
+      "line": 33,
+      "reason": "The official RFID launcher relies on grep -P, which is unsupported by standard BSD/macOS grep and makes the documented workflow non-portable.",
+      "confidence": "medium"
+    }
+  ],
+  "candidates": {
+    "S01": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "main_csi.py",
+          "line": null
+        },
+        {
+          "file": "inference_csi.py",
+          "line": null
+        },
+        {
+          "file": "run_csi.sh",
+          "line": null
+        }
+      ],
+      "matched_flags": [
+        "The README advertises two-phase CSI training through main_csi.py, but that training entry point is absent.",
+        "The README documents CSI inference with inference_csi.py, but no such inference implementation is included.",
+        "The README's primary CSI command is bash run_csi.sh, but that launcher is absent."
+      ]
+    },
+    "S02": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "inference_ble.py",
+          "line": null
+        }
+      ],
+      "matched_flags": [
+        "The README documents pretrained BLE inference with inference_ble.py, but the file is absent."
+      ]
+    },
+    "S03": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "utils/fle_utils.py",
+          "line": 52
+        }
+      ],
+      "matched_flags": [
+        "eval_fle derives its parameter count from the full coefficient tensor and uses deg only in assertions, so active_fle_degree and the documented progressive degree ramp do not change the rendered model."
+      ]
+    },
+    "S04": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "gaussian_renderer/__init__.py",
+          "line": 76
+        }
+      ],
+      "matched_flags": []
+    },
+    "S05": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "scene/ble_dataset.py",
+          "line": 60
+        },
+        {
+          "file": "scene/ble_dataset.py",
+          "line": 94
+        }
+      ],
+      "matched_flags": [
+        "The BLE random split takes both train and test sets from the start of the same shuffled array, making the entire default test set a subset of training."
+      ]
+    },
+    "S06": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "scene/dataset_readers.py",
+          "line": 80
+        }
+      ],
+      "matched_flags": [
+        "The random RFID split takes test indices from all_indices[:num_test] instead of all_indices[num_train:], so every test sample is also in the training set for the default 80/20 split."
+      ]
+    },
+    "S07": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "utils/general_utils.py",
+          "line": 83
+        }
+      ],
+      "matched_flags": []
+    },
+    "S08": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "utils/loss_utils.py",
+          "line": 72
+        }
+      ],
+      "matched_flags": [
+        "fourier_loss detaches pred before the FFT, so the configured Fourier term contributes no gradient while still reducing the L1 coefficient in the total loss."
+      ]
+    }
+  }
+}

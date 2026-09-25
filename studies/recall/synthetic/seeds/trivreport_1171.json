@@ -1,0 +1,229 @@
+{
+  "paper": "1171",
+  "n_flags": 20,
+  "flags": [
+    {
+      "file": "Legenddddd__MEL/base.py",
+      "line": null,
+      "reason": "The Trainer superclass imported by models/mel/fscil_trainer.py is absent, so the documented training entry point fails during import.",
+      "confidence": "high"
+    },
+    {
+      "file": "Legenddddd__MEL/models/mel/Network.py",
+      "line": null,
+      "reason": "The central MYNET model implementation is imported but absent, leaving the claimed method unimplemented and the training entry point unrunnable.",
+      "confidence": "high"
+    },
+    {
+      "file": "Legenddddd__MEL/dataloader/StanfordDog/StanfordDog.py",
+      "line": 16,
+      "reason": "Base-session training explicitly selects test.csv, so the base model is trained on the same evaluation split used by the test loader.",
+      "confidence": "high"
+    },
+    {
+      "file": "Legenddddd__MEL/dataloader/StanfordDog/StanfordDog.py",
+      "line": 105,
+      "reason": "Incremental training ignores the exact few-shot filenames in the session index and instead takes the first five images per class from test.csv, directly leaking test examples into training.",
+      "confidence": "high"
+    },
+    {
+      "file": "Legenddddd__MEL/models/mel/fscil_trainer.py",
+      "line": 74,
+      "reason": "Every base-training epoch is evaluated on the test set and the maximum test accuracy selects the checkpoint, making the reported test result validation-tuned.",
+      "confidence": "high"
+    },
+    {
+      "file": "Legenddddd__MEL/models/mel/fscil_trainer.py",
+      "line": 108,
+      "reason": "Prototype replacement unconditionally overwrites best_model_dict and the best checkpoint before checking its accuracy, so later sessions use it even when it is worse than the recorded best model.",
+      "confidence": "high"
+    },
+    {
+      "file": "Legenddddd__MEL/models/mel/helper.py",
+      "line": 130,
+      "reason": "Evaluation reports accuracy from logits1 alone although training accuracy and loss combine logits1 and logits2, so the second branch and part_weight do not affect the reported metric consistently.",
+      "confidence": "high"
+    },
+    {
+      "file": "Legenddddd__MEL/models/mel/helper.py",
+      "line": 135,
+      "reason": "Test accuracy is averaged equally across batches rather than across examples, overweighting the final partial batch and biasing the reported metric.",
+      "confidence": "high"
+    },
+    {
+      "file": "Legenddddd__MEL/dataloader/StanfordDog/autoaugment.py",
+      "line": 146,
+      "reason": "The default StanfordDog augmentation constructs a dtype with removed alias np.int, which crashes on NumPy 1.24 and newer.",
+      "confidence": "high"
+    },
+    {
+      "file": "Legenddddd__MEL/utils.py",
+      "line": 218,
+      "reason": "get_optimizer always constructs AdamW, ignoring the advertised -optim choice (default SGD) and the parsed momentum setting.",
+      "confidence": "high"
+    },
+    {
+      "file": "Legenddddd__MEL/dataloader/data_utils.py",
+      "line": 7,
+      "reason": "Three configured dataset branches (cub200, StanfordCar, and Aircraft) import loader packages that are absent from the repository.",
+      "confidence": "high"
+    },
+    {
+      "file": "Legenddddd__MEL/models/mel/fscil_trainer.py",
+      "line": 130,
+      "reason": "When batch_size_new is nonzero, the attention update loop overwrites data on every iteration and consequently updates attention using only the final shuffled batch.",
+      "confidence": "medium"
+    },
+    {
+      "file": "Legenddddd__MEL/models/resnet12_encoder.py",
+      "line": 171,
+      "reason": "The encoder unconditionally detaches the layer-3 output before both returning it and feeding layer 4, preventing gradients from reaching layers 1 through 3.",
+      "confidence": "medium"
+    },
+    {
+      "file": "Legenddddd__MEL/models/resnet12_encoder.py",
+      "line": 115,
+      "reason": "ResNet12Block returns the convolutional path without ever adding an identity or projected shortcut, contradicting the class/factory's ResNet designation.",
+      "confidence": "medium"
+    },
+    {
+      "file": "Legenddddd__MEL/dataloader/sampler.py",
+      "line": 31,
+      "reason": "CategoriesSampler ignores its n_cls argument and always samples group*way classes, so its public sampling contract can silently produce the wrong episode size.",
+      "confidence": "medium"
+    },
+    {
+      "file": "Legenddddd__MEL/models/mel/fscil_trainer.py",
+      "line": 149,
+      "reason": "The trainer records only aggregate encountered-class accuracy and never computes or saves the seen/unseen and harmonic-mean metrics that utils.save_result and its result schema expect.",
+      "confidence": "medium"
+    },
+    {
+      "file": "Legenddddd__MEL/requirements.txt",
+      "line": null,
+      "reason": "No dependency or environment specification is provided despite nonstandard imports such as torch_dct and version-sensitive code such as np.int, preventing reproducible setup.",
+      "confidence": "medium"
+    },
+    {
+      "file": "Legenddddd__MEL/models/resnet12_encoder.py",
+      "line": 154,
+      "reason": "_make_layer references an undefined downsample variable whenever n_block is not 1, making the supposedly general layer builder crash for multi-block configurations.",
+      "confidence": "medium"
+    },
+    {
+      "file": "Legenddddd__MEL/models/resnet12_encoder.py",
+      "line": 25,
+      "reason": "DropBlock allocates masks and offsets with bare .cuda(), which can place them on a different device from x under CPU use or multi-GPU DataParallel.",
+      "confidence": "low"
+    },
+    {
+      "file": "Legenddddd__MEL/dataloader/data_utils.py",
+      "line": 69,
+      "reason": "Base loaders hard-code num_workers=8 and ignore the parsed -num_workers argument, unlike incremental loaders.",
+      "confidence": "low"
+    }
+  ],
+  "candidates": {
+    "S01": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "models/mel/Network.py",
+          "line": null
+        }
+      ],
+      "matched_flags": [
+        "The central MYNET model implementation is imported but absent, leaving the claimed method unimplemented and the training entry point unrunnable."
+      ]
+    },
+    "S02": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "base.py",
+          "line": null
+        }
+      ],
+      "matched_flags": [
+        "The Trainer superclass imported by models/mel/fscil_trainer.py is absent, so the documented training entry point fails during import."
+      ]
+    },
+    "S03": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "models/resnet12_encoder.py",
+          "line": 88
+        },
+        {
+          "file": "models/resnet12_encoder.py",
+          "line": 149
+        }
+      ],
+      "matched_flags": [
+        "_make_layer references an undefined downsample variable whenever n_block is not 1, making the supposedly general layer builder crash for multi-block configurations."
+      ]
+    },
+    "S04": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "utils.py",
+          "line": 218
+        }
+      ],
+      "matched_flags": [
+        "get_optimizer always constructs AdamW, ignoring the advertised -optim choice (default SGD) and the parsed momentum setting."
+      ]
+    },
+    "S05": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "dataloader/StanfordDog/StanfordDog.py",
+          "line": 15
+        }
+      ],
+      "matched_flags": [
+        "Base-session training explicitly selects test.csv, so the base model is trained on the same evaluation split used by the test loader."
+      ]
+    },
+    "S06": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "dataloader/StanfordDog/StanfordDog.py",
+          "line": 98
+        }
+      ],
+      "matched_flags": [
+        "Incremental training ignores the exact few-shot filenames in the session index and instead takes the first five images per class from test.csv, directly leaking test examples into training."
+      ]
+    },
+    "S07": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "utils.py",
+          "line": 212
+        }
+      ],
+      "matched_flags": [
+        "get_optimizer always constructs AdamW, ignoring the advertised -optim choice (default SGD) and the parsed momentum setting."
+      ]
+    },
+    "S08": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "models/resnet12_encoder.py",
+          "line": 168
+        }
+      ],
+      "matched_flags": [
+        "The encoder unconditionally detaches the layer-3 output before both returning it and feeding layer 4, preventing gradients from reaching layers 1 through 3.",
+        "_make_layer references an undefined downsample variable whenever n_block is not 1, making the supposedly general layer builder crash for multi-block configurations."
+      ]
+    }
+  }
+}

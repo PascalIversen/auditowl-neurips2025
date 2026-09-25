@@ -1,0 +1,5 @@
+{
+  "row0_future_weight_repo(1e-8 mask)": 0.9661,
+  "row0_future_weight_correct(-inf mask)": 0.0,
+  "note": "With the repo's 1e-8 fill, token 0 still attends to future tokens (weight > 0); a correct causal mask gives exactly 0."
+}

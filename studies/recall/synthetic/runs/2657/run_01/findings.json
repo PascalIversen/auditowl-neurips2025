@@ -1,0 +1,123 @@
+{
+  "schema_version": "1",
+  "audit": "run_01",
+  "audit_md": "/home/author/Desktop/code/major_recall_study_export_v2/for_rebuttal/recall_experiment/major_recall_study/runs/2657/run_01/audit.md",
+  "generated_at": "2026-08-02T22:54:36.192884+00:00",
+  "findings": [
+    {
+      "id": "run_01/ablation-script-missing",
+      "category": "missing",
+      "topic": "ablations / result traceability",
+      "title": "AblationStudies.py (Appendix D.3 ablation figures) is referenced but absent from the repo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 80,
+      "line_end": 80,
+      "quote": "├── AblationStudies.py        # Ablation study runner\n",
+      "claim": "The README lists AblationStudies.py in the repo structure (line 80), in the Reproduction Roadmap (line 99: `python AblationStudies.py` -> ./results_ablation), and in the 'Ablation Studies' section (line 230), stating it reproduces the Appendix D.3 ablations and outputs Time_Embedding_Figure_12.pdf, Sensitivity_t_Figure_13.pdf and Noise_Injection_Figure_14.pdf; the file does not exist in the repository (`ls *.py` returns only AggregateResults.py, ContaminationStudies.py, FullExperiments.py, ProcessContamination.py, RobustnessStudy.py, utils.py).",
+      "concern": "The ablation/sensitivity results the paper uses to justify its design choices (Figures 12, 13, 14 and, with no other generating script, Figures 16/17/18 and the epoch-sensitivity Figure 5) have no code in the repo, so they cannot be reproduced.",
+      "resolution": "Authors: please add AblationStudies.py (and any script generating Figures 16–18 / Figure 5), or point to where these figures are produced.",
+      "cross_refs": [
+        "§ Appendix D.3",
+        "epoch-selection-not-implemented"
+      ],
+      "paper_ref": "Appendix D.3 (Figures 12–18); README lines 80, 99, 230, 241–243",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ablation-script-missing",
+      "audit": "run_01",
+      "audit_md_line": 45
+    },
+    {
+      "id": "run_01/epoch-selection-not-implemented",
+      "category": "missing",
+      "topic": "hyperparameter selection / reproducibility",
+      "title": "Unsupervised (CSM) epoch-selection procedure is not in the repo; epochs are hardcoded per dataset",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "FMAD/functions.py",
+      "line_start": 127,
+      "line_end": 134,
+      "quote": "elif \"skin\" in dataset_name:\n    epoch_size = 110  # Chosen first from \"100 or 1\"\n    batch_size = 1024\n    learning_rate = 0.005\nelif \"celeba\" in dataset_name:\n    epoch_size = 2  # Chosen first from \"100 or 1\"\n    batch_size = 1024\n    learning_rate = 0.005\n",
+      "claim": "TCCM's number of training epochs — described by the paper as 'the only data-dependent hyperparameter' and selected by an unsupervised, label-free Improved-Contrast-Score-Margin (CSM) procedure (Appendix B.6) — is instead provided as a hardcoded per-dataset if/else in determine_FMAD_hyperparameters, with comments such as `# Chosen first from \"100 or 1\"`; a repo-wide grep for the selection procedure (CSM / candidate / inlier / epoch-selection) finds no implementation.",
+      "concern": "The paper states the epochs are 'not arbitrarily hardcoded' and chosen without anomaly labels, but the repo contains only the final numbers and no selection code, so the fairness/reproducibility of TCCM's sole tuned hyperparameter (range 1–5000 epochs across datasets) cannot be verified, and the manual-looking comments suggest hand-selection rather than the described automated procedure.",
+      "resolution": "Authors: please release the CSM-based epoch-selection script (or the code from Li et al. 2025b as invoked here) and confirm the epochs were chosen using only training/model outputs, never test AUROC.",
+      "cross_refs": [
+        "no-holdout-split",
+        "§ Appendix B.6"
+      ],
+      "paper_ref": "Appendix B.6 'Unsupervised Epoch Selection Strategy'; Sec. B.3 ('not arbitrarily hardcoded')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "epoch-selection-not-implemented",
+      "audit": "run_01",
+      "audit_md_line": 69
+    },
+    {
+      "id": "run_01/run-knn-wrong-script-name",
+      "category": "bug",
+      "topic": "reproduction scripts",
+      "title": "bash_files/run_knn.sh calls non-existent Full_experiments.py (actual file: FullExperiments.py)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "bash_files/run_knn.sh",
+      "line_start": 28,
+      "line_end": 28,
+      "quote": "nohup taskset -c \"$core_id\" python Full_experiments.py -d \"$dname\" -i \"$j\" -r \"$RANDOM_SEED\" -t \"$TIME_LIMIT\" -m \"$MEMORY_LIMIT\" >> \"./logs/seed_${RANDOM_SEED}/run_${dname}_model_${j}.log\" 2>&1 &\n",
+      "claim": "run_knn.sh invokes `python Full_experiments.py` on lines 28, 63, 101 and 141, but the repository file is named FullExperiments.py (no underscore, capital E); every invocation would fail with 'can't open file Full_experiments.py'.",
+      "concern": "The auxiliary KNN reproduction script cannot run as written; a reviewer following it verbatim gets a file-not-found error.",
+      "resolution": "Rename the invocation to FullExperiments.py (the main run_main.sh already uses the correct name).",
+      "cross_refs": [],
+      "paper_ref": "N/A",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "run-knn-wrong-script-name",
+      "audit": "run_01",
+      "audit_md_line": 102
+    },
+    {
+      "id": "run_01/no-holdout-split",
+      "category": "methodology",
+      "topic": "data splitting / evaluation validity",
+      "title": "Main benchmark has no held-out normal test set: the entire normal training set is reused as test normals",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "utils.py",
+      "line_start": 37,
+      "line_end": 44,
+      "quote": "X_train = X_normal.copy()\ny_train = y_normal.copy()\nX_test_normal = X_normal.copy()\ny_test_normal = y_normal.copy()\n\n# Test set contains both normal and abnormal data\nX_test = np.vstack((X_test_normal, X_anomalous))\ny_test = np.concatenate((y_test_normal, y_anomalous))\n",
+      "claim": "load_adbench_npz (used by FullExperiments.py:221 for every main-benchmark run) sets both X_train and X_test_normal to X_normal.copy(), so the normal half of X_test is byte-identical to X_train; the test set is a superset of the training set on the normal class. The `test_size=0.5`/`random_state` arguments and the imported `train_test_split` are never used. My check (_audit_code/out/split_overlap.csv) confirms 100% of training rows recur in the test set for every dataset examined (e.g. 42_WBC: 213 train normals, all 213 in a 223-row test set; 32_shuttle: 45586/45586).",
+      "concern": "The paper states the main protocol is 'a stratified split to the normal data, using 50% for training and holding out the rest for testing' and frames TCCM as inductive scoring 'unseen test data', but the reported AUROC/AUPRC (Figure 2) are computed with all normals seen during training, so a high-capacity model that memorises training normals (TCCM trains up to 5000 epochs on some datasets) is scored partly in-sample, inflating separation from anomalies and making the numbers non-reproducible under the described held-out protocol.",
+      "resolution": "Authors: re-run the main benchmark with the 50% held-out normal split that ContaminationStudies.py:168 already implements, and report whether the Figure-2 rankings and absolute AUROC/AUPRC hold; confirm which loader produced the paper's numbers.",
+      "cross_refs": [
+        "epoch-selection-not-implemented",
+        "§ Sec. 4 Data Processing",
+        "§ Sec. 4.1 inductive framing"
+      ],
+      "check_script": "_audit_code/check_split_overlap.py",
+      "paper_ref": "Sec. 4 'Experimental Setup, (2) Data Processing' (50% train / hold out rest); Sec. 4.1 ('TCCM is an inductive method ... unseen test data')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-holdout-split",
+      "audit": "run_01",
+      "audit_md_line": 134
+    }
+  ]
+}

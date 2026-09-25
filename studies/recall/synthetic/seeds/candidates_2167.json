@@ -1,0 +1,198 @@
+{
+  "paper": "2167",
+  "seeds": [
+    {
+      "sid": "S01",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "Remove the NICE arm of the flow-architecture ablation",
+      "description": "Delete the repository's only NICE implementation. Table 5 reports a NICE NLL and uses the four-way architecture comparison to justify choosing MAF; after this deletion there is no executable NICE model in the repository with which to reproduce that arm of the ablation.",
+      "expected_reasoning": "The paper says the architecture-selection ablation compares MAF, NICE, RealNVP, and KDE on Adult. A careful reader enumerates the corresponding implementations, finds NICE only in counterfactuals/generative_models/nice.py, and observes that the patch deletes that file rather than replacing it with a runnable mechanism. Therefore no code path remains that can instantiate and train the reported NICE variant, so this is a missing experiment rather than a buggy substitute.",
+      "paper_anchor": "We conducted an ablation study to select the most suitable normalizing flow architecture for our framework, comparing different models based on negative log-likelihood (NLL) on the Adult dataset.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "delete_file",
+            "file": "ofurman__DiCoFlex/counterfactuals/generative_models/nice.py"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S02",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "Remove the RealNVP arm of the flow-architecture ablation",
+      "description": "Delete the repository's only RealNVP model implementation. The paper reports a RealNVP NLL and relies on its comparison with MAF to support the selected architecture, but the released repository would retain no code capable of producing the RealNVP result.",
+      "expected_reasoning": "The paper explicitly lists Real NVP among the trained alternatives in the Adult generative-model ablation. Searching the code finds its complete implementation only in counterfactuals/generative_models/real_nvp.py; the remaining package import is merely a reference and cannot execute the method after the file is deleted. Since nothing runnable stands in for RealNVP, the reported ablation arm is absent rather than incorrectly implemented.",
+      "paper_anchor": "We compared three normalizing flow architectures: MAF [26], NICE [8], and Real NVP [9], as well as KDE as a non-parametric baseline.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "delete_file",
+            "file": "ofurman__DiCoFlex/counterfactuals/generative_models/real_nvp.py"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S03",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "Implement RealNVP coupling layers inside the claimed MAF model",
+      "description": "Replace the autoregressive transform stack in MaskedAutoregressiveFlow with nflows' full SimpleRealNVP coupling architecture while preserving the public class and training API. The substitute remains an invertible conditional flow with trainable scale/shift networks, exact likelihoods, sampling, and real gradients, but it is RealNVP rather than the autoregressive method the paper says was selected.",
+      "expected_reasoning": "The paper attributes MAF's advantage to each dimension depending autoregressively on previously transformed dimensions. The patched constructor no longer builds any MaskedAffineAutoregressiveTransform; it constructs SimpleRealNVP with non-volume-preserving affine coupling layers and passes that transform into the existing Flow wrapper. Training and sampling still work and optimize a genuine normalizing flow, so the discrepancy is a coherent alternative method, not a no-op or missing implementation.",
+      "paper_anchor": "MAF\u2019s superior performance stems from its autoregressive structure, which enables more expressive transformations by conditioning each dimension on previously transformed dimensions.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ofurman__DiCoFlex/counterfactuals/generative_models/maf.py",
+            "old_string": "from nflows.flows.base import Flow\nfrom nflows.transforms.autoregressive import MaskedAffineAutoregressiveTransform",
+            "new_string": "from nflows.flows.base import Flow\nfrom nflows.flows import SimpleRealNVP as _SimpleRealNVP\nfrom nflows.transforms.autoregressive import MaskedAffineAutoregressiveTransform"
+          },
+          {
+            "action": "replace",
+            "file": "ofurman__DiCoFlex/counterfactuals/generative_models/maf.py",
+            "old_string": "        if use_random_permutations:\n            permutation_constructor = RandomPermutation\n        else:\n            permutation_constructor = ReversePermutation\n\n        layers = []\n        for _ in range(num_layers):\n            layers.append(permutation_constructor(features))\n            layers.append(\n                MaskedAffineAutoregressiveTransform(\n                    features=features,\n                    hidden_features=hidden_features,\n                    context_features=context_features,\n                    num_blocks=num_blocks_per_layer,\n                    use_residual_blocks=use_residual_blocks,\n                    random_mask=use_random_masks,\n                    activation=activation,\n                    dropout_probability=dropout_probability,\n                    use_batch_norm=batch_norm_within_layers,\n                )\n            )\n            if batch_norm_between_layers:\n                layers.append(BatchNorm(features))\n\n        super().__init__(\n            transform=CompositeTransform(layers),\n            distribution=StandardNormalWithTemp([features]),\n        )",
+            "new_string": "        model = _SimpleRealNVP(\n            features=features,\n            hidden_features=hidden_features,\n            context_features=context_features,\n            num_layers=num_layers,\n            num_blocks_per_layer=num_blocks_per_layer,\n            activation=activation,\n            use_volume_preserving=False,\n            dropout_probability=dropout_probability,\n            batch_norm_within_layers=batch_norm_within_layers,\n            batch_norm_between_layers=batch_norm_between_layers,\n        )\n\n        super().__init__(\n            transform=model._transform,\n            distribution=StandardNormalWithTemp([features]),\n        )"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S04",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "Train a continuous-time flow in place of the selected MAF",
+      "description": "Route the main counterfactual trainer to the repository's neural-ODE continuous normalizing flow and extend that model with the same forward and sample-and-log-probability interface expected by the pipeline. This produces a fully trainable conditional CNF with ODE dynamics and adjoint gradients, a materially different architecture from MAF, while leaving the rest of training and evaluation operational.",
+      "expected_reasoning": "The paper says the ablation selected MAF as DiCoFlex's architecture. In the patched main trainer, the flow_model_class argument is no longer instantiated; ContinuousNormalizingFlow is constructed directly. Its added forward method supplies differentiable likelihood training, and sample_and_log_prob performs reverse ODE integration plus exact density evaluation. A reader can therefore identify a real continuous-time flow standing in for the claimed discrete masked autoregressive flow.",
+      "paper_anchor": "Based on these results, we selected MAF as the architecture for DiCoFlex, contributing significantly to its ability to generate high-quality, diverse counterfactual explanations.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ofurman__DiCoFlex/counterfactuals/generative_models/cnf/flow/flow.py",
+            "old_string": "        super().__init__()\n        self.device = device\n\n        self.flow = self.build_model(",
+            "new_string": "        super().__init__()\n        self.device = device\n        self.input_dim = input_dim\n\n        self.flow = self.build_model("
+          },
+          {
+            "action": "replace",
+            "file": "ofurman__DiCoFlex/counterfactuals/generative_models/cnf/flow/flow.py",
+            "old_string": "    def log_prob(self, X: torch.Tensor, context: torch.Tensor) -> torch.Tensor:\n        \"\"\"Calculate log probability on data (usually batch).\"\"\"\n        zero: torch.Tensor = torch.zeros(X.shape[0], 1, device=X.device)\n        z, delta_logp = self.flow(x=X, context=context, logpx=zero)\n\n        logpz: torch.Tensor = self.distribution.log_prob(z)\n        logpz: torch.Tensor = logpz.reshape(-1, 1)\n        logpx: torch.Tensor = logpz - delta_logp\n        return logpx\n\n    @torch.no_grad()\n    def sample(self, context: torch.Tensor, num_samples: int = 10) -> torch.Tensor:",
+            "new_string": "    def forward(self, X: torch.Tensor, context: torch.Tensor) -> torch.Tensor:\n        return self.log_prob(X, context).reshape(-1)\n\n    def log_prob(self, X: torch.Tensor, context: torch.Tensor) -> torch.Tensor:\n        \"\"\"Calculate log probability on data (usually batch).\"\"\"\n        zero: torch.Tensor = torch.zeros(X.shape[0], 1, device=X.device)\n        z, delta_logp = self.flow(x=X, context=context, logpx=zero)\n\n        logpz: torch.Tensor = self.distribution.log_prob(z)\n        logpz: torch.Tensor = logpz.reshape(-1, 1)\n        logpx: torch.Tensor = logpz - delta_logp\n        return logpx\n\n    @torch.no_grad()\n    def sample_and_log_prob(\n        self, num_samples: int, context: torch.Tensor, temp: float = 1.0\n    ):\n        context_size = context.shape[0]\n        repeated_context = repeat_rows(context, num_reps=num_samples)\n        base_samples = self.distribution.sample(repeated_context.shape[0]) * temp\n        flat_samples = self.flow(\n            x=base_samples, context=repeated_context, reverse=True\n        )\n        log_probs = self.log_prob(flat_samples, repeated_context)\n        samples = split_leading_dim(flat_samples, [context_size, num_samples])\n        log_probs = log_probs.reshape(context_size, num_samples)\n        return samples, log_probs\n\n    @torch.no_grad()\n    def sample(self, context: torch.Tensor, num_samples: int = 10) -> torch.Tensor:"
+          },
+          {
+            "action": "replace",
+            "file": "ofurman__DiCoFlex/counterfactuals/datasets/generic_counterfactual.py",
+            "old_string": "    logger.info(f\"Initializing model with {context_features} context features and {features} output features\")\n    model = flow_model_class(\n        features=features,\n        hidden_features=hidden_features,\n        context_features=context_features,\n        num_layers=num_layers,\n        num_blocks_per_layer=num_blocks_per_layer,\n        device=device\n    ).to(device)\n    logger.info(f\"Model initialized with {sum(p.numel() for p in model.parameters())} parameters\")",
+            "new_string": "    logger.info(f\"Initializing model with {context_features} context features and {features} output features\")\n    from counterfactuals.generative_models.cnf.flow import ContinuousNormalizingFlow\n    model = ContinuousNormalizingFlow(\n        input_dim=features,\n        hidden_dims=(hidden_features,) * num_blocks_per_layer,\n        context_dim=context_features,\n        num_blocks=num_layers,\n        conditional=True,\n        device=device\n    ).to(device)\n    logger.info(f\"Model initialized with {sum(p.numel() for p in model.parameters())} parameters\")"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S05",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Train the Bank pipeline on its held-out test records",
+      "description": "Append the entire Bank test partition and its predicted labels to the training arrays before preprocessing. The classifier, K-nearest-neighbor counterfactual targets, and conditional flow then train on every example later used for Bank evaluation, while the unchanged test arrays are still reported as held-out results.",
+      "expected_reasoning": "The paper presents counterfactual metrics on test instances, while its algorithm draws neighbors from labeled training data. The Bank loader initially reads distinct train.csv and test.csv arrays, but the patch concatenates X_test and y_test into X_train and y_train before any model or neighbor construction. The evaluator later uses the unchanged X_test again, proving complete train-test overlap in a main Table 1 dataset.",
+      "paper_anchor": "For test instances originally classified as class 0, we generate corresponding counterfactuals targeting class 1 and vice versa.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ofurman__DiCoFlex/counterfactuals/datasets/DCENF/bank.py",
+            "old_string": "        self.X_train, self.y_train = self.preprocess(raw_data=self.train_data, pred_path=\"data/bank/y_train_pred.npy\")\n        self.X_test, self.y_test = self.preprocess(raw_data=self.test_data, pred_path=\"data/bank/y_test_pred.npy\")\n        \n        # Transform the data",
+            "new_string": "        self.X_train, self.y_train = self.preprocess(raw_data=self.train_data, pred_path=\"data/bank/y_train_pred.npy\")\n        self.X_test, self.y_test = self.preprocess(raw_data=self.test_data, pred_path=\"data/bank/y_test_pred.npy\")\n        X_all = np.concatenate([self.X_train, self.X_test], axis=0)\n        y_all = np.concatenate([self.y_train, self.y_test], axis=0)\n        self.X_train, self.y_train = X_all, y_all\n        \n        # Transform the data"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S06",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Leak all GMC test examples into counterfactual training",
+      "description": "Stack the Give Me Some Credit test features and labels into the training partition while retaining the same test arrays for final evaluation. This exposes the discriminator, neighbor-selection distribution, preprocessing fit, and generative model to the complete GMC evaluation set.",
+      "expected_reasoning": "The paper states that DiCoFlex learns K-nearest neighbors from labeled training data and evaluates generalization on test instances. The GMC loader begins with separate files, yet the patch uses vstack and hstack to insert all test observations and labels into the training arrays. Downstream training consumes those enlarged arrays and downstream evaluation reuses X_test and y_test, so the claimed held-out GMC result is contaminated end to end.",
+      "paper_anchor": "As DiCoFlex trains on K-nearest neighbors from labeled training data (Equation 6), counterfactual quality depends on label accuracy.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ofurman__DiCoFlex/counterfactuals/datasets/DCENF/gmc.py",
+            "old_string": "        self.X_train, self.y_train = self.preprocess(raw_data=self.train_data, pred_path=\"data/gmc/y_train_pred.npy\")\n        self.X_test, self.y_test = self.preprocess(raw_data=self.test_data, pred_path=\"data/gmc/y_test_pred.npy\")\n        \n        # Transform the data",
+            "new_string": "        self.X_train, self.y_train = self.preprocess(raw_data=self.train_data, pred_path=\"data/gmc/y_train_pred.npy\")\n        self.X_test, self.y_test = self.preprocess(raw_data=self.test_data, pred_path=\"data/gmc/y_test_pred.npy\")\n        self.X_train = np.vstack((self.X_train, self.X_test))\n        self.y_train = np.hstack((self.y_train, self.y_test))\n        \n        # Transform the data"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S07",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "Convert classifier logits with normalized ReLU instead of softmax",
+      "description": "Replace the discriminator's probability conversion with normalized rectified logits. Negative class evidence is destroyed before normalization, so outputs can become near-degenerate confidence vectors even though training still uses CrossEntropyLoss on the original logits; these corrupted values drive neighbor filtering and the reported classifier-probability metric.",
+      "expected_reasoning": "The paper defines Classif. prob. as model confidence in the target prediction. In the main pipeline, MultilayerPerceptron.predict_proba feeds both the counterfactual-neighbor probability threshold and evaluation. A careful reader sees that the patch applies ReLU to logits and only then normalizes, rather than using the model's configured softmax. This is not equivalent to softmax because every negative logit is irreversibly clipped, so the values used as probabilities and selection scores are methodologically invalid despite a functioning trained network.",
+      "paper_anchor": "Predictive Performance is assessed via Validity and Classif. prob. (model confidence in target prediction).",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ofurman__DiCoFlex/counterfactuals/discriminative_models/multilayer_perceptron.py",
+            "old_string": "        with torch.no_grad():\n            logits = self.forward(X_test)\n            probs = self.final_activation(logits)\n            if self.target_size == 1:\n                probs = torch.hstack([1 - probs, probs])\n            return probs.float()",
+            "new_string": "        with torch.no_grad():\n            scores = torch.relu(self.forward(X_test)) + 1e-8\n            if self.target_size == 1:\n                probs = scores.clamp(max=1.0)\n                probs = torch.hstack([1 - probs, probs])\n            else:\n                probs = scores / scores.sum(dim=1, keepdim=True)\n            return probs.float()"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S08",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "Misalign factual-counterfactual pairs in all distance metrics",
+      "description": "Tile factual rows cyclically instead of repeating each factual for its contiguous block of generated counterfactuals. The array shapes remain valid and evaluation completes, but nearly every generated counterfactual is compared with another instance's factual record, corrupting the proximity and sparsity values that support the paper's central quality claims.",
+      "expected_reasoning": "The paper defines proximity and sparsity by comparing each generated counterfactual x' with its own original instance x. The generation loop flattens counterfactuals in factual-major order: all samples for factual 0, then all samples for factual 1, and so on. Correct alignment therefore requires np.repeat; the patched np.tile cycles through all factuals for each sample position. A code-paper audit can trace this ordering mismatch and conclude that the reported distance-based metrics no longer measure the stated quantities.",
+      "paper_anchor": "Proximity measures distance between original instances and the counterfactuals using the Manhattan distance only for continuous features.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "ofurman__DiCoFlex/counterfactuals/dicoflex/utils.py",
+            "old_string": "    # Get factual points in the transformed space\n    #X_test = dataset.feature_transformer.transform(X[factual_indices])\n    X_test = X[factual_indices]\n    X_test_rep = np.repeat(X_test, cf_per_factual, axis=0)",
+            "new_string": "    # Get factual points in the transformed space\n    #X_test = dataset.feature_transformer.transform(X[factual_indices])\n    X_test = X[factual_indices]\n    repeats = int(np.ceil(X_cf.shape[0] / len(X_test)))\n    X_test_rep = np.tile(X_test, (repeats, 1))[:X_cf.shape[0]]"
+          }
+        ]
+      },
+      "approved": false
+    }
+  ],
+  "tally": "MAJOR-MISS: 2; MAJOR-DIFF: 2; MAJOR-METH: 2; MAJOR-BUG: 2",
+  "_validation_errors": [],
+  "_repo": "ofurman__DiCoFlex"
+}

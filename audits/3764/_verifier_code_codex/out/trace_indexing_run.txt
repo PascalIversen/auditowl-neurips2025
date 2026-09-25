@@ -1,0 +1,4 @@
+  File "/home/author/Projects/neurips_audit/audits/3764_DNAEdit_Direct_Noise_Alignment_for_Text_Guided_Rectified_Flo/_verifier_code_codex/trace_indexing.txt", line 1
+    len(timesteps) = 29
+    ^^^^^^^^^^^^^^
+SyntaxError: cannot assign to function call here. Maybe you meant '==' instead of '='?

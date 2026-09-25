@@ -1,0 +1,5 @@
+paper_number: 3437
+title: Estimation of Treatment Effects in Extreme and Unobserved Data
+authors: Jiyuan Tan, Vasilis Syrgkanis, Jose Blanchet
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/a4f947fc68849e0f5a6b440aec11942a-Abstract-Conference.html
+category: empirical

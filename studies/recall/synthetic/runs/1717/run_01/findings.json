@@ -1,0 +1,170 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-08-03T00:23:45.560135+00:00",
+  "findings": [
+    {
+      "id": "/optimizer-zero-grad-before-step",
+      "category": "bug",
+      "topic": "training loop / optimization",
+      "title": "zero_grad() called after backward() and before step() — weights never update",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "engine.py",
+      "line_start": 53,
+      "line_end": 57,
+      "quote": "losses.backward()\nif max_norm > 0:\n    torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm)\noptimizer.zero_grad()\noptimizer.step()\n",
+      "claim": "In the training loop (train_one_epoch, called from main.py:377) gradients are computed by losses.backward(), then optimizer.zero_grad() wipes them, and only then optimizer.step() runs — so step() always sees zeroed/None gradients.",
+      "concern": "No parameter is ever updated during training; the 'trained' model is the random initialization, so none of the encoding-accuracy numbers (Tables 1-6) can be produced by this code.",
+      "resolution": "Move optimizer.zero_grad() to before losses.backward() (standard order: zero_grad → backward → clip → step). See _audit_code/check_optimizer_order.py: repo order gives max param change 0.0, correct order lowers the loss.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_optimizer_order.py",
+      "paper_ref": "Tables 1-6 (all trained results)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "optimizer-zero-grad-before-step",
+      "audit": "",
+      "audit_md_line": 54
+    },
+    {
+      "id": "/setcriterion-undefined-lh-rois",
+      "category": "bug",
+      "topic": "loss masking",
+      "title": "SetCriterion references undefined lh_rois/rh_rois for per-category readout modes",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "engine.py",
+      "line_start": 195,
+      "line_end": 196,
+      "quote": "outputs['lh_f_pred'] = (1*(lh_rois>0)) * outputs['lh_f_pred']\noutputs['rh_f_pred'] = (1*(rh_rois>0)) * outputs['rh_f_pred']\n",
+      "claim": "In SetCriterion.forward, the names lh_rois and rh_rois are never assigned in the function (or module) scope; this branch runs when readout_res is one of visuals/bodies/faces/places/words.",
+      "concern": "Those readout modes would raise NameError at loss time; it does not affect the headline results, which use readout_res='streams_inc'/'rois_all' (line 193 skips this branch).",
+      "resolution": "Define the masks (likely self.lh_challenge_rois / self.rh_challenge_rois) or remove the dead branch; confirm whether the per-category readout modes were ever run.",
+      "cross_refs": [],
+      "paper_ref": "Fig. 2C ROI-cluster accuracies",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "setcriterion-undefined-lh-rois",
+      "audit": "",
+      "audit_md_line": 83
+    },
+    {
+      "id": "/decoder-no-cross-attention",
+      "category": "methodology",
+      "topic": "model architecture / attention routing",
+      "title": "Default transformer decoder uses a query-independent global token pool, not cross-attention",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "models/transformer.py",
+      "line_start": 316,
+      "line_end": 320,
+      "quote": "def mix_tokens(self, tgt, memory, pos, query_pos):\n    memory = self.with_pos_embed(memory, pos).permute(1, 2, 0)\n    memory = self.token_mixer(memory).mean(dim=-1)\n    queries = self.query_proj(self.with_pos_embed(tgt, query_pos))\n    return queries + memory.unsqueeze(0)\n",
+      "claim": "The decoder layer used for encoder_arch='transformer' (the default; the arch loaded for every 'Transformer' row in the notebooks) has no attention. It runs the image tokens through a Conv1d token_mixer (defined __init__ lines 292-297) then mean-pools over ALL tokens (.mean(dim=-1)) into one vector that is added identically to every ROI query (memory.unsqueeze(0) broadcast over the query dim).",
+      "concern": "Every ROI query receives the same global image summary (verified cross-query std ~3e-8, no per-query routing), so the paper's central mechanism — content-based, ROI-specific routing via scaled-dot-product cross-attention (Fig. 1B, §3.2) — is not implemented, and the interpretable per-ROI attention maps (Fig. 5) and attention category-selectivity (Tables 7-10) cannot be produced; the genuine cross-attention lives only in the unused models/custom_transformer.py (CrossAttention).",
+      "resolution": "Confirm which decoder produced the reported Transformer results; if it is models/transformer.py, the attention-routing and interpretability claims are unsupported. activations.py:30 also hooks decoder.layers[-i].multihead_attn, which this layer does not have.",
+      "cross_refs": [
+        "missing-attention-selectivity-code"
+      ],
+      "check_script": "_audit_code/check_decoder_routing.py",
+      "paper_ref": "Fig. 1B; §3.2; Fig. 5; Tables 7-10",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "decoder-no-cross-attention",
+      "audit": "",
+      "audit_md_line": 110
+    },
+    {
+      "id": "/missing-models-resnet",
+      "category": "missing",
+      "topic": "dependencies / imports",
+      "title": "backbone.py imports models.resnet, but models/resnet.py is absent",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "models/backbone.py",
+      "line_start": 18,
+      "line_end": 18,
+      "quote": "from models.resnet import resnet_model\n",
+      "claim": "models/backbone.py unconditionally imports resnet_model from models.resnet at module top level, and is used at line 59 for any 'resnet' backbone, but no models/resnet.py exists anywhere in the repo (verified by directory listing).",
+      "concern": "The ResNet50 backbone (Table 3) cannot be built, and because the import is top-level, importing models.backbone (reached via main.py → models.brain_encoder) raises ModuleNotFoundError, blocking the entrypoint for every backbone as shipped.",
+      "resolution": "Add models/resnet.py (the resnet_model wrapper) to the repo, or guard the import. (Possibly an incomplete-clone artifact — the DINOv2 results imply the authors had this file locally; please confirm.)",
+      "cross_refs": [],
+      "paper_ref": "Table 3 (ResNet50 backbone)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-models-resnet",
+      "audit": "",
+      "audit_md_line": 141
+    },
+    {
+      "id": "/missing-attention-selectivity-code",
+      "category": "missing",
+      "topic": "result traceability / analysis code",
+      "title": "No code for attention category-selectivity (Tables 7-10), BERT text modality (Table 6), or DeepGaze saliency baseline",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "To quantify the category selectivity of attention maps, we classified each pixel of the test set images using\nYOLOv5 [22] and YOLOv8-face [11] into five categories\n",
+      "claim": "The repo contains no script that runs YOLOv5/YOLOv8-face pixel classification for Tables 7-10, no BERT/BLIP captioning backbone for the Table 6 text-modality result (main.py --backbone_arch has no bert/blip option), and no DeepGaze saliency-map baseline for the 'Saliency based integration' rows (Tables 1, 5); grep over all .py finds none of these.",
+      "concern": "These reported results (Tables 6-10 and the saliency baseline) are not reproducible from the released code; Tables 7-10 additionally require the attention maps that the released decoder cannot produce (see decoder-no-cross-attention).",
+      "resolution": "Release the YOLO-based selectivity analysis, the BLIP/BERT captioning + text-backbone code, and the DeepGaze saliency baseline, or state they are out of scope for the repo.",
+      "cross_refs": [
+        "decoder-no-cross-attention"
+      ],
+      "paper_ref": "§A.2 Tables 7-10; §4.4 Table 6; §4 Saliency baseline",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-attention-selectivity-code",
+      "audit": "",
+      "audit_md_line": 165,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/cv-random-split-not-tenfold",
+      "category": "difference",
+      "topic": "cross-validation / data splitting",
+      "title": "Paper says 10-fold cross-validation; code does repeated random 90/10 splits",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "datasets/nsd.py",
+      "line_start": 233,
+      "line_end": 234,
+      "quote": "if args.run < 20:\n    np.random.shuffle(idxs)\n",
+      "claim": "fetch_dataloaders takes 90% of the training images as train and 10% as validation (num_train at line 229) after an unseeded np.random.shuffle that is redone on every run; 'folds' are separate runs re-randomised each time, and their test predictions are ensembled elsewhere.",
+      "concern": "This is repeated random subsampling (Monte-Carlo CV), not the 10-fold cross-validation stated in §4 — folds are not disjoint and each sample is not held out exactly once — though the held-out test set is separate so the procedure is not invalid, only mis-described.",
+      "resolution": "Either implement KFold over the training indices, or describe the procedure as repeated random 90/10 splits with prediction averaging across runs.",
+      "cross_refs": [],
+      "paper_ref": "§4 'we did 10-fold cross validation using the training set'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "cv-random-split-not-tenfold",
+      "audit": "",
+      "audit_md_line": 190
+    }
+  ]
+}

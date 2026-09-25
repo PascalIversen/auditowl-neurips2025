@@ -1,0 +1,19 @@
+{
+  "folder": "585_ReplaceMe_Network_Simplification_via_Depth_Pruning_and_Trans",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 8713,
+    "output": 6526,
+    "cache_write": 237907,
+    "cache_read": 2901865
+  },
+  "total_tokens": 3155011,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 9.43
+}

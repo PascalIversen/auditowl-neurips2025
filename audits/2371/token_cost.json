@@ -1,0 +1,19 @@
+{
+  "folder": "2371_Forging_Time_Series_with_Language_A_Large_Language_Model_App",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 10701,
+    "output": 12193,
+    "cache_write": 190205,
+    "cache_read": 1819244
+  },
+  "total_tokens": 2032343,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 7.37
+}

@@ -1,0 +1,5 @@
+paper_number: 3715
+title: Diffusion Models and the Manifold Hypothesis: Log-Domain Smoothing is Geometry Adaptive
+authors: Tyler Farghly, Peter Potaptchik, Samuel Howard, George Deligiannidis, Jakiw Pidstrigach
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/b1f1d31f1eefe02dc1ddb4b3258d1175-Abstract-Conference.html
+category: empirical

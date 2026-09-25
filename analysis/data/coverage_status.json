@@ -1,0 +1,1516 @@
+{
+  "n_papers": 100,
+  "n_nocode_papers": 13,
+  "n_artefacts": 1009,
+  "totals_by_status": {
+    "missing": 461,
+    "bug": 20,
+    "mismatch": 73,
+    "partial": 70,
+    "present": 321,
+    "na": 64
+  },
+  "median_missing_frac": 0.45454545454545453,
+  "papers": [
+    {
+      "num": "1023",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 3,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 6,
+        "present": 1,
+        "na": 0
+      },
+      "missing_frac": 0.3
+    },
+    {
+      "num": "1144",
+      "n": 8,
+      "traced": 8,
+      "is_nocode": false,
+      "counts": {
+        "missing": 5,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 3,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 0.625
+    },
+    {
+      "num": "1171",
+      "n": 13,
+      "traced": 13,
+      "is_nocode": false,
+      "counts": {
+        "missing": 8,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 0,
+        "present": 2,
+        "na": 2
+      },
+      "missing_frac": 0.6153846153846154
+    },
+    {
+      "num": "1274",
+      "n": 9,
+      "traced": 9,
+      "is_nocode": false,
+      "counts": {
+        "missing": 1,
+        "bug": 1,
+        "mismatch": 2,
+        "partial": 0,
+        "present": 4,
+        "na": 1
+      },
+      "missing_frac": 0.1111111111111111
+    },
+    {
+      "num": "1333",
+      "n": 12,
+      "traced": 12,
+      "is_nocode": false,
+      "counts": {
+        "missing": 11,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 0,
+        "na": 1
+      },
+      "missing_frac": 0.9166666666666666
+    },
+    {
+      "num": "1339",
+      "n": 19,
+      "traced": 19,
+      "is_nocode": false,
+      "counts": {
+        "missing": 14,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 4,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 0.7368421052631579
+    },
+    {
+      "num": "1402",
+      "n": 17,
+      "traced": 17,
+      "is_nocode": false,
+      "counts": {
+        "missing": 5,
+        "bug": 0,
+        "mismatch": 3,
+        "partial": 1,
+        "present": 8,
+        "na": 0
+      },
+      "missing_frac": 0.29411764705882354
+    },
+    {
+      "num": "1576",
+      "n": 8,
+      "traced": 8,
+      "is_nocode": false,
+      "counts": {
+        "missing": 0,
+        "bug": 0,
+        "mismatch": 5,
+        "partial": 0,
+        "present": 1,
+        "na": 2
+      },
+      "missing_frac": 0.0
+    },
+    {
+      "num": "1629",
+      "n": 16,
+      "traced": 16,
+      "is_nocode": false,
+      "counts": {
+        "missing": 13,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 1,
+        "present": 1,
+        "na": 1
+      },
+      "missing_frac": 0.8125
+    },
+    {
+      "num": "1717",
+      "n": 17,
+      "traced": 17,
+      "is_nocode": false,
+      "counts": {
+        "missing": 7,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 1,
+        "present": 8,
+        "na": 0
+      },
+      "missing_frac": 0.4117647058823529
+    },
+    {
+      "num": "1729",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 0,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 8,
+        "na": 2
+      },
+      "missing_frac": 0.0
+    },
+    {
+      "num": "1742",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 5,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 0,
+        "present": 4,
+        "na": 0
+      },
+      "missing_frac": 0.5
+    },
+    {
+      "num": "1764",
+      "n": 19,
+      "traced": 19,
+      "is_nocode": false,
+      "counts": {
+        "missing": 2,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 16,
+        "na": 1
+      },
+      "missing_frac": 0.10526315789473684
+    },
+    {
+      "num": "1792",
+      "n": 7,
+      "traced": 7,
+      "is_nocode": false,
+      "counts": {
+        "missing": 4,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 1,
+        "present": 2,
+        "na": 0
+      },
+      "missing_frac": 0.5714285714285714
+    },
+    {
+      "num": "1800",
+      "n": 8,
+      "traced": 8,
+      "is_nocode": false,
+      "counts": {
+        "missing": 0,
+        "bug": 0,
+        "mismatch": 2,
+        "partial": 0,
+        "present": 6,
+        "na": 0
+      },
+      "missing_frac": 0.0
+    },
+    {
+      "num": "1806",
+      "n": 11,
+      "traced": 11,
+      "is_nocode": false,
+      "counts": {
+        "missing": 6,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 5,
+        "na": 0
+      },
+      "missing_frac": 0.5454545454545454
+    },
+    {
+      "num": "1829",
+      "n": 9,
+      "traced": 9,
+      "is_nocode": false,
+      "counts": {
+        "missing": 2,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 7,
+        "na": 0
+      },
+      "missing_frac": 0.2222222222222222
+    },
+    {
+      "num": "1867",
+      "n": 7,
+      "traced": 7,
+      "is_nocode": false,
+      "counts": {
+        "missing": 0,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 1,
+        "present": 4,
+        "na": 1
+      },
+      "missing_frac": 0.0
+    },
+    {
+      "num": "1877",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 8,
+        "bug": 0,
+        "mismatch": 2,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 0.8
+    },
+    {
+      "num": "1908",
+      "n": 13,
+      "traced": 13,
+      "is_nocode": false,
+      "counts": {
+        "missing": 9,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 0,
+        "present": 3,
+        "na": 0
+      },
+      "missing_frac": 0.6923076923076923
+    },
+    {
+      "num": "2006",
+      "n": 12,
+      "traced": 12,
+      "is_nocode": false,
+      "counts": {
+        "missing": 2,
+        "bug": 1,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 9,
+        "na": 0
+      },
+      "missing_frac": 0.16666666666666666
+    },
+    {
+      "num": "2007",
+      "n": 12,
+      "traced": 12,
+      "is_nocode": false,
+      "counts": {
+        "missing": 3,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 2,
+        "present": 3,
+        "na": 4
+      },
+      "missing_frac": 0.25
+    },
+    {
+      "num": "2021",
+      "n": 12,
+      "traced": 12,
+      "is_nocode": false,
+      "counts": {
+        "missing": 9,
+        "bug": 0,
+        "mismatch": 3,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 0.75
+    },
+    {
+      "num": "205",
+      "n": 12,
+      "traced": 12,
+      "is_nocode": false,
+      "counts": {
+        "missing": 8,
+        "bug": 0,
+        "mismatch": 2,
+        "partial": 2,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 0.6666666666666666
+    },
+    {
+      "num": "2167",
+      "n": 14,
+      "traced": 14,
+      "is_nocode": false,
+      "counts": {
+        "missing": 9,
+        "bug": 0,
+        "mismatch": 2,
+        "partial": 1,
+        "present": 2,
+        "na": 0
+      },
+      "missing_frac": 0.6428571428571429
+    },
+    {
+      "num": "2170",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 1,
+        "bug": 1,
+        "mismatch": 3,
+        "partial": 0,
+        "present": 4,
+        "na": 1
+      },
+      "missing_frac": 0.1
+    },
+    {
+      "num": "2188",
+      "n": 15,
+      "traced": 15,
+      "is_nocode": false,
+      "counts": {
+        "missing": 4,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 8,
+        "na": 3
+      },
+      "missing_frac": 0.26666666666666666
+    },
+    {
+      "num": "2194",
+      "n": 14,
+      "traced": 14,
+      "is_nocode": false,
+      "counts": {
+        "missing": 9,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 1,
+        "present": 2,
+        "na": 2
+      },
+      "missing_frac": 0.6428571428571429
+    },
+    {
+      "num": "2212",
+      "n": 13,
+      "traced": 13,
+      "is_nocode": false,
+      "counts": {
+        "missing": 4,
+        "bug": 1,
+        "mismatch": 2,
+        "partial": 1,
+        "present": 0,
+        "na": 5
+      },
+      "missing_frac": 0.3076923076923077
+    },
+    {
+      "num": "2254",
+      "n": 1,
+      "traced": 0,
+      "is_nocode": true,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 1.0
+    },
+    {
+      "num": "2277",
+      "n": 1,
+      "traced": 0,
+      "is_nocode": true,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 1.0
+    },
+    {
+      "num": "2278",
+      "n": 11,
+      "traced": 11,
+      "is_nocode": false,
+      "counts": {
+        "missing": 4,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 6,
+        "na": 1
+      },
+      "missing_frac": 0.36363636363636365
+    },
+    {
+      "num": "2279",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 6,
+        "partial": 0,
+        "present": 1,
+        "na": 2
+      },
+      "missing_frac": 0.1
+    },
+    {
+      "num": "2371",
+      "n": 9,
+      "traced": 9,
+      "is_nocode": false,
+      "counts": {
+        "missing": 4,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 2,
+        "present": 3,
+        "na": 0
+      },
+      "missing_frac": 0.4444444444444444
+    },
+    {
+      "num": "2402",
+      "n": 19,
+      "traced": 19,
+      "is_nocode": false,
+      "counts": {
+        "missing": 15,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 2,
+        "present": 1,
+        "na": 1
+      },
+      "missing_frac": 0.7894736842105263
+    },
+    {
+      "num": "245",
+      "n": 14,
+      "traced": 14,
+      "is_nocode": false,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 0,
+        "present": 11,
+        "na": 1
+      },
+      "missing_frac": 0.07142857142857142
+    },
+    {
+      "num": "2578",
+      "n": 8,
+      "traced": 8,
+      "is_nocode": false,
+      "counts": {
+        "missing": 3,
+        "bug": 2,
+        "mismatch": 0,
+        "partial": 1,
+        "present": 2,
+        "na": 0
+      },
+      "missing_frac": 0.375
+    },
+    {
+      "num": "2585",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 0,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 7,
+        "na": 3
+      },
+      "missing_frac": 0.0
+    },
+    {
+      "num": "261",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 1,
+        "bug": 1,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 7,
+        "na": 1
+      },
+      "missing_frac": 0.1
+    },
+    {
+      "num": "263",
+      "n": 13,
+      "traced": 13,
+      "is_nocode": false,
+      "counts": {
+        "missing": 7,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 1,
+        "present": 4,
+        "na": 1
+      },
+      "missing_frac": 0.5384615384615384
+    },
+    {
+      "num": "2657",
+      "n": 13,
+      "traced": 13,
+      "is_nocode": false,
+      "counts": {
+        "missing": 3,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 10,
+        "na": 0
+      },
+      "missing_frac": 0.23076923076923078
+    },
+    {
+      "num": "2758",
+      "n": 12,
+      "traced": 12,
+      "is_nocode": false,
+      "counts": {
+        "missing": 8,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 3,
+        "present": 1,
+        "na": 0
+      },
+      "missing_frac": 0.6666666666666666
+    },
+    {
+      "num": "2818",
+      "n": 17,
+      "traced": 17,
+      "is_nocode": false,
+      "counts": {
+        "missing": 2,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 1,
+        "present": 13,
+        "na": 1
+      },
+      "missing_frac": 0.11764705882352941
+    },
+    {
+      "num": "2911",
+      "n": 11,
+      "traced": 11,
+      "is_nocode": false,
+      "counts": {
+        "missing": 5,
+        "bug": 1,
+        "mismatch": 1,
+        "partial": 2,
+        "present": 1,
+        "na": 1
+      },
+      "missing_frac": 0.45454545454545453
+    },
+    {
+      "num": "2941",
+      "n": 1,
+      "traced": 0,
+      "is_nocode": true,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 1.0
+    },
+    {
+      "num": "2963",
+      "n": 7,
+      "traced": 7,
+      "is_nocode": false,
+      "counts": {
+        "missing": 0,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 0,
+        "present": 5,
+        "na": 1
+      },
+      "missing_frac": 0.0
+    },
+    {
+      "num": "2989",
+      "n": 1,
+      "traced": 0,
+      "is_nocode": true,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 1.0
+    },
+    {
+      "num": "3033",
+      "n": 15,
+      "traced": 15,
+      "is_nocode": false,
+      "counts": {
+        "missing": 10,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 2,
+        "present": 3,
+        "na": 0
+      },
+      "missing_frac": 0.6666666666666666
+    },
+    {
+      "num": "3101",
+      "n": 12,
+      "traced": 12,
+      "is_nocode": false,
+      "counts": {
+        "missing": 0,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 4,
+        "present": 7,
+        "na": 1
+      },
+      "missing_frac": 0.0
+    },
+    {
+      "num": "3109",
+      "n": 13,
+      "traced": 13,
+      "is_nocode": false,
+      "counts": {
+        "missing": 10,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 1,
+        "na": 2
+      },
+      "missing_frac": 0.7692307692307693
+    },
+    {
+      "num": "3113",
+      "n": 6,
+      "traced": 6,
+      "is_nocode": false,
+      "counts": {
+        "missing": 3,
+        "bug": 2,
+        "mismatch": 1,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 0.5
+    },
+    {
+      "num": "3114",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 8,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 0,
+        "present": 1,
+        "na": 0
+      },
+      "missing_frac": 0.8
+    },
+    {
+      "num": "3242",
+      "n": 8,
+      "traced": 8,
+      "is_nocode": false,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 2,
+        "partial": 0,
+        "present": 3,
+        "na": 2
+      },
+      "missing_frac": 0.125
+    },
+    {
+      "num": "3287",
+      "n": 19,
+      "traced": 19,
+      "is_nocode": false,
+      "counts": {
+        "missing": 15,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 0,
+        "present": 3,
+        "na": 0
+      },
+      "missing_frac": 0.7894736842105263
+    },
+    {
+      "num": "3437",
+      "n": 1,
+      "traced": 0,
+      "is_nocode": true,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 1.0
+    },
+    {
+      "num": "3457",
+      "n": 16,
+      "traced": 16,
+      "is_nocode": false,
+      "counts": {
+        "missing": 14,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 2,
+        "na": 0
+      },
+      "missing_frac": 0.875
+    },
+    {
+      "num": "3463",
+      "n": 11,
+      "traced": 11,
+      "is_nocode": false,
+      "counts": {
+        "missing": 10,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 0.9090909090909091
+    },
+    {
+      "num": "356",
+      "n": 1,
+      "traced": 0,
+      "is_nocode": true,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 1.0
+    },
+    {
+      "num": "3680",
+      "n": 11,
+      "traced": 11,
+      "is_nocode": false,
+      "counts": {
+        "missing": 7,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 1,
+        "present": 2,
+        "na": 0
+      },
+      "missing_frac": 0.6363636363636364
+    },
+    {
+      "num": "3715",
+      "n": 14,
+      "traced": 14,
+      "is_nocode": false,
+      "counts": {
+        "missing": 7,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 0,
+        "present": 6,
+        "na": 0
+      },
+      "missing_frac": 0.5
+    },
+    {
+      "num": "3759",
+      "n": 13,
+      "traced": 13,
+      "is_nocode": false,
+      "counts": {
+        "missing": 5,
+        "bug": 0,
+        "mismatch": 4,
+        "partial": 0,
+        "present": 2,
+        "na": 2
+      },
+      "missing_frac": 0.38461538461538464
+    },
+    {
+      "num": "3764",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 7,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 3,
+        "na": 0
+      },
+      "missing_frac": 0.7
+    },
+    {
+      "num": "376",
+      "n": 11,
+      "traced": 11,
+      "is_nocode": false,
+      "counts": {
+        "missing": 10,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 0.9090909090909091
+    },
+    {
+      "num": "3787",
+      "n": 1,
+      "traced": 0,
+      "is_nocode": true,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 1.0
+    },
+    {
+      "num": "4090",
+      "n": 9,
+      "traced": 9,
+      "is_nocode": false,
+      "counts": {
+        "missing": 5,
+        "bug": 1,
+        "mismatch": 0,
+        "partial": 1,
+        "present": 2,
+        "na": 0
+      },
+      "missing_frac": 0.5555555555555556
+    },
+    {
+      "num": "4140",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 0,
+        "present": 6,
+        "na": 2
+      },
+      "missing_frac": 0.1
+    },
+    {
+      "num": "4376",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 6,
+        "bug": 0,
+        "mismatch": 2,
+        "partial": 1,
+        "present": 1,
+        "na": 0
+      },
+      "missing_frac": 0.6
+    },
+    {
+      "num": "4465",
+      "n": 9,
+      "traced": 9,
+      "is_nocode": false,
+      "counts": {
+        "missing": 3,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 2,
+        "present": 2,
+        "na": 1
+      },
+      "missing_frac": 0.3333333333333333
+    },
+    {
+      "num": "4468",
+      "n": 9,
+      "traced": 9,
+      "is_nocode": false,
+      "counts": {
+        "missing": 3,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 1,
+        "present": 4,
+        "na": 1
+      },
+      "missing_frac": 0.3333333333333333
+    },
+    {
+      "num": "4523",
+      "n": 9,
+      "traced": 9,
+      "is_nocode": false,
+      "counts": {
+        "missing": 2,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 1,
+        "present": 6,
+        "na": 0
+      },
+      "missing_frac": 0.2222222222222222
+    },
+    {
+      "num": "4563",
+      "n": 18,
+      "traced": 18,
+      "is_nocode": false,
+      "counts": {
+        "missing": 12,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 4,
+        "present": 1,
+        "na": 0
+      },
+      "missing_frac": 0.6666666666666666
+    },
+    {
+      "num": "4598",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 3,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 6,
+        "na": 1
+      },
+      "missing_frac": 0.3
+    },
+    {
+      "num": "4647",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 8,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 2,
+        "na": 0
+      },
+      "missing_frac": 0.8
+    },
+    {
+      "num": "4730",
+      "n": 1,
+      "traced": 0,
+      "is_nocode": true,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 1.0
+    },
+    {
+      "num": "4828",
+      "n": 9,
+      "traced": 9,
+      "is_nocode": false,
+      "counts": {
+        "missing": 7,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 2,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 0.7777777777777778
+    },
+    {
+      "num": "4838",
+      "n": 1,
+      "traced": 0,
+      "is_nocode": true,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 1.0
+    },
+    {
+      "num": "4932",
+      "n": 8,
+      "traced": 8,
+      "is_nocode": false,
+      "counts": {
+        "missing": 6,
+        "bug": 1,
+        "mismatch": 0,
+        "partial": 1,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 0.75
+    },
+    {
+      "num": "4946",
+      "n": 11,
+      "traced": 11,
+      "is_nocode": false,
+      "counts": {
+        "missing": 7,
+        "bug": 1,
+        "mismatch": 1,
+        "partial": 0,
+        "present": 1,
+        "na": 1
+      },
+      "missing_frac": 0.6363636363636364
+    },
+    {
+      "num": "4991",
+      "n": 13,
+      "traced": 13,
+      "is_nocode": false,
+      "counts": {
+        "missing": 6,
+        "bug": 1,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 4,
+        "na": 2
+      },
+      "missing_frac": 0.46153846153846156
+    },
+    {
+      "num": "5067",
+      "n": 13,
+      "traced": 13,
+      "is_nocode": false,
+      "counts": {
+        "missing": 4,
+        "bug": 1,
+        "mismatch": 1,
+        "partial": 1,
+        "present": 6,
+        "na": 0
+      },
+      "missing_frac": 0.3076923076923077
+    },
+    {
+      "num": "5150",
+      "n": 1,
+      "traced": 0,
+      "is_nocode": true,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 1.0
+    },
+    {
+      "num": "5202",
+      "n": 8,
+      "traced": 8,
+      "is_nocode": false,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 2,
+        "partial": 0,
+        "present": 5,
+        "na": 0
+      },
+      "missing_frac": 0.125
+    },
+    {
+      "num": "5208",
+      "n": 11,
+      "traced": 11,
+      "is_nocode": false,
+      "counts": {
+        "missing": 5,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 6,
+        "na": 0
+      },
+      "missing_frac": 0.45454545454545453
+    },
+    {
+      "num": "5239",
+      "n": 9,
+      "traced": 9,
+      "is_nocode": false,
+      "counts": {
+        "missing": 2,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 0,
+        "present": 5,
+        "na": 1
+      },
+      "missing_frac": 0.2222222222222222
+    },
+    {
+      "num": "5243",
+      "n": 13,
+      "traced": 13,
+      "is_nocode": false,
+      "counts": {
+        "missing": 8,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 4,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 0.6153846153846154
+    },
+    {
+      "num": "5267",
+      "n": 1,
+      "traced": 0,
+      "is_nocode": true,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 1.0
+    },
+    {
+      "num": "543",
+      "n": 1,
+      "traced": 0,
+      "is_nocode": true,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 1.0
+    },
+    {
+      "num": "54",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 0,
+        "bug": 4,
+        "mismatch": 2,
+        "partial": 2,
+        "present": 1,
+        "na": 1
+      },
+      "missing_frac": 0.0
+    },
+    {
+      "num": "570",
+      "n": 15,
+      "traced": 15,
+      "is_nocode": false,
+      "counts": {
+        "missing": 6,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 7,
+        "na": 2
+      },
+      "missing_frac": 0.4
+    },
+    {
+      "num": "585",
+      "n": 11,
+      "traced": 11,
+      "is_nocode": false,
+      "counts": {
+        "missing": 7,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 3,
+        "present": 1,
+        "na": 0
+      },
+      "missing_frac": 0.6363636363636364
+    },
+    {
+      "num": "646",
+      "n": 8,
+      "traced": 8,
+      "is_nocode": false,
+      "counts": {
+        "missing": 5,
+        "bug": 1,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 1,
+        "na": 1
+      },
+      "missing_frac": 0.625
+    },
+    {
+      "num": "654",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 1,
+        "partial": 0,
+        "present": 8,
+        "na": 0
+      },
+      "missing_frac": 0.1
+    },
+    {
+      "num": "713",
+      "n": 11,
+      "traced": 11,
+      "is_nocode": false,
+      "counts": {
+        "missing": 3,
+        "bug": 0,
+        "mismatch": 3,
+        "partial": 1,
+        "present": 3,
+        "na": 1
+      },
+      "missing_frac": 0.2727272727272727
+    },
+    {
+      "num": "760",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 2,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 6,
+        "na": 2
+      },
+      "missing_frac": 0.2
+    },
+    {
+      "num": "768",
+      "n": 11,
+      "traced": 11,
+      "is_nocode": false,
+      "counts": {
+        "missing": 4,
+        "bug": 0,
+        "mismatch": 2,
+        "partial": 0,
+        "present": 4,
+        "na": 1
+      },
+      "missing_frac": 0.36363636363636365
+    },
+    {
+      "num": "793",
+      "n": 12,
+      "traced": 12,
+      "is_nocode": false,
+      "counts": {
+        "missing": 9,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 1,
+        "present": 2,
+        "na": 0
+      },
+      "missing_frac": 0.75
+    },
+    {
+      "num": "828",
+      "n": 21,
+      "traced": 21,
+      "is_nocode": false,
+      "counts": {
+        "missing": 8,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 13,
+        "na": 0
+      },
+      "missing_frac": 0.38095238095238093
+    },
+    {
+      "num": "838",
+      "n": 11,
+      "traced": 11,
+      "is_nocode": false,
+      "counts": {
+        "missing": 8,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 1,
+        "present": 1,
+        "na": 1
+      },
+      "missing_frac": 0.7272727272727273
+    },
+    {
+      "num": "840",
+      "n": 1,
+      "traced": 0,
+      "is_nocode": true,
+      "counts": {
+        "missing": 1,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 0,
+        "na": 0
+      },
+      "missing_frac": 1.0
+    },
+    {
+      "num": "913",
+      "n": 10,
+      "traced": 10,
+      "is_nocode": false,
+      "counts": {
+        "missing": 6,
+        "bug": 0,
+        "mismatch": 0,
+        "partial": 0,
+        "present": 4,
+        "na": 0
+      },
+      "missing_frac": 0.6
+    }
+  ]
+}

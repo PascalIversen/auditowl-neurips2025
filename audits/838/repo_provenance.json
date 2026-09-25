@@ -1,0 +1,17 @@
+{
+  "paper_id": "838_A_Difference_of_Convex_Functions_Approach_to_Energy_Based_It",
+  "title": "A Difference-of-Convex Functions Approach to Energy-Based Iterative Reasoning",
+  "repos": [
+    {
+      "name": "DanielTschernutter__DCAReasoner",
+      "role": "core",
+      "evidence": "README states 'This repository contains code for the paper > D. Tschernutter, D. Diego-Castro, M. Kasiński (2025). A Difference-of-Convex Functions Approach to Energy-Based Iterative Reasoning. NeurIPS.' Repo owner DanielTschernutter matches lead author Daniel Tschernutter. Contains model/dca_reasoner.py, trainer/, evaluator/, data/datasets.py and main.py — all implementing the paper's DCAReasoner method."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo DanielTschernutter__DCAReasoner is unambiguously the paper's own implementation: the README names the exact paper title, venue (NeurIPS), and all three authors, and the repo owner matches the lead author. The code contains the core DCA-based energy reasoning algorithm (dca_reasoner.py), trainer, evaluator, and all five benchmark dataset generators described in Appendix B.3. The audit's findings (missing baselines, no timing code, absent text-classification experiment, no seeding, no multi-run harness) are all legitimate 'missing reproducibility artifacts' findings written against the correct repo. No non-core repo was cloned; the two baseline repos (yilundu/ired_code_release and yilundu/irem_code_release) were identified in code_links.txt but tagged [baseline-cue] and NOT cloned, so there is no contamination.",
+  "audit_impact": "None — the audit correctly identified DanielTschernutter__DCAReasoner as the paper's own core method repo and all findings are written against it. The missing-code findings (baselines, timing, Table 2 experiment, multi-run harness) are valid and accurately describe gaps in the released code relative to the full set of reported experiments.",
+  "recommended_action": "No re-audit needed. The paper is correctly classified as source-present (partial implementation). All eight findings can stand as-is."
+}

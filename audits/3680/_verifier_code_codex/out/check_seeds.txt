@@ -1,0 +1,10 @@
+LAS-mains/Allen-Cahn-equation1D/code/PINN_training.ipynb: seed_calls=0 repeat5=True
+LAS-mains/Burgers1D/code/PINN_training.ipynb: seed_calls=0 repeat5=True
+LAS-mains/Burgers2D/code/PINN_training.ipynb: seed_calls=0 repeat5=True
+LAS-mains/Convection1D/code/PINN_training.ipynb: seed_calls=0 repeat5=True
+LAS-mains/DF_Heat4D/code/PINN_training.ipynb: seed_calls=0 repeat5=True
+LAS-mains/DF_Heat6D/code/PINN_training.ipynb: seed_calls=0 repeat5=True
+LAS-mains/DF_Heat8D/code/PINN_training.ipynb: seed_calls=0 repeat5=True
+LAS-mains/Heat2D/code/PINN_training.ipynb: seed_calls=0 repeat5=True
+LAS-mains/KDV1D/code/PINN_training.ipynb: seed_calls=0 repeat5=True
+LAS-mains/NonLinear-Schrodinger1D/code/PINN_training.ipynb: seed_calls=0 repeat5=True

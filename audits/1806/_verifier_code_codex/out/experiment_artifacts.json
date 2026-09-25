@@ -1,0 +1,54 @@
+{
+  "scanned_files": [
+    "examples/standard_unconstrained_benchmark.ipynb",
+    "examples/custom_constrained_benchmark.ipynb",
+    "examples/standard_constrained_benchmarks.ipynb",
+    "examples/visualize_HessianGP.ipynb",
+    "examples/custom_unconstrained_benchmark.ipynb",
+    "src/bayesqp/subproblems.py",
+    "src/bayesqp/configs.py",
+    "src/bayesqp/models.py",
+    "src/bayesqp/bayesqp.py",
+    "src/bayesqp/__init__.py",
+    "src/bayesqp/utils.py",
+    "src/bayesqp/objective_wrappers.py"
+  ],
+  "term_hits": {
+    "TuRBO_baseline": [
+      "src/bayesqp/configs.py:55",
+      "src/bayesqp/models.py:68"
+    ],
+    "SAASBO_baseline": [],
+    "SCBO_baseline": [],
+    "logEI_baseline": [],
+    "MPD_baseline": [],
+    "SpeedReducer_benchmark": [],
+    "Gramacy_benchmark": [],
+    "Ackley_benchmark": [],
+    "RFF_within_model": [
+      "examples/custom_constrained_benchmark.ipynb:258",
+      "examples/custom_constrained_benchmark.ipynb:370",
+      "examples/custom_constrained_benchmark.ipynb:407",
+      "examples/standard_constrained_benchmarks.ipynb:141",
+      "examples/standard_constrained_benchmarks.ipynb:256",
+      "examples/visualize_HessianGP.ipynb:266",
+      "examples/custom_unconstrained_benchmark.ipynb:257"
+    ],
+    "seed_loop_32": [
+      "examples/standard_unconstrained_benchmark.ipynb:108",
+      "examples/standard_unconstrained_benchmark.ipynb:129",
+      "examples/standard_unconstrained_benchmark.ipynb:209",
+      "examples/custom_constrained_benchmark.ipynb:238",
+      "examples/custom_constrained_benchmark.ipynb:258",
+      "examples/custom_constrained_benchmark.ipynb:370",
+      "examples/custom_constrained_benchmark.ipynb:407",
+      "examples/standard_constrained_benchmarks.ipynb:120",
+      "examples/standard_constrained_benchmarks.ipynb:141",
+      "examples/standard_constrained_benchmarks.ipynb:256",
+      "examples/visualize_HessianGP.ipynb:5",
+      "examples/visualize_HessianGP.ipynb:266",
+      "examples/custom_unconstrained_benchmark.ipynb:177",
+      "examples/custom_unconstrained_benchmark.ipynb:257"
+    ]
+  }
+}

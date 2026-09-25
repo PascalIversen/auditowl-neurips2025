@@ -1,0 +1,313 @@
+{
+  "schema_version": "1",
+  "audit": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs",
+  "audit_md": "audits/1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs/audit.md",
+  "generated_at": "2026-05-30T23:13:00.265815+00:00",
+  "findings": [
+    {
+      "id": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs/fig4-violating-data-not-located",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "Figure 4 (regret under violated Assumption 6.1) data not separately identifiable in repo",
+      "severity": "low",
+      "confidence": "low",
+      "status": "question",
+      "file": "paper.pdf",
+      "quote": "Figure 4: Regret comparison on a POMDP with S “ 3, A “ 3, O “ 4 violating Assumption 6.1 (10\nruns, 95 %c.i.).\n",
+      "claim": "Appendix J reports a second regret experiment (Fig. 4) on an instance that violates Assumption 6.1, but the repo holds only one regret directory name per POMDP (13Ep_0.04discr_10000tau1_30000tau2_0.02SMAC_30000SMT0_30000MXTO) under 3states_3actions_4obs/pomdp{1,3,5}, with no marker distinguishing the assumption-violating instance.",
+      "concern": "The data backing Fig. 4 cannot be unambiguously located, so that experiment is not independently reproducible from the released artefacts.",
+      "resolution": "Authors: indicate which saved POMDP instance / directory corresponds to the Assumption-6.1-violating Fig. 4, or add the missing run data.",
+      "cross_refs": [
+        "regret-runs-not-ten"
+      ],
+      "paper_ref": "Appendix J.2, Figure 4",
+      "id_local": "fig4-violating-data-not-located",
+      "audit": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs",
+      "audit_md_line": 41,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs/ci-band-inverted",
+      "category": "bug",
+      "topic": "statistical integrity / plotting",
+      "title": "ci2() uses t.ppf(1-conf) (negative quantile) -> error band inverted, conf level wrong",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "plots/run_regret_plot.py",
+      "line_start": 17,
+      "line_end": 27,
+      "quote": "def ci2(mean, std, n, conf=0.85):\n    # Calculate the t-value\n    t_value = t.ppf(1 - conf, n - 1)\n\n    # Calculate the margin of error\n    margin_error = t_value * std / math.sqrt(n)\n\n    # Calculate the lower and upper bounds of the confidence interval\n    lower_bound = mean - margin_error\n    upper_bound = mean + margin_error\n    return lower_bound, upper_bound\n",
+      "claim": "Both plot scripts compute their shaded 'confidence interval' as mean ± t.ppf(1-conf, n-1)·std/sqrt(n); for conf=0.85 (regret) and conf=0.90 (estimation error) the quantile t.ppf(1-conf,·) is NEGATIVE, so lower_bound lands above the mean and upper_bound below it.",
+      "concern": "The error bands in every figure (Figs. 1-4) are computed with an inverted (and wrong-level) t-multiplier, so the captioned '95% c.i.' bands are neither 95% nor correctly oriented; the only quantification of statistical significance in the paper is mis-computed.",
+      "resolution": "Use the two-sided multiplier t.ppf(1-(1-0.95)/2, n-1) (i.e. t.ppf(0.975, n-1)) for a true 95% CI; verified numerically that the current call returns negative t-values (e.g. -1.19 for n=5 vs the correct +2.78).",
+      "cross_refs": [
+        "ci-conf-level-mismatch",
+        "ci-hardcoded-n"
+      ],
+      "check_script": "_audit_code/check_ci_formula.py",
+      "paper_ref": "Figures 1-4 captions, '95 %c.i.'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ci-band-inverted",
+      "audit": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs",
+      "audit_md_line": 63
+    },
+    {
+      "id": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs/get-base-path-wrong-dirname",
+      "category": "bug",
+      "topic": "reproducibility / plotting entrypoint",
+      "title": "get_base_path() searches for dir 'NeurIPS_Average_Reward_POMDP' absent from the clone -> infinite loop",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "utils.py",
+      "line_start": 146,
+      "line_end": 153,
+      "quote": "def get_base_path():\n    current_path = os.getcwd()\n\n    while not os.path.basename(current_path) == \"NeurIPS_Average_Reward_POMDP\":\n        parent_path = os.path.dirname(current_path)\n        current_path = parent_path\n\n    return current_path\n",
+      "claim": "Both plot scripts build every data path via os.path.join(utils.get_base_path(), ...); get_base_path() walks parent directories until one is named 'NeurIPS_Average_Reward_POMDP', a name that does not occur anywhere in the released repository (its root is 'Spectral_Learning_POMDP').",
+      "concern": "Run from the published repo the loop reaches the filesystem root, where os.path.dirname('/')=='/', so it never terminates (hangs); the plotting pipeline that produces every figure cannot run as shipped without editing this hardcoded name.",
+      "resolution": "Replace the hardcoded directory name with a repo-relative path resolution (e.g. relative to __file__) or rename the loop target to the actual repo directory.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_runtime_blockers.py",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "get-base-path-wrong-dirname",
+      "audit": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs",
+      "audit_md_line": 99
+    },
+    {
+      "id": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs/numpy-random-integers-removed",
+      "category": "bug",
+      "topic": "dependencies / runtime",
+      "title": "np.random.random_integers used but removed in the pinned numpy 2.2.6",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "simulations/estimation_error/simulation_spectral_estimation_error.py",
+      "line_start": 151,
+      "line_end": 151,
+      "quote": "initial_state = np.random.random_integers(low=0, high=self.num_states - 1)\n",
+      "claim": "The estimation-error experiment seeds the initial state with np.random.random_integers, but requirements.txt pins numpy==2.2.6, and np.random.random_integers was removed in numpy 2.0.",
+      "concern": "Under the declared environment, regenerating the estimation-error data (Figs. 1, 3) raises AttributeError at this line, so the headline estimation experiment cannot be re-run with the pinned dependencies.",
+      "resolution": "Replace with np.random.randint(0, self.num_states) (or np.random.default_rng().integers). Note: I could only execute under a locally available numpy 1.26.4, where the deprecated function still exists; the removal in numpy 2.x is the basis for medium confidence — authors should confirm by installing requirements.txt verbatim.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_runtime_blockers.py",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "numpy-random-integers-removed",
+      "audit": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs",
+      "audit_md_line": 131
+    },
+    {
+      "id": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs/regret-runs-not-ten",
+      "category": "difference",
+      "topic": "result traceability / sample size",
+      "title": "Fig. 2 captioned '10 runs' but released regret data has at most 5 runs",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "plots/run_regret_plot.py",
+      "line_start": 292,
+      "line_end": 292,
+      "quote": "num_experiments = 5\n",
+      "claim": "The released regret data under 3states_3actions_4obs/pomdp3 and pomdp5 contain 5 run indices (0-4) per algorithm, pomdp1 only 3 (0-2), and the plot script's default num_experiments is 5; Fig. 2 (and Fig. 4) caption states '10 runs, 95% c.i.'.",
+      "concern": "The reported 10-run average / CI is not backed by the released data, which contain at most 5 runs; the error bars and means a reviewer can reproduce differ from those claimed.",
+      "resolution": "Authors: release the full 10 runs used for Fig. 2/Fig. 4, or correct the caption to the number of runs actually used.",
+      "cross_refs": [
+        "ci-band-inverted",
+        "est-runs-not-ten"
+      ],
+      "check_script": "_audit_code/check_run_counts.py",
+      "paper_ref": "Figure 2 caption; Figure 4 caption",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "regret-runs-not-ten",
+      "audit": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs",
+      "audit_md_line": 158
+    },
+    {
+      "id": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs/est-runs-not-ten",
+      "category": "difference",
+      "topic": "result traceability / sample size",
+      "title": "Fig. 1 and Fig. 3-right captioned '10 runs' but backing data hold 5 runs",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "_audit_code/out/run_counts.txt",
+      "line_start": 2,
+      "line_end": 5,
+      "quote": "Fig1 main S=4,A=3,O=4: num_experiments=5 num_checkpoints=30 obs_frob_shape=(5, 30)\nFig3-left S=3,A=2,O=5: num_experiments=10 num_checkpoints=30 obs_frob_shape=(10, 30)\nFig3-right S=5,A=3,O=5 (file1_first_two): num_experiments=2 num_checkpoints=30 obs_frob_shape=(2, 30)\nFig3-right S=5,A=3,O=5 (file2_last_three): num_experiments=3 num_checkpoints=30 obs_frob_shape=(3, 30)\n",
+      "claim": "Fig. 1 (main, S=4,A=3,O=4) data file 1.json reports num_experiments=5; the Fig. 3-right (S=5,A=3,O=5) data are split across 1_first_two_exp.json (2 runs) + 2_last_three_exp.json (3 runs) = 5 runs; both figure captions state '10 runs, 95% c.i.' (Fig. 3-left, S=3,A=2,O=5, genuinely has 10).",
+      "concern": "Two of the three estimation-error figures average over 5 runs, not the captioned 10, so the curves and CI bands a reviewer can regenerate from the release do not match the stated sample size.",
+      "resolution": "Authors: release the remaining runs or correct the captions; also note the run-estimation driver defaults to S=3,A=2,O=5, not the main-paper S=4,A=3,O=4 instance.",
+      "cross_refs": [
+        "regret-runs-not-ten",
+        "ci-hardcoded-n"
+      ],
+      "check_script": "_audit_code/check_run_counts.py",
+      "paper_ref": "Figure 1 caption; Figure 3 caption",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "est-runs-not-ten",
+      "audit": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs",
+      "audit_md_line": 184
+    },
+    {
+      "id": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs/ci-conf-level-mismatch",
+      "category": "difference",
+      "topic": "statistical integrity",
+      "title": "Plot scripts use conf=0.90 / 0.85 while every caption states '95% c.i.'",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "plots/run_estimation_err_plot.py",
+      "line_start": 17,
+      "line_end": 17,
+      "quote": "def ci2(mean, std, n, conf=0.90):\n",
+      "claim": "The estimation-error plotter calls ci2 with conf=0.90 and the regret plotter with conf=0.85, but all figure captions report '95% c.i.'.",
+      "concern": "Even setting aside the inverted-sign defect (see ci-band-inverted), the nominal confidence level coded does not match the 95% claimed in the captions.",
+      "resolution": "Authors: align the coded confidence level with the captioned 95% (conf argument and the t-quantile).",
+      "cross_refs": [
+        "ci-band-inverted"
+      ],
+      "check_script": "_audit_code/check_ci_formula.py",
+      "paper_ref": "Figures 1-4 captions",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ci-conf-level-mismatch",
+      "audit": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs",
+      "audit_md_line": 213
+    },
+    {
+      "id": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs/ci-hardcoded-n",
+      "category": "difference",
+      "topic": "statistical integrity",
+      "title": "Estimation-error CI uses a hardcoded n (10/20), not the actual run count",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "plots/run_estimation_err_plot.py",
+      "line_start": 67,
+      "line_end": 68,
+      "quote": "num_considered_episodes = 10\nconfidence = 10\n",
+      "claim": "plot_estimation_error passes a literal confidence=10 as the sample size n to ci2 (plot_custom_estimation_error passes 20), instead of the true number of runs in the loaded data (5 for Fig. 1; 5 for Fig. 3-right).",
+      "concern": "The CI width (std/sqrt(n) and the t degrees of freedom) is computed against the wrong n, so even the band magnitude is inconsistent with the underlying sample.",
+      "resolution": "Authors: pass observation_matrix_error_frobenious_norms.shape[0] as n (the code even has this commented out at lines 80 and 215).",
+      "cross_refs": [
+        "ci-band-inverted",
+        "est-runs-not-ten"
+      ],
+      "check_script": "_audit_code/check_ci_formula.py",
+      "paper_ref": "Figure 1 / Figure 3 captions",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ci-hardcoded-n",
+      "audit": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs",
+      "audit_md_line": 239
+    },
+    {
+      "id": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs/regret-hparams-differ",
+      "category": "difference",
+      "topic": "experimental settings",
+      "title": "Regret hyperparameters in code are 10x smaller than Appendix J.2 reports",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "run_regret_experiments.py",
+      "line_start": 73,
+      "line_end": 82,
+      "quote": "# SEEU\ntau_1 = 10000\ntau_2 = 30000\n\n# SM UCRL\nmin_action_prob_smucrl = 0.02\n\n############################################\n# SET EXPERIMENT LENGTH\ninitial_episode_length = 30000\n",
+      "claim": "Appendix J.2 reports SEEU tau_1=1e5, tau_2=3e5 and Mixed Spectral UCRL / SM-UCRL initial episode T0=3e5, but the driver sets tau_1=1e4, tau_2=3e4, T0=3e4; the saved data directory name (13Ep_0.04discr_10000tau1_30000tau2_0.02SMAC_30000SMT0_30000MXTO) confirms the code values, not the paper values, produced the released results.",
+      "concern": "The hyperparameters that generated the released regret curves differ by a factor of 10 from those stated in the paper, so the paper's described setting and the reproducible setting disagree.",
+      "resolution": "Authors: reconcile the Appendix J.2 values with the driver / saved-directory values, and state which produced Fig. 2.",
+      "cross_refs": [
+        "regret-runs-not-ten"
+      ],
+      "paper_ref": "Appendix J.2 (SEEU/SM-UCRL/Mixed Spectral UCRL hyperparameters)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "regret-hparams-differ",
+      "audit": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs",
+      "audit_md_line": 266
+    },
+    {
+      "id": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs/fig3-caption-internal-inconsistency",
+      "category": "difference",
+      "topic": "figure labelling",
+      "title": "Figure 3 prose says right instance is S=5,A=5,O=5; caption and data say S=5,A=3,O=5",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "For the experiment on the right, we consider a larger POMDP instance (S “ 5, A “ 5, O “ 5)\n",
+      "claim": "Appendix J.1 prose describes the right-hand Fig. 3 instance as S=5, A=5, O=5, but the Fig. 3 caption and the released data directory (5states_3actions_5obs) both use A=3.",
+      "concern": "An internal labelling inconsistency about the instance size of a reported experiment; the released data fix the ambiguity (A=3) but the text disagrees.",
+      "resolution": "Authors: correct the prose to S=5, A=3, O=5 to match the caption and the released instance.",
+      "cross_refs": [],
+      "paper_ref": "Appendix J.1 (text vs Figure 3 caption)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "fig3-caption-internal-inconsistency",
+      "audit": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs",
+      "audit_md_line": 300,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs/data-generation-unseeded",
+      "category": "methodology",
+      "topic": "reproducibility / seeding",
+      "title": "Data-generating experiments set no RNG seed; only plot scripts seed",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "simulations/estimation_error/simulation_spectral_estimation_error.py",
+      "line_start": 148,
+      "line_end": 151,
+      "quote": "for n in range(num_experiments):\n    print(\"Experiment_n: \" + str(n))\n\n    initial_state = np.random.random_integers(low=0, high=self.num_states - 1)\n",
+      "claim": "Neither experiment driver nor either simulation class sets a numpy/Python RNG seed (grep finds np.random.seed only in the two plotting scripts); POMDP instances, policies, initial states, and rollouts are all drawn from the unseeded global RNG.",
+      "concern": "The released figures cannot be regenerated bit-for-bit, and rerunning yields a fresh random POMDP each time, so the specific instances behind Figs. 1-4 are not reproducible from the code alone (mitigated only because the raw outputs are shipped under NeurIPS_experiments/).",
+      "resolution": "Authors: seed all RNG sources at the start of each experiment and record per-figure seeds, or document that reproducibility relies on the shipped JSON outputs.",
+      "cross_refs": [
+        "numpy-random-integers-removed"
+      ],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "data-generation-unseeded",
+      "audit": "1576_Spectral_Learning_for_Infinite_Horizon_Average_Reward_POMDPs",
+      "audit_md_line": 325
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+math_eval.py max_model_len literal = 4096
+README eval_math_nodes.sh invocation passes --max_tokens = 16000
+max_tokens_per_call is forwarded to SamplingParams(max_tokens=...) at line 307
+CONFLICT: vLLM caps total context (prompt+gen) at 4096; a request asking for 16000 new tokens cannot be honored -> generations are capped at 4096-prompt_len tokens, far below the documented 16000.

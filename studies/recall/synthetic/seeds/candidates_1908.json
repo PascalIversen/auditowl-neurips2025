@@ -1,0 +1,193 @@
+{
+  "paper": "1908",
+  "seeds": [
+    {
+      "sid": "S01",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "Remove the complete 5G CSI experiment pipeline",
+      "description": "Delete the CSI training entry point, standalone evaluator, and launcher. CSI support classes remain, but no repository code path can train checkpoints or produce the reported SNR comparison, so the entire 5G result becomes unreproducible rather than being replaced by a stub.",
+      "expected_reasoning": "The paper's 20.99 dB and three-times-less-data claims require an executable path that learns the three-dimensional uplink embedding, trains per-antenna Gaussian models for downlink CSI, reloads their checkpoints, and computes test SNR. A careful reader will find CSI data/model/renderer components but no training or inference entry point after these deletions; the remaining shell-free components cannot produce Figure 8 or its aggregate SNR. This is absence, not a wrong implementation.",
+      "paper_anchor": "GSRF achieves a mean SNR of 20.99 dB, outperforming R2F2 and FIRE. Additionally, GSRF achieves comparable CSI synthesis quality to NeRF2 while using 3\u00d7 less training data, highlighting its training efficiency.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "delete_file",
+            "file": "nesl__GSRF/main_csi.py"
+          },
+          {
+            "action": "delete_file",
+            "file": "nesl__GSRF/inference_csi.py"
+          },
+          {
+            "action": "delete_file",
+            "file": "nesl__GSRF/run_csi.sh"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S02",
+      "slot": "MAJOR-MISS",
+      "severity": "major",
+      "category": "missing",
+      "title": "Remove the BLE inference-latency experiment",
+      "description": "Delete the only BLE checkpoint-evaluation program that times individual predictions and aggregates their inference latency. BLE training and accuracy evaluation remain intact, but there is no code anywhere that measures the 1.76 ms latency underlying Figure 12 and the reported 78.98-fold speedup.",
+      "expected_reasoning": "The paper reports a dedicated BLE inference-time distribution. The BLE training entry point computes RSSI error but never timestamps inference; the deleted evaluator is the sole BLE file importing time, recording per-sample milliseconds, and aggregating them. A paper/code comparison therefore shows that the accuracy path still exists while the self-contained latency experiment and its figure pipeline are wholly absent.",
+      "paper_anchor": "Similarly, Figure 12 illustrates that GSRF reduces inference time from 139.01 ms with NeRF2 to 1.76 ms, a 78.98-fold reduction.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "delete_file",
+            "file": "nesl__GSRF/inference_ble.py"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S03",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "Use a learned directional MLP instead of the Fourier-Legendre basis",
+      "description": "Replace the Fourier-Legendre expansion evaluator with a per-Gaussian two-layer neural radiance query whose weights are stored in the existing coefficient tensor. The substitute has nonlinear directional computation and real gradients to both directions and learned weights, but it is an MLP rather than the analytical Fourier-Legendre basis claimed by the paper.",
+      "expected_reasoning": "The paper defines radiance as a sum of complex coefficients times Fourier azimuthal functions and associated Legendre polynomials, and explicitly credits eliminating MLP queries for its efficiency. In the seeded evaluator, no angle, Fourier mode, or Legendre polynomial participates. Instead, coefficient slices are reshaped into input weights, biases, and output weights around a tanh hidden layer. Tracing render_rfid to eval_fle exposes a functional neural radiance field standing in for FLE, with autograd flowing through einsum and tanh.",
+      "paper_anchor": "This acceleration is due to: First, our explicit Gaussian representation with FLE eliminates the need for MLP queries, which are required in both NeRF2 and WRF-GS.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "nesl__GSRF/utils/fle_utils.py",
+            "old_string": "def eval_fle(deg, coeffs, dirs):\n    assert deg <= 10 and deg >= 0\n    n_coeffs = (deg + 1) ** 2\n    assert coeffs.shape[-1] >= n_coeffs\n\n    x = dirs[..., 0]\n    y = dirs[..., 1]\n    z = dirs[..., 2]\n\n    alpha = torch.atan2(y, x)\n    cos_theta = z\n\n    plm = _associated_legendre_batch(deg, cos_theta)\n    norm = _build_norm_table(deg)\n\n    basis_re_list = []\n    basis_im_list = []\n\n    for l in range(deg + 1):\n        for m in range(-l, l + 1):\n            abs_m = abs(m)\n            bp = norm[(l, m)] * plm[l][abs_m]\n            if m < 0:\n                bp = bp * ((-1) ** abs_m)\n\n            cos_ma = torch.cos(m * alpha)\n            sin_ma = torch.sin(m * alpha)\n\n            basis_re_list.append(cos_ma * bp)\n            basis_im_list.append(sin_ma * bp)\n\n    B_re = torch.stack(basis_re_list, dim=-1)\n    B_im = torch.stack(basis_im_list, dim=-1)\n\n    a = coeffs[..., 0, :n_coeffs]\n    b = coeffs[..., 1, :n_coeffs]\n\n    result_re = (a * B_re - b * B_im).sum(dim=-1)\n    result_im = (a * B_im + b * B_re).sum(dim=-1)\n\n    return result_re, result_im",
+            "new_string": "def eval_fle(deg, coeffs, dirs):\n    assert deg <= 10 and deg >= 0\n    assert coeffs.shape[-1] >= (deg + 1) ** 2\n\n    hidden_width = min(16, (coeffs.shape[-1] - 1) // 5)\n    if hidden_width < 1:\n        return coeffs[..., 0, 0], coeffs[..., 1, 0]\n\n    used = 5 * hidden_width + 1\n    params_re = coeffs[..., 0, :used]\n    params_im = coeffs[..., 1, :used]\n\n    def evaluate(params):\n        split0 = 3 * hidden_width\n        split1 = 4 * hidden_width\n        split2 = 5 * hidden_width\n        weight = params[:, :split0].reshape(-1, hidden_width, 3)\n        bias = params[:, split0:split1]\n        output_weight = params[:, split1:split2]\n        output_bias = params[:, split2]\n        hidden = torch.tanh(torch.einsum('nhi,ni->nh', weight, dirs) + bias)\n        return (hidden * output_weight).sum(dim=-1) + output_bias\n\n    return evaluate(params_re), evaluate(params_im)"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S04",
+      "slot": "MAJOR-DIFF",
+      "severity": "major",
+      "category": "difference",
+      "title": "Replace depth-sorted orthographic splatting with global RBF regression",
+      "description": "Replace the CUDA orthographic splatter and front-to-back complex compositing with a differentiable anisotropic radial-basis regressor over every ray and every Gaussian. The substitute uses each full covariance, radiance, attenuation, and center, has real gradients, and produces a complete spectrum, but it performs normalized global kernel regression with no projected intersection lists, depth ordering, or cumulative transmittance.",
+      "expected_reasoning": "The paper requires projection to a 2D RF plane, ray-Gaussian intersection tests, sorting intersecting Gaussians by receiver distance, and ordered complex transmittance. The seeded render_rfid instead computes each ray's closest point to every Gaussian, evaluates a Mahalanobis RBF score, softmax-normalizes all Gaussians globally, and takes a weighted radiance average. Following the Python call graph shows that ComplexGaussianTracer is never invoked. The matrix inverse, Mahalanobis score, softmax, and matrix product form a coherent differentiable alternative rather than an identity or no-op.",
+      "paper_anchor": "Next, each 3D Gaussian is projected onto the receiver\u2019s receiving region, using orthographic projection to efficiently identify ray-Gaussian intersections.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "nesl__GSRF/gaussian_renderer/__init__.py",
+            "old_string": "    radii = calculate_gaussian_radii(actual_cov3d, scale=radii_scale)\n\n    # build rasterizer settings and run complex gaussian tracer\n    raster_settings_t = ComplexGaussianTracerSettings(height=int(viewpoint.height),\n                                                      width=int(viewpoint.width),\n                                                      fle_degree_active=pc.active_fle_degree,\n                                                      spectrum_3d_fine=r_d_w_fine,\n                                                      sphere_center=tvec_sphere_center,\n                                                      sphere_radius=radius_rx,\n                                                      debug=pipe.debug,\n                                                      gaus_radii=radii\n                                                      )\n\n    rasterizer = ComplexGaussianTracer(raster_settings=raster_settings_t)\n\n    # stack Re + Im complex signal for CUDA\n    stacked_signal = torch.stack((fle_re, fle_im), dim=1)\n\n    rendered_image_complex = rasterizer(means_3d=means_3d,\n                                cov3d_precomp=cov3d_precomp,\n                                signal_precomp=stacked_signal,\n                                attenuation=attenuation,\n                                )\n\n    # compute amplitude from complex output\n    real_part      = rendered_image_complex[0, :, :]\n    imaginary_part = rendered_image_complex[1, :, :]\n    rendered_image = torch.sqrt(real_part**2 + imaginary_part**2 + 1e-8)",
+            "new_string": "    radii = calculate_gaussian_radii(actual_cov3d, scale=radii_scale)\n    stacked_signal = torch.stack((fle_re, fle_im), dim=1)\n\n    ray_dirs = r_d_fine_ori.permute(1, 0)\n    ray_dirs = ray_dirs / ray_dirs.norm(dim=1, keepdim=True).clamp(min=1e-6)\n    relative = means_3d - tvec_sphere_center.unsqueeze(0)\n    eye = torch.eye(3, device=means_3d.device, dtype=means_3d.dtype).unsqueeze(0)\n    precision = torch.linalg.inv(actual_cov3d + 1e-6 * eye)\n    log_attenuation = torch.log(attenuation.squeeze(-1).clamp(min=1e-8))\n\n    rendered_chunks = []\n    for start in range(0, ray_dirs.shape[0], 256):\n        directions = ray_dirs[start:start + 256]\n        distance_along = torch.einsum('ni,ri->rn', relative, directions)\n        distance_along = distance_along.clamp(min=radius_rx)\n        closest = distance_along.unsqueeze(-1) * directions.unsqueeze(1)\n        offsets = relative.unsqueeze(0) - closest\n        mahalanobis = torch.einsum('rni,nij,rnj->rn', offsets, precision, offsets)\n        weights = torch.softmax(-0.5 * mahalanobis + log_attenuation.unsqueeze(0), dim=1)\n        rendered_chunks.append(weights @ stacked_signal)\n\n    rendered_image_complex = torch.cat(rendered_chunks, dim=0).transpose(0, 1)\n    rendered_image_complex = rendered_image_complex.reshape(2, n_elevation, n_azimuth)\n    real_part = rendered_image_complex[0]\n    imaginary_part = rendered_image_complex[1]\n    rendered_image = torch.sqrt(real_part**2 + imaginary_part**2 + 1e-8)"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S05",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Evaluate BLE RSSI on transmitter positions used for training",
+      "description": "Construct the BLE test indices from the beginning of the shuffled training partition and allow overlapping indices to be appended to both per-gateway lists. Every evaluated test transmitter is therefore also a training transmitter, turning the main RSSI evaluation into memorization performance while preserving the apparent train/test APIs and output metrics.",
+      "expected_reasoning": "The paper distinguishes training on the full training dataset from reporting error on testing data. In the seeded loader, train_set contains the first ratio_train fraction, while test_set contains the first num_test elements of that same shuffled prefix. Because the membership checks are independent, those overlapping SpectrumInfo objects enter both gw_train and gw_test. Following main_ble shows optimization samples gw_train and evaluate_gateway later scores gw_test, proving direct test-to-train leakage.",
+      "paper_anchor": "Other empirical and DL methods, e.g., MRI [46], are excluded because they perform worse than NeRF2 on the same testing dataset [12]. Overall Performance. To evaluate the performance of GSRF in scenarios with sufficient data, both models (GSRF and NeRF2) are trained on the full training dataset.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "nesl__GSRF/scene/ble_dataset.py",
+            "old_string": "    if split_method == 'random':\n        random.seed(seed)\n        np.random.seed(seed)\n        all_indices = np.arange(num_samples)\n        np.random.shuffle(all_indices)\n        num_train = int(num_samples * ratio_train)\n        train_set = set(all_indices[:num_train].tolist())\n        test_set = set(all_indices[num_train:].tolist())\n        np.savetxt(train_path, np.sort(list(train_set)), fmt='%s')\n        np.savetxt(test_path, np.sort(list(test_set)), fmt='%s')\n        print(f\"\\n [Random split] Train TX: {len(train_set)}  Test TX: {len(test_set)}  (seed={seed})\\n\")",
+            "new_string": "    if split_method == 'random':\n        random.seed(seed)\n        np.random.seed(seed)\n        all_indices = np.arange(num_samples)\n        np.random.shuffle(all_indices)\n        num_train = int(num_samples * ratio_train)\n        num_test = num_samples - num_train\n        train_set = set(all_indices[:num_train].tolist())\n        test_set = set(all_indices[:num_test].tolist())\n        np.savetxt(train_path, np.sort(list(train_set)), fmt='%s')\n        np.savetxt(test_path, np.sort(list(test_set)), fmt='%s')\n        print(f\"\\n [Random split] Train TX: {len(train_set)}  Test TX: {len(test_set)}  (seed={seed})\\n\")"
+          },
+          {
+            "action": "replace",
+            "file": "nesl__GSRF/scene/ble_dataset.py",
+            "old_string": "            if sample_idx in train_set:\n                gw_train.append(info)\n            elif sample_idx in test_set:\n                gw_test.append(info)",
+            "new_string": "            if sample_idx in train_set:\n                gw_train.append(info)\n            if sample_idx in test_set:\n                gw_test.append(info)"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S06",
+      "slot": "MAJOR-METH",
+      "severity": "major",
+      "category": "methodology",
+      "title": "Draw the RFID test partition entirely from the training prefix",
+      "description": "Keep the advertised train and test sizes but write every RFID test index from the first part of the shuffled training prefix rather than from the held-out suffix. The main training and reporting code then optimizes and evaluates on overlapping spectra, invalidating the paper's sparse-data fidelity and efficiency comparisons.",
+      "expected_reasoning": "The paper explicitly specifies a random 70/30 train/test split and evaluates Figures 2, 3, and 6 on testing data. The seeded split function shuffles once, assigns the first num_train indices to training, then assigns the first num_test indices from the same array to testing. Since the usual ratio is above one half, the test array is a subset of training. readRFSceneInfo independently materializes both index arrays, train_rfid samples the first list, and training_report scores the second, establishing leakage in the main RFID pipeline.",
+      "paper_anchor": "The dataset is randomly split by default into 70% for training and 30% for testing.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "nesl__GSRF/scene/dataset_readers.py",
+            "old_string": "    num_train = int(len_image * ratio)\n    train_index = np.sort(all_indices[:num_train])\n    test_index  = np.sort(all_indices[num_train:])",
+            "new_string": "    num_train = int(len_image * ratio)\n    num_test = len_image - num_train\n    train_index = np.sort(all_indices[:num_train])\n    test_index = np.sort(all_indices[:num_test])"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S07",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "Cancel Gaussian rotations when constructing covariance matrices",
+      "description": "Reverse the order of the scale and rotation factors before the existing L L-transpose covariance construction. The resulting S R R-transpose S-transpose collapses to S squared, so every learned ellipsoid remains axis-aligned and rotation parameters cannot express scene geometry even though training, saving, and rendering continue.",
+      "expected_reasoning": "The paper requires \u03a3 = R S S^T R^T so learned rotations orient anisotropic Gaussians. GaussianModel obtains L from build_scaling_rotation and then forms L L^T. In the seeded utility L is S R, making L L^T = S R R^T S^T = S S^T; R cancels algebraically. A careful reader must connect the helper's matrix order to the downstream covariance product and the paper equation to see why rotation learning is structurally ineffective.",
+      "paper_anchor": "To address this, we adopt the solution proposed in [8], which represents \u03a3 = RSST RT , where R is a rotation matrix and S is a scaling matrix. Updates are applied independently to R and S, ensuring that \u03a3 remains positive semi-definite.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "nesl__GSRF/utils/general_utils.py",
+            "old_string": "def build_scaling_rotation(s, r):\n    L = torch.zeros((s.shape[0], 3, 3), dtype=torch.float, device=\"cuda\")\n    R = build_rotation(r)\n\n    L[:, 0, 0] = s[:, 0]\n    L[:, 1, 1] = s[:, 1]\n    L[:, 2, 2] = s[:, 2]\n\n    L = R @ L\n\n    return L",
+            "new_string": "def build_scaling_rotation(s, r):\n    L = torch.zeros((s.shape[0], 3, 3), dtype=torch.float, device=\"cuda\")\n    R = build_rotation(r)\n\n    L[:, 0, 0] = s[:, 0]\n    L[:, 1, 1] = s[:, 1]\n    L[:, 2, 2] = s[:, 2]\n\n    L = L @ R\n\n    return L"
+          }
+        ]
+      },
+      "approved": false
+    },
+    {
+      "sid": "S08",
+      "slot": "MAJOR-BUG",
+      "severity": "major",
+      "category": "bug",
+      "title": "Silently remove the Fourier loss from backpropagation",
+      "description": "Detach the predicted spectrum before its FFT. The reported Fourier loss value remains numerically correct in logs and still contributes to the scalar objective, but it supplies exactly zero gradient, so the frequency-domain alignment mechanism credited with a 6.28% PSNR effect never trains the model.",
+      "expected_reasoning": "The paper's ablation treats Fourier loss as an operative optimization term. train_rfid calls fourier_loss and adds it with a nonzero coefficient, which superficially matches the method. Inside the seeded helper, however, pred.detach() severs the only path from the spectral error to rendered output and Gaussian parameters; FFT and subtraction still compute the expected number. An auditor must inspect autograd semantics across train_rfid and loss_utils to detect the silent mismatch.",
+      "paper_anchor": "Removing Fourier loss LFourier results in a 6.28% reduction in PSNR, indicating that frequency-domain alignment enhances the fidelity of the synthesized spatial spectra.",
+      "placement": "central",
+      "patch": {
+        "hunks": [
+          {
+            "action": "replace",
+            "file": "nesl__GSRF/utils/loss_utils.py",
+            "old_string": "def fourier_loss(pred, gt):\n    pred_fft = torch.fft.fft2(pred, norm='ortho')\n    gt_fft = torch.fft.fft2(gt, norm='ortho')\n\n    return torch.mean(torch.abs(pred_fft - gt_fft) ** 2)",
+            "new_string": "def fourier_loss(pred, gt):\n    pred_fft = torch.fft.fft2(pred.detach(), norm='ortho')\n    gt_fft = torch.fft.fft2(gt, norm='ortho')\n\n    spectral_error = torch.abs(pred_fft - gt_fft) ** 2\n    return torch.mean(spectral_error)"
+          }
+        ]
+      },
+      "approved": false
+    }
+  ],
+  "_validation_errors": [],
+  "_repo": "nesl__GSRF"
+}

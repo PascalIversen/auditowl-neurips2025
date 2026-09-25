@@ -1,0 +1,19 @@
+{
+  "folder": "1829_OLinear_A_Linear_Model_for_Time_Series_Forecasting_in_Orthog",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 10823,
+    "output": 14937,
+    "cache_write": 273060,
+    "cache_read": 6007450
+  },
+  "total_tokens": 6306270,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 15.41
+}

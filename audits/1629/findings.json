@@ -1,0 +1,176 @@
+{
+  "schema_version": "1",
+  "audit": "1629_MESS_Dynamically_Learned_Inference_Time_LLM_Routing_in_Model",
+  "audit_md": "audits/1629_MESS_Dynamically_Learned_Inference_Time_LLM_Routing_in_Model/audit.md",
+  "generated_at": "2026-05-29T22:27:44.455495+00:00",
+  "findings": [
+    {
+      "id": "1629_MESS_Dynamically_Learned_Inference_Time_LLM_Routing_in_Model/missing-inference-data",
+      "category": "missing",
+      "topic": "result traceability / data availability",
+      "title": "Captured inference data, predictor checkpoints, and W&B logs absent; no table/figure reproducible",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/laminair__mess-plus/.gitignore",
+      "line_start": 8,
+      "line_end": 18,
+      "quote": "data/\ndatasets/\nlegacy/figures/\nclassifier/checkpoints/\n/evaluations/pivot_sample_data\n\n*.zip\n*.sqsh\n*.out\n*.csv\n*.ckpt\n*.log\n",
+      "claim": "simulator.py (the README's path for reproducing paper results) requires --dataset-path pointing to per-model inference CSVs (read_files_from_folder), and every table/figure is aggregated from W&B run histories via evaluations/utils/wandb_loader.py + tables.py; .gitignore excludes data/, *.csv, classifier/checkpoints/, *.ckpt and wandb/, and the repo ships none of them (0 CSVs, 0 checkpoints, 0 data files — _audit_code/out/repo_artifacts.txt).",
+      "concern": "Not a single quantitative result (Table 2 costs/satisfaction/ratios, the headline 2x claim, Figs 2/3, Tables 3-5/8/9) can be reproduced from the repository because the inputs to the computing code are absent and the W&B projects are private.",
+      "resolution": "Authors: release the captured per-model inference CSVs (one per benchmark/zoo), the trained predictor checkpoints, and either the W&B export or a script that regenerates the tables from the CSVs end-to-end.",
+      "cross_refs": [
+        "baselines-not-in-repo"
+      ],
+      "check_script": "_audit_code/check_repo_artifacts.py",
+      "paper_ref": "Table 2; README 'Running experiments'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-inference-data",
+      "audit": "1629_MESS_Dynamically_Learned_Inference_Time_LLM_Routing_in_Model",
+      "audit_md_line": 74
+    },
+    {
+      "id": "1629_MESS_Dynamically_Learned_Inference_Time_LLM_Routing_in_Model/baselines-not-in-repo",
+      "category": "missing",
+      "topic": "baselines",
+      "title": "RouteLLM / RouterDC routing code not in repo; only their private W&B logs are post-processed",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/laminair__mess-plus/run_baselines.ipynb",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "# Comparison with RouteLLM\nDATA_DIR = f\"{PROJECT_ROOT_PATH}/data/routellm_raw\"\nroutellm_logs = download_log_data(\n    entity=\"tum-i13\",\n    project_name=\"routellm-sweepv2\",\n    save_dir=DATA_DIR,\n    batch_size=50\n)\n",
+      "claim": "The two competitor baselines (RouteLLM, RouterDC) are reproduced by downloading the authors' private W&B run histories (tum-i13/routellm-sweepv2, tum-i13/routerdc-sweep) that already contain the per-request model_choice; the router models themselves (RouteLLM BERT controller, RouterDC deberta-v3 contrastive router) are not trained or invoked anywhere in the repo (grep: no 'Controller', 'deberta', 'contrastive').",
+      "concern": "The central comparison underpinning the '2x cheaper than existing routing' headline cannot be re-run; the baseline numbers are taken from inaccessible private logs rather than runnable baseline code.",
+      "resolution": "Authors: include the RouteLLM/RouterDC training+routing scripts (or configs) used, and ship the per-request model-choice logs, so the comparison can be reproduced independently.",
+      "cross_refs": [
+        "missing-inference-data",
+        "baseline-notebook-stale-paths"
+      ],
+      "check_script": "_audit_code/check_repo_artifacts.py",
+      "paper_ref": "Table 2; Appendix B 'RouteLLM' / 'RouterDC'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "baselines-not-in-repo",
+      "audit": "1629_MESS_Dynamically_Learned_Inference_Time_LLM_Routing_in_Model",
+      "audit_md_line": 111
+    },
+    {
+      "id": "1629_MESS_Dynamically_Learned_Inference_Time_LLM_Routing_in_Model/main-chosen-model-stale",
+      "category": "bug",
+      "topic": "model-call accounting",
+      "title": "main.py logs/records stale `chosen_model_id` on every exploitation step",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/laminair__mess-plus/main.py",
+      "line_start": 466,
+      "line_end": 472,
+      "quote": "INFERENCE_TIME_LIST.append(step_time)\nENERGY_PER_MODEL[model_category_chosen].append(step_energy)\nMODEL_CHOSEN_LIST.append(chosen_model_id)\nACCURACY_LIST.append(target_metric)\n\nmonitoring_dict[f\"mess_plus/energy\"] = step_energy\nmonitoring_dict[f\"mess_plus/chosen_model\"] = chosen_model_id\n",
+      "claim": "In the exploitation branch the selected model is `model_category_chosen` (returned by exploit()), but the code appends/logs `chosen_model_id`, a variable only ever assigned in the exploration branch (main.py:417 `chosen_model_id = len(label_cols) - 1`, i.e. the largest model). It is never set in the exploit branch (verified: zero assignments to chosen_model_id in lines 433-474, _audit_code/out/main_chosen_model_bug.txt).",
+      "concern": "When main.py is used to produce model-call ratios, every exploitation step is recorded as the largest model (stale value) instead of the model actually chosen, biasing the model-call-ratio statistics toward L70B (and raising NameError if the first non-explore step is an exploit).",
+      "resolution": "Use the index of `model_category_chosen` (e.g. `self.labels.index(model_category_chosen)`, as simulator.py:198 correctly does) when appending to MODEL_CHOSEN_LIST and logging mess_plus/chosen_model in the exploit branch.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_main_chosen_model_bug.py",
+      "paper_ref": "Table 2 'Model Call Ratio' columns",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "main-chosen-model-stale",
+      "audit": "1629_MESS_Dynamically_Learned_Inference_Time_LLM_Routing_in_Model",
+      "audit_md_line": 146
+    },
+    {
+      "id": "1629_MESS_Dynamically_Learned_Inference_Time_LLM_Routing_in_Model/baseline-notebook-stale-paths",
+      "category": "bug",
+      "topic": "baseline reproduction",
+      "title": "run_baselines.ipynb reads config/online/*.yaml and CONFIG['algorithm'] that do not exist",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/laminair__mess-plus/run_baselines.ipynb",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "config_path = Path(f\"{PROJECT_ROOT_PATH}/config/online/{benchmark}.yaml\")\nNUM_PRETRAINING_STEPS = 0\n\nwith config_path.open(\"r\") as f:\n    CONFIG = yaml.safe_load(f)\n\nalgorithm_config = CONFIG[\"algorithm\"]\n",
+      "claim": "The RouteLLM/RouterDC baseline cells open `config/online/<benchmark>.yaml` and read `CONFIG['algorithm']`, but the repo has no `config/online/` (or `config/qwen2/online/`) directory and no config file with a top-level `algorithm:` key — configs use `empirical:`/`simulated:` (verified _audit_code/out/repo_artifacts.txt).",
+      "concern": "These notebook cells cannot run as shipped (FileNotFoundError / KeyError), so the baseline post-processing is not executable even if the W&B logs were available.",
+      "resolution": "Update the notebook to the current config layout (config/<family>/<benchmark>.yaml, keys empirical/simulated) or add the referenced files.",
+      "cross_refs": [
+        "baselines-not-in-repo"
+      ],
+      "check_script": "_audit_code/check_repo_artifacts.py",
+      "paper_ref": "Appendix B baselines",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "baseline-notebook-stale-paths",
+      "audit": "1629_MESS_Dynamically_Learned_Inference_Time_LLM_Routing_in_Model",
+      "audit_md_line": 178
+    },
+    {
+      "id": "1629_MESS_Dynamically_Learned_Inference_Time_LLM_Routing_in_Model/zoo-size-config-mismatch",
+      "category": "difference",
+      "topic": "experimental setup",
+      "title": "Llama configs declare a 4-model zoo (adds 3.2 3B); paper Table 2 reports a 3-model zoo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/laminair__mess-plus/config/llama3/arc_challenge.yaml",
+      "line_start": 11,
+      "line_end": 16,
+      "quote": "meta-llama/Llama-3.2-3B-Instruct:\n  category: \"small\"\n  gpu_indices: [0]\n  max_seq_len: 2048\n  gpu_memory_utilization: 0.15\n  quantization: null\n",
+      "claim": "Every config/llama3/*.yaml lists four models — Llama 3.2 1B (xsmall), 3.2 3B (small), 3.1 8B (medium), 3.3 70B (large) — whereas the paper's Appendix B 'LLM Zoo' and Table 2 describe a three-model zoo (1B/8B/70B), with model-call ratios reported only for L70B/L8B/L1B (verified across all 8 llama3 configs, _audit_code/out/repo_artifacts.txt).",
+      "concern": "The shipped Llama configs do not match the zoo composition used for the reported Table 2 numbers, so a user running main.py with these configs would evaluate a different (4-model) system than the paper reports; both setups are individually valid routing problems.",
+      "resolution": "Authors: confirm whether Table 2 used 3 or 4 Llama models, and ship configs matching the reported zoo (or clarify that the 3B 'small' model was excluded for the main results).",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_repo_artifacts.py",
+      "paper_ref": "Appendix B 'LLM Zoo'; Table 2 column headers (L70B/L8B/L1B)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "zoo-size-config-mismatch",
+      "audit": "1629_MESS_Dynamically_Learned_Inference_Time_LLM_Routing_in_Model",
+      "audit_md_line": 212
+    },
+    {
+      "id": "1629_MESS_Dynamically_Learned_Inference_Time_LLM_Routing_in_Model/predictor-no-disjoint-eval",
+      "category": "methodology",
+      "topic": "evaluation design",
+      "title": "Request-satisfaction predictor never evaluated on data held out from its training stream",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "question",
+      "file": "code/laminair__mess-plus/simulator.py",
+      "line_start": 63,
+      "line_end": 65,
+      "quote": "for seed in self.algorithm_config[\"seed\"]:\n    set_all_seeds(seed)\n    self.dataset = self.dataset.sample(frac=1, random_state=seed).reset_index(drop=True)\n",
+      "claim": "The online predictor is trained on exploration requests and used to route subsequent exploitation requests from the same shuffled stream; reported request-satisfaction/cost are accumulated over that same stream, with no separate held-out test split. This is the intended online formulation (predict-then-act on each arriving request), so a held-out split is arguably not required.",
+      "concern": "Because evaluation and predictor training share one shuffled stream, the reported per-benchmark satisfaction is an in-stream online estimate, not an out-of-distribution generalization measure; whether this matters depends on interpreting the claim as online performance vs. generalization.",
+      "resolution": "Authors: clarify that results are online cumulative metrics over the request stream (not held-out generalization), and consider reporting predictor accuracy on requests excluded from its own training to bound any optimism.",
+      "cross_refs": [],
+      "paper_ref": "Section 2.3; Section 4.1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "predictor-no-disjoint-eval",
+      "audit": "1629_MESS_Dynamically_Learned_Inference_Time_LLM_Routing_in_Model",
+      "audit_md_line": 245
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+comparison,t_stat,p_value,data_source
+surface_DPO_vs_CrossQ,-1.8138,8.9117e-02,"np.random.normal(mean,std)"
+grid_DPO_vs_STRPO,-9.9464,6.1920e-08,"np.random.normal(mean,std)"
+molecule_DPO_vs_DDPG,-948.9124,8.0057e-24,"np.random.normal(mean,std)"

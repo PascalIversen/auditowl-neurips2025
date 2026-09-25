@@ -1,0 +1,10 @@
+{
+  "anupampani__Gaze-VLM": {
+    "repo": "https://github.com/anupampani/Gaze-VLM",
+    "clone_status": "cached",
+    "size_mb": 1.3,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

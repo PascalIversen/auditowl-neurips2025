@@ -1,0 +1,177 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T06:08:14.330547+00:00",
+  "findings": [
+    {
+      "id": "/plugin-generality-code-missing",
+      "category": "missing",
+      "topic": "result traceability / generality experiments",
+      "title": "No code for OrthoTrans/NormLin plug-in experiments (iTransformer, PatchTST, RLinear)",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "experiments/exp_basic.py",
+      "line_start": 13,
+      "line_end": 25,
+      "quote": "self.model_dict = {\n    'OLinear': OLinear,\n    'OLinear_C': OLinear_C,\n    'OLinear_attn_var': OLinear_attn_var,\n    'OLinear_ablation_var_temp': OLinear_ablation_var_temp,\n    'OLinear_ablation_lin_design': OLinear_ablation_lin_design,\n    'OLinear_no_Q_neither': OLinear_no_Q_neither,\n    'OLinear_FFT': OLinear_FFT,\n    'OLinear_wavelet': OLinear_wavelet,\n    'OLinear_wavelet2': OLinear_wavelet2,\n    'OLinear_Legendre': OLinear_Legendre,\n    'OLinear_Laguerre': OLinear_Laguerre,\n    'OLinear_cheby': OLinear_cheby,\n}\n",
+      "claim": "The model registry contains only OLinear and its own variants/ablations; no iTransformer / PatchTST / RLinear / DLinear / TimeMixer model is registered or present in model/, although run.py defines flags iTrans_ortho_trans, PatchTST_ortho_trans, DLinear_ortho_trans (run.py:78-80).",
+      "concern": "One of the paper's three headline contributions — that OrthoTrans/NormLin as a plug-in 'consistently improves the performance of existing forecasters' (Table 5, Tables 9-10) — has no runnable code in the repo, so the generality results cannot be reproduced.",
+      "resolution": "Provide the modified baseline models (iTransformer/PatchTST/RLinear with OrthoTrans and NormLin plug-ins) and their scripts, or point to where they live.",
+      "cross_refs": [
+        "baselines-not-in-repo",
+        "§5.2 Generality",
+        "Table 5"
+      ],
+      "check_script": "_audit_code/check_models_and_keys.py",
+      "paper_ref": "Section 5.2 'OrthoTrans as a plug-in', Table 5; Tables 9-10",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "plugin-generality-code-missing",
+      "audit": "",
+      "audit_md_line": 57
+    },
+    {
+      "id": "/channel-corr-matrices-missing",
+      "category": "missing",
+      "topic": "data/artefact availability (OLinear-C)",
+      "title": "Channel-correlation matrices required by OLinear-C absent for all bundled datasets except weather",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "scripts/OLinear_C/more_datasets/cars_orthoLinear.sh",
+      "line_start": 35,
+      "line_end": 39,
+      "quote": "--q_mat_file cars_${seq_len}_ratio0.7.npy \\\n--q_out_mat_file cars_${pred_len}_ratio0.7.npy \\\n--q_channel_file cars_COV_channel_ratio0.70.npy \\\n--model_id Cars_OLinear_${seq_len}_${pred_len}_${d_model}_${lr}_corr_only \\\n--model $model_name \\\n",
+      "claim": "OLinear-C (model/OLinear_C.py:42-45) requires a per-dataset channel-correlation matrix `*_COV_channel_ratio0.70.npy`, but of the 50 script references to bundled datasets only weather's file exists; 44/50 referenced channel files are absent (cars, covid, DowJones, ILI, nasdaq, power, SP500, unemployment, website, wiki).",
+      "concern": "Table 7 (OLinear-C results) and the var-corr / attn-var ablations cannot be reproduced out-of-the-box on the bundled datasets, because the channel matrices the scripts load are not shipped (they must be regenerated via dataset/Generate_corrmat.ipynb, which the README presents as optional).",
+      "resolution": "Ship the `*_COV_channel_ratio0.70.npy` files for all bundled datasets, or state in the README that Generate_corrmat.ipynb must be run first to produce them.",
+      "cross_refs": [
+        "channel-file-assert-typo",
+        "Table 7"
+      ],
+      "check_script": "_audit_code/check_channel_files_exist.py",
+      "paper_ref": "Table 7 (OLinear vs OLinear-C)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "channel-corr-matrices-missing",
+      "audit": "",
+      "audit_md_line": 95
+    },
+    {
+      "id": "/baselines-not-in-repo",
+      "category": "missing",
+      "topic": "baselines / fair comparison",
+      "title": "None of the 11 baseline models are present in the repo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "We carefully choose 11 well-acknowledged state-of-the-art forecasting models as our\nbaselines\n",
+      "claim": "The paper compares OLinear against 11 baselines (Tables 2, 3, 8), but model/ contains no baseline implementation (checked: iTransformer, PatchTST, DLinear, TimeMixer, Leddam, CARD, Fredformer, FITS, FilterNet, TimesNet all ABSENT); only OLinear variants are registered.",
+      "concern": "Baseline numbers cannot be reproduced from this repo and there is no script that runs baselines under the same split/metric/tuning budget, so the head-to-head comparison is not independently checkable here.",
+      "resolution": "Either include the baseline code/scripts used to produce Tables 2/3/8, or cite the exact source (repo+commit) and configuration for each baseline number.",
+      "cross_refs": [
+        "plugin-generality-code-missing"
+      ],
+      "check_script": "_audit_code/check_models_and_keys.py",
+      "paper_ref": "Section 5.1 'Baselines'; Tables 2, 3, 8",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "baselines-not-in-repo",
+      "audit": "",
+      "audit_md_line": 124,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "/unpinned-dependencies",
+      "category": "missing",
+      "topic": "environment reproducibility",
+      "title": "requirements.txt lists no versions; 'pywt' is not an installable PyPI name",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "requirements.txt",
+      "line_start": 1,
+      "line_end": 13,
+      "quote": "pandas\nscikit-learn\nnumpy\nmatplotlib\ntorch\nfvcore\neinops\nthop\ntimm\nreformer_pytorch\nopenpyxl\nseaborn\npywt\n",
+      "claim": "All dependencies are unpinned (no versions), and the final entry `pywt` is not a valid PyPI distribution name (the package is `PyWavelets`, import name `pywt`); `pip install -r requirements.txt` will fail on `pywt`.",
+      "concern": "The exact environment cannot be rebuilt from the spec, and a literal `pip install -r requirements.txt` errors out on `pywt`, which is used by the wavelet-basis ablation (model/orthoLinear_basis/OLinear_wavelet.py:10).",
+      "resolution": "Pin versions (especially torch/numpy) and replace `pywt` with `PyWavelets` (or `pywavelets`).",
+      "cross_refs": [],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "unpinned-dependencies",
+      "audit": "",
+      "audit_md_line": 148
+    },
+    {
+      "id": "/undefined-wavelet-concat-model-key",
+      "category": "bug",
+      "topic": "ablation scripts",
+      "title": "Basis-ablation scripts request model keys 'OLinear_wavelet_concat'/'OLinear_wavelet2_concat' not in model_dict",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "scripts/ablation/basis/ECL_orthoLinear_basis.sh",
+      "line_start": 6,
+      "line_end": 6,
+      "quote": "model_names=(OLinear_FFT OLinear_wavelet_concat OLinear_wavelet2 OLinear_cheby OLinear_Laguerre OLinear_Legendre)\n",
+      "claim": "The active model_names arrays in scripts/ablation/basis/{ECL,PEMS03,Solar}_*basis.sh include `OLinear_wavelet_concat` (and `OLinear_wavelet2_concat` in PEMS03/Solar), but model_dict (experiments/exp_basic.py:13-25) only defines `OLinear_wavelet`/`OLinear_wavelet2`; exp_forecast.py:218 indexes `self.model_dict[self.args.model]` with no default.",
+      "concern": "Running these basis-ablation scripts as shipped raises `KeyError: 'OLinear_wavelet_concat'` at model construction, so the wavelet rows of Table 4 cannot be produced via these scripts.",
+      "resolution": "Rename the model_names entries to `OLinear_wavelet`/`OLinear_wavelet2`, or add the `*_concat` variants to model_dict.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_models_and_keys.py",
+      "paper_ref": "Table 4 (wavelet rows)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "undefined-wavelet-concat-model-key",
+      "audit": "",
+      "audit_md_line": 185
+    },
+    {
+      "id": "/channel-file-assert-typo",
+      "category": "bug",
+      "topic": "error handling",
+      "title": "OLinear-C guard for missing channel file uses `assert ValueError(...)` (always truthy, never raises)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "model/OLinear_C.py",
+      "line_start": 42,
+      "line_end": 47,
+      "quote": "assert configs.q_channel_file is not None, 'configs.q_channel_file should not be None in orthoLinear'\nq_channel_file = os.path.join(configs.root_path, configs.q_channel_file)\nif os.path.isfile(q_channel_file):\n    self.channel_corr_mat = torch.from_numpy(np.load(q_channel_file)).to(torch.float32).to(device)\nelse:\n    assert ValueError('self.channel_corr_mat should not be None in orthoLinear_corr_only')\n",
+      "claim": "When the channel-correlation file is absent, the intended error path is `assert ValueError(...)`, which asserts the truthiness of a (truthy) exception object and therefore never raises; `self.channel_corr_mat` is left unset and the code later fails with an opaque AttributeError at OLinear_C.py:74.",
+      "concern": "The defensive check does not do what it intends (it should `raise ValueError`), so a missing channel matrix produces a confusing downstream crash instead of the intended clear message — compounding the missing-file issue (see channel-corr-matrices-missing).",
+      "resolution": "Replace `assert ValueError(...)` with `raise ValueError(...)`.",
+      "cross_refs": [
+        "channel-corr-matrices-missing"
+      ],
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "channel-file-assert-typo",
+      "audit": "",
+      "audit_md_line": 210
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "discrepancy_id": "f234a0ee",
+  "paper_url": "https://proceedings.neurips.cc/paper_files/paper/2024/file/984dd3db213db2d1454a163b65b84d08-Paper-Datasets_and_Benchmarks_Track.pdf",
+  "paper_url_versioned": "https://proceedings.neurips.cc/paper_files/paper/2024/file/984dd3db213db2d1454a163b65b84d08-Paper-Datasets_and_Benchmarks_Track.pdf",
+  "code_url": "https://github.com/S-Abdelnabi/LLM-Deliberation",
+  "code_url_versioned": "https://github.com/S-Abdelnabi/LLM-Deliberation/tree/78e11e04ba89b9d888cb006f57bad696584a32f1",
+  "discrepancy_date": "2025-06-20T00:00:00.000Z",
+  "origin_type": "Reproducibility Paper",
+  "origin_url": "https://openreview.net/pdf?id=MTrhFmkC45",
+  "origin_discrepancy_text": "Acceptance criterion mismatch between paper and code. The paper defines a deal as acceptable if an agent's score meets or exceeds its minimum threshold, but the official repository implemented this inconsistently\u2014requiring strictly greater-than in one part of the evaluation notebook and greater-or-equal elsewhere. This discrepancy changes whether boundary cases (scores exactly at the threshold) are counted as accepted and led to changes in some model evaluations after fixing.",
+  "discrepancy_description_pooled_gpt_5": null,
+  "discrepancy_description_pooled_gemini_2_5_pro": null,
+  "discrepancy_description_pooled_gpt_oss_20b": null,
+  "is_valid_discrepancy_gemini": true,
+  "is_valid_discrepancy_gpt": true,
+  "is_valid_discrepancy_reason_gemini": "The paper sets a minimum threshold for acceptance, implying equality represents an acceptable deal. The codebase inconsistently evaluates this boundary; it uses a strictly greater-than operator (>) to count agreements in one place, while relying on greater-or-equal (>=) logic in other functions and scripts.",
+  "is_valid_discrepancy_reason_gpt": "The repository\u2019s evaluation code applies different acceptance criteria in different places (strictly greater-than vs greater-or-equal) while the paper\u2019s instructions to agents define acceptance as meeting at least the minimum threshold. This leads to boundary deals (exactly at the threshold) being treated inconsistently across the code and relative to the paper\u2019s stated rule.",
+  "discrepancy_description_gemini": "The paper describes that a deal proposal is acceptable if the agent's score meets or exceeds its minimum utility threshold, which is conceptually presented as a minimum acceptable bound. However, the evaluation code implements this condition inconsistently across different files and functions. In the `loop_all_parties` function of the evaluation code, a strictly greater-than (`>`) operator is used to determine if an agent voted for the deal, but in the `check_correctness` function and the `adjust_games.py` script, it employs a greater-or-equal (`>=`) logic. The difference is that the code inconsistently evaluates threshold boundary cases, leading deals with scores exactly equal to the minimum threshold to be considered as rejected during agreement counting, despite being considered correct and acceptable elsewhere.",
+  "discrepancy_description_gpt": "The paper repeatedly instructs agents that a deal is acceptable if their score is not less than their minimum threshold (i.e., equality is acceptable), and describes feasible deals as those that satisfy parties\u2019 thresholds. In the official code, the evaluation script evaluate_deals.py counts an agent as \u201cagreeing\u201d with a deal only if their score is strictly greater than the threshold, whereas other parts treat equality as acceptable (e.g., the \u201cwrong deals\u201d check treats scores equal to the threshold as valid, and adjust_games.py uses \u2265 to enumerate feasible deals). Consequently, the same boundary case (score exactly at the threshold) is treated as accepted in some computations and not accepted in others. This inconsistency affects whether certain deals are counted as passing and changes some evaluation outcomes once corrected.",
+  "relevant_paper_sections_gemini": [
+    "Each party $p_i$ has a minimum threshold $\tau_{p_i}$ for acceptance.",
+    "You cannot accept any deal with a score less than 55. This is the minimum score you can accept.",
+    "Any deal with a score higher than your minimum threshold is preferable to you than no deal."
+  ],
+  "relevant_paper_sections_gpt": [
+    "Scoring rules: - You cannot accept any deal with a score less than 55. This is the minimum score you can accept.",
+    "Feasible solutions. Each party p_i has a minimum threshold \u03c4_{p_i} for acceptance. A deal is feasible if it exceeds the thresholds of at least n-1 parties, which must include p_1 and p_2."
+  ],
+  "relevant_code_files_gemini": [
+    "evaluation/evaluate_deals.py",
+    "evaluation/adjust_games.py"
+  ],
+  "relevant_code_files_gpt": [
+    "evaluation/evaluate_deals.py",
+    "evaluation/adjust_games.py",
+    "initial_prompts.py"
+  ],
+  "changed_code_files": {
+    "file_name": [],
+    "discrepancy_code": []
+  },
+  "changed_code_snippets": {
+    "original_file": [],
+    "original_code": [],
+    "changed_code": []
+  },
+  "discrepancy_type": "Difference",
+  "discrepancy_category": "Evaluation",
+  "arxiv_subject": "cs",
+  "arxiv_categories": [
+    "cs.CL",
+    "cs.CY",
+    "cs.LG"
+  ],
+  "arxiv_year": 2024
+}

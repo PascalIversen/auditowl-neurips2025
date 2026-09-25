@@ -1,0 +1,14 @@
+# AUTHOR / PRIMARY repositories (cloned):
+# 1. GitHub open-source release — a partial mirror: only the two shrinkage-KDE
+#    scripts + a score-visualisation script (no diffusion / 2D / MNIST / UCI code).
+https://github.com/Elliotepsteino/SD-KDE	[author]
+#    -> on disk: code/Elliotepsteino__SD-KDE/  (shrinkage_kde_{gaussian,laplace}.py, visualize_score.py)
+# 2. NeurIPS 2025 Supplemental ZIP — the FULL reproduction package: the
+#    minDiffusion DDPM/DDIM suite (train_{2d,mnist,cifar10}.py, data/datagen_2d.py,
+#    mindiffusion/{ddpm,ddim,unet}.py, run scripts, pretrained best_model_*.pth)
+#    and UCI processing (process_uci.py + datasets). This is the artefact the
+#    GitHub README's "Diffusion Model Experiments" section points to.
+https://papers.nips.cc/paper_files/paper/2025/file/fd8548947a14f68375d7e6235ab493ec-Supplemental-Conference.zip	[author]
+#    -> on disk: code/SD-KDE__neurips_supplemental/  (minDiffusion/, shrinkage_kde_*.py, visualize_score.py)
+
+# Other code links found (NOT cloned -- baseline/dependency):

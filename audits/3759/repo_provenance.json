@@ -1,0 +1,17 @@
+{
+  "paper_id": "3759_Self_supervised_learning_for_in_vivo_localization_of_microel",
+  "title": "Self supervised learning for in vivo localization of microelectrode arrays using raw local field potential",
+  "repos": [
+    {
+      "name": "tianxiao18__Lfp2vec",
+      "role": "core",
+      "evidence": "README states 'LFP2Vec: Self-Supervised Representation Learning for Local Field Potentials' and 'This repository provides the implementation used in our experiments'; repo owner 'tianxiao18' matches first author Tianxiao He; paper text (line 31) explicitly cites 'https://github.com/tianxiao18/Lfp2vec' as the code repo; scripts wave2vec2.py, wav2vec_random_init.py, w2v2_across_session.py, wav2vec_disease.py, monkey_w2v2.py implement the Lfp2vec pipeline; config.json in results/ matches Tables 2-3 (7-layer CNN, 12-layer Transformer, 2x320 codebooks)."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo (tianxiao18__Lfp2vec) is unambiguously the paper's own implementation: the paper's abstract URL itself links to https://github.com/tianxiao18/Lfp2vec, the repo owner matches the first author, the README names 'LFP2Vec' as the paper's method, and the code structure (wav2vec2-based training scripts, preprocessing for Allen/IBL/Neuronexus/Macaque datasets, blind_localization module) maps directly to the paper's claimed contributions. The audit correctly treated this as core author code. All 10 findings (missing data pickles, missing pretrained weights, hardcoded cluster paths, metric mismatch, missing ablation driver, README errors, missing torch import, post-processing class weight discrepancy, silhouette/linear-probing missing code, disease classification methodology) are legitimately written against the correct repo.",
+  "audit_impact": "None. The audit correctly identified the core repo and all findings are substantively valid against it. No misclassification occurred.",
+  "recommended_action": "No action needed on repo provenance. Findings stand as filed."
+}

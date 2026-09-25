@@ -1,0 +1,19 @@
+{
+  "folder": "2278_VITA_1_5_Towards_GPT_4o_Level_Real_Time_Vision_and_Speech_In",
+  "model": "claude-opus-4-8",
+  "audit_runs": 2,
+  "tokens": {
+    "input": 27974,
+    "output": 31018,
+    "cache_write": 423034,
+    "cache_read": 7704717
+  },
+  "total_tokens": 8186743,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 22.23
+}

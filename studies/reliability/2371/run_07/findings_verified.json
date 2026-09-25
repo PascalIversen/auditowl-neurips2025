@@ -1,0 +1,168 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T22:05:32.333960+00:00",
+  "findings": [
+    {
+      "id": "/baselines-no-code",
+      "category": "missing",
+      "topic": "baselines",
+      "title": "No code for any of the 5 generative baselines in Tables 1 & 2",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "utils/evaluation/TSG_evaluation.py",
+      "line_start": 10,
+      "line_end": 53,
+      "quote": "def tsg_evaluation(original_dataset, generated_dataset):\n\n    print(original_dataset.shape)\n\n    result = {'MDD': None,\n            'ACD': None,\n            'SD': None,\n            'KD': None,\n            'ED': None,\n            'DTW':None,\n            'SHAP-RE':None}\n",
+      "claim": "The evaluation harness only scores one (original, generated) pair; neither repo contains code to generate or run the five baselines (TimeVAE, TimeVQVAE, RTSGAN, SDEGAN, LS4) whose numbers populate Tables 1 and 2. A grep for these names across all .py files returns nothing.",
+      "concern": "The paper's headline claim that SDForger 'outperforms existing generative models' and the per-baseline numbers in Tables 1-2 cannot be reproduced or checked from the provided code.",
+      "resolution": "Authors: release the baseline-generation scripts (or the generated baseline outputs and the exact hyperparameters/commits used), so the comparison can be reproduced under the same split and metrics.",
+      "cross_refs": [
+        "§5",
+        "Table 1",
+        "Table 2"
+      ],
+      "paper_ref": "Section 5 'Results'; Tables 1 and 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "baselines-no-code",
+      "audit": "",
+      "audit_md_line": 41,
+      "verdict": "keep",
+      "reason": "TSG_evaluation.py lines 10-53 match the quote exactly; a grep for all five baseline names (TimeVAE, TimeVQVAE, RTSGAN, SDEGAN, LS4) across all .py files in both repos returns no matches, confirming no baseline-generation code is present.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/knn-081-accuracy-no-code",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "Section 6 'accuracy of 0.81' kNN classifier has no code",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "For instance, using a longitudinal k-nearest neighbor classifier (Ramos-Carreño et al., 2024) trained\non real data, we achieve an accuracy of 0.81 in identifying the generated curves (see Figure 2).\n",
+      "claim": "The conditional-generation notebook (notebook/conditional_generation.ipynb) only produces the Figure 2 plot of original vs synthetic curves; no script in either repo trains the longitudinal kNN classifier or computes the 0.81 accuracy. A grep for 'knn', 'neighbor', 'classifier', 'accuracy', 'skfda', 'Ramos' across all .py files returns nothing.",
+      "concern": "The quantitative claim backing the multimodal/text-conditioning experiment (0.81 accuracy) cannot be traced to any computation in the repo.",
+      "resolution": "Authors: provide the script that trains the longitudinal kNN classifier and computes the 0.81 identification accuracy.",
+      "cross_refs": [
+        "knn-081-accuracy-no-code"
+      ],
+      "paper_ref": "Section 6 'Shaping time series with language'; Figure 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "knn-081-accuracy-no-code",
+      "audit": "",
+      "audit_md_line": 75,
+      "line_start": null,
+      "line_end": null,
+      "verdict": "keep",
+      "reason": "Paper text at line 939 confirms the 0.81 accuracy quote verbatim, and a grep for knn/neighbor/classifier/accuracy/skfda/Ramos across all .py files in both repos returns no matches.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/mase-denominator-horizon-not-train",
+      "category": "difference",
+      "topic": "evaluation metrics",
+      "title": "MASE scaled by forecast-horizon naive error, not training-set naive error",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "utils/evaluation/utils_ttm.py",
+      "line_start": 247,
+      "line_end": 251,
+      "quote": "def compute_mase(true, pred):\n    \"\"\"Compute MASE (Mean Absolute Scaled Error)\"\"\"\n    numerator = np.mean(np.abs(true - pred))\n    denominator = np.mean(np.abs(true[1:] - true[:-1]))  # Naive one-step ahead forecast\n    return numerator / denominator if denominator != 0 else np.nan\n",
+      "claim": "MASE here divides the mean absolute forecast error by the mean absolute first difference of the *future (test) values being forecast*, rather than by the in-sample one-step naive error of the training series as in the standard MASE definition (Hyndman & Koehler 2006).",
+      "concern": "The denominator is computed from the same window being scored, so the reported 'MASE' is a non-standard scaling; it is applied uniformly to all methods so within-table rankings are still internally comparable, but the absolute MASE values are not the conventional metric.",
+      "resolution": "Authors: confirm whether MASE was intended to scale by the training-series naive error; if the horizon-based scaling is intended, label it as a scaled MAE / custom MASE.",
+      "cross_refs": [
+        "Table 2"
+      ],
+      "paper_ref": "Table 2 (MASE columns)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "mase-denominator-horizon-not-train",
+      "audit": "",
+      "audit_md_line": 107,
+      "verdict": "keep",
+      "reason": "utils_ttm.py lines 247-251 match the quote exactly; the denominator is clearly computed from `true[1:] - true[:-1]` (the forecast window's own differences), not from the training series.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/shr-unseeded-nondeterministic",
+      "category": "methodology",
+      "topic": "statistical integrity / reproducibility",
+      "title": "SHAP-RE similarity metric is unseeded and nondeterministic",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "utils/evaluation/shapelet_based_measures.py",
+      "line_start": 22,
+      "line_end": 37,
+      "quote": "train_y  = np.random.rand(orig_data.shape[0])\ntest_y = np.random.rand(gen_data.shape[0])\nn_train, p = train_data.shape\nn_test, _ = test_data.shape\n\n\nA_rand_init = np.random.randn(n_test, K)\nq = int(np.ceil(p * r))\nrunid = f'l_{lambdas}_K_{K}_q_{q}'\n# Train SIDL on original dataset\nS, A, Offsets, F_obj = USIDL(train_data, train_y, lambdas, K, q, c, epsilon, maxIter, maxInnerIter, runid)\n\n# Learn sparse coding on generated test set with dictionary learned from original dataset\nA_test = A_rand_init\nOffsets_test = np.random.randint(0, p - q, (n_test, K))\nA_test, Offsets_test, F_all_1 = update_A_par(test_data, S, A_test, Offsets_test, lambdas, maxIter, epsilon)\n",
+      "claim": "The SHAP-RE (SHR) metric initializes the SIDL dictionary (S, A, Offsets) and the test sparse-coding (A_rand_init, Offsets_test) with np.random.* and is never seeded; sources/run_TSG_evaluation.py reads SEED but never calls set_seed/np.random.seed before tsg_evaluation. Running the repo's own calculate_shapelet_recons_err three times on identical inputs returned 8.1048, 7.9609, 8.0526.",
+      "concern": "The SHR column in Table 1 — and the distance-based normalized average and average-rank that include it — depend on uncontrolled RNG state, so the reported SHR values (and any 'SDForger best on SHR' / ranking conclusions drawn from them) are not reproducible.",
+      "resolution": "Authors: seed the RNG (or average over multiple seeds with a reported variance) before computing SHAP-RE, and report the spread; confirm which seed produced the Table 1 SHR values.",
+      "cross_refs": [
+        "Table 1"
+      ],
+      "check_script": "_audit_code/check_shr_nondeterminism.py",
+      "paper_ref": "Table 1 (SHR column); Appendix B.2 'Shapelet-based Reconstructions'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "shr-unseeded-nondeterministic",
+      "audit": "",
+      "audit_md_line": 137,
+      "verdict": "keep",
+      "reason": "shapelet_based_measures.py lines 22-37 match the quote exactly showing multiple np.random.* calls with no seed; run_TSG_evaluation.py reads SEED but never calls np.random.seed() or set_seed() before invoking tsg_evaluation, confirming nondeterminism.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/ed-dtw-pairing",
+      "category": "methodology",
+      "topic": "evaluation metrics",
+      "title": "ED/DTW pair samples by arbitrary index and use only 30 of 100 generated",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "utils/evaluation/distance_based_measures.py",
+      "line_start": 13,
+      "line_end": 37,
+      "quote": "def calculate_ed(ori_data,gen_data):\n    n_samples = ori_data.shape[0]\n    n_series = ori_data.shape[2]\n    distance_eu = []\n    for i in range(n_samples):\n        total_distance_eu = 0\n        for j in range(n_series):\n            distance = np.linalg.norm(ori_data[i, :, j] - gen_data[i, :, j])\n            total_distance_eu += distance\n        distance_eu.append(total_distance_eu / n_series)\n\n    distance_eu = np.array(distance_eu)\n    average_distance_eu = distance_eu.mean()\n    return average_distance_eu\n\ndef calculate_dtw(ori_data,comp_data):\n    distance_dtw = []\n    n_samples = ori_data.shape[0]\n    for i in range(n_samples):\n        distance = multi_dtw_distance(ori_data[i].astype(np.double), comp_data[i].astype(np.double), use_c=True)\n        distance_dtw.append(distance)\n\n    distance_dtw = np.array(distance_dtw)\n    average_distance_dtw = distance_dtw.mean()\n    return average_distance_dtw\n",
+      "claim": "ED and DTW compute distance between original sample i and generated sample i by positional index, looping only over ori_data.shape[0]. Per the paper's protocol (Appendix C.2: I=30 training instances, 100 synthetic generated; config min=max=100), this consumes only the first 30 of the 100 generated samples and pairs each original window with an arbitrary generated sample, even though SDForger's generated samples (sdforger_augmentation.py) have no per-sample correspondence to the originals.",
+      "concern": "The paper's ED definition pairs 'each original series and its generated' counterpart, but the code's index pairing is arbitrary and discards 70% of the generated set, so ED/DTW do not measure per-sample reconstruction fidelity and depend on the (meaningless) ordering of the generated array; _audit_code/check_ed_dtw_pairing.py shows ED uses 30/100 samples and varies across random generated-orderings.",
+      "resolution": "Authors: clarify how original and generated samples are matched for ED/DTW (e.g. nearest-neighbour matching as in TSGBench), why only 30 of 100 generated samples are scored, and whether the reported values are order-invariant.",
+      "cross_refs": [
+        "Table 1",
+        "shr-unseeded-nondeterministic"
+      ],
+      "check_script": "_audit_code/check_ed_dtw_pairing.py",
+      "paper_ref": "Appendix B.2 'Euclidean Distance' / 'Dynamic Time Warping'; Table 1 ED/DTW columns",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ed-dtw-pairing",
+      "audit": "",
+      "audit_md_line": 177,
+      "verdict": "keep",
+      "reason": "distance_based_measures.py lines 13-37 match the quote exactly; both functions loop over ori_data.shape[0] and pair by positional index i, confirming the index-pairing claim; the 30-of-100 sample discarding follows directly from ori_data.shape[0] controlling the loop.",
+      "changed": "nothing"
+    }
+  ]
+}

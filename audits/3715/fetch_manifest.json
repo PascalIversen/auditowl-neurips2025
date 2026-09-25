@@ -1,0 +1,15 @@
+{
+  "samuel-howard__log_": {
+    "repo": "https://github.com/samuel-howard/log_",
+    "clone_status": "failed",
+    "clone_error": "fatal: repository 'https://github.com/samuel-howard/log_/' not found"
+  },
+  "samuel-howard__log_smoothing": {
+    "repo": "https://github.com/samuel-howard/log_smoothing",
+    "clone_status": "cached",
+    "size_mb": 58.2,
+    "lfs_pointer_stubs": 0,
+    "lfs_examples": [],
+    "empty_submodules": []
+  }
+}

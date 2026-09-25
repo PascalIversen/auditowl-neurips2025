@@ -1,0 +1,11 @@
+Result files the notebook (notebooks/plots_and_tables.ipynb) reads:
+  MISSING: res/all_experiments_results.parquet
+  MISSING: res/all_experiments_embeddings.npz
+  MISSING: res/all_experiments_embeddings_input.npz
+
+Any .parquet / res dir present in repo:
+  res/ dir exists: False
+  *.parquet files in repo: []
+
+Grep for 'wasserstein' anywhere in repo (case-insensitive):
+  hits (excluding .git): 0

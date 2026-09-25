@@ -1,0 +1,273 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T06:21:32.105074+00:00",
+  "findings": [
+    {
+      "id": "/restoration-network-rtheta-absent",
+      "category": "missing",
+      "topic": "result traceability / core method",
+      "title": "Latent restoration network Rθ (Eq. 7/9) is absent; Stage-2 restores via VAE only",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "basicsr/models/VAEadapter_model.py",
+      "line_start": 132,
+      "line_end": 139,
+      "quote": "def _forward_g(self):\n    out = self.net_g(self.lq, alpha=self.alpha)\n    if isinstance(out, (list, tuple)):\n        if len(out) >= 3:\n            return out[0], out[1], out[2]\n        if len(out) == 2:\n            return out[0], out[1], None\n    return out, None, None\n",
+      "claim": "Stage-2 training forwards the degraded input self.lq only through net_g (a RAVAEHFLora, i.e. the LoRA-wrapped VAE encode→decode); no latent restoration network Rθ is instantiated or invoked anywhere in the repo.",
+      "concern": "The paper's restoration result depends on Rθ predicting a restored latent zres=Rθ(zdeg) (Eq. 7, and Eq. 9 runs HF(Dψ(Rθ(Eϕ(Ideg))))); with Rθ missing, the code merely reconstructs the degraded image with HF-LoRA and cannot produce the headline restoration numbers in Tables 1–5.",
+      "resolution": "Authors: please add the latent restoration network (paper says SFHformer; Table 5c also lists Restormer/NAFNet) and the LRes pre-training stage (Eq. 7), and show where zres = Rθ(zdeg) enters the Stage-2 pipeline.",
+      "cross_refs": [
+        "stage2-ravae-not-registered",
+        "no-eval-entrypoint",
+        "§4.2",
+        "Eq. 7",
+        "Eq. 9",
+        "Table 5(c)"
+      ],
+      "check_script": "_audit_code/check_ravae_registry.py",
+      "paper_ref": "Section 4.2 (Eq. 7, 9); Table 5(c)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "restoration-network-rtheta-absent",
+      "audit": "",
+      "audit_md_line": 68,
+      "verdict": "keep",
+      "reason": "Quote matches exactly at lines 132–139; _forward_g routes only through net_g (RAVAEHFLora) and no Rθ restoration network exists anywhere in the repo.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/lres-pretraining-stage-absent",
+      "category": "missing",
+      "topic": "training protocol",
+      "title": "Stage-2 LRes pre-training of Rθ with frozen VAE (Eq. 7) is not implemented",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "basicsr/models/VAEadapter_model.py",
+      "line_start": 148,
+      "line_end": 167,
+      "quote": "def optimize_parameters(self, current_iter):\n    loss_dict = OrderedDict()\n    hf_gt = self._hf(self.gt)\n\n    if self._is_fhf_step(current_iter):\n        # FHF-LoRA: update encoder LoRA only.\n        self._set_training_stage(train_enc=True, train_dec=False, train_disc=False)\n        self.optimizer_enc.zero_grad()\n\n        recon, posterior, z = self._forward_g()\n        hf_pred = self._hf(recon)\n        l_hf_fid = self.cri_pix(hf_pred, hf_gt) * self.lambda_hf_fid\n        l_hf_fid.backward()\n        self.optimizer_enc.step()\n\n        self.output = recon\n        self.posterior = posterior\n        self.latent = z\n        loss_dict['l_hf_fid'] = l_hf_fid\n        loss_dict['stage'] = recon.new_tensor(0.0)\n",
+      "claim": "The VAEadapter trainer only alternates FHF-LoRA (encoder) and PHF-LoRA (decoder) HF-alignment steps; there is no phase that trains a restoration network with the standard restoration loss LRes = ||Dψ*(zres) - Iclean||1 (Eq. 7) before LoRA fine-tuning.",
+      "concern": "Eq. 7 (training Rθ with frozen VAE) is described as the first sub-step of Stage 2 and is the source of the restored latent; its absence means the described training protocol is not reproducible from this repo.",
+      "resolution": "Authors: provide the LRes pre-training script/config (which model, which loss, frozen-VAE setting) and how its checkpoint feeds the LoRA stage.",
+      "cross_refs": [
+        "restoration-network-rtheta-absent",
+        "Eq. 7"
+      ],
+      "paper_ref": "Section 4.2, Eq. 7",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "lres-pretraining-stage-absent",
+      "audit": "",
+      "audit_md_line": 100,
+      "verdict": "keep",
+      "reason": "Quote matches exactly at lines 148–167; optimize_parameters contains only FHF-LoRA and PHF-LoRA branches with no LRes restoration pre-training phase.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/no-eval-entrypoint",
+      "category": "missing",
+      "topic": "result traceability / evaluation",
+      "title": "No evaluation/inference entrypoint and no metric computation for Tables 1–5",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "basicsr/metrics/__init__.py",
+      "line_start": 1,
+      "line_end": 8,
+      "quote": "from copy import deepcopy\n\nfrom basicsr.utils.registry import METRIC_REGISTRY\nfrom .niqe import calculate_niqe\nfrom .psnr_ssim import calculate_psnr, calculate_ssim\n\n__all__ = ['calculate_psnr', 'calculate_ssim', 'calculate_niqe']\n",
+      "claim": "The repo ships only basicsr/train.py; there is no test.py / inference / benchmark script, the two provided configs set `metrics: ~` (no metrics), no config evaluates a trained model on UHD-LL/UHD-blur/etc., and no FID metric exists at all (paper Table 3 reports FID).",
+      "concern": "Every PSNR/SSIM/LPIPS/FID/NIQE/user-study/FLOPs/runtime number in Tables 1–5 and Figure 2 is therefore untraceable to code that computes it, so none of the reported results can be reproduced or verified.",
+      "resolution": "Authors: add the evaluation entrypoint(s) and metric configuration used to produce each table (including FID), with the exact commands and the trained checkpoints.",
+      "cross_refs": [
+        "restoration-network-rtheta-absent",
+        "missing-deps-and-data",
+        "Table 1",
+        "Table 2",
+        "Table 3",
+        "Table 4",
+        "Table 5"
+      ],
+      "paper_ref": "Tables 1–5; Figure 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-eval-entrypoint",
+      "audit": "",
+      "audit_md_line": 143,
+      "verdict": "keep",
+      "reason": "Quote matches at lines 1–7; no test.py, inference script, or FID metric found anywhere in the repo; only train.py is present as an entrypoint.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/missing-deps-and-data",
+      "category": "missing",
+      "topic": "expected code completeness",
+      "title": "No dependency spec, no dataset/weights download, empty README, missing checkpoints",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "# Latent-Harmony\n",
+      "claim": "README.md is a single header line; there is no requirements.txt/setup.py/environment.yml, no dataset-prep or download script (configs hardcode ./datasets/train/{gt,lq}), and the referenced ./weights/dinov2_vits14.pth and ./weights/stage1_eqvae.pth are absent with no fetch instructions.",
+      "concern": "The environment cannot be rebuilt, the UHD benchmark data is not obtainable from the repo, the DINOv2 backbone and the Stage-1 VAE checkpoint are not provided, and there are no commands/results table — so the submission is not self-contained or runnable end-to-end.",
+      "resolution": "Authors: add a pinned dependency file, dataset acquisition instructions/scripts, the DINOv2 and Stage-1 checkpoints (or download links), and a README with the exact reproduce commands and a results table.",
+      "cross_refs": [
+        "no-eval-entrypoint",
+        "hardcoded-author-paths"
+      ],
+      "paper_ref": "NeurIPS checklist Q5 (code release: No)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-deps-and-data",
+      "audit": "",
+      "audit_md_line": 173,
+      "verdict": "keep",
+      "reason": "README.md contains only '# Latent-Harmony'; no requirements.txt, setup.py, or environment.yml found in the repo; absence confirmed by filesystem search.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/stage2-ravae-not-registered",
+      "category": "bug",
+      "topic": "configuration / arch registry",
+      "title": "Stage-2 config requests vae_config.type=RAVAE, which is not a registered arch",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "configs/stage2_hflora.yml",
+      "line_start": 41,
+      "line_end": 42,
+      "quote": "vae_config:\n  type: RAVAE\n",
+      "claim": "The Stage-2 config sets the wrapped VAE type to 'RAVAE', but the only VAE class registered in ARCH_REGISTRY is 'RAVAE_EQ' (the Stage-1 config correctly uses RAVAE_EQ). RAVAEHFLora.__init__ calls ARCH_REGISTRY.get(arch_type), and Registry.get raises KeyError when the name is absent.",
+      "concern": "Stage-2 training crashes at network construction (KeyError: No object named 'RAVAE' found in 'arch' registry), so the provided Stage-2 config cannot run as shipped.",
+      "resolution": "Authors: change the type to RAVAE_EQ (or register a RAVAE class) and confirm the Stage-2 config runs.",
+      "cross_refs": [
+        "restoration-network-rtheta-absent"
+      ],
+      "check_script": "_audit_code/check_ravae_registry.py",
+      "paper_ref": "Section 4.2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "stage2-ravae-not-registered",
+      "audit": "",
+      "audit_md_line": 199,
+      "verdict": "keep",
+      "reason": "Quote matches at lines 41–42; only RAVAE_EQ is decorated with @ARCH_REGISTRY.register() in LHVAE_arch.py, so ARCH_REGISTRY.get('RAVAE') will raise KeyError at runtime.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/hardcoded-author-paths",
+      "category": "bug",
+      "topic": "portability / dead paths",
+      "title": "Hardcoded author-machine absolute paths injected into sys.path and __main__",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "basicsr/train.py",
+      "line_start": 7,
+      "line_end": 8,
+      "quote": "import sys\nsys.path.append(\"/fs-computility/ai4sData/liuyidi/code/LatentGen\")\n",
+      "claim": "train.py (and LHVAE_arch.py line 7) append the author-only absolute path /fs-computility/ai4sData/liuyidi/code/LatentGen to sys.path; LHVAE_arch.py's __main__ further opens /fs-computility/.../options/debug.yml.",
+      "concern": "These author-specific paths do not exist on any other machine; while sys.path.append of a missing dir is silently ignored, it signals the code was not cleaned for release and the __main__ profiling path is dead, undermining the claimed FLOPs/Params profiling route.",
+      "resolution": "Authors: remove hardcoded absolute paths and make the profiling/debug entrypoints use repo-relative paths.",
+      "cross_refs": [
+        "missing-deps-and-data"
+      ],
+      "paper_ref": "Tables 1–2 (FLOPs/Params)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "hardcoded-author-paths",
+      "audit": "",
+      "audit_md_line": 225,
+      "verdict": "keep",
+      "reason": "Quote matches at lines 7–8 of train.py; LHVAE_arch.py line 7 also appends the same path and line 467 opens the author-specific debug.yml in __main__.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/eqv-loss-uses-perturbed-latent",
+      "category": "difference",
+      "topic": "equivariance loss",
+      "title": "LEqv downsamples the perturbed latent, not zclean=Eϕ(Iclean) as in Eq. 5",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "basicsr/models/EQvae_model.py",
+      "line_start": 283,
+      "line_end": 293,
+      "quote": "def _compute_eqv_loss(self, z):\n    if self.lambda_eqv <= 0:\n        return z.new_zeros(())\n    if self.eqv_scale_factor <= 0 or self.eqv_scale_factor >= 1:\n        raise ValueError(f'eqv.scale_factor must be in (0, 1), got {self.eqv_scale_factor}')\n\n    z_down = F.interpolate(z, scale_factor=self.eqv_scale_factor, mode='bilinear', align_corners=False)\n    net_g = self.get_bare_model(self.net_g)\n    pred_down = net_g.decode(z_down)\n    gt_down = F.interpolate(self.gt, size=pred_down.shape[2:], mode='bilinear', align_corners=False)\n    return F.l1_loss(pred_down, gt_down)\n",
+      "claim": "The equivariance loss downsamples z, where z is the latent of the PDPS-perturbed input (optimize_parameters forwards self.pdps_input and reuses that z), whereas paper Eq. 5 defines zdown=Downs(zclean) with zclean=Eϕ(Iclean) from the clean image.",
+      "concern": "Using the perturbed latent instead of the clean latent is a valid-but-different equivariance constraint; it mildly couples the equivariance objective with the degradation perturbation rather than enforcing clean-image scale equivariance as written.",
+      "resolution": "Authors: clarify whether LEqv is intended on the clean latent (Eq. 5) or the perturbed latent; align code and paper.",
+      "cross_refs": [
+        "§4.1",
+        "Eq. 5"
+      ],
+      "paper_ref": "Section 4.1, Eq. 5",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "eqv-loss-uses-perturbed-latent",
+      "audit": "",
+      "audit_md_line": 252,
+      "verdict": "keep",
+      "reason": "Quote matches at lines 283–293; optimize_parameters passes z derived from self.pdps_input (perturbed) to _compute_eqv_loss, confirmed at line 330, not from clean image encoding.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/configs-are-examples-not-paper-settings",
+      "category": "difference",
+      "topic": "reproducibility / configs",
+      "title": "Shipped configs are *_example with toy batch sizes and no paper hyperparameters",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "question",
+      "file": "configs/stage1_eqvae.yml",
+      "line_start": 1,
+      "line_end": 4,
+      "quote": "name: stage1_eqvae_example\nmodel_type: EQVAEModel\nnum_gpu: 1\nmanual_seed: 123\n",
+      "claim": "Both configs are named *_example with batch_size_per_gpu: 2 and num_gpu: 1, and the paper's appendix is said to hold the actual training/eval setup (data splits, hyperparameters, compute) that is not present in the repo.",
+      "concern": "Without the real training configs (LoRA rank, loss weights, schedules, batch/GPU counts, dataset roots) the reported numbers cannot be reproduced; the example configs do not document the settings behind Tables 1–5.",
+      "resolution": "Authors: ship the exact configs used for each reported experiment, or point to where they live.",
+      "cross_refs": [
+        "missing-deps-and-data",
+        "no-eval-entrypoint"
+      ],
+      "paper_ref": "Section 5 / appendix (implementation details)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "configs-are-examples-not-paper-settings",
+      "audit": "",
+      "audit_md_line": 286,
+      "verdict": "keep",
+      "reason": "Quote matches at lines 1–4 of stage1_eqvae.yml; config is named *_example with num_gpu: 1, consistent with the finding that only toy example configs are shipped.",
+      "changed": "nothing"
+    }
+  ]
+}

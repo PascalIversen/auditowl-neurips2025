@@ -1,0 +1,17 @@
+{
+  "paper_id": "2167_DiCoFlex_Model_Agnostic_Diverse_Counterfactuals_with_Flexibl",
+  "title": "DiCoFlex: Model-Agnostic Diverse Counterfactuals with Flexible Control",
+  "repos": [
+    {
+      "name": "ofurman__DiCoFlex",
+      "role": "core",
+      "evidence": "GitHub remote https://github.com/ofurman/DiCoFlex; owner 'ofurman' = first author Oleksii Furman (oleksii.furman@pwr.edu.pl). README opens 'This repository is dedicated to the research and development of DiCoFlex' and reproduces the paper's exact abstract verbatim. Directory counterfactuals/dicoflex/ holds the method driver (train_generic_counterfactual.py). generic_counterfactual.py (1163 LOC) implements the paper's core: conditional MAF (MaskedAutoregressiveFlow) trained by NLL on KNN-sampled, classifier-probability-filtered neighbors with p-norm and feature-mask conditioning (sparsity + actionability control) -- matching Algorithm 1 / Eqs 4&6. The audit itself confirms 'The implemented DiCoFlex training matches Algorithm 1 / Eqs. 4 & 6'."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo is unambiguously the paper's own core implementation: GitHub owner 'ofurman' matches first author Oleksii Furman, the README reproduces the paper's exact abstract and names DiCoFlex, and counterfactuals/dicoflex/ plus generic_counterfactual.py implement the named conditional normalizing-flow method with inference-time sparsity (Lp-norm) and actionability (mask) control described in the paper. No baseline/dependency/different-paper/stub contamination -- only this one author repo was cloned. The audit's findings are completeness/traceability gaps (no baseline code, no hypervolume-metric code, no per-table drivers) and minor config/metric differences (10 vs 1000 epochs, Adult 2000-row subsample, sparsity definition), explicitly NOT 'no code exists' -- the audit's own methodology section states the implemented flow-training path is sound. Source-present is justified.",
+  "audit_impact": "None on classification. The audit correctly treated the repo as the paper's own core (audit.md Summary calls it 'the DiCoFlex method (conditional MAF over KNN-sampled neighbors)' and Section 'Items that genuinely look fine' confirms the implemented DiCoFlex training matches Algorithm 1 / Eqs 4&6). The high-severity 'missing' findings (hypervolume-not-computed, baselines-and-tables-missing) are written against genuine gaps in the author's own repo (absent baseline/diversity-metric/per-table code), not against a non-core clone, and the core method code is present. No misclassification, contamination, or stale 'no code' finding.",
+  "recommended_action": "Keep as-is: paper is correctly counted source-present with its own core repo. No re-audit needed. The existing missing/difference findings about absent baselines, absent hypervolume code, and config mismatches remain valid as completeness/reproducibility concerns against the author repo."
+}

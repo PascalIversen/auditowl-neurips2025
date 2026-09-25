@@ -1,0 +1,130 @@
+{
+  "schema_version": "1",
+  "audit": "1806_BayeSQP_Bayesian_Optimization_through_Sequential_Quadratic_P",
+  "audit_md": "/Users/anon/Projects/neurips_audit/audits/1806_BayeSQP_Bayesian_Optimization_through_Sequential_Quadratic_P/audit.md",
+  "generated_at": "2026-05-29T22:26:05.514921+00:00",
+  "findings": [
+    {
+      "id": "1806_BayeSQP_Bayesian_Optimization_through_Sequential_Quadratic_P/experiment-harness-missing",
+      "category": "missing",
+      "topic": "result traceability / experiment reproduction",
+      "title": "Repo is the method library only; no code reproduces any paper experiment",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/brunzema__bayesqp/README.md",
+      "line_start": 9,
+      "line_end": 9,
+      "quote": "The repository contains a _plug-and-play_ implementation of BayeSQP (NeurIPS 2025). BayeSQP as a framework aims to combine ideas from both Bayesian optimization (BO) and ideas from sequential quadratic optimization to effectively solve potentially constrained black-box optimization problems.\n",
+      "claim": "The repository ships only the BayeSQP optimizer package plus demo notebooks; it contains no baseline implementations (logEI, TuRBO, SAASBO, MPD, C-logEI, SCBO), no paper benchmark functions (within-model RFF objectives, Ackley variants of Table 1, Speed Reducer, Gramacy), no 32-seed driver, and no result/figure/table generation code.",
+      "concern": "None of the paper's quantitative claims (Figs. 4-6, Tables 1-2, the headline 'outperforms SOTA from dimension 16 onward') can be reproduced or verified from the repository; the comparative results that establish the paper's central empirical claim are entirely off-repo.",
+      "resolution": "Authors: please release the experiment harness (baseline configs, the within-model RFF benchmark generators, Speed Reducer and Gramacy definitions, the 32-seed driver, and the table/figure scripts), or point to where it lives.",
+      "cross_refs": [
+        "repro-statement-overclaims-instructions"
+      ],
+      "check_script": "_audit_code/check_experiment_artifacts.py",
+      "paper_ref": "\u00a75 Empirical evaluations; Figures 4-6; Tables 1-2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "experiment-harness-missing",
+      "audit": "1806_BayeSQP_Bayesian_Optimization_through_Sequential_Quadratic_P",
+      "audit_md_line": 60,
+      "verdict": "keep",
+      "reason": "The README quote matches, the cited script ran successfully, and a source-only scan found no baseline implementations, named paper benchmarks, 32-seed driver, or result/table/figure reproduction harness beyond demo/example code.",
+      "changed": "nothing"
+    },
+    {
+      "id": "1806_BayeSQP_Bayesian_Optimization_through_Sequential_Quadratic_P/reset-path-undefined-attrs",
+      "category": "bug",
+      "topic": "restart / reset logic",
+      "title": "use_resets=True crashes: self.subsampling_option and self.tol never defined",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/brunzema__bayesqp/src/bayesqp/bayesqp.py",
+      "line_start": 583,
+      "line_end": 587,
+      "quote": "new_x, new_y, next_constraints = self._generate_local_samples(\n    x_k=x_k,\n    n=self.n_subsamples,\n    option=self.subsampling_option,\n)\n",
+      "claim": "Inside the `use_resets` reset branch, `self.subsampling_option` (line 586) and `self.tol` (used by `_check_reset_conditions`, line 662) are read but are never assigned anywhere in the package; the config field is `self.config.tol` / `self.config.local_sample_strategy`.",
+      "concern": "Enabling the documented restart feature (`use_resets=True`, default False) raises AttributeError mid-run, so the restart-on-stagnation behavior described in the paper's practical-considerations section cannot actually be exercised through the public config.",
+      "resolution": "Authors: replace `self.subsampling_option` with `self.config.local_sample_strategy` and `self.tol` with `self.config.tol`, and add a test that runs with `use_resets=True`.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_reset_path_undefined_attrs.py",
+      "paper_ref": "\u00a74.4 Practical considerations (restart behavior)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "reset-path-undefined-attrs",
+      "audit": "1806_BayeSQP_Bayesian_Optimization_through_Sequential_Quadratic_P",
+      "audit_md_line": 88,
+      "verdict": "keep",
+      "reason": "The cited reset branch reads self.subsampling_option, _check_reset_conditions reads self.tol, the config fields are local_sample_strategy and tol, and the cited script confirms both attributes are read without assignment.",
+      "changed": "nothing"
+    },
+    {
+      "id": "1806_BayeSQP_Bayesian_Optimization_through_Sequential_Quadratic_P/unconstrained-subproblem-returns-none",
+      "category": "bug",
+      "topic": "error handling",
+      "title": "Unconstrained solver returns bare None on failure; caller unpacks two values",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "code/brunzema__bayesqp/src/bayesqp/subproblems.py",
+      "line_start": 970,
+      "line_end": 971,
+      "quote": ")\nreturn None\n",
+      "claim": "`solve_bayesqp_unconstrained` returns a bare `None` on solver exception (lines 971 and 979), but the caller unpacks `res, info = solve_bayesqp_unconstrained(...)` at bayesqp.py:376.",
+      "concern": "If the unconstrained subproblem solver hits an exception, the optimizer crashes with a TypeError on the tuple unpack instead of degrading gracefully (the constrained path returns a valid failed-result tuple via create_failed_bayesqp_result, so the inconsistency is the code's own intent).",
+      "resolution": "Authors: return `create_failed_bayesqp_result(n, 0), {...}` (a 2-tuple) on the unconstrained failure paths, matching the constrained solver's contract.",
+      "cross_refs": [],
+      "paper_ref": "\u00a74.1 B-SUB (unconstrained case)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "unconstrained-subproblem-returns-none",
+      "audit": "1806_BayeSQP_Bayesian_Optimization_through_Sequential_Quadratic_P",
+      "audit_md_line": 118,
+      "verdict": "keep",
+      "reason": "The cited unconstrained exception paths return bare None while bayesqp.py unpacks solve_bayesqp_unconstrained into res, info, so an exception would produce the claimed contract mismatch.",
+      "changed": "nothing"
+    },
+    {
+      "id": "1806_BayeSQP_Bayesian_Optimization_through_Sequential_Quadratic_P/repro-statement-overclaims-instructions",
+      "category": "difference",
+      "topic": "reproducibility statement vs repo contents",
+      "title": "Paper claims instructions/scripts to reproduce all experiments; repo has neither",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "All benchmarks are publicly available and we provide instructions to reproduce\nall experiments. The implementation is provided under https://github.com/brunzema/\nbayesqp and easily accessible via PyPI.\n",
+      "claim": "The NeurIPS reproducibility checklist (open-access-to-code item) answers 'Yes' and states the authors provide instructions to reproduce all experiments; the linked repo provides only the method package and demo notebooks, with no experiment instructions, baseline configs, or result scripts (see finding experiment-harness-missing).",
+      "concern": "Readers relying on the availability statement will not find the promised reproduction instructions/scripts in the repository, so the stated reproducibility avenue does not match the released artefact.",
+      "resolution": "Authors: either add the reproduction instructions and scripts to the repo, or amend the statement to scope it to the method implementation plus the paper's Appendix A hyperparameter tables.",
+      "cross_refs": [
+        "experiment-harness-missing"
+      ],
+      "paper_ref": "NeurIPS Checklist Q5 (Open access to data and code), 'Justification'; \u00a74 Experimental Result Reproducibility (Appendix A)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "repro-statement-overclaims-instructions",
+      "audit": "1806_BayeSQP_Bayesian_Optimization_through_Sequential_Quadratic_P",
+      "audit_md_line": 146,
+      "line_start": null,
+      "line_end": null,
+      "verdict": "keep",
+      "reason": "The checklist quote is present in paper_text.txt and the repository evidence checked for experiment-harness-missing shows no instructions or scripts to reproduce all paper experiments.",
+      "changed": "nothing"
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "schema_version": "1",
+  "audit": "1023_Over_squashing_in_Spatiotemporal_Graph_Neural_Networks",
+  "audit_md": "audits/1023_Over_squashing_in_Spatiotemporal_Graph_Neural_Networks/audit.md",
+  "generated_at": "2026-05-29T22:27:04.357930+00:00",
+  "findings": [
+    {
+      "id": "1023_Over_squashing_in_Spatiotemporal_Graph_Neural_Networks/fosr-rgcn-missing",
+      "category": "missing",
+      "topic": "result traceability / Table 2",
+      "title": "No FOSR rewiring or RGCN model code; Table 2 cannot be reproduced",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "_audit_code/out/checks.txt",
+      "line_start": 52,
+      "line_end": 53,
+      "quote": "=== FOSR / RGCN search (Table 2 rewiring) ===\n  hits: 0\n",
+      "claim": "A repo-wide search (all .py/.yaml/.md) finds zero references to FOSR, graph rewiring, or RGCN; the file inventory contains no rewiring module and no RGCN model class.",
+      "concern": "Table 2 reports EngRAD MAE 'w/ FOSR rewiring' for both RGCN and DCNN spatial layers (and the narrative that temporal rewiring contributes the largest marginal gain), but no code applies FOSR or implements RGCN, so the entire Table 2 experiment is unreproducible from this repo.",
+      "resolution": "Provide the FOSR rewiring code and the RGCN model/config used for Table 2, or point to the external script that produced those numbers.",
+      "cross_refs": [
+        "succrate-aggregation-missing"
+      ],
+      "check_script": "_audit_code/check_artifacts.py",
+      "paper_ref": "Table 2 (EngRAD, FOSR rewiring w/ RGCN and w/ DCNN)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "fosr-rgcn-missing",
+      "audit": "1023_Over_squashing_in_Spatiotemporal_Graph_Neural_Networks",
+      "audit_md_line": 50,
+      "verdict": "keep",
+      "reason": "checks.txt lines 52-53 exactly match the quoted output ('hits: 0') and check_artifacts.py confirms the script ran a repo-wide grep for 'fosr|rewir|rgcn|relational.?graph.?conv', finding zero hits.",
+      "changed": "nothing"
+    },
+    {
+      "id": "1023_Over_squashing_in_Spatiotemporal_Graph_Neural_Networks/succrate-aggregation-missing",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No code computes success-rate (MSE<0.001) or assembles any table/figure",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "_audit_code/out/checks.txt",
+      "line_start": 55,
+      "line_end": 61,
+      "quote": "=== Success-rate / 0.001 threshold / table-building search (Fig3/4,Tab1/2) ===\n  raw hits: 5\n  ('config/optimizer/adam.yaml', 6, '    lr: 0.001')\n  ('config/dataset/la.yaml', 11, '    threshold: 0.1')\n  ('config/dataset/engrad.yaml', 19, '    threshold: 0.1')\n  ('config/dataset/bay.yaml', 11, '    threshold: 0.1')\n  ('experiments/run_prediction.py', 91, '        stopping_threshold=1e-3,')\n",
+      "claim": "The drivers train one model and log per-run scalar metrics (test MSE/MAE) to W&B/Lightning; the only `1e-3` in the repo is an early-stopping threshold, not a success-criterion, and there is no notebook/CSV/plot/aggregation script that converts per-run metrics into the reported 'success rate (%)' (test MSE < 0.001) of Fig. 3/4 or assembles Tables 1-2.",
+      "concern": "Every headline empirical number (success-rate curves in Fig. 3/4 and the MAE means±std in Tables 1-2) is produced off-repo, so the computation that yields the reported values is not traceable to any artefact in the repository (Rule G).",
+      "resolution": "Add the aggregation/plotting scripts (or notebooks) that read the logged runs, apply the MSE<0.001 success criterion, average over seeds, and emit the figures/tables; or document the exact W&B queries used.",
+      "cross_refs": [
+        "fosr-rgcn-missing",
+        "multi-run-seed-commented"
+      ],
+      "check_script": "_audit_code/check_artifacts.py",
+      "paper_ref": "Fig. 3, Fig. 4, Table 1, Table 2; success criterion in Sec 4 ('task solved when test MSE < 0.001')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "succrate-aggregation-missing",
+      "audit": "1023_Over_squashing_in_Spatiotemporal_Graph_Neural_Networks",
+      "audit_md_line": 77,
+      "verdict": "keep",
+      "reason": "checks.txt lines 55-61 exactly match the quoted block; none of the 5 hits applies a success-rate criterion — they are a learning rate, three dataset thresholds (0.1), and an early-stopping threshold.",
+      "changed": "nothing"
+    },
+    {
+      "id": "1023_Over_squashing_in_Spatiotemporal_Graph_Neural_Networks/copyfirst-config-missing",
+      "category": "missing",
+      "topic": "result traceability / Fig. 3",
+      "title": "Committed copy-time config produces only COPYLAST, not the COPYFIRST half of Fig. 3",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "config/run_copy_time.yaml",
+      "line_start": 22,
+      "line_end": 26,
+      "quote": "n_nodes: 1\nspatial_order: 0\ngraph_generator: \"identity\"\nmemorize: none  # none, source\ndump: source  # source, none\n",
+      "claim": "run_copy_time fixes memorize=none, dump=source (= predict the LAST value, COPYLAST) and the sweeper does not vary memorize/dump, so the single provided config reproduces only the COPYLAST curves of Fig. 3.",
+      "concern": "Fig. 3 reports both COPYFIRST and COPYLAST, but the committed sweep generates only COPYLAST; reproducing the COPYFIRST curves requires manually overriding memorize=source, dump=none, which is not documented in the README or config.",
+      "resolution": "Add a sweep dimension (or a second config) toggling memorize/dump so both COPYFIRST and COPYLAST in Fig. 3 are reproduced out of the box, or document the required override.",
+      "cross_refs": [
+        "succrate-aggregation-missing"
+      ],
+      "check_script": "_audit_code/check_artifacts.py",
+      "paper_ref": "Fig. 3 (CopyFirst and CopyLast curves)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "copyfirst-config-missing",
+      "audit": "1023_Over_squashing_in_Spatiotemporal_Graph_Neural_Networks",
+      "audit_md_line": 109,
+      "verdict": "keep",
+      "reason": "config/run_copy_time.yaml lines 22-26 match the quote exactly, with memorize=none and dump=source hard-coded, confirming only COPYLAST is produced by the committed config.",
+      "changed": "nothing"
+    },
+    {
+      "id": "1023_Over_squashing_in_Spatiotemporal_Graph_Neural_Networks/multi-run-seed-commented",
+      "category": "difference",
+      "topic": "experimental setting / replication",
+      "title": "Multi-seed replication (`+task`) is commented out in every sweep config",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "config/run_realworld.yaml",
+      "line_start": 39,
+      "line_end": 40,
+      "quote": "#      +task: 1,2,3,4,5,6,7,8,9,10  # number of seeds per config\nmodel.hparams.tcn_kwargs.row_normalization: False, True\n",
+      "claim": "In all five sweep configs the `+task: 1..10` grid dimension that replicates each configuration across seeds is commented out, and the global `seed` is `null` (config/default.yaml:30, config/realworld.yaml:27), so running a config as-committed executes exactly one run per setting.",
+      "concern": "The paper reports 'success rate across multiple runs' (Fig. 3/4) and mean±std error bars (Tables 1-2), all of which require multiple replicates; as committed the configs produce a single run, so the reported variability/success-rate cannot be reproduced without uncommenting `+task` (the procedure is otherwise valid, hence a difference, not a methodology defect).",
+      "resolution": "Uncomment/enable the `+task` multi-seed dimension by default, and state in the README how many seeds were used for each figure/table and how success rate is computed across them.",
+      "cross_refs": [
+        "succrate-aggregation-missing"
+      ],
+      "check_script": "_audit_code/check_artifacts.py",
+      "paper_ref": "Fig. 3/4 ('success rate across multiple runs'); Tables 1-2 (±)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "multi-run-seed-commented",
+      "audit": "1023_Over_squashing_in_Spatiotemporal_Graph_Neural_Networks",
+      "audit_md_line": 148,
+      "verdict": "keep",
+      "reason": "config/run_realworld.yaml lines 39-40 match the quote exactly, with +task line commented out and the next active grid parameter immediately following.",
+      "changed": "nothing"
+    }
+  ]
+}

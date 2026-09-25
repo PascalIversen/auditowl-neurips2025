@@ -1,0 +1,167 @@
+{
+  "schema_version": "1",
+  "audit": "3287_Context_Aware_Regularization_with_Markovian_Integration_for_",
+  "audit_md": "audits/3287_Context_Aware_Regularization_with_Markovian_Integration_for_/audit.md",
+  "generated_at": "2026-05-31T11:49:10.394482+00:00",
+  "findings": [
+    {
+      "id": "3287_Context_Aware_Regularization_with_Markovian_Integration_for_/eval-pipeline-missing",
+      "category": "missing",
+      "topic": "result traceability / evaluation code",
+      "title": "No fine-tuning, CV, retrieval, or metric code — none of Tables 1-16 / Figs 2-8 reproducible",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "train.py",
+      "line_start": 109,
+      "line_end": 112,
+      "quote": "# === Run ===\nif __name__ == \"__main__\":\n    fasta_path = \"./train.fasta\" \n    train(fasta_path)\n",
+      "claim": "The only executable entrypoint in the repo is a single self-supervised pretraining loop; the repo contains no classification fine-tuning head, no 5-/10-fold cross-validation harness, no FAISS best-hit retrieval, no metric computation (F1/MCC/accuracy/BLEU/perplexity), and no baseline code.",
+      "concern": "Every quantitative result in the paper (Tables 1-16, Figs 2-8) is produced by downstream evaluation that is entirely absent from the repo, so no headline number can be reproduced or checked from the released code.",
+      "resolution": "Authors: please release the fine-tuning + cross-validation + FAISS retrieval + metric scripts (with exact commands) that produced Tables 2-6 and the ablation tables, or state where they live.",
+      "cross_refs": [
+        "dependency-spec-missing",
+        "figure-table-scripts-missing",
+        "second-order-tm-missing"
+      ],
+      "check_script": "_audit_code/check_repo_coverage.py",
+      "paper_ref": "Tables 1-16, Figures 2-8; Checklist Q5 'we will release the code ... upon acceptance'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "eval-pipeline-missing",
+      "audit": "3287_Context_Aware_Regularization_with_Markovian_Integration_for_",
+      "audit_md_line": 71,
+      "verdict": "keep",
+      "reason": "Quote at train.py:109-112 matches exactly; check_script (_verifier_code/check_repo_coverage.py) confirms all evaluation-code categories ABSENT across all 11 tracked .py files.",
+      "changed": "nothing"
+    },
+    {
+      "id": "3287_Context_Aware_Regularization_with_Markovian_Integration_for_/dependency-spec-missing",
+      "category": "missing",
+      "topic": "expected code completeness / dependencies",
+      "title": "No requirements.txt / setup.py / environment.yml — environment cannot be rebuilt",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "train.py",
+      "line_start": 1,
+      "line_end": 16,
+      "quote": "import os\nimport torch\nimport wandb\nfrom torch.utils.data import Dataset, DataLoader\nfrom torch.cuda.amp import GradScaler, autocast\nfrom transformers import get_scheduler\nfrom Bio import SeqIO\nfrom typing import List, Tuple, Optional\nimport numpy as np\nfrom torch import nn\nfrom carmania.tokenization_carmania import CarmaniaTokenizer\nfrom carmania.modeling_carmania import CarmaniaModel\nfrom carmania.configuration_carmania import CarmaniaConfig\nfrom carmania.loss import TMLoss\nfrom tqdm import tqdm\nfrom transformers import AutoModel\n",
+      "claim": "The code imports torch, transformers, wandb, Bio (Biopython), numpy, tqdm, and optionally flash_attn (modeling_carmania.py:24-36), but the repo ships no requirements.txt, setup.py, pyproject.toml, or environment.yml pinning any version.",
+      "concern": "Without a dependency specification the training/inference environment cannot be reconstructed, and unpinned transformers/torch versions can change tokenizer and attention behaviour.",
+      "resolution": "Authors: add a pinned dependency file (versions of torch, transformers, flash-attn, biopython, wandb).",
+      "cross_refs": [
+        "eval-pipeline-missing"
+      ],
+      "check_script": "_audit_code/check_repo_coverage.py",
+      "paper_ref": "Checklist Q5 (open access to code)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "dependency-spec-missing",
+      "audit": "3287_Context_Aware_Regularization_with_Markovian_Integration_for_",
+      "audit_md_line": 99,
+      "verdict": "keep",
+      "reason": "Import block at train.py:1-16 matches exactly; check_script confirms 'dependency-spec files: NONE' in the git-tracked file list; repo root contains only train.py, carmania/, notebooks/, README.md, LICENSE, and a logo — no dependency spec of any kind.",
+      "changed": "nothing"
+    },
+    {
+      "id": "3287_Context_Aware_Regularization_with_Markovian_Integration_for_/second-order-tm-missing",
+      "category": "missing",
+      "topic": "ablations / higher-order TM",
+      "title": "Second-order TM ablation (Tables 10/11) absent — loss is first-order only",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "carmania/loss.py",
+      "line_start": 14,
+      "line_end": 24,
+      "quote": "def forward(self, logits, true_probs):\n    probs = F.softmax(logits, dim=2)\n    p1, p2 = probs[:, :-1, :], probs[:, 1:, :]\n    pred_bigram = torch.einsum('bti,btj->bij', p1, p2)\n\n    pred_bigram = pred_bigram[:, :-1, :-1]\n    row_sums = pred_bigram.sum(dim=-1, keepdim=True).clamp_min(1)\n    pred_bigram = pred_bigram / row_sums\n\n    pred_bigram += self.epsilon\n    true_probs += self.epsilon\n",
+      "claim": "TMLoss only ever forms a first-order (bigram) transition matrix; there is no code path, flag, or tensor formulation for the second-order (trigram) TM loss the paper ablates.",
+      "concern": "The paper's claim that first-order TM beats second-order TM (Tables 10, 11) cannot be reproduced because the second-order variant is not in the repo.",
+      "resolution": "Authors: release the higher-order TM implementation used for Tables 10/11.",
+      "cross_refs": [
+        "eval-pipeline-missing"
+      ],
+      "check_script": "_audit_code/check_repo_coverage.py",
+      "paper_ref": "Section A.5, Tables 10 and 11",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "second-order-tm-missing",
+      "audit": "3287_Context_Aware_Regularization_with_Markovian_Integration_for_",
+      "audit_md_line": 139,
+      "verdict": "keep",
+      "reason": "Quote at loss.py:14-24 matches exactly (only a bigram/first-order einsum present); check_script confirms 'second-order TM' ABSENT across all tracked .py files.",
+      "changed": "nothing"
+    },
+    {
+      "id": "3287_Context_Aware_Regularization_with_Markovian_Integration_for_/figure-table-scripts-missing",
+      "category": "missing",
+      "topic": "result traceability / figures",
+      "title": "No data-loading or plotting code for any pretraining dataset or figure",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "train.py",
+      "line_start": 18,
+      "line_end": 34,
+      "quote": "class DNASequenceDataset(Dataset):\n    def __init__(self, fasta_path: str, tokenizer: CarmaniaTokenizer):\n        self.input_ids = []\n        self.bigrams = []\n        print(\"Loading and tokenizing sequences...\")\n        for i, record in enumerate(SeqIO.parse(fasta_path, \"fasta\")):\n            seq = str(record.seq)\n            token_ids, bigram_matrix = tokenizer.encode_with_bigram(seq)\n            self.input_ids.append(token_ids)\n            self.bigrams.append(bigram_matrix)\n\n        self.input_ids = torch.tensor(self.input_ids, dtype=torch.long)\n        self.bigrams = torch.tensor(self.bigrams, dtype=torch.float32)\n        row_sums = self.bigrams.sum(axis=2, keepdims=True) \n        self.bigrams = self.bigrams / row_sums\n        \n        print(f\"Loaded {len(self.input_ids)} sequences.\")\n",
+      "claim": "Training reads a single local FASTA (`./train.fasta`); there is no script to download or build the GRCh38 / Basic-Genome / Scorpio-Gene-Taxa / MiBiG / AMR datasets (Tables 17-18), and no code generating any figure (training curves, inference-time, window-size, Hamming retention, t-SNE).",
+      "concern": "Reviewers cannot obtain the pretraining or downstream datasets in the expected format, nor regenerate any figure, from the repo alone.",
+      "resolution": "Authors: provide dataset fetch/preprocessing scripts (or resolvable accessions in the train.fasta format) and the figure-generation code.",
+      "cross_refs": [
+        "eval-pipeline-missing"
+      ],
+      "check_script": "_audit_code/check_repo_coverage.py",
+      "paper_ref": "Tables 17-18; Figures 2-8",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "figure-table-scripts-missing",
+      "audit": "3287_Context_Aware_Regularization_with_Markovian_Integration_for_",
+      "audit_md_line": 174,
+      "verdict": "keep",
+      "reason": "Quote at train.py:18-34 matches exactly; check_script confirms 'plotting / figures', 'data download / accession', and all related categories ABSENT; dataset reads only a local FASTA path with no download logic.",
+      "changed": "nothing"
+    },
+    {
+      "id": "3287_Context_Aware_Regularization_with_Markovian_Integration_for_/train-hparams-mismatch",
+      "category": "difference",
+      "topic": "training hyperparameters",
+      "title": "train.py omits weight decay, grad clipping, eps/betas, and uses different warmup/epoch defaults than Table 13",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "train.py",
+      "line_start": 46,
+      "line_end": 71,
+      "quote": "def train(\n    fasta_path,\n    batch_size=32,\n    epochs=4,\n    learning_rate=5e-4,\n    model_name=\"carmania\",\n    beta= 1 ,\n    seq_length = 2000,\n    num_warmup_steps = 100,\n    fp16= True,\n    device=\"cuda:0\"\n):\n    wandb.init(project=\"carmania\")\n\n    # Setup\n    config = CarmaniaConfig(seq_length=seq_length)\n    tokenizer = CarmaniaTokenizer(model_max_length=config.seq_length, calculate_bigram=True)\n    dataset = DNASequenceDataset(fasta_path, tokenizer)\n    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True)\n    model = CarmaniaModel(config).to(device)\n    TM1_loss = TMLoss()\n    NT_loss = nn.CrossEntropyLoss(ignore_index=4) # [PAd]==4\n\n    optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)\n    scaler = torch.amp.GradScaler(enabled=fp16)\n    scheduler = get_scheduler(\"cosine\", optimizer=optimizer, num_warmup_steps=num_warmup_steps, num_training_steps=len(dataloader)*epochs)\n",
+      "claim": "The AdamW optimizer is created with only `lr` (so weight_decay=0.01 default, eps=1e-8, betas=(0.9,0.999)); there is NO gradient clipping in the training loop; and the defaults are epochs=4, num_warmup_steps=100 — whereas paper Table 13 specifies weight_decay=0.2, Adam epsilon=1e-6, warmup 400, max-grad-norm 0.85/2, and 2 epochs. There is no argparse/CLI, so these are run as-is.",
+      "concern": "The released training script does not reproduce the paper's documented training recipe (notably grad clipping and weight decay are entirely absent), so a re-run from the repo uses a different optimizer configuration than reported.",
+      "resolution": "Authors: align train.py defaults with Table 13 (add weight_decay, eps, gradient clipping, warmup=400, epochs=2) or expose them as arguments.",
+      "cross_refs": [],
+      "paper_ref": "Table 13 (Parameter Ranges for Model Training)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "train-hparams-mismatch",
+      "audit": "3287_Context_Aware_Regularization_with_Markovian_Integration_for_",
+      "audit_md_line": 225,
+      "verdict": "keep",
+      "reason": "Quote at train.py:46-71 matches exactly; AdamW called with only `lr`; grep confirms no gradient clipping anywhere in train.py; defaults epochs=4, warmup=100 contradict Table 13's epochs=2, warmup=400, weight_decay=0.2, grad-clip 0.85.",
+      "changed": "nothing"
+    }
+  ]
+}

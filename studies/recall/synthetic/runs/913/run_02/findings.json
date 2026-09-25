@@ -1,0 +1,262 @@
+{
+  "schema_version": "1",
+  "audit": "run_02",
+  "audit_md": "/home/author/Desktop/code/major_recall_study_export_v2/for_rebuttal/recall_experiment/major_recall_study/runs/913/run_02/audit.md",
+  "generated_at": "2026-08-02T23:44:59.753816+00:00",
+  "findings": [
+    {
+      "id": "run_02/missing-triton-gat-import-crash",
+      "category": "missing",
+      "topic": "runnability / missing modules",
+      "title": "gnn_type.py imports two GAT modules absent from the repo; every run crashes at import",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "helpers/gnn_type.py",
+      "line_start": 14,
+      "line_end": 16,
+      "quote": "from triton_tests.gat import GATConv\nfrom models.triton_nn.mean_gnn import TritonMeanGNN\nfrom models.triton_nn.gat import TritonGAT\n",
+      "claim": "gnn_type.py unconditionally imports `triton_tests.gat.GATConv` and `models.triton_nn.gat.TritonGAT`, but no `gat.py` exists anywhere in the repo (only `triton_tests/test2d_mean.py`, `models/triton_nn/mean_gnn.py`, `models/triton_kernels/mean.py` are present).",
+      "concern": "Because main.py -> helpers.arguments -> helpers.gnn_type, `python main.py` raises ModuleNotFoundError at import for EVERY --gnn_type (MEAN_GNN and GAT), so no result in the paper can be reproduced; additionally TS-GAT (Table 1, Table 4) has no backbone implementation at all.",
+      "resolution": "Add the missing `triton_tests/gat.py` (GATConv) and `models/triton_nn/gat.py` (TritonGAT), or gate the GAT imports; confirm which commit produced the paper's numbers.",
+      "cross_refs": [
+        "readme-hidden-dim-invalid-flag",
+        "missing-appendix-backbones"
+      ],
+      "check_script": "_audit_code/check_missing_gat_modules.py",
+      "paper_ref": "Table 1 (TS-GAT column); §6.1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-triton-gat-import-crash",
+      "audit": "run_02",
+      "audit_md_line": 61
+    },
+    {
+      "id": "run_02/missing-appendix-backbones",
+      "category": "missing",
+      "topic": "result traceability / backbones",
+      "title": "DSS-Mean, TS-SGC, TS-GCN, TS-GCNII (Tables 5–6) are not implemented",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "helpers/gnn_type.py",
+      "line_start": 33,
+      "line_end": 34,
+      "quote": "GAT = auto()\nMEAN_GNN = auto()\n",
+      "claim": "The GNNType enum defines only GAT and MEAN_GNN; a repo-wide grep finds no SGC, GCN, GCNII, or DSS implementation.",
+      "concern": "Table 5 (MeanGNN / DSS-Mean / TS-Mean, the Q5 'triple-symmetry is necessary' evidence) and Table 6 (TS-SGC / TS-GCN / TS-GCNII) cannot be reproduced because their backbones have no code.",
+      "resolution": "Provide the SGC/GCN/GCNII aggregations and the DSS-Mean variant, or point to the branch/commit implementing them.",
+      "cross_refs": [
+        "missing-triton-gat-import-crash",
+        "§G.3",
+        "§G.4"
+      ],
+      "paper_ref": "Table 5; Table 6; §G.3–G.4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "missing-appendix-backbones",
+      "audit": "run_02",
+      "audit_md_line": 88
+    },
+    {
+      "id": "run_02/env-not-reproducible",
+      "category": "missing",
+      "topic": "dependencies / environment",
+      "title": "No dependency manifest; ogb & scikit-learn undeclared; Neptune logging is mandatory with a placeholder token",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 9,
+      "line_end": 13,
+      "quote": "pip3 install torch==2.3.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118\npip3 install torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.3.0+cu118.html\npip3 install torch-geometric==2.5.3\npip3 install neptune\npip3 install triton\n",
+      "claim": "The only dependency spec is this README block (no requirements.txt / setup.py / environment.yml exists). It omits `ogb` (imported at helpers/datasets.py:16) and `scikit-learn` (imported at transforms/pca.py:3, transforms/least_squares.py:11, helpers/split_data.py:4), and does not pin neptune/triton.",
+      "concern": "The environment cannot be rebuilt turn-key, and even once built the run cannot start: experiment.py:45 calls `neptune.init_run(project=args.project, api_token=API_TOKEN)` unconditionally with `API_TOKEN = \"...\"` (constants.py:15) and a required --project, with no offline/disable path.",
+      "resolution": "Add a pinned requirements file including ogb and scikit-learn; make Neptune logging optional (offline mode / no-op logger) so results can be reproduced without an account.",
+      "cross_refs": [
+        "missing-triton-gat-import-crash"
+      ],
+      "paper_ref": "§6 (reproducibility), README Installation",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "env-not-reproducible",
+      "audit": "run_02",
+      "audit_md_line": 113
+    },
+    {
+      "id": "run_02/only-two-splits-used",
+      "category": "bug",
+      "topic": "data splitting / seeds",
+      "title": "`seed % train_mask.ndim` selects only 2 of the predefined splits, not the seed-th split",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "helpers/split_data.py",
+      "line_start": 59,
+      "line_end": 65,
+      "quote": "if train_mask.ndim == 2:\n    # ! Multiple splits\n    # Modified: Use the ${seed} split if not specified!\n    split_index = seed\n    # Avoid invalid split index\n    split_index = (split_index % train_mask.ndim)\n    train_mask = train_mask[:, split_index].squeeze()\n",
+      "claim": "For datasets with 2-D predefined split masks the split column is `seed % train_mask.ndim`, but `train_mask.ndim` is always 2 for a 2-D tensor, so `split_index = seed % 2 ∈ {0,1}` — contradicting the code's own comment 'Use the ${seed} split'.",
+      "concern": "Across the 5 seeds (SEEDS=range(5)) only the first two of the many official splits (heterophily/WebKB/Actor ship 10, WikiCS 20) are ever used, and seeds 0/2/4 reuse split 0 while 1/3 reuse split 1, so the reported mean±std over 'five random seeds' does not sample the official splits and understates split variance.",
+      "resolution": "Use `split_index = seed % train_mask.shape[1]` (or iterate all official splits); re-report Table 1 mean/std with the corrected split selection.",
+      "cross_refs": [
+        "test-label-leakage-align-masks"
+      ],
+      "check_script": "_audit_code/check_align_masks_leakage.py",
+      "paper_ref": "§6 'five random seeds'; §6.1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "only-two-splits-used",
+      "audit": "run_02",
+      "audit_md_line": 143
+    },
+    {
+      "id": "run_02/readme-hidden-dim-invalid-flag",
+      "category": "bug",
+      "topic": "reproduction commands",
+      "title": "Documented 'best config' commands use an undefined --hidden_dim flag and omit --ls_num_layers",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 44,
+      "line_end": 44,
+      "quote": "python -u main.py --is_train --train_test_setup trainset1 --gnn_type MEAN_GNN --hidden_dim 16 --num_layers 2\n",
+      "claim": "The README 'best configs' pass `--hidden_dim 16`, but arguments.py defines `--hid_channel` (there is no `--hidden_dim`); the commands also never pass `--ls_num_layers`, so it stays at the default -1 (LS mixing disabled).",
+      "concern": "Run verbatim, the documented command aborts with `error: unrecognized arguments: --hidden_dim 16`, and even after renaming the flag it runs the no-least-squares variant rather than the LS-enabled model the paper highlights.",
+      "resolution": "Fix the README to use `--hid_channel` and add the `--ls_num_layers` value used for the paper's main TS-Mean/TS-GAT results.",
+      "cross_refs": [
+        "missing-triton-gat-import-crash"
+      ],
+      "paper_ref": "README 'best configs'; Table 10",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "readme-hidden-dim-invalid-flag",
+      "audit": "run_02",
+      "audit_md_line": 174
+    },
+    {
+      "id": "run_02/feature-norm-not-l2",
+      "category": "difference",
+      "topic": "preprocessing / normalization",
+      "title": "Paper says per-node L2 normalization; code applies per-feature z-scoring across nodes",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "transforms/normalize.py",
+      "line_start": 13,
+      "line_end": 16,
+      "quote": "def normalize(x: Tensor) -> Tensor:\n    mean = x.mean(dim=0, keepdim=True)\n    variance = (x - mean).pow(2).mean(dim=0, keepdim=True)\n    return (x - mean) / torch.sqrt(variance + EPS)\n",
+      "claim": "`NormalizeTransform` applies `normalize` to `data.x` (normalize.py:24), which subtracts the per-feature mean over nodes (dim=0) and divides by the per-feature std — i.e. column-wise z-scoring across nodes.",
+      "concern": "The paper states 'we apply L2 normalization to each node's feature vector', which is a per-node (dim=1) unit-norm rescaling; the code implements a different operation (per-feature standardization), a code↔paper mismatch in a core preprocessing step of a feature-invariance method.",
+      "resolution": "Clarify which normalization was actually used for the reported numbers; if L2-per-node was intended, normalize over dim=1 (row-wise).",
+      "cross_refs": [],
+      "paper_ref": "§6 Datasets ('L2 normalization to each node's feature vector')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "feature-norm-not-l2",
+      "audit": "run_02",
+      "audit_md_line": 200
+    },
+    {
+      "id": "run_02/pca-co-physics-1024-vs-2048",
+      "category": "difference",
+      "topic": "preprocessing / PCA",
+      "title": "co-physics is PCA-reduced to 1024 components in code but 2048 in the paper",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "helpers/datasets.py",
+      "line_start": 226,
+      "line_end": 234,
+      "quote": "def get_pca_components(self) -> Optional[int]:\n    if self in [DataSet.full_cora,  # reduced from 8710\n                DataSet.co_cs,  # reduced from 6805\n                ]:\n        return 2048\n    elif self is DataSet.co_physics:  # 8415\n        return 1024\n    else:\n        return None\n",
+      "claim": "The code reduces full_cora and co_cs to 2048 PCA components but co_physics to 1024.",
+      "concern": "The paper states full-Cora, co-cs, and co-physics are all reduced 'with PCA to 2048 components'; the code uses 1024 for co-physics, a code↔paper discrepancy in the input dimensionality for that dataset.",
+      "resolution": "Confirm the PCA component count used for co-physics in the reported runs and reconcile paper text with code.",
+      "cross_refs": [],
+      "paper_ref": "§6 Datasets ('PCA to 2048 components')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "pca-co-physics-1024-vs-2048",
+      "audit": "run_02",
+      "audit_md_line": 227
+    },
+    {
+      "id": "run_02/adamw-vs-adam",
+      "category": "difference",
+      "topic": "optimization",
+      "title": "Paper says Adam; code uses AdamW (decoupled weight decay)",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "experiment.py",
+      "line_start": 158,
+      "line_end": 158,
+      "quote": "optimizer = torch.optim.AdamW(params=model.parameters(), lr=self.lr)\n",
+      "claim": "Training uses `torch.optim.AdamW` (which applies decoupled weight decay, default 0.01).",
+      "concern": "The paper states 'We optimize all models using the Adam optimizer'; AdamW is a different optimizer (nonzero default weight decay), a code↔paper mismatch that can shift the reported results.",
+      "resolution": "State whether AdamW (and what weight decay) or plain Adam was used for the reported numbers.",
+      "cross_refs": [],
+      "paper_ref": "§6 ('We optimize all models using the Adam optimizer')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "adamw-vs-adam",
+      "audit": "run_02",
+      "audit_md_line": 259
+    },
+    {
+      "id": "run_02/test-label-leakage-align-masks",
+      "category": "methodology",
+      "topic": "data splitting / label leakage",
+      "title": "align_masks unions train+test, so evaluated nodes' labels are fed to the model at test time",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "helpers/datasets.py",
+      "line_start": 86,
+      "line_end": 93,
+      "quote": "train_mask = data.train_mask\ntest_mask = data.test_mask\nif train_mask.ndim > test_mask.ndim:\n    test_mask = test_mask.unsqueeze(-1).expand_as(train_mask)\nelif test_mask.ndim > train_mask.ndim:\n    train_mask = train_mask.unsqueeze(-1).expand_as(test_mask)\ndata.train_mask = train_mask | test_mask\nreturn data\n",
+      "claim": "For every dataset with predefined splits, `align_masks` sets `train_mask = train_mask | test_mask` (leaving `test_mask` unchanged), so `test_mask ⊆ train_mask`. Downstream, `train_mask` is the model's visible label/support set: the least-squares mixers are fit on `data.*[data.train_mask]` (least_squares.py:108,112,122-132), and at eval `train_y[~data.train_mask]=0` (experiment.py:243-244) with `lp_mask = train_mask` (gfm.py:74,80) feeds those labels through the layers (each backbone has a self/root term); the same nodes are then scored via `test_mask` (experiment.py:249).",
+      "concern": "The labels of the evaluated (test) nodes are visible to the model — both as least-squares targets and as propagated labels — while those nodes are scored, so the reported 'zero-shot test accuracy' on the ~15 predefined-split datasets (citeseer, pubmed, roman-empire, amazon-ratings, minesweeper, tolokers, questions, chameleon, squirrel, cornell, wisconsin, texas, actor, wiki-cs, arxiv) is not a clean held-out estimate; the ~13 datasets that instead use `graphany_mask_splits` (disjoint 20·C train nodes) are unaffected.",
+      "resolution": "Re-run with the evaluated test nodes excluded from `data.train_mask` (both the LS fit and the label-propagation support), and report the change in Table 1/Figure 3; confirm whether `align_masks`' union is intended and matches the GraphAny protocol it cites.",
+      "cross_refs": [
+        "only-two-splits-used",
+        "§6.1",
+        "§I"
+      ],
+      "check_script": "_audit_code/check_align_masks_leakage.py",
+      "paper_ref": "Table 1 (Average 28 graphs); §6.1 (Q1)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "test-label-leakage-align-masks",
+      "audit": "run_02",
+      "audit_md_line": 285
+    }
+  ]
+}

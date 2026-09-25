@@ -1,0 +1,249 @@
+{
+  "paper": "1023",
+  "n_flags": 18,
+  "flags": [
+    {
+      "file": "marshka__spatiotemporal-oversquashing/lib/datasets/syntethic.py",
+      "line": 349,
+      "reason": "The synthetic training indices explicitly append the entire test range, so every test example is seen during training.",
+      "confidence": "high"
+    },
+    {
+      "file": "marshka__spatiotemporal-oversquashing/experiments/run_realworld.py",
+      "line": 202,
+      "reason": "Real-world training passes dm.test_dataloader() as the validation loader, leaking the test set into early stopping and checkpoint selection.",
+      "confidence": "high"
+    },
+    {
+      "file": "marshka__spatiotemporal-oversquashing/lib/nn/models/gnn_mixin.py",
+      "line": 27,
+      "reason": "DiffConvMixin assigns GCNConv rather than the imported DiffConv, making the advertised diffusion-convolution model a GCN duplicate.",
+      "confidence": "high"
+    },
+    {
+      "file": "marshka__spatiotemporal-oversquashing/lib/nn/models/convolution_disjoint.py",
+      "line": 116,
+      "reason": "The alleged temporal convolution layers are GRUs; kernel size and dilation only affect a computed/truncated receptive field and do not configure the temporal operator.",
+      "confidence": "high"
+    },
+    {
+      "file": "marshka__spatiotemporal-oversquashing/lib/nn/models/stgnn_base.py",
+      "line": 147,
+      "reason": "The unconditional ReLU clamps every prediction nonnegative, despite the supported normal synthetic targets and the LA/Bay configurations using centered StandardScaler targets.",
+      "confidence": "high"
+    },
+    {
+      "file": "marshka__spatiotemporal-oversquashing/experiments/run_prediction.py",
+      "line": 123,
+      "reason": "After testing, the normal run returns the best validation loss and discards trainer.test() results, so programmatic experiment output is not test performance.",
+      "confidence": "high"
+    },
+    {
+      "file": "marshka__spatiotemporal-oversquashing/lib/utils/experiments.py",
+      "line": 211,
+      "reason": "The Neptune branch reads cfg.neptune.project/offline even though the Hydra file creates cfg.logger.project/offline, so logger=neptune fails.",
+      "confidence": "high"
+    },
+    {
+      "file": "marshka__spatiotemporal-oversquashing/lib/nn/models/convolution_disjoint.py",
+      "line": 120,
+      "reason": "Although tcn_kwargs is documented as optional and defaults are merged, receptive-field code indexes the original tcn_kwargs, causing TypeError/KeyError when it is None or lacks kernel_size.",
+      "confidence": "high"
+    },
+    {
+      "file": "marshka__spatiotemporal-oversquashing/lib/datasets/memory.py",
+      "line": 70,
+      "reason": "The code contradicts its task comments: the 'memorize first steps' source branch takes the last steps, while the 'dump last steps' source branch takes the first steps.",
+      "confidence": "high"
+    },
+    {
+      "file": "marshka__spatiotemporal-oversquashing/lib/utils/experiments.py",
+      "line": 88,
+      "reason": "get_spatial_order has no return for documented identity, community, or k_reg generators, so the default interpolation can silently supply spatial_order=None.",
+      "confidence": "high"
+    },
+    {
+      "file": "marshka__spatiotemporal-oversquashing/lib/datasets/syntethic.py",
+      "line": 181,
+      "reason": "Generators named and documented as k-regular graphs are implemented with build_knn_graph, which constructs a k-nearest-neighbor graph rather than a k-regular random graph.",
+      "confidence": "high"
+    },
+    {
+      "file": "marshka__spatiotemporal-oversquashing/experiments/run_realworld.py",
+      "line": 27,
+      "reason": "EngRad invalid nighttime entries are made valid by mutating dataset.mask, so the scaler workaround also admits originally masked targets into training/evaluation.",
+      "confidence": "medium"
+    },
+    {
+      "file": "marshka__spatiotemporal-oversquashing/config/default.yaml",
+      "line": 30,
+      "reason": "The experiment seed is null and the provided sweeps comment out the intended multi-seed task grid, leaving stochastic model initialization unreproducible and results single-run.",
+      "confidence": "medium"
+    },
+    {
+      "file": "marshka__spatiotemporal-oversquashing/experiments/plot_or_aggregate_results.py",
+      "line": null,
+      "reason": "No result aggregation, table-generation, or plotting component exists even though the README presents commands as reproducing paper tables/plots.",
+      "confidence": "medium"
+    },
+    {
+      "file": "marshka__spatiotemporal-oversquashing/config/run_spatial_memory.yaml",
+      "line": null,
+      "reason": "The repository provides only a temporal copy-time synthetic sweep and no runnable spatial-memory/graph sweep despite implementing spatial oversquashing datasets and graph families.",
+      "confidence": "medium"
+    },
+    {
+      "file": "marshka__spatiotemporal-oversquashing/conda_env.yml",
+      "line": 18,
+      "reason": "The documented logger=wandb/neptune options are not reproducible from the supplied environment because neither optional logging client is installed.",
+      "confidence": "medium"
+    },
+    {
+      "file": "marshka__spatiotemporal-oversquashing/lib/datasets/syntethic.py",
+      "line": 250,
+      "reason": "SyntheticDataset.jacobian unconditionally indexes 32 samples, so it crashes for any otherwise-valid dataset with n_samples below 32.",
+      "confidence": "medium"
+    },
+    {
+      "file": "marshka__spatiotemporal-oversquashing/lib/datasets/syntethic.py",
+      "line": 265,
+      "reason": "Jacobian adjacency normalization divides by j_adj.max() without a zero check, producing NaNs for zero-dependency/constant target configurations.",
+      "confidence": "medium"
+    }
+  ],
+  "candidates": {
+    "S01": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "lib/datasets/__init__.py",
+          "line": 1
+        },
+        {
+          "file": "lib/datasets/__init__.py",
+          "line": 8
+        },
+        {
+          "file": "lib/datasets/memory.py",
+          "line": 99
+        },
+        {
+          "file": "config/dataset/rocketman.yaml",
+          "line": null
+        },
+        {
+          "file": "config/run_space_vs_time.yaml",
+          "line": null
+        }
+      ],
+      "matched_flags": []
+    },
+    "S02": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "lib/nn/models/gwnet_tts.py",
+          "line": null
+        },
+        {
+          "file": "config/model/gwnet_tts.yaml",
+          "line": null
+        },
+        {
+          "file": "lib/nn/models/__init__.py",
+          "line": 21
+        },
+        {
+          "file": "config/run_realworld_gwnet.yaml",
+          "line": 23
+        }
+      ],
+      "matched_flags": []
+    },
+    "S03": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "lib/nn/models/gnn_mixin.py",
+          "line": 26
+        },
+        {
+          "file": "config/model/gnn/diffconv.yaml",
+          "line": 7
+        }
+      ],
+      "matched_flags": [
+        "DiffConvMixin assigns GCNConv rather than the imported DiffConv, making the advertised diffusion-convolution model a GCN duplicate."
+      ]
+    },
+    "S04": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "lib/nn/models/convolution_disjoint.py",
+          "line": 3
+        },
+        {
+          "file": "lib/nn/models/convolution_disjoint.py",
+          "line": 116
+        },
+        {
+          "file": "lib/nn/models/convolution_disjoint.py",
+          "line": 138
+        }
+      ],
+      "matched_flags": [
+        "The alleged temporal convolution layers are GRUs; kernel size and dilation only affect a computed/truncated receptive field and do not configure the temporal operator.",
+        "Although tcn_kwargs is documented as optional and defaults are merged, receptive-field code indexes the original tcn_kwargs, causing TypeError/KeyError when it is None or lacks kernel_size."
+      ]
+    },
+    "S05": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "lib/datasets/syntethic.py",
+          "line": 347
+        }
+      ],
+      "matched_flags": [
+        "The synthetic training indices explicitly append the entire test range, so every test example is seen during training."
+      ]
+    },
+    "S06": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "experiments/run_realworld.py",
+          "line": 200
+        }
+      ],
+      "matched_flags": [
+        "Real-world training passes dm.test_dataloader() as the validation loader, leaking the test set into early stopping and checkpoint selection."
+      ]
+    },
+    "S07": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "lib/nn/models/stgnn_base.py",
+          "line": 146
+        }
+      ],
+      "matched_flags": [
+        "The unconditional ReLU clamps every prediction nonnegative, despite the supported normal synthetic targets and the LA/Bay configurations using centered StandardScaler targets."
+      ]
+    },
+    "S08": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "lib/datasets/memory.py",
+          "line": 73
+        }
+      ],
+      "matched_flags": [
+        "The code contradicts its task comments: the 'memorize first steps' source branch takes the last steps, while the 'dump last steps' source branch takes the first steps."
+      ]
+    }
+  }
+}

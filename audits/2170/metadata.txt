@@ -1,0 +1,5 @@
+paper_number: 2170
+title: Seg4Diff: Unveiling Open-Vocabulary Semantic Segmentation in Text-to-Image Diffusion Transformers
+authors: Chaehyun Kim, Heeseong Shin, Eunbeen Hong, Heeji Yoon, Anurag Arnab, Paul Hongsuck Seo, Sunghwan Hong, Seungryong Kim
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/67b87de31003d4f56e3312a2e04b479d-Abstract-Conference.html
+category: empirical

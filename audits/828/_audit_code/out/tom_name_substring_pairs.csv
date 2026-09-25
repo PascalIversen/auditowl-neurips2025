@@ -1,0 +1,4 @@
+train_candidate_name,test_candidate_name,relation
+Gabriel,Gabriella,'Gabriel' is a substring of 'Gabriella'
+Daniel,Danielle,'Daniel' is a substring of 'Danielle'
+Julia,Julian,'Julia' is a substring of 'Julian'

@@ -1,0 +1,34 @@
+{
+  "baseline_mentions": {
+    "\\bNeRF2\\b": [
+      "README.md"
+    ]
+  },
+  "ablation_toggles": {},
+  "subsampling": {},
+  "fle_degree_in_configs": {
+    "arguments/configs/csi/exp1.yaml": {
+      "fle_degree": 9,
+      "num_coeffs_(deg+1)^2": 100
+    },
+    "arguments/configs/ble/exp1.yaml": {
+      "fle_degree": 9,
+      "num_coeffs_(deg+1)^2": 100
+    },
+    "arguments/configs/rfid/exp1.yaml": {
+      "fle_degree": 9,
+      "num_coeffs_(deg+1)^2": 100
+    }
+  },
+  "paper_claims_L3_16coeffs": {
+    "L": 3,
+    "num_coeffs": 16
+  },
+  "root_dependency_files": [],
+  "weight_files_in_repo": [
+    "weights"
+  ],
+  "time_module_used_in": [
+    "inference_ble.py"
+  ]
+}

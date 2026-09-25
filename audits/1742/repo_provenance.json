@@ -1,0 +1,17 @@
+{
+  "paper_id": "1742_Does_Reinforcement_Learning_Really_Incentivize_Reasoning_Cap",
+  "title": "Does Reinforcement Learning Really Incentivize Reasoning Capacity in LLMs Beyond the Base Model?",
+  "repos": [
+    {
+      "name": "LeapLabTHU__limit-of-RLVR",
+      "role": "core",
+      "evidence": "README H1 is the paper title verbatim; author list matches exactly (Yue, Chen, Lu, Zhao, Wang, Yue, Song, Huang, Tsinghua LeapLab + SJTU); owner 'LeapLabTHU' = paper affiliation; README links arXiv 2504.13837 and project page limit-of-rlvr.github.io (the exact URL on page 1 of the paper); ships Limit_of_RLVR.pdf. Implements the paper's headline pass@k unbiased estimator (Eq. 2) in math/pass@k.py:58-60 and math/examples/math_eval/evaluate.py:25-31 ('1 - comb(n-c,k)/comb(n,k)'), plus the full vLLM generation+grading math-eval pipeline (math_eval.py, evaluate.py, grader.py, parser.py) and the vendored verl/DeepCoder code-RL training tree under code/DeepCoder/."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "Exactly one repo was cloned and it is the paper's own official implementation. Title, full author list, owner org, arXiv id (2504.13837), and project-page URL all match the paper, and the repo implements the paper's named method (the pass@k coverage metric, Eq. 2) verbatim along with the math evaluation and code-RL training pipelines. This is not a baseline, dependency, different paper, mirror, or stub. The code_links.txt [author-cue] prior is corroborated.",
+  "audit_impact": "None adverse. The audit correctly identified this as the official author repo and verified the core pass@k estimator (max abs diff 8.9e-16 vs Eq. 2). All 8 findings are scoped, secondary code-completeness/dependency/bug issues (no missing visual-reasoning eval, code-gen HumanEval+/MBPP+ harness, perplexity script, or coverage-overlap script in the repo; unlisted eval deps; hardcoded vLLM max_model_len=4096 vs documented max_tokens=16000; a stale n_sampling=8 comment). None claim 'no code exists' and none are written against a non-core repo. No misclassification, contamination, or stale-no-code error.",
+  "recommended_action": "No change. Keep paper as source-present (correct). Findings are accurately attributed to the author repo; leave them as-is. Optional: the four 'result code missing' findings target genuinely off-repo computations (visual/code-gen/perplexity/coverage-overlap) and are valid completeness gaps, not provenance errors."
+}

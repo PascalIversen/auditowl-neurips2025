@@ -1,0 +1,17 @@
+{
+  "paper_id": "713_How_Patterns_Dictate_Learnability_in_Sequential_Data",
+  "title": "How Patterns Dictate Learnability in Sequential Data",
+  "repos": [
+    {
+      "name": "EkMeasurable__Learnability_Ipred",
+      "role": "core",
+      "evidence": "Paper text line 74 states 'The codes are available on GitHub: https://github.com/EkMeasurable/Learnability_Ipred'. README title is 'How Patterns Dictate Learnability in Sequential Data' — exact paper title match. Repo contains the paper's own estimators (utils/estimators.py, utils/lower_bounds.py implementing SMILE/NWJ/InfoNCE/DV/TUBA), experiment scripts (experiments/experiment_1.py for Gaussian process Ipred estimation, experiments/experiment_2.py for Ising-spin learning curves), and committed result artifacts (results_data/spin_xps/*.json, results_data/ar_sequence_estimation_*/) that the auditor compared against paper tables."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "The single cloned repo is unambiguously this paper's own implementation: the paper's text includes an explicit GitHub URL matching the repo (https://github.com/EkMeasurable/Learnability_Ipred), the README title matches the paper title exactly, and the code structure (Ipred estimators, universal learning curve computation, AR and Ising-spin experiments) directly implements the paper's contributions. All audit findings were correctly written against this core repo. No non-core repos were cloned.",
+  "audit_impact": "None. The audit correctly identified and evaluated the paper's own code. All 11 findings (missing, bug, difference, methodology categories) are legitimately written against the core repo. No findings were misdirected at a baseline or dependency.",
+  "recommended_action": "No provenance correction needed. The audit's findings stand as written."
+}

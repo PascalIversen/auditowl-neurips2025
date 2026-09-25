@@ -1,0 +1,6 @@
+third-party imports in src/*.py: ['accelerate', 'argparse', 'datasets', 'numpy', 'portalocker', 'primefac', 'quant_cuda', 'random', 'scipy', 'torch', 'tqdm', 'transformers']
+NOT found in requirement.txt   : ['argparse', 'datasets', 'numpy', 'portalocker', 'quant_cuda', 'random', 'scipy', 'tqdm']
+
+Fig2 partial-quant/TransBlock-delta code: []
+Table3 timing in main drivers (llama/qep_awq): []
+OmniQuant code: []

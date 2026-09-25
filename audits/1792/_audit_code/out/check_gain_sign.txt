@@ -1,0 +1,2 @@
+samples:200000  group-choice mismatches vs sign(rel_acc): 0
+=> group assignment depends ONLY on sign(relative_accuracy_gain); length term changes magnitude not sign

@@ -1,0 +1,10 @@
+{
+  "findings": [
+    {
+      "id": "4523_Few_Shot_Knowledge_Distillation_of_LLMs_With_Counterfactual_/synthetic-moons-experiment-no-code",
+      "verdict": "keep",
+      "reason": "Although the cited README line is stale and the quoted dataset list is actually at line 31, repository-wide filename and source searches confirm that the release contains only text-benchmark code and no implementation of the paper's 2D-moons experiment.",
+      "changed": "reverted the first-pass reject to keep after confirming the quote at README line 31 and the repository-wide absence of synthetic-moons code"
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "schema_version": "1",
+  "audit": "2578_DOVE_Efficient_One_Step_Diffusion_Model_for_Real_World_Video",
+  "audit_md": "audits/2578_DOVE_Efficient_One_Step_Diffusion_Model_for_Real_World_Video/audit.md",
+  "generated_at": "2026-05-31T12:09:00.598172+00:00",
+  "findings": [
+    {
+      "id": "2578_DOVE_Efficient_One_Step_Diffusion_Model_for_Real_World_Video/video-metric-scripts-missing-deps",
+      "category": "missing",
+      "topic": "result traceability / evaluation code",
+      "title": "DOVER, FasterVQA, E*warp metric scripts depend on external code not in repo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "finetune/scripts/eval_dover.py",
+      "line_start": 150,
+      "line_end": 150,
+      "quote": "from DOVER.evaluate_a_set_of_videos import evaluate_set as dover\n",
+      "claim": "eval_dover.py imports a DOVER package, eval_vbench.py imports VBench/evaluate, and eval_ewarp.py imports an ewarp module; none of DOVER/, VBench/, or ewarp.py exist anywhere in the repo (verified repo-wide in _audit_code/out/eval_artefacts.csv), and FasterVQA has no calling script at all.",
+      "concern": "DOVER, FasterVQA, and E*warp are reported in Table 2 for every dataset and headline the abstract/Fig. 1/Tab. 3, yet none of these numbers can be reproduced from the shipped code without third-party packages the repo neither vendors nor pins; the README's own TODO 'Add metric computation scripts for FasterVQA, DOVER, and E*warp' confirms they are unfinished.",
+      "resolution": "Authors: bundle or pin (with exact versions/commits) the DOVER, VBench, and RAFT/ewarp dependencies, and add a FasterVQA computation script, so Table 2's VQA and temporal-consistency columns are reproducible.",
+      "cross_refs": [
+        "eval-dover-off-by-one",
+        "eval-ewarp-broken"
+      ],
+      "check_script": "_audit_code/check_eval_artefacts.py",
+      "paper_ref": "Table 2 (FasterVQA, DOVER, E*warp rows); Table 3; Fig. 1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "video-metric-scripts-missing-deps",
+      "audit": "2578_DOVE_Efficient_One_Step_Diffusion_Model_for_Real_World_Video",
+      "audit_md_line": 60
+    },
+    {
+      "id": "2578_DOVE_Efficient_One_Step_Diffusion_Model_for_Real_World_Video/pipeline-code-missing",
+      "category": "missing",
+      "topic": "dataset construction",
+      "title": "Sec 3.3 video-processing pipeline (HQ-VSR construction) not in repo",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "Step 1: Metadata Filtering. ... Step 2: Scene Filtering. ... Step 3: Quality\nFiltering. ... Step 4: Motion Processing. ... we introduce the motion area\ndetection algorithm for localized processing\n",
+      "claim": "The paper describes a four-step pipeline (metadata/scene/quality/motion filtering with aesthetic, CLIP-IQA, FasterVQA, DOVER scoring and optical-flow motion-area cropping per Eq. 8) used to build HQ-VSR and ablated in Table 1d; a repo-wide search finds no code implementing scene detection, quality-score filtering, or motion-area cropping (only CLIP-IQA used as an eval metric).",
+      "concern": "Table 1d's '+Filter/+Motion' ablation and the HQ-VSR dataset construction cannot be reproduced or audited; the README TODO 'Release the video processing pipeline' is explicitly unchecked, confirming the omission.",
+      "resolution": "Authors: release the data-construction pipeline code (the four filtering steps and motion-area cropping) so HQ-VSR and Table 1d can be reproduced.",
+      "cross_refs": [
+        "§3.3",
+        "Table 1d"
+      ],
+      "check_script": "_audit_code/check_eval_artefacts.py",
+      "paper_ref": "Section 3.3; Table 1d",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "pipeline-code-missing",
+      "audit": "2578_DOVE_Efficient_One_Step_Diffusion_Model_for_Real_World_Video",
+      "audit_md_line": 85,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "2578_DOVE_Efficient_One_Step_Diffusion_Model_for_Real_World_Video/eval-dover-off-by-one",
+      "category": "bug",
+      "topic": "evaluation code",
+      "title": "eval_dover.py assigns DOVER scores with an off-by-one index",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "finetune/scripts/eval_dover.py",
+      "line_start": 158,
+      "line_end": 159,
+      "quote": "for i, name in enumerate(pred_names):\n    results[name] = dover_results[i-1]\n",
+      "claim": "Inside `for i, name in enumerate(pred_names)` the code indexes `dover_results[i-1]`, so the first clip (i=0) is assigned the LAST clip's score (index -1) and every clip is shifted by one relative to its name.",
+      "concern": "Per-clip DOVER scores are mismatched to clip names; the reported per-dataset DOVER average (Table 2/Tab. 3/Fig. 1) is computed over a misaligned mapping (the mean is unchanged, but per-sample values and any name-based aggregation are wrong, and it signals the script was not validated).",
+      "resolution": "Change `dover_results[i-1]` to `dover_results[i]`; confirm the order returned by `evaluate_set` matches `sorted(pred_names)`.",
+      "cross_refs": [
+        "video-metric-scripts-missing-deps"
+      ],
+      "check_script": "_audit_code/check_eval_artefacts.py",
+      "paper_ref": "Table 2, DOVER rows",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "eval-dover-off-by-one",
+      "audit": "2578_DOVE_Efficient_One_Step_Diffusion_Model_for_Real_World_Video",
+      "audit_md_line": 112
+    },
+    {
+      "id": "2578_DOVE_Efficient_One_Step_Diffusion_Model_for_Real_World_Video/eval-ewarp-broken",
+      "category": "bug",
+      "topic": "evaluation code",
+      "title": "eval_ewarp.py chdirs to script dir and uses a non-existent default RAFT path",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "finetune/scripts/eval_ewarp.py",
+      "line_start": 146,
+      "line_end": 150,
+      "quote": "original_dir = os.getcwd()\nraft_dir = os.path.join(original_dir, \"RAFT\")\nos.chdir(raft_dir)\nfrom ewarp import Ewarp as Ewarp\nresults, avg_score = Ewarp(args)\n",
+      "claim": "The script chdirs into `<script_dir>/RAFT` and imports `ewarp`, but no `RAFT/` subdirectory or `ewarp.py` exists under finetune/scripts (RAFT lives at finetune/utils/RAFT and has no ewarp.py); its default `--model finetune/scripts/models/raft-things.pth` also points to a path that does not exist (the weight is at finetune/utils/RAFT/raft-things.pth).",
+      "concern": "eval_ewarp.py cannot run as shipped, so the E*warp temporal-consistency column of Table 2 (a headline 'excellent temporal consistency' claim) is not reproducible from the repo.",
+      "resolution": "Authors: vendor the `ewarp` implementation, fix the chdir target to the real RAFT location, and correct the default `--model` path.",
+      "cross_refs": [
+        "video-metric-scripts-missing-deps"
+      ],
+      "check_script": "_audit_code/check_eval_artefacts.py",
+      "paper_ref": "Table 2, E*warp rows; Fig. 1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "eval-ewarp-broken",
+      "audit": "2578_DOVE_Efficient_One_Step_Diffusion_Model_for_Real_World_Video",
+      "audit_md_line": 138
+    },
+    {
+      "id": "2578_DOVE_Efficient_One_Step_Diffusion_Model_for_Real_World_Video/inference-sh-wrong-gt",
+      "category": "bug",
+      "topic": "evaluation driver",
+      "title": "inference.sh passes UDM10 ground truth for every dataset's eval",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "inference.sh",
+      "line_start": 34,
+      "line_end": 37,
+      "quote": "python eval_metrics.py \\\n    --gt datasets/test/UDM10/GT \\\n    --pred results/DOVE/YouHQ40 \\\n    --metrics psnr,ssim,lpips,dists,clipiqa\n",
+      "claim": "All six eval_metrics.py invocations in inference.sh hardcode `--gt datasets/test/UDM10/GT`, even for SPMCS, YouHQ40, RealVSR, MVSR4x, and VideoLQ (verified: 6/6 --gt lines point to UDM10/GT in _audit_code/out/eval_artefacts.csv).",
+      "concern": "Run verbatim, the reference-based metrics (PSNR/SSIM/LPIPS/DISTS) for the five non-UDM10 datasets are computed against the wrong ground truth; eval_metrics.py silently skips clips whose names lack a matching GT file (eval_metrics.py:163-179), so most clips would be dropped, producing meaningless Table 2 fidelity numbers unless the user edits the script.",
+      "resolution": "Authors: set `--gt` to each dataset's own GT directory in inference.sh.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_eval_artefacts.py",
+      "paper_ref": "Table 2 (per-dataset fidelity metrics)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "inference-sh-wrong-gt",
+      "audit": "2578_DOVE_Efficient_One_Step_Diffusion_Model_for_Real_World_Video",
+      "audit_md_line": 167
+    }
+  ]
+}

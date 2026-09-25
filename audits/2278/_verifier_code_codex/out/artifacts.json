@@ -1,0 +1,39 @@
+{
+  "asr_metric_files": [
+    "README.md"
+  ],
+  "asr_dataset_ref_files": [
+    "README.md"
+  ],
+  "stage3_training_shell_scripts": [],
+  "train_shell_scripts_all": [
+    "finetune.sh",
+    "finetuneTaskNeg_qwen.sh",
+    "finetuneTaskNeg_qwen_fo.sh",
+    "finetuneTaskNeg_qwen_fo_nodes.sh",
+    "finetuneTaskNeg_qwen_nodes.sh",
+    "finetuneTask_nodes.sh",
+    "finetuneTask_qwen.sh",
+    "finetuneTask_qwen_nodes.sh",
+    "finetune_nodes.sh",
+    "finetune_qwen.sh",
+    "finetune_qwen_nodes.sh",
+    "pretrain_audio_mlp_qwen.sh",
+    "pretrain_audio_mlp_qwen_nodes.sh",
+    "pretrain_mlp.sh",
+    "pretrain_mlp_nodes.sh",
+    "pretrain_mlp_qwen.sh",
+    "pretrain_mlp_qwen_nodes.sh"
+  ],
+  "train_py_mentions_tts_codec": false,
+  "readme_has_numbers": {
+    "2.2": true,
+    "8.4": true,
+    "7.5": true,
+    "70.8": true,
+    "59.8": true
+  },
+  "ctc_training_loop_files": [],
+  "parse_answer_hardcoded_num_total": true,
+  "parse_answer_counts_rows": false
+}

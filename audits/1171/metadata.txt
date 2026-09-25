@@ -1,0 +1,5 @@
+paper_number: 1171
+title: Evolving and Regularizing Meta-Environment Learner for Fine-Grained Few-Shot Class-Incremental Learning
+authors: Li-Jun Zhao, Zhen-Duo Chen, Yongxin Wang, Xin Luo, Xin-Shun Xu
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/376b1b131609e764f687afca832e62b3-Abstract-Conference.html
+category: empirical

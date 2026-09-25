@@ -1,0 +1,6 @@
+ece_kl(n_bins=15)=0.151309
+ece_kl(n_bins=5)=0.151517
+ece_kl(n_bins=30)=0.152565
+ece_kl after scrambling non-top-1 probs (n_bins=15)=0.151309
+depends_on_n_bins=True
+ignores_non_top1_distribution=True

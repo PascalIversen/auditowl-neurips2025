@@ -1,0 +1,225 @@
+{
+  "paper": "2657",
+  "n_flags": 20,
+  "flags": [
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/utils.py",
+      "line": 37,
+      "reason": "X_train is all normal samples and those exact same normal samples are also copied into X_test, so training and evaluation are not disjoint.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/AggregateResults.py",
+      "line": 218,
+      "reason": "Aggregation takes idxmax(AUC) over seeds for each dataset/model before computing means, cherry-picking the best seed and leaving reported standard deviations undefined.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/ContaminationStudies.py",
+      "line": 162,
+      "reason": "The contamination study stacks X_train with X_test even though every normal row is already present in both, then re-splits duplicated rows so identical observations can leak across train and test.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/bash_files/run_contamination.sh",
+      "line": 38,
+      "reason": "Unconditional breaks exit both dataset loops after their first iteration, so only one of the eight contamination datasets is processed per seed.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/bash_files/run_contamination.sh",
+      "line": 25,
+      "reason": "The launcher runs model indices 0..10 although ContaminationStudies defines only 10 models (indices 0..9), making every index-10 job fail.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/AggregateResults.py",
+      "line": 103,
+      "reason": "semi_only is forced True while the only CLI action is store_true, so the documented instruction to omit --semi_only cannot enable standard transductive results.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/AggregateResults.py",
+      "line": 107,
+      "reason": "split_index changes only the output directory name; no dataset filtering uses split, so small/medium/high_dim/large outputs all aggregate every dataset.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/bash_files/run_semisupervise.sh",
+      "line": 23,
+      "reason": "The claimed seven-model inductive check runs indices 45..50 only, omitting index 51 (KNN_semisup) on every dataset and seed.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/bash_files/run_knn.sh",
+      "line": 28,
+      "reason": "The KNN launcher invokes nonexistent Full_experiments.py and index 50 is INNE_semisup rather than KNN_semisup, so it cannot run the advertised target.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/RobustnessStudy.py",
+      "line": null,
+      "reason": "The robustness launcher and README require RobustnessStudy.py, but that entry point is absent, so the advertised empirical robustness experiment is not reproducible.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/AblationStudies.py",
+      "line": null,
+      "reason": "The README advertises AblationStudies.py and four ablation outputs, but the runner is absent.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/AggregateResults.py",
+      "line": 275,
+      "reason": "The aggregation script ends after writing CSV files and contains no plotting code, contradicting the documented Rank_ROC.pdf and Rank_PR.pdf outputs.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/FMAD/FlowMatchingAD.py",
+      "line": 30,
+      "reason": "Random t is fed only as an auxiliary input while both the training sample and target -batch_x are independent of t, so the alleged time-conditioned flow objective merely trains the network to ignore time.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/baselines/drocc.py",
+      "line": 102,
+      "reason": "only_ce_epochs equals total_epochs, making epoch >= only_ce_epochs impossible and disabling DROCC's defining adversarial loss for the entire run.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/baselines/normalizingFlow.py",
+      "line": 29,
+      "reason": "NormalizingFlowModel is only a bottleneck autoencoder; PlanarFlow, Jacobian likelihoods, and K are never used, so the reported NormalizingFlow baseline is not a normalizing flow.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/baselines/diffusion/ddpm.py",
+      "line": 427,
+      "reason": "DDPM reconstruction comments out forward noising and starts the reverse diffusion chain from the clean test sample at a high timestep, violating the sampler's assumed state distribution.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/baselines/dagmm.py",
+      "line": 185,
+      "reason": "DAGMM uses batch_size=1024 with drop_last=True, so datasets with fewer than 1024 training normals execute zero optimizer steps and are scored by a random model.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/utils.py",
+      "line": 19,
+      "reason": "test_size and random_state are never used, so the nominal seed-specific data split does not exist and all five runs reuse the same leaked partition.",
+      "confidence": "high"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/FullExperiments.py",
+      "line": 166,
+      "reason": "Seven selected baselines are fit directly on the evaluation matrix including anomalies and scored on those same rows, while the remaining baselines train on normal-only data, yielding incomparable protocols.",
+      "confidence": "medium"
+    },
+    {
+      "file": "ZhongLIFR__TCCM-NIPS/FMAD/FlowMatchingAD.py",
+      "line": 50,
+      "reason": "The only public score collapses feature residuals to a scalar norm and the repository exposes no feature-contribution/explanation method despite repeatedly claiming feature-wise explanations.",
+      "confidence": "medium"
+    }
+  ],
+  "candidates": {
+    "S01": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "AblationStudies.py",
+          "line": null
+        }
+      ],
+      "matched_flags": [
+        "The README advertises AblationStudies.py and four ablation outputs, but the runner is absent."
+      ]
+    },
+    "S02": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "RobustnessStudy.py",
+          "line": null
+        }
+      ],
+      "matched_flags": [
+        "The robustness launcher and README require RobustnessStudy.py, but that entry point is absent, so the advertised empirical robustness experiment is not reproducible."
+      ]
+    },
+    "S03": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "baselines/normalizingFlow.py",
+          "line": 29
+        }
+      ],
+      "matched_flags": [
+        "NormalizingFlowModel is only a bottleneck autoencoder; PlanarFlow, Jacobian likelihoods, and K are never used, so the reported NormalizingFlow baseline is not a normalizing flow."
+      ]
+    },
+    "S04": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "baselines/dagmm.py",
+          "line": 53
+        },
+        {
+          "file": "baselines/dagmm.py",
+          "line": 261
+        }
+      ],
+      "matched_flags": []
+    },
+    "S05": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "utils.py",
+          "line": 33
+        }
+      ],
+      "matched_flags": [
+        "X_train is all normal samples and those exact same normal samples are also copied into X_test, so training and evaluation are not disjoint.",
+        "test_size and random_state are never used, so the nominal seed-specific data split does not exist and all five runs reuse the same leaked partition."
+      ]
+    },
+    "S06": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "AggregateResults.py",
+          "line": 216
+        }
+      ],
+      "matched_flags": [
+        "Aggregation takes idxmax(AUC) over seeds for each dataset/model before computing means, cherry-picking the best seed and leaving reported standard deviations undefined."
+      ]
+    },
+    "S07": {
+      "status": "clean",
+      "sites": [
+        {
+          "file": "baselines/mcm.py",
+          "line": 38
+        }
+      ],
+      "matched_flags": []
+    },
+    "S08": {
+      "status": "FLAGGED",
+      "sites": [
+        {
+          "file": "baselines/drocc.py",
+          "line": 99
+        }
+      ],
+      "matched_flags": [
+        "only_ce_epochs equals total_epochs, making epoch >= only_ce_epochs impossible and disabling DROCC's defining adversarial loss for the entire run."
+      ]
+    }
+  }
+}

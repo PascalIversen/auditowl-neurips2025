@@ -1,0 +1,7 @@
+Source uses random.randint(0, model.cfg.n_layers) and random.randint(0, model.cfg.n_heads):
+  FOUND: random.randint(0, model.cfg.n_layers)
+  FOUND: random.randint(0, model.cfg.n_heads)
+
+Python random.randint(a,b) is INCLUSIVE of b. Valid layer indices are 0..n_layers-1.
+With n_layers=28: out of 100000 samples, max sampled index = 28, # equal to n_layers (out-of-range) = 3482 (3.48%)
+Verdict: random baseline can place components at layer index == n_layers (and head == n_heads), which are out of range; such components silently match nothing in real circuits, biasing the random-baseline IoU/faithfulness downward.

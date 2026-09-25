@@ -1,0 +1,61 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T06:06:27.602812+00:00",
+  "findings": [
+    {
+      "id": "/unlisted-deps-patoolib-tqdm",
+      "category": "missing",
+      "topic": "dependencies / environment",
+      "title": "patoolib and tqdm imported at startup of every run but absent from requirements.txt",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "data_provider/m4.py",
+      "line_start": 26,
+      "line_end": 27,
+      "quote": "import patoolib\nfrom tqdm import tqdm\n",
+      "claim": "data_provider/m4.py unconditionally imports `patoolib` and `tqdm` at module top; m4.py is imported at the top of data_provider/data_loader.py (line 9: `from data_provider.m4 import M4Dataset, M4Meta`), which data_provider/data_factory.py imports, which experiments/exp_forecast.py and run.py import. Neither `patoolib` nor `tqdm` appears in requirements.txt (verified: grep -iE 'tqdm|patool|pyunpack' returns nothing).",
+      "concern": "Because the import is on the startup path of run.py for EVERY dataset (not just M4), a fresh environment built from requirements.txt raises ModuleNotFoundError before any experiment can begin, so the published reproduction commands fail out of the box.",
+      "resolution": "Add `tqdm` and `patoolib` (and its unpacker backend) to requirements.txt, or move the M4-only imports inside Dataset_M4 so the main forecasting path does not require them. (Also note: requirements.txt lists `pywt`, whose PyPI name is `PyWavelets`, and pins no versions.)",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_imports.py",
+      "paper_ref": "Appendix D (implementation details); README 'Usage' step 1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "unlisted-deps-patoolib-tqdm",
+      "audit": "",
+      "audit_md_line": 56
+    },
+    {
+      "id": "/orthotrans-undocumented-delta",
+      "category": "difference",
+      "topic": "model architecture / OrthoTrans",
+      "title": "OrthoTrans adds undocumented learnable additive terms (delta1, delta2) not in the paper's equations",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "model/OLinear.py",
+      "line_start": 104,
+      "line_end": 118,
+      "quote": "else:\n    x_trans = torch.einsum('bndt,tv->bndv', x, self.Q_mat.transpose(-1, -2)) + self.delta1\n    # added on 25/1/30\n    # x_trans = F.gelu(x_trans)\n    # [B, N, D, T]\nassert x_trans.shape[-1] == self.seq_len\n\n# ########## transformer ####\nx_trans = self.ortho_trans(x_trans.flatten(-2)).reshape(B, N, D, self.pred_len)\n\n# [B, N, D, tau]; orthogonal transformation\nif self.Q_chan_indep:\n    x = torch.einsum('bndt,ntv->bndv', x_trans, self.Q_out_mat)\nelse:\n    x = torch.einsum('bndt,tv->bndv', x_trans, self.Q_out_mat) + self.delta2\n",
+      "claim": "The default OLinear path (Q_chan_indep=0, the value used by all main scripts) adds learnable parameters self.delta1 (shape [1,N,1,seq_len]) and self.delta2 (shape [1,N,1,pred_len]; declared at OLinear.py:80-81) to the input and output orthogonal projections. The paper's Eqs. (1)-(2) describe the transform as a pure orthogonal projection Z=(RevINNorm(X)⊗φd)Qi^T and ˜Y=LinearDecode(˜HL)·Qo with no additive term.",
+      "concern": "A result-affecting learnable component present in the code is absent from the paper's formal description of OrthoTrans, so the published equations under-specify the model that actually produced the numbers; the code is still methodologically valid (the deltas are ordinary learnable biases).",
+      "resolution": "Authors: state in the paper that OrthoTrans includes per-position learnable bias terms (delta1/delta2), or run the ablation with delta1=delta2=0 to confirm they do not materially change the reported results.",
+      "cross_refs": [],
+      "paper_ref": "§4.1 Eqs. (1)-(2); paper_text.txt lines 254-281",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "orthotrans-undocumented-delta",
+      "audit": "",
+      "audit_md_line": 90
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "paper_id": "2278_VITA_1_5_Towards_GPT_4o_Level_Real_Time_Vision_and_Speech_In",
+  "title": "VITA-1.5: Towards GPT-4o Level Real-Time Vision and Speech Interaction",
+  "repos": [
+    {
+      "name": "VITA-MLLM__VITA",
+      "role": "core",
+      "evidence": "README title is the exact paper title 'VITA-1.5: Towards GPT-4o Level Real-Time Vision and Speech Interaction'; links arXiv:2501.01957 and cites '@article{fu2025vita ... author={Fu, Chaoyou ...}' matching the paper's lead author Chaoyou Fu and the VITA-MLLM org named in the paper's stated 'Source Code: https://github.com/VITA-MLLM/VITA' (paper_text line 12). Core modules match the paper's named architecture: vita/model/vita_tts/decoder/ticodec/ (the TiCodec single-codebook codec from Sec 3.1.2), vita/model/vita_tts/decoder/llm2tts.py with NAR/AR speech decoders, whale audio encoder, InternViT-300M visual encoder, three-stage training scripts (pretrain_mlp / pretrain_audio_mlp / finetuneTask*), and the Video-MME + vendored VLMEvalKit harnesses producing Tables 2-3."
+    }
+  ],
+  "core_present": "yes",
+  "paper_verdict": "correct",
+  "confidence": "high",
+  "rationale": "Exactly one repo was cloned (VITA-MLLM/VITA) and it is the paper's own official implementation, not a baseline/dependency/different-paper/stub. Multiple decisive signals align: identical title, matching arXiv id (2501.01957), matching lead author and org, the URL printed in the paper, and modules implementing the paper's named components (TiCodec codec, NAR/AR speech decoders, three-stage progressive training). The audit.md itself correctly identifies it as 'the authors' training + inference codebase for VITA-1.5'.",
+  "audit_impact": "None of the audit's findings target a wrong/non-core repo. The four 'missing' findings are partial-reproducibility claims AGAINST the genuine core repo (Table-4 ASR eval not shipped; Stage-3 codec/NAR-AR-decoder training and Stage-2.1 CTC encoder training absent though inference-time TTS modules in vita/model/vita_tts/ ARE present; MVBench/TempCompass driver missing), plus one Video-MME scorer bug and one decoding-difference finding. Grep of vita/train and script/ confirms no TTS/codec/CTC training references, corroborating that these are 'training code absent' claims, not 'no code' or wrong-repo errors. Source-present classification is justified.",
+  "recommended_action": "No change to provenance. Keep paper as source-present (verdict: correct). The existing partial-reproducibility findings are validly written against the authors' own repo; no repo reclassification or finding re-targeting is needed."
+}

@@ -1,0 +1,229 @@
+{
+  "schema_version": "1",
+  "audit": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti",
+  "audit_md": "audits/4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti/audit.md",
+  "generated_at": "2026-05-31T11:02:59.199396+00:00",
+  "findings": [
+    {
+      "id": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti/baselines-not-in-repo",
+      "category": "missing",
+      "topic": "baselines / result traceability",
+      "title": "No baseline (SeqLoRA, O-LoRA, PerTaskFT, EWC, LwF, …) code in repo",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 66,
+      "line_end": 70,
+      "quote": "## Models and Usage\n\n### T5 Model\n\nTraining and evaluation scripts are in `scripts/`, outputs and logs are in `logs_and_outputs/`.\n",
+      "claim": "The repo ships only the DEAL training/eval pipeline (scripts/, scripts_llama/, src/*_run_wavelet.py). There is no script, config, or module that produces the SeqLoRA, O-LoRA, PerTaskFT (Table 1) or EWC/LwF/L2P/Replay/ProgPrompt/LFPT5/LB-CL (Table 10) numbers.",
+      "concern": "Every comparison in Table 1 and Table 10 — the basis for the 'consistently outperforms baselines' headline claim — relies on baseline numbers that no code in the repo computes, so the central comparison is not reproducible from this artefact.",
+      "resolution": "Authors: please add the baseline training/eval scripts and configs (or point to the exact upstream commit/command used), so the reported baseline AA/R-1 can be reproduced under the identical split/metric/budget.",
+      "cross_refs": [
+        "reg-loss-never-applied"
+      ],
+      "paper_ref": "Table 1; Table 10; Section 4 'Baselines'",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "baselines-not-in-repo",
+      "audit": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti",
+      "audit_md_line": 57
+    },
+    {
+      "id": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti/stat-test-not-implemented",
+      "category": "missing",
+      "topic": "statistical integrity",
+      "title": "Claimed two-sided t-test (p<0.05) significance has no code and no per-run logs",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "Note. Bold indicates the statistically significant improvements\n(i.e., two-sided t-test with p < 0.05) over the best baseline.\n",
+      "claim": "Table 1 and Table 4 mark results as significant via a two-sided t-test; the repo contains no statistical-test code (no scipy.stats/ttest anywhere) and ships no per-seed/per-run scores. The run scripts never pass --seed, so a single default-seed run is produced per task, providing no sample for a t-test.",
+      "concern": "The significance annotation (which underwrites the 'statistically significant improvement over the best baseline' claim) cannot be reproduced or verified from the artefact, and a single deterministic run cannot support a t-test.",
+      "resolution": "Authors: provide the per-run scores, the number of runs/seeds, and the t-test script (sample definition, paired vs unpaired, one/two-sided).",
+      "cross_refs": [],
+      "paper_ref": "Table 1 note; Table 4 note",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "stat-test-not-implemented",
+      "audit": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti",
+      "audit_md_line": 85,
+      "line_start": null,
+      "line_end": null
+    },
+    {
+      "id": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti/ablations-not-runnable-from-repo",
+      "category": "missing",
+      "topic": "ablations",
+      "title": "Adapter-update (Fig 2a), kernel (Table 3) and efficiency (Tab 8/9) ablations absent",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "src/T5_run_wavelet.py",
+      "line_start": 328,
+      "line_end": 334,
+      "quote": "logger.info(\"** wavelet-based wrapping: freeze lora_B, unfreeze lora_A. **\")\nfor name, param in model.named_parameters():\n    if 'lora_A' in name:\n        param.requires_grad = True\n    elif 'lora_B' in name:\n        param.requires_grad = False\n",
+      "claim": "The code unconditionally trains lora_A and freezes lora_B; there is no flag to select 'Only B' or 'Both A&B' (Fig 2a), no alternative-kernel implementation (Table 3 only ships wave='haar'), and no timing/memory profiling (Tables 8/9).",
+      "concern": "Fig 2a's 'Both A&B = 75.6' (the chosen/best configuration), Table 3's kernel comparison, and Tables 8/9 efficiency numbers cannot be reproduced because the code path they describe is not present.",
+      "resolution": "Authors: add the configuration switches and kernel variants used for Fig 2a / Table 3, and the profiling script for Tables 8/9.",
+      "cross_refs": [
+        "reg-loss-never-applied",
+        "wavelet-method-differs-from-paper"
+      ],
+      "paper_ref": "Figure 2a; Table 3; Tables 8-9",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "ablations-not-runnable-from-repo",
+      "audit": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti",
+      "audit_md_line": 108
+    },
+    {
+      "id": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti/reg-loss-never-applied",
+      "category": "bug",
+      "topic": "controlled knowledge updating / regularization",
+      "title": "Eq.12 regularization silently never applied (isinstance against wrong class)",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "src/uie_trainer_lora.py",
+      "line_start": 95,
+      "line_end": 108,
+      "quote": "if \"adapter\" in self.path.lower():\n    for name, module in model.named_modules():\n        if not isinstance(module, LinearWaveletFilter):\n            continue\n        \n        if module.theta.requires_grad:\n            theta_norm = torch.norm(module.theta.view(-1), p=self.theta_norm_p)\n            reg_loss += self.lambda1 * theta_norm\n\n        mlp_params = [p.view(-1) for p in module.mlp.parameters() if p.requires_grad]\n        if mlp_params:\n            mlp_cat  = torch.cat(mlp_params)\n            mlp_norm = torch.norm(mlp_cat, p=self.mlp_norm_p)\n            reg_loss += self.lambda2 * mlp_norm\n",
+      "claim": "The trainer guards the regularization loop with `isinstance(module, LinearWaveletFilter)` where `LinearWaveletFilter` is imported from `waveletLoRAAdapter` (line 12). But the modules actually inserted into the model are instances of the *separate* `LinearWaveletFilter` class defined inside `T5_run_wavelet.py` (line 137) / `Llama3_run_wavelet.py` (line 139); those run scripts never import the adapter-module class. The two classes are distinct objects, so `isinstance` is always False, the loop body never runs, and `reg_loss` stays 0.",
+      "concern": "The paper's 'Controlled Knowledge Updating' contribution — the λ1‖θ‖^a + λ2‖MLP‖^b term of Eq.12 and the asymmetric a≥b regularization that Table 4 grid-searches — is never present in the loss, so a core advertised component is inert and Table 4 (AA varying 74.8→85.5 with (a,b)) cannot be produced by this code.",
+      "resolution": "Authors: confirm whether reg was active in the reported runs; if so, import the same LinearWaveletFilter class in both trainer and run script (or unify on one definition) and re-verify that reg_loss is non-zero during training.",
+      "cross_refs": [
+        "ablations-not-runnable-from-repo"
+      ],
+      "check_script": "_audit_code/check_reg_isinstance_mismatch.py",
+      "paper_ref": "Eq. (12); Table 4",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "reg-loss-never-applied",
+      "audit": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti",
+      "audit_md_line": 139
+    },
+    {
+      "id": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti/long-t5-script-crashes",
+      "category": "bug",
+      "topic": "repository provenance / runnability",
+      "title": "scripts/long.sh (T5 15-task) crashes: FLAN-T5 path matches no branch in Llama script",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "scripts/long.sh",
+      "line_start": 10,
+      "line_end": 17,
+      "quote": "model_path=\"google/flan-t5-large\"\n\nfor i in \"${!datasets[@]}\"; do\n  dataset=\"${datasets[$i]}\"\n  round=$((i + 1))\n  output_dir=\"logs_and_outputs/long/outputs/${round}-${dataset}\"\n\n  python src/Llama3_run_wavelet.py \\\n",
+      "claim": "scripts/long.sh runs the T5 15-task benchmark but invokes src/Llama3_run_wavelet.py with model_name_or_path=google/flan-t5-large. In that script the model/tokenizer are only assigned under `if 'adapter' in path` or `elif 'llama' in path` (lines 283-341); 'google/flan-t5-large' matches neither on the first task, so config/tokenizer/model are never bound and execution raises UnboundLocalError/NameError before training.",
+      "concern": "The T5 15-task headline result (Table 1: T5+DEAL AA 73.9 / R-1 79.1) cannot be reproduced with the provided script, since it fails on the very first task.",
+      "resolution": "Authors: provide the script actually used for the T5 15-task run (presumably T5_run_wavelet.py with the long_configs), or add a base-model branch in Llama3_run_wavelet.py.",
+      "cross_refs": [],
+      "paper_ref": "Table 1, T5 15-Task column",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "long-t5-script-crashes",
+      "audit": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti",
+      "audit_md_line": 177
+    },
+    {
+      "id": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti/wavelet-method-differs-from-paper",
+      "category": "difference",
+      "topic": "method faithfulness (knowledge retention)",
+      "title": "Code uses a single-level Haar DWT gate, not the SVD-truncation + heat-kernel network of §3.2",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "src/T5_run_wavelet.py",
+      "line_start": 159,
+      "line_end": 164,
+      "quote": "self.dwt = DWTForward(J=1, wave=self.wavelet, mode='zero').to(device)\nself.idwt = DWTInverse(wave=self.wavelet, mode='zero').to(device)\nweight_4d = self.original_weight.unsqueeze(0).unsqueeze(0).to(device)\ncA, _ = self.dwt(weight_4d)\ncA_shape = cA.shape\nself.theta = nn.Parameter(torch.ones(cA_shape, device=device))\n",
+      "claim": "The 'Wavelet Kernel-based Knowledge Retention' module is implemented as a single-level (J=1) Haar discrete wavelet transform of the lora_A weight matrix with an element-wise learnable gate `theta` on the approximation coefficients cA, followed (in forward, lines 184-196) by an inverse DWT and an MLP. No singular value decomposition, no truncated-SVD core-feature estimate (Eq.6-7), and no multi-scale heat-kernel wavelet network (Eq.8-10) appear anywhere in the repo (grep for svd/singular/heat/eckart returns nothing in src).",
+      "concern": "The paper's central retention mechanism, derived in §3.2 as SVD-truncation denoising filtered by a series of learnable heat kernels at multiple scales, is a different operation from the implemented single-level Haar DWT gate, so the method evaluated is not the method described.",
+      "resolution": "Authors: clarify whether the reported results use the Haar-DWT implementation or the SVD/heat-kernel derivation in §3.2, and reconcile the paper's Eq.7-10 with the released code.",
+      "cross_refs": [
+        "ablations-not-runnable-from-repo"
+      ],
+      "paper_ref": "Section 3.2, Eq. (6)-(10)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "wavelet-method-differs-from-paper",
+      "audit": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti",
+      "audit_md_line": 210
+    },
+    {
+      "id": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti/adapter-update-both-vs-A-only",
+      "category": "difference",
+      "topic": "adapter update strategy",
+      "title": "Code always trains A and freezes B, but paper's default/best is 'Both A & B'",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "src/T5_run_wavelet.py",
+      "line_start": 328,
+      "line_end": 333,
+      "quote": "logger.info(\"** wavelet-based wrapping: freeze lora_B, unfreeze lora_A. **\")\nfor name, param in model.named_parameters():\n    if 'lora_A' in name:\n        param.requires_grad = True\n    elif 'lora_B' in name:\n        param.requires_grad = False\n",
+      "claim": "On every continual-learning step the code unfreezes lora_A and freezes lora_B (the wavelet/MLP module replaces lora_A only; lora_B is passed through unchanged in replace_lora_params). This is the 'Only Adapter A' configuration.",
+      "concern": "Figure 2a reports 'Both A & B' (75.6 AA) as the highest and presents it as the adopted strategy, while the released code implements 'Only A' (reported as 72.8); the main-table runs therefore use a strategy the ablation says is sub-optimal, or the released code differs from what produced Table 1.",
+      "resolution": "Authors: confirm which adapter-update strategy produced the Table 1 numbers and, if 'Both A&B', release that code path.",
+      "cross_refs": [
+        "reg-loss-never-applied",
+        "ablations-not-runnable-from-repo"
+      ],
+      "paper_ref": "Figure 2a",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "adapter-update-both-vs-A-only",
+      "audit": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti",
+      "audit_md_line": 239
+    },
+    {
+      "id": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti/train-sample-count-vs-readme",
+      "category": "difference",
+      "topic": "data / experimental setup",
+      "title": "README says 1,000 train / 500 val per task; shipped data + scripts use far more",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 62,
+      "line_end": 62,
+      "quote": "*All datasets are reformulated into an instruction-following format, with each task limited to 1,000 training and 500 validation examples. For full details on dataset preprocessing, task ordering, and prompt construction, see the Appendix in our paper.*\n",
+      "claim": "The README claims 1,000 train / 500 val per task, but the shipped CL_Benchmark/*/train.json hold 250-14,000 examples (e.g. dbpedia 14,000, yahoo 10,000, amazon 5,000) and the scripts set neither --max_train_samples nor --max_num_instances_per_task below its 10,000 default, so up to 10,000 train examples per task are actually used.",
+      "concern": "The 'data-efficient / small-scale dataset' framing central to the paper's motivation is not enforced by the released configuration, so the data budget actually used is much larger than stated.",
+      "resolution": "Authors: clarify the train/val sizes used for the reported numbers and set the corresponding caps in the scripts (or trim the data files).",
+      "cross_refs": [],
+      "paper_ref": "README; Appendix B.1",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "train-sample-count-vs-readme",
+      "audit": "4991_Data_Efficient_Adaptation_in_Large_Language_Models_via_Conti",
+      "audit_md_line": 268
+    }
+  ]
+}

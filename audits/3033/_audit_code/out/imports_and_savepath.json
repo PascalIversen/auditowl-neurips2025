@@ -1,0 +1,28 @@
+{
+  "hooks_defined_names": [
+    "TimedHook",
+    "ablate_block",
+    "add_feature",
+    "add_feature_on_area_base",
+    "add_feature_on_area_base_both",
+    "add_feature_on_area_base_cond",
+    "add_feature_on_area_turbo",
+    "reconstruct_sae_hook",
+    "replace_with_feature_base",
+    "replace_with_feature_turbo"
+  ],
+  "example_nb_imports_from_utils": [
+    "add_feature_on_area",
+    "replace_with_feature"
+  ],
+  "example_nb_missing_imports": [
+    "add_feature_on_area",
+    "replace_with_feature"
+  ],
+  "example_nb_import_error": true,
+  "save_path_check": {
+    "uses_bare_save_path_base": true,
+    "uses_self_save_path_base": false,
+    "save_path_base_is_instance_field": true
+  }
+}

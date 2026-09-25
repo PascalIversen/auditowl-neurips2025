@@ -1,0 +1,133 @@
+{
+  "paper": "1171",
+  "seeds": [
+    {
+      "sid": "S01",
+      "category": "missing",
+      "sites": [
+        {
+          "file": "Legenddddd__MEL/models/mel/Network.py",
+          "line": null,
+          "action": "delete_file"
+        }
+      ],
+      "title": "Remove the only MEL architecture behind the Stanford Dogs ablation",
+      "description": "Delete the repository's sole implementation of MYNET, including the meta-category vector, attention-mask branch, low/high feature transformations, dual prototype classifiers, and incremental prototype update. Table 2's M1-M5 component ablations and the reported MEL results then have no executable model implementation anywhere in the repository."
+    },
+    {
+      "sid": "S03",
+      "category": "difference",
+      "sites": [
+        {
+          "file": "Legenddddd__MEL/models/resnet12_encoder.py",
+          "line": 88,
+          "action": "replace"
+        },
+        {
+          "file": "Legenddddd__MEL/models/resnet12_encoder.py",
+          "line": 149,
+          "action": "replace"
+        }
+      ],
+      "title": "Use a plain twelve-layer convolutional backbone instead of ResNet-12",
+      "description": "Remove every residual addition from ResNet12Block while retaining the three learned convolutions, normalizations, nonlinearities, pooling, and regularization in each stage. The resulting backbone is a genuine trainable twelve-convolution feed-forward CNN with the expected feature shapes and gradients, but it is not the ResNet-12 architecture claimed in the paper."
+    },
+    {
+      "sid": "S06",
+      "category": "methodology",
+      "sites": [
+        {
+          "file": "Legenddddd__MEL/dataloader/StanfordDog/StanfordDog.py",
+          "line": 98,
+          "action": "replace"
+        }
+      ],
+      "title": "Use held-out Stanford Dogs images as every incremental support set",
+      "description": "Replace each session manifest's five training examples per novel class with five images read directly from test.csv, while preserving the correct class targets and 5-way 5-shot shape. Every incremental prototype and mutual-regularization update therefore consumes examples that remain in the cumulative test set used for the reported session accuracies."
+    },
+    {
+      "sid": "S07",
+      "category": "bug",
+      "sites": [
+        {
+          "file": "Legenddddd__MEL/utils.py",
+          "line": 212,
+          "action": "replace"
+        }
+      ],
+      "title": "Silently leave the ResNet-12 feature extractor untrained",
+      "description": "Exclude every encoder parameter from the base-session optimizer while continuing to train the attention, mask, transformation, and classifier parameters. The program runs and losses backpropagate, but all reported features originate from a randomly initialized ResNet-12 whose weights never receive an update."
+    }
+  ],
+  "baseline": [
+    {
+      "id": "1171/missing-dataset-loaders",
+      "category": "missing",
+      "file": "dataloader/data_utils.py",
+      "line_start": 5,
+      "line_end": 38,
+      "title": "3 of 4 Table-1 dataset loaders (CUB200, Stanford Cars, FGVCAircraft) absent from repo"
+    },
+    {
+      "id": "1171/missing-ablation-harness",
+      "category": "missing",
+      "file": "train.py",
+      "line_start": 6,
+      "line_end": 57,
+      "title": "Ablation Table 2 (M0\u2013M5) cannot be reproduced \u2014 no component toggles in code"
+    },
+    {
+      "id": "1171/missing-aux-experiments",
+      "category": "missing",
+      "file": "dataloader/data_utils.py",
+      "line_start": 5,
+      "line_end": 41,
+      "title": "Figs 4, 8, 9 experiments (opt-strategy variants, conventional benchmarks, alt backbones) absent"
+    },
+    {
+      "id": "1171/no-dependency-spec",
+      "category": "missing",
+      "file": "models/mel/helper.py",
+      "line_start": 1,
+      "line_end": 5,
+      "title": "No requirements/env file; unlisted deps (torch_dct, timm); no pretrained weights or run command for 3/4 datasets"
+    },
+    {
+      "id": "1171/lmutual-distill-temperature",
+      "category": "difference",
+      "file": "models/mel/fscil_trainer.py",
+      "line_start": 8,
+      "line_end": 19,
+      "title": "L_mutual implemented as DistillKL(T=4.0) \u2014 extra softening temperature and \u00d7T\u00b2 scaling not in Eq. 14"
+    }
+  ],
+  "unassigned": [
+    {
+      "fid": "run_01/base-model-selected-on-test",
+      "run": "run_01",
+      "category": "methodology",
+      "loc": "models/mel/fscil_trainer.py:71",
+      "title": "Base checkpoint (and reported base accuracy) selected by best TEST accuracy",
+      "claim": "During the 400-epoch base session the model is evaluated on the test loader every epoch, and the checkpoint kept (best_model_dict) plus the reported max_acc[0] is the epoch with the highest TEST accuracy. There is no separate validation split; testloader is built from test.csv (get_base_dataloader) and is the same set that is reported. best_model_dict is then carried into every incremental session (load_state_dict at line 62).",
+      "concern": "Selecting the checkpoint/epoch by test-set accuracy biases the reported base-session number upward and propagates an optimistically-selected backbone into all incremental sessions; the reported accuracies are a max over 400 epochs of test performance rather than a held-out estimate."
+    },
+    {
+      "fid": "run_01/cub200-accavg-prose-mismatch",
+      "run": "run_01",
+      "category": "methodology",
+      "loc": "paper.pdf:None",
+      "title": "Prose 'AccAvg 1.21% higher than CLOSER on CUB200' disagrees with Table 1 (gap = 1.48)",
+      "claim": "Table 1 (and per-session Table 3, whose rows I re-averaged: Ours = 45.44, CLOSER = 43.95) gives a CUB200 AccAvg gap of 45.44 - 43.95 = 1.48/1.49, not 1.21. The companion AccT claim in the same sentence (4.26%) matches exactly (36.00 - 31.74 = 4.26), so the 1.21 figure is the inconsistent one.",
+      "concern": "Minor arithmetic inconsistency between the prose and the paper's own tables; it does not change the ranking (Ours still leads on CUB200), but the stated margin is understated."
+    },
+    {
+      "fid": "/broader-experiments-no-code",
+      "run": "run_02",
+      "category": "missing",
+      "loc": "models/resnet12_encoder.py:175",
+      "title": "No code for Fig 8/9 benchmarks & backbones, Fig 4 strategy variants, or Table 1 baselines",
+      "claim": "ResNet-12 is the only backbone factory in the repo, and set_up_datasets (data_utils.py) defines only the four fine-grained datasets; there is no code/config for the conventional-benchmark experiments (Figure 8: miniImageNet, CIFAR100), the alternate backbones (Figure 9: ResNet-18/50, ViT-B/16, ViT+adaptor), the meta-category strategy variants (Figure 4: Avg, Avg+Sim, Avg+Weight, BP), or the Table 1 baseline methods.",
+      "concern": "Several reported experiments (Figs 4, 8, 9 and all Table-1 baseline columns) cannot be reproduced or checked because no corresponding backbone, dataloader, or driver code is present in the repository."
+    }
+  ]
+}

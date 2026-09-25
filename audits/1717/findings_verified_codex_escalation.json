@@ -1,0 +1,13 @@
+{
+  "findings": [
+    {
+      "id": "1717_Transformer_brain_encoders_explain_human_high_level_visual_r/missing-saliency-baseline",
+      "verdict": "lowered",
+      "reason": "The paper reports the DeepGaze saliency-integration baseline in Table 1 and the repository source scan finds no DeepGaze or saliency implementation, but Tables 3 and 5 contain no saliency row, confirming the first-pass scope correction.",
+      "changed": "nothing",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding"
+    }
+  ]
+}

@@ -1,0 +1,240 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T17:37:46.392435+00:00",
+  "findings": [
+    {
+      "id": "/video-pipeline-code-absent",
+      "category": "missing",
+      "topic": "result traceability / dataset construction",
+      "title": "Section-3.3 HQ-VSR video processing pipeline (and its Tab. 1d ablation) has no code",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 79,
+      "line_end": 81,
+      "quote": "- [x] Release training code.\n- [ ] Release the video processing pipeline.\n- [x] Release HQ-VSR dataset.\n",
+      "claim": "The paper's core contribution and Tab. 1d ablation rely on a four-step pipeline (metadata filtering, scene detection, CLIP-IQA/FasterVQA/DOVER quality filtering, and optical-flow motion-mask bounding-box cropping per Eq. 8) that builds HQ-VSR; the repo contains none of this code, and the README leaves 'Release the video processing pipeline' unchecked.",
+      "concern": "Tab. 1c (training-dataset) and Tab. 1d (+Filter/+Motion) ablations and the HQ-VSR dataset claim cannot be reproduced because no script implements the filtering or motion-area cropping (a `grep` for aesthetic/scenedetect/motion-mask/bounding-box returns nothing — see _audit_code/out/eval_artifacts.csv).",
+      "resolution": "Authors: release the metadata/scene/quality-filtering and motion-area cropping scripts (Sec 3.3, Eq. 8), or confirm Tab. 1c/1d are not reproducible from the released code.",
+      "cross_refs": [
+        "§3.3",
+        "Table 1c",
+        "Table 1d"
+      ],
+      "check_script": "_audit_code/check_eval_artifacts.py",
+      "paper_ref": "Section 3.3 and Table 1c/1d",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "video-pipeline-code-absent",
+      "audit": "",
+      "audit_md_line": 54,
+      "verdict": "keep",
+      "reason": "README.md lines 79-81 exactly match the quoted TODO list with 'Release the video processing pipeline' unchecked, and no pipeline/filtering/motion-cropping scripts exist anywhere in the repo.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/vqa-warp-metric-deps-missing",
+      "category": "missing",
+      "topic": "result traceability / evaluation metrics",
+      "title": "DOVER, FasterVQA (VBench), and E*_warp metric scripts import packages absent from the repo",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "finetune/scripts/eval_dover.py",
+      "line_start": 150,
+      "line_end": 150,
+      "quote": "from DOVER.evaluate_a_set_of_videos import evaluate_set as dover\n",
+      "claim": "eval_dover.py imports a `DOVER` package, eval_vbench.py appends a `VBench/` dir to sys.path (lines 19-20/146), and eval_ewarp.py imports `from ewarp import Ewarp` (line 149); none of `DOVER/`, `VBench/`, or `ewarp.py` exists anywhere in the repo (verified in _audit_code/out/eval_artifacts.csv), and they are not listed in requirements.txt.",
+      "concern": "Three of Table 2's eight metric columns (DOVER, FasterVQA, E*_warp) — including the headline DOVER values in Fig. 1 and Table 3 — cannot be reproduced because the scripts that compute them depend on third-party code that is neither vendored nor declared.",
+      "resolution": "Authors: vendor or pin the DOVER, VBench/FasterVQA, and Ewarp dependencies (with versions/weights) so the Table 2 VQA and temporal columns are reproducible; the README already lists this as a TODO (README.md:269).",
+      "cross_refs": [
+        "eval-ewarp-paths-broken",
+        "dover-offbyone-index",
+        "Table 2",
+        "Table 3",
+        "Figure 1"
+      ],
+      "check_script": "_audit_code/check_eval_artifacts.py",
+      "paper_ref": "Table 2 (DOVER/FasterVQA/E*_warp columns)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "vqa-warp-metric-deps-missing",
+      "audit": "",
+      "audit_md_line": 81,
+      "verdict": "keep",
+      "reason": "eval_dover.py line 150 confirms the DOVER import, eval_vbench.py lines 19-20 confirm VBench sys.path append, eval_ewarp.py line 149 confirms the ewarp import, and no DOVER/, VBench/, or ewarp.py exists anywhere in the repo.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/running-time-no-script",
+      "category": "missing",
+      "topic": "result traceability / efficiency claim",
+      "title": "No script computes the running-time / 28x-speedup headline numbers (Tab. 3, Fig. 1)",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "paper.pdf",
+      "quote": "Our method is approximately 28× faster than MGLD-VSR [50]. Even\ncompared with the fastest compared method, VEnhancer [9], the DOVE is 8 times faster.\n",
+      "claim": "The abstract/Table 3/Fig. 1 report per-method wall-clock times (DOVE 14.90 s vs MGLD-VSR 425.23 s, '28x faster') on a 33-frame 720x1280 video, but no timing/benchmark harness exists in the repo (grep for time.time/perf_counter/latency finds only randomness use in degradation.py — see _audit_code/out/eval_artifacts.csv).",
+      "concern": "The central efficiency claim ('28x speed-up') has no released measurement code, so the timing numbers cannot be independently reproduced from the repo.",
+      "resolution": "Authors: release the timing/benchmark script (with the exact frame count, resolution, dtype, and GPU) used to produce Table 3 and Fig. 1.",
+      "cross_refs": [
+        "Table 3",
+        "Figure 1"
+      ],
+      "check_script": "_audit_code/check_eval_artifacts.py",
+      "paper_ref": "Table 3 and Figure 1 (Time column)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "running-time-no-script",
+      "audit": "",
+      "audit_md_line": 106,
+      "line_start": null,
+      "line_end": null,
+      "verdict": "keep",
+      "reason": "Paper text (lines 1153-1154) confirms the quoted 28x/8x speedup claim, and a repo-wide search finds time.time usage only in degradation.py (unrelated to benchmarking inference speed), confirming no timing script exists.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/inference-sh-gt-hardcoded-udm10",
+      "category": "bug",
+      "topic": "evaluation / reproduce script",
+      "title": "inference.sh evaluates every dataset against UDM10's ground truth",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "inference.sh",
+      "line_start": 22,
+      "line_end": 25,
+      "quote": "python eval_metrics.py \\\n    --gt datasets/test/UDM10/GT \\\n    --pred results/DOVE/SPMCS \\\n    --metrics psnr,ssim,lpips,dists,clipiqa\n",
+      "claim": "The 'Reproduce paper results' runner reuses `--gt datasets/test/UDM10/GT` in all six eval blocks (lines 11,23,35,48,61,73); five of them (SPMCS, YouHQ40, RealVSR, MVSR4x, VideoLQ) pair non-UDM10 predictions with UDM10 ground truth (verified in _audit_code/out/eval_artifacts.csv).",
+      "concern": "Anyone following inference.sh computes the full-reference Table-2 metrics (PSNR/SSIM/LPIPS/DISTS) for five of six datasets against the wrong GT; because eval_metrics.py matches by basename, mismatched names are silently skipped ('No valid samples') or, if names collide, scored against the wrong reference — so the script as shipped does not reproduce Table 2.",
+      "resolution": "Authors: change each `--gt` to the matching `datasets/test/<DatasetName>/GT`; confirm Table 2 was produced with per-dataset GT, not UDM10's.",
+      "cross_refs": [
+        "Table 2"
+      ],
+      "check_script": "_audit_code/check_eval_artifacts.py",
+      "paper_ref": "Table 2 (PSNR/SSIM/LPIPS/DISTS columns)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "inference-sh-gt-hardcoded-udm10",
+      "audit": "",
+      "audit_md_line": 132,
+      "verdict": "keep",
+      "reason": "inference.sh lines 22-25 exactly match the quote, and reading the full script confirms --gt datasets/test/UDM10/GT is hardcoded in all six eval blocks including for SPMCS, YouHQ40, RealVSR, MVSR4x, and VideoLQ.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/dover-offbyone-index",
+      "category": "bug",
+      "topic": "evaluation metrics / DOVER",
+      "title": "eval_dover.py assigns DOVER scores to clips with an off-by-one (i-1) index",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "finetune/scripts/eval_dover.py",
+      "line_start": 158,
+      "line_end": 159,
+      "quote": "for i, name in enumerate(pred_names):\n    results[name] = dover_results[i-1]\n",
+      "claim": "Iterating with `enumerate(pred_names)` starts at i=0, so the first clip is assigned `dover_results[-1]` (the last clip's score) and every other clip is shifted by one, mis-aligning per-clip DOVER scores (verified in _audit_code/out/eval_artifacts.csv).",
+      "concern": "Per-sample DOVER values are mis-assigned by one position; the dataset mean is unchanged but per-clip results (and any inspection of them) are wrong, and combined with the missing DOVER package this script cannot produce correct per-clip output.",
+      "resolution": "Authors: index with `dover_results[i]` (not `i-1`), and confirm whether the reported DOVER values used this script.",
+      "cross_refs": [
+        "vqa-warp-metric-deps-missing",
+        "Table 2"
+      ],
+      "check_script": "_audit_code/check_eval_artifacts.py",
+      "paper_ref": "Table 2 (DOVER column)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "dover-offbyone-index",
+      "audit": "",
+      "audit_md_line": 160,
+      "verdict": "keep",
+      "reason": "eval_dover.py lines 158-159 exactly match the quoted code showing enumerate starting at i=0 with dover_results[i-1], confirming the off-by-one indexing bug.",
+      "changed": "nothing"
+    },
+    {
+      "id": "/eval-ewarp-paths-broken",
+      "category": "bug",
+      "topic": "evaluation metrics / temporal consistency",
+      "title": "eval_ewarp.py chdirs to a non-existent RAFT dir and defaults to a non-existent weights path",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "finetune/scripts/eval_ewarp.py",
+      "line_start": 147,
+      "line_end": 149,
+      "quote": "raft_dir = os.path.join(original_dir, \"RAFT\")\nos.chdir(raft_dir)\nfrom ewarp import Ewarp as Ewarp\n",
+      "claim": "After the module-level `os.chdir(script_directory)` (line 7), `original_dir` is `finetune/scripts/`, so the script chdirs into `finetune/scripts/RAFT` which does not exist (the RAFT package is at `finetune/utils/RAFT`), then imports a module `ewarp` that exists nowhere in the repo; the default `--model` path `finetune/scripts/models/raft-things.pth` (line 190) is also absent (verified in _audit_code/out/eval_artifacts.csv).",
+      "concern": "The E*_warp temporal-consistency column of Table 2 / Fig. 1 cannot be computed: the script raises FileNotFoundError on chdir or ImportError on `from ewarp import`, and the default RAFT checkpoint path points to a directory that does not exist.",
+      "resolution": "Authors: ship `ewarp.py`, fix the chdir target to `finetune/utils/RAFT`, and set the default `--model` to the bundled `finetune/utils/RAFT/raft-things.pth`.",
+      "cross_refs": [
+        "vqa-warp-metric-deps-missing",
+        "Table 2"
+      ],
+      "check_script": "_audit_code/check_eval_artifacts.py",
+      "paper_ref": "Table 2 (E*_warp column)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "eval-ewarp-paths-broken",
+      "audit": "",
+      "audit_md_line": 186,
+      "verdict": "keep",
+      "reason": "eval_ewarp.py lines 147-149 exactly match the quote; RAFT exists only at finetune/utils/RAFT (not finetune/scripts/RAFT), ewarp.py is absent from the entire repo, and the default model path finetune/scripts/models/raft-things.pth does not exist (the pth file is at finetune/utils/RAFT/raft-things.pth).",
+      "changed": "nothing"
+    },
+    {
+      "id": "/stage1-batchsize-image-count",
+      "category": "difference",
+      "topic": "experimental settings",
+      "title": "Released DIV2K image count (900) and per-GPU batch differ slightly from in-repo defaults",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "finetune/train_ddp_one_s1.sh",
+      "line_start": 37,
+      "line_end": 38,
+      "quote": "--batch_size 2\n--gradient_accumulation_steps 1\n",
+      "claim": "The launchers use `--batch_size 2` per process with `gradient_accumulation_steps 1`; the paper states 'total batch size 8' on '4 NVIDIA A800-80G GPUs', consistent only under 4 data-parallel processes (4x2=8), which the script does not itself enforce. Separately the paper says DIV2K has '900 images' (Sec 4.1) while the README datasets table lists DIV2K-HR as 800 images.",
+      "concern": "The 8-vs-2 batch size and 900-vs-800 image-count statements require the reader to assume the 4-GPU launch and a specific DIV2K variant; neither is pinned in the script, so an exact reproduction depends on undocumented launch topology.",
+      "resolution": "Authors: document the number of data-parallel processes used (to reach total batch 8) and clarify whether DIV2K-HR (800) or DIV2K train+val (900) was used.",
+      "cross_refs": [
+        "§4.1"
+      ],
+      "paper_ref": "Section 4.1 (Implementation Details / Datasets)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "stage1-batchsize-image-count",
+      "audit": "",
+      "audit_md_line": 215,
+      "verdict": "keep",
+      "reason": "train_ddp_one_s1.sh lines 37-38 exactly match the quoted --batch_size 2 and --gradient_accumulation_steps 1, confirming the discrepancy between per-process batch size 2 and the paper's stated total batch size 8 (which requires knowing 4 GPUs are used).",
+      "changed": "nothing"
+    }
+  ]
+}

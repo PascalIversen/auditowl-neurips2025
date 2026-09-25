@@ -1,0 +1,18 @@
+OBJECTIVE LINE (misc.py):
+  equation_result = (1/(n0+S) + (S**2 * trace_term)/(d*(n0+S)**2)) * d/2 + 1/S
+  paper Eq.14/72: (d/2)*(1/(N0+s) + s^2/(N0+s)^2 * t); NO +1/S term.
+  -> code adds '+ 1/S' (==+1/S) absent from paper. PRESENT: True
+
+FISHER NORMALIZATION (misc.py):
+  present: True
+  paper/Algorithm-1 line 10: J = empirical mean of gradient outer products (no normalization).
+
+BEST-EPOCH-ON-TEST:
+  main.py computes acc on eval_loader each epoch: True
+  check_epoch stops 'patience' epochs after the MAX acc index:
+    def check_epoch(models_acc, patience=5, all_epoch_threshold=40):
+    max_acc = max(models_acc)
+    max_acc_epoch = models_acc.index(max_acc)
+    if len(models_acc) < patience + 1:
+  reported number = highest eval acc (paper: 'report the highest accuracies within 5 epoch early stops').
+  eval set = the 20% per-class holdout in get_trainset_and_evalset_ratioway (also called the 'test set').

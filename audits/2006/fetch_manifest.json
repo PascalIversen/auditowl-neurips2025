@@ -1,0 +1,15 @@
+{
+  "technion-cs-nlp__vlm-circuits-analysis": {
+    "repo": "https://github.com/technion-cs-nlp/vlm-circuits-analysis",
+    "clone_status": "cached",
+    "size_mb": 16.2,
+    "lfs_pointer_stubs": 4,
+    "lfs_examples": [
+      "data/counting/images.tar.gz",
+      "data/factual_recall/images.tar.gz",
+      "data/arithmetic/images.tar.gz",
+      "data/sentiment_analysis/images.tar.gz"
+    ],
+    "empty_submodules": []
+  }
+}

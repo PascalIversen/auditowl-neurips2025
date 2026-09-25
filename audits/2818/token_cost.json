@@ -1,0 +1,19 @@
+{
+  "folder": "2818_Scaling_Up_Parameter_Generation_A_Recurrent_Diffusion_Approa",
+  "model": "claude-opus-4-8",
+  "audit_runs": 1,
+  "tokens": {
+    "input": 11820,
+    "output": 28792,
+    "cache_write": 549101,
+    "cache_read": 11758278
+  },
+  "total_tokens": 12347991,
+  "pricing_usd_per_mtok": {
+    "input": 15.0,
+    "output": 75.0,
+    "cache_write": 18.75,
+    "cache_read": 1.5
+  },
+  "estimated_cost_usd": 30.27
+}

@@ -1,0 +1,237 @@
+{
+  "schema_version": "1",
+  "audit": "",
+  "audit_md": "audit.md",
+  "generated_at": "2026-06-02T06:22:01.610680+00:00",
+  "findings": [
+    {
+      "id": "/no-restoration-network-rtheta",
+      "category": "missing",
+      "topic": "result traceability / Stage-2 pipeline",
+      "title": "Latent restoration network R_theta absent from entire codebase",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "basicsr/models/VAEadapter_model.py",
+      "line_start": 132,
+      "line_end": 139,
+      "quote": "def _forward_g(self):\n    out = self.net_g(self.lq, alpha=self.alpha)\n    if isinstance(out, (list, tuple)):\n        if len(out) >= 3:\n            return out[0], out[1], out[2]\n        if len(out) == 2:\n            return out[0], out[1], None\n    return out, None, None\n",
+      "claim": "Stage-2 forward passes the degraded input directly through the VAE (net_g = RAVAEHFLora wrapping the VAE); no latent restoration network R_theta is instantiated or applied anywhere in the repo (grep for SFHformer/NAFNet/Restormer-as-restoration/net_r returns nothing in basicsr/models).",
+      "concern": "The paper's Stage 2 (§4.2, Eq. 7-9) and Table 5(c) center on a latent restoration network R_theta (default SFHformer) that maps z_deg to z_res; without it the code cannot perform restoration, so none of the reported PSNR/SSIM/LPIPS numbers can be produced by this repo.",
+      "resolution": "Authors: provide the R_theta restoration-network code (SFHformer/NAFNet/Restormer variants from Table 5c) and the script that trains LRes (Eq. 7) and runs it inside the Stage-2 loss path (Eq. 9).",
+      "cross_refs": [
+        "no-test-eval-script",
+        "stage2-ravae-type-unregistered"
+      ],
+      "check_script": "_audit_code/check_repo_completeness.py",
+      "paper_ref": "§4.2 Eq. 7-9; Table 5(c)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-restoration-network-rtheta",
+      "audit": "",
+      "audit_md_line": 63
+    },
+    {
+      "id": "/no-test-eval-script",
+      "category": "missing",
+      "topic": "evaluation harness / reproducibility",
+      "title": "No test/evaluation/inference entrypoint; Tables 1-5 and Fig. 2 untraceable",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "# Latent-Harmony\n",
+      "claim": "The repo ships only the generic BasicSR train.py and two example training configs; there is no test.py / inference / evaluation / ablation / analysis script (check_repo_completeness.py: test_eval_infer_scripts = []), and the one-line README gives no commands.",
+      "concern": "Every quantitative result in the paper (Tables 1-5, Fig. 2 motivation panels) lacks a value-producing script, so no reported number can be reproduced or checked.",
+      "resolution": "Authors: provide the evaluation harness that loads the UHD benchmark test splits and computes the PSNR/SSIM/LPIPS/FID/NIQE/runtime values in Tables 1-5, plus the analysis code for Fig. 2.",
+      "cross_refs": [
+        "no-restoration-network-rtheta",
+        "no-data-or-weights"
+      ],
+      "check_script": "_audit_code/check_repo_completeness.py",
+      "paper_ref": "Tables 1-5; Fig. 2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-test-eval-script",
+      "audit": "",
+      "audit_md_line": 95
+    },
+    {
+      "id": "/no-data-or-weights",
+      "category": "missing",
+      "topic": "datasets and pretrained weights",
+      "title": "No datasets, no pretrained VAE/DINOv2 weights, no fetch script",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "configs/stage1_eqvae.yml",
+      "line_start": 8,
+      "line_end": 11,
+      "quote": "dataroot_gt: ./datasets/train/gt\ndataroot_lq: ./datasets/train/lq\nio_backend:\n  type: disk\n",
+      "claim": "Configs point at ./datasets/... and ./weights/dinov2_vits14.pth / ./weights/stage1_eqvae.pth, but the repo contains no datasets/ or weights/ directory and no *.pth/image files (check_repo_completeness.py: data_or_weight_dirs=[], weight_files=[], image_files=[]); there is no download/fetch script.",
+      "concern": "The UHD benchmarks (UHD-LL, UHD-blur, UHD-haze, UHDN, UHD-rain, UHD-snow) and the required DINOv2 weights are neither bundled nor fetchable, so neither stage can be trained or run as shipped.",
+      "resolution": "Authors: provide working dataset download/preparation scripts (or accessions) and the DINOv2 / Stage-1 VAE checkpoints the configs reference.",
+      "cross_refs": [
+        "no-test-eval-script"
+      ],
+      "check_script": "_audit_code/check_repo_completeness.py",
+      "paper_ref": "§5 (UHD benchmarks); configs stage1/stage2",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-data-or-weights",
+      "audit": "",
+      "audit_md_line": 120
+    },
+    {
+      "id": "/no-dependency-spec",
+      "category": "missing",
+      "topic": "environment / dependencies",
+      "title": "No dependency specification (requirements/setup/env); deps unpinned",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "# Latent-Harmony\n",
+      "claim": "The repo has no requirements.txt / setup.py / pyproject.toml / environment.yml / Dockerfile (check_repo_completeness.py: dependency_spec_files=[]); it imports torch, cv2, numpy, einops, torchvision, tqdm, and pyiqa, plus torch.hub DINOv2, none pinned.",
+      "concern": "Without a pinned environment the runtime (and especially pyiqa/torch versions that affect metric values) cannot be reconstructed, blocking reproduction.",
+      "resolution": "Authors: add a pinned requirements.txt / environment.yml listing torch, pyiqa, einops, opencv, torchvision and their versions.",
+      "cross_refs": [],
+      "check_script": "_audit_code/check_repo_completeness.py",
+      "paper_ref": "NeurIPS checklist item 6/8 (env)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-dependency-spec",
+      "audit": "",
+      "audit_md_line": 148
+    },
+    {
+      "id": "/stage2-ravae-type-unregistered",
+      "category": "bug",
+      "topic": "config / registry",
+      "title": "Stage-2 config requests unregistered arch 'RAVAE'; model build crashes",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "configs/stage2_hflora.yml",
+      "line_start": 41,
+      "line_end": 42,
+      "quote": "vae_config:\n  type: RAVAE\n",
+      "claim": "RAVAEHFLora.__init__ does self.vae = ARCH_REGISTRY.get(arch_type)(**cfg) with arch_type='RAVAE' (LHVAE_hflora_arch.py:37-38); the only registered VAE arch is 'RAVAE_EQ' (registry scan: registered_archs = [LoRAConv2d, RAVAEHFLora, RAVAE_EQ, UNetDiscriminatorSN]). Registry.get raises KeyError for an unknown name (registry.py:62-66).",
+      "concern": "Running `train.py -opt configs/stage2_hflora.yml` raises KeyError(\"No object named 'RAVAE' found in 'arch' registry!\") before any training step, so Stage 2 cannot run as shipped.",
+      "resolution": "Authors: set vae_config.type to the actual registered arch (RAVAE_EQ) or register a 'RAVAE' class; confirm which VAE arch produced the paper results.",
+      "cross_refs": [
+        "no-restoration-network-rtheta"
+      ],
+      "check_script": "_audit_code/check_registry_vs_configs.py",
+      "paper_ref": "§4.2 (Stage-2 LH-VAE backbone)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "stage2-ravae-type-unregistered",
+      "audit": "",
+      "audit_md_line": 175
+    },
+    {
+      "id": "/hardcoded-experiments-root",
+      "category": "bug",
+      "topic": "hardcoded absolute paths",
+      "title": "experiments_root hardcoded to authors' machine path",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "basicsr/utils/options.py",
+      "line_start": 158,
+      "line_end": 164,
+      "quote": "if is_train:\n    experiments_root = osp.join('/fs-computility/ai4sData/liuyidi/model', 'experiments', opt['name'])\n    opt['path']['experiments_root'] = experiments_root\n    opt['path']['models'] = osp.join(experiments_root, 'models')\n    opt['path']['training_states'] = osp.join(experiments_root, 'training_states')\n    opt['path']['log'] = experiments_root\n    opt['path']['visualization'] = osp.join(experiments_root, 'visualization')\n",
+      "claim": "For any training run, all output dirs (models, logs, checkpoints, visualizations) are forced under the absolute path /fs-computility/ai4sData/liuyidi/model/experiments/<name>, ignoring the run's root_path.",
+      "concern": "On any machine other than the authors' cluster, make_exp_dirs/copy_opt_file/save will write to (or fail to create) an inaccessible absolute path, so checkpoints and logs are misplaced or training aborts.",
+      "resolution": "Authors: derive experiments_root from root_path (as upstream BasicSR does) instead of a hardcoded cluster path.",
+      "cross_refs": [
+        "hardcoded-syspath-appends"
+      ],
+      "paper_ref": "n/a (engineering)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "hardcoded-experiments-root",
+      "audit": "",
+      "audit_md_line": 201
+    },
+    {
+      "id": "/hardcoded-syspath-appends",
+      "category": "bug",
+      "topic": "hardcoded absolute paths",
+      "title": "Multiple sys.path.append to non-existent absolute author paths",
+      "severity": "low",
+      "confidence": "high",
+      "status": "finding",
+      "file": "basicsr/archs/encoder_3.py",
+      "line_start": 8,
+      "line_end": 8,
+      "quote": "sys.path.append('/code/UHDformer-main')\n",
+      "claim": "Several modules append absolute author-machine paths to sys.path: encoder_3.py:8 ('/code/UHDformer-main'), modules/attention.py:8 ('/code/UHDFour_code-main'), train.py:8 and LHVAE_arch.py:7 ('/fs-computility/ai4sData/liuyidi/code/LatentGen').",
+      "concern": "These reveal the code was carved out of a larger private tree; the appends are no-ops only because nothing under them is imported here, but they signal that the released snapshot is incomplete relative to the authors' working tree.",
+      "resolution": "Authors: remove the absolute sys.path.append lines and confirm no hidden dependency lived under those paths.",
+      "cross_refs": [
+        "hardcoded-experiments-root"
+      ],
+      "paper_ref": "n/a (engineering)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "hardcoded-syspath-appends",
+      "audit": "",
+      "audit_md_line": 231
+    },
+    {
+      "id": "/stage2-decoder-lora-active-during-fhf",
+      "category": "difference",
+      "topic": "Stage-2 alternating optimization",
+      "title": "FHF step keeps decoder LoRA active (alpha=0.5) instead of frozen base decoder",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "question",
+      "file": "basicsr/models/VAEadapter_model.py",
+      "line_start": 152,
+      "line_end": 161,
+      "quote": "if self._is_fhf_step(current_iter):\n    # FHF-LoRA: update encoder LoRA only.\n    self._set_training_stage(train_enc=True, train_dec=False, train_disc=False)\n    self.optimizer_enc.zero_grad()\n\n    recon, posterior, z = self._forward_g()\n    hf_pred = self._hf(recon)\n    l_hf_fid = self.cri_pix(hf_pred, hf_gt) * self.lambda_hf_fid\n    l_hf_fid.backward()\n    self.optimizer_enc.step()\n",
+      "claim": "During the FHF (encoder-fidelity) step the decoder LoRA is frozen (train_dec=False) but still contributes to the forward pass, because _forward_g calls net_g(lq, alpha=0.5) and set_alpha sets dec_scale=1-alpha=0.5 (LHVAE_hflora_arch.py:83-91), so the decoder is psi*+0.5*delta_psi, not the frozen base psi* of Eq. 8.",
+      "concern": "Paper Eq. 8 evaluates the fidelity loss with the decoder at its frozen base parameters D_{psi*}; the code instead applies a half-strength decoder LoRA, a mismatch between the described and implemented FHF objective (the implemented version is still valid, hence difference).",
+      "resolution": "Authors: confirm whether FHF-LoRA training should set alpha=1 (decoder LoRA off) during encoder steps to match Eq. 8, or clarify the intended decoder state.",
+      "cross_refs": [
+        "no-restoration-network-rtheta"
+      ],
+      "paper_ref": "§4.2 Eq. 8",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": false
+      },
+      "id_local": "stage2-decoder-lora-active-during-fhf",
+      "audit": "",
+      "audit_md_line": 257
+    }
+  ]
+}

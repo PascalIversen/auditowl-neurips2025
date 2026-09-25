@@ -1,0 +1,5 @@
+paper_number: 1717
+title: Transformer brain encoders explain human high-level visual responses
+authors: Hossein Adeli, Sun Minni, Nikolaus Kriegeskorte
+abstract_url: https://papers.nips.cc/paper_files/paper/2025/hash/5236f6de5c7f15e76978a5c492966aa7-Abstract-Conference.html
+category: empirical

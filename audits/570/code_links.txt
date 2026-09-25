@@ -1,0 +1,4 @@
+# AUTHOR / PRIMARY repositories (cloned):
+https://github.com/harpoonix/GC-xLSTM
+
+# Other code links found (NOT cloned -- baseline/dependency):

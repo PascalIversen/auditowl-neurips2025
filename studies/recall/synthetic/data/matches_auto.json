@@ -1,0 +1,1188 @@
+{
+  "assignments": [
+    {
+      "paper": "1023",
+      "run": "run_01",
+      "fid": "run_01/realworld-model-selection-on-test",
+      "assigned_to": "seed:S06",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1023",
+      "run": "run_01",
+      "fid": "run_01/mptcn-diff-uses-gcnconv",
+      "assigned_to": "seed:S03",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1023",
+      "run": "run_01",
+      "fid": "run_01/table2-fosr-rgcn-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1023",
+      "run": "run_01",
+      "fid": "run_01/temporal-tree-neighboursmatch-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1023",
+      "run": "run_01",
+      "fid": "run_01/rocketman-driver-config-missing",
+      "assigned_to": "seed:S01",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1023",
+      "run": "run_02",
+      "fid": "run_02/test-set-model-selection",
+      "assigned_to": "seed:S06",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1023",
+      "run": "run_02",
+      "fid": "run_02/diffconv-is-actually-gcn",
+      "assigned_to": "seed:S03",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1023",
+      "run": "run_02",
+      "fid": "run_02/fosr-rgcn-rewiring-absent",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1023",
+      "run": "run_02",
+      "fid": "run_02/tree-neighboursmatch-absent",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1023",
+      "run": "run_02",
+      "fid": "run_02/rocketman-config-missing",
+      "assigned_to": "seed:S01",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_01",
+      "fid": "run_01/gat-modules-missing",
+      "assigned_to": "seed:S01",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_01",
+      "fid": "run_01/ablation-architectures-missing",
+      "assigned_to": "baseline:913/baselines-not-in-repo",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_01",
+      "fid": "run_01/single-train-graph-hardcoded-cora",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_01",
+      "fid": "run_01/baseline-code-absent",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_01",
+      "fid": "run_01/deps-unlisted",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_01",
+      "fid": "run_01/split-index-uses-ndim",
+      "assigned_to": "baseline:913/split-index-modulo-ndim",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_01",
+      "fid": "run_01/test-label-leakage-align-masks",
+      "assigned_to": "seed:S06",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_01",
+      "fid": "run_01/generated-splits-not-official",
+      "assigned_to": "baseline:913/split-index-modulo-ndim",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_01",
+      "fid": "run_01/ablation-bias-toggle-not-exposed",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_02",
+      "fid": "run_02/missing-triton-gat-import-crash",
+      "assigned_to": "seed:S01",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_02",
+      "fid": "run_02/missing-appendix-backbones",
+      "assigned_to": "baseline:913/baselines-not-in-repo",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_02",
+      "fid": "run_02/env-not-reproducible",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_02",
+      "fid": "run_02/only-two-splits-used",
+      "assigned_to": "baseline:913/split-index-modulo-ndim",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_02",
+      "fid": "run_02/readme-hidden-dim-invalid-flag",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_02",
+      "fid": "run_02/feature-norm-not-l2",
+      "assigned_to": "seed:S03",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_02",
+      "fid": "run_02/pca-co-physics-1024-vs-2048",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_02",
+      "fid": "run_02/adamw-vs-adam",
+      "assigned_to": "baseline:913/adamw-vs-adam",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "913",
+      "run": "run_02",
+      "fid": "run_02/test-label-leakage-align-masks",
+      "assigned_to": "seed:S06",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2657",
+      "run": "run_01",
+      "fid": "run_01/ablation-script-missing",
+      "assigned_to": "seed:S01",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2657",
+      "run": "run_01",
+      "fid": "run_01/epoch-selection-not-implemented",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2657",
+      "run": "run_01",
+      "fid": "run_01/run-knn-wrong-script-name",
+      "assigned_to": "baseline:2657/run-knn-wrong-script-name",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2657",
+      "run": "run_01",
+      "fid": "run_01/no-holdout-split",
+      "assigned_to": "seed:S05",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2657",
+      "run": "run_02",
+      "fid": "run_02/epoch-selection-code-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2657",
+      "run": "run_02",
+      "fid": "run_02/ablation-script-missing",
+      "assigned_to": "seed:S01",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2657",
+      "run": "run_02",
+      "fid": "run_02/explainability-code-missing",
+      "assigned_to": "baseline:2657/explainability-code-missing",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2657",
+      "run": "run_02",
+      "fid": "run_02/forced-inductive-knn-not-run",
+      "assigned_to": "baseline:2657/run-knn-wrong-script-name",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2657",
+      "run": "run_02",
+      "fid": "run_02/no-heldout-split-leakage",
+      "assigned_to": "seed:S05",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2657",
+      "run": "run_02",
+      "fid": "run_02/contam-duplicate-normal-leakage",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_01",
+      "fid": "/stage2-refinement-not-implemented",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_01",
+      "fid": "/vqa-temporal-metric-scripts-unreproducible",
+      "assigned_to": "baseline:2578/eval-ewarp-broken",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_01",
+      "fid": "/paired-crop-temporal-misalignment",
+      "assigned_to": "seed:S07",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_01",
+      "fid": "/sft-x0-vs-inference-vpred-mismatch",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_01",
+      "fid": "/infer-sh-wrong-gt-path",
+      "assigned_to": "baseline:2578/inference-sh-wrong-gt",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_01",
+      "fid": "/dover-per-sample-off-by-one",
+      "assigned_to": "baseline:2578/video-metric-scripts-missing-deps",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_01",
+      "fid": "/stage1-config-trains-on-udm10",
+      "assigned_to": "seed:S05",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_02",
+      "fid": "/sft-predict-sample-wrong-target",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_02",
+      "fid": "/paired-crop-temporal-misalign",
+      "assigned_to": "seed:S07",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_02",
+      "fid": "/dover-eval-off-by-one",
+      "assigned_to": "baseline:2578/video-metric-scripts-missing-deps",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_02",
+      "fid": "/stage2-refinement-trainer-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_02",
+      "fid": "/ewarp-fastervqa-metric-missing",
+      "assigned_to": "baseline:2578/eval-ewarp-broken",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2578",
+      "run": "run_02",
+      "fid": "/stage1-launcher-trains-on-udm10-testset",
+      "assigned_to": "seed:S05",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2167",
+      "run": "run_01",
+      "fid": "/hypervolume-diversity-not-computed",
+      "assigned_to": "baseline:2167/hypervolume-not-computed",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2167",
+      "run": "run_01",
+      "fid": "/baselines-not-in-repo",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2167",
+      "run": "run_01",
+      "fid": "/classification-probability-not-computed",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2167",
+      "run": "run_01",
+      "fid": "/actionability-masks-absent",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2167",
+      "run": "run_01",
+      "fid": "/hardcoded-foreign-syspath",
+      "assigned_to": "baseline:2167/hardcoded-abs-syspath",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2167",
+      "run": "run_01",
+      "fid": "/maf-is-actually-realnvp",
+      "assigned_to": "seed:S03",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2167",
+      "run": "run_01",
+      "fid": "/epsilon-sparsity-absolute-not-relative",
+      "assigned_to": "baseline:2167/sparsity-metric-mismatch",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2167",
+      "run": "run_01",
+      "fid": "/adult-subsampled-to-2000",
+      "assigned_to": "baseline:2167/adult-subsample-2000-unseeded",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2167",
+      "run": "run_02",
+      "fid": "/hypervolume-metric-not-implemented",
+      "assigned_to": "baseline:2167/hypervolume-not-computed",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2167",
+      "run": "run_02",
+      "fid": "/nice-import-breaks-package",
+      "assigned_to": "seed:S01",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2167",
+      "run": "run_02",
+      "fid": "/mlp-predict-proba-relu-not-softmax",
+      "assigned_to": "seed:S07",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2167",
+      "run": "run_02",
+      "fid": "/maf-class-builds-realnvp",
+      "assigned_to": "seed:S03",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2167",
+      "run": "run_02",
+      "fid": "/sparsity-metric-absolute-not-relative",
+      "assigned_to": "baseline:2167/sparsity-metric-mismatch",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2167",
+      "run": "run_02",
+      "fid": "/adult-subsampled-to-2000",
+      "assigned_to": "baseline:2167/adult-subsample-2000-unseeded",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "2167",
+      "run": "run_02",
+      "fid": "/bank-train-test-leakage",
+      "assigned_to": "seed:S05",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1717",
+      "run": "run_01",
+      "fid": "/optimizer-zero-grad-before-step",
+      "assigned_to": "seed:S08",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1717",
+      "run": "run_01",
+      "fid": "/decoder-no-cross-attention",
+      "assigned_to": "seed:S04",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1717",
+      "run": "run_01",
+      "fid": "/missing-models-resnet",
+      "assigned_to": "seed:S01",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1717",
+      "run": "run_01",
+      "fid": "/missing-attention-selectivity-code",
+      "assigned_to": "baseline:1717/missing-saliency-baseline",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1717",
+      "run": "run_01",
+      "fid": "/cv-random-split-not-tenfold",
+      "assigned_to": "baseline:1717/missing-trainsize-sweep",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1717",
+      "run": "run_02",
+      "fid": "run_02/resnet-module-missing",
+      "assigned_to": "seed:S01",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1717",
+      "run": "run_02",
+      "fid": "run_02/bert-backbone-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1717",
+      "run": "run_02",
+      "fid": "run_02/train-size-ablation-missing",
+      "assigned_to": "baseline:1717/missing-trainsize-sweep",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1717",
+      "run": "run_02",
+      "fid": "run_02/optimizer-zerograd-discards-grads",
+      "assigned_to": "seed:S08",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1717",
+      "run": "run_02",
+      "fid": "run_02/tenfold-cv-random-resampling",
+      "assigned_to": "baseline:1717/missing-trainsize-sweep",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1717",
+      "run": "run_02",
+      "fid": "run_02/decoder-token-mixer-not-attention",
+      "assigned_to": "seed:S04",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_01",
+      "fid": "/csi-experiment-not-runnable",
+      "assigned_to": "seed:S01",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_01",
+      "fid": "/localization-experiments-missing",
+      "assigned_to": "baseline:1908/ablation-code-missing",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_01",
+      "fid": "/rfid-sparse-density-protocol-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_01",
+      "fid": "/render-path-not-complex-ray-tracing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_01",
+      "fid": "/transmittance-real-not-complex",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_01",
+      "fid": "/fle-degree-9-vs-paper-3",
+      "assigned_to": "baseline:1908/fle-degree-config-vs-paper",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_01",
+      "fid": "/split-ratio-80-20-vs-paper-70-30",
+      "assigned_to": "baseline:1908/fle-degree-config-vs-paper",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_01",
+      "fid": "/ble-rssi-aggregation-mean-l2-vs-paper-sum-l1",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_01",
+      "fid": "/ble-train-test-leakage",
+      "assigned_to": "seed:S05",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_02",
+      "fid": "/csi-experiment-driver-missing",
+      "assigned_to": "seed:S01",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_02",
+      "fid": "/ble-localization-code-missing",
+      "assigned_to": "baseline:1908/ablation-code-missing",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_02",
+      "fid": "/table1-ablation-variants-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_02",
+      "fid": "/rfid-sparse-density-protocol-missing",
+      "assigned_to": "baseline:1908/ablation-code-missing",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_02",
+      "fid": "/ble-test-subset-of-train",
+      "assigned_to": "seed:S05",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_02",
+      "fid": "/rfid-render-not-cuda-tracer",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_02",
+      "fid": "/split-ratio-default-mismatch",
+      "assigned_to": "baseline:1908/fle-degree-config-vs-paper",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1908",
+      "run": "run_02",
+      "fid": "/fle-degree-default-mismatch",
+      "assigned_to": "baseline:1908/fle-degree-config-vs-paper",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/visual-experiments-absent",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/tabular-data-incomplete",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/ablation-configs-no-driver",
+      "assigned_to": "seed:S02",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/readme-repro-instructions",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/hardcoded-data-path",
+      "assigned_to": "baseline:4090/hardcoded-data-path",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/prob-predictor-loop-no-thread",
+      "assigned_to": "seed:S02",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/affine-coupling-not-contraction",
+      "assigned_to": "seed:S03",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/metric-max-over-transforms",
+      "assigned_to": "seed:S05",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_01",
+      "fid": "/test-eval-during-training-no-val",
+      "assigned_to": "baseline:4090/ablation-harness-missing",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/visual-ad-code-absent",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/tabular-datasets-missing",
+      "assigned_to": "baseline:4090/datasets-missing",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/ablation-sweep-code-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/density-loglik-not-chained",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/hardcoded-abs-data-path",
+      "assigned_to": "baseline:4090/hardcoded-data-path",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/cudnn-determinism-typo",
+      "assigned_to": "baseline:4090/cudnn-determinism-typo",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/affine-coupling-not-contraction",
+      "assigned_to": "seed:S03",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/auc-orientation-selection",
+      "assigned_to": "seed:S05",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "4090",
+      "run": "run_02",
+      "fid": "run_02/test-set-hparam-selection",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_01",
+      "fid": "run_01/network-module-absent",
+      "assigned_to": "seed:S01",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_01",
+      "fid": "run_01/dataset-loaders-absent",
+      "assigned_to": "baseline:1171/missing-dataset-loaders",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_01",
+      "fid": "run_01/unlisted-unused-hard-dependency",
+      "assigned_to": "baseline:1171/no-dependency-spec",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_01",
+      "fid": "run_01/incremental-train-from-test-split",
+      "assigned_to": "seed:S06",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_01",
+      "fid": "run_01/base-model-selected-on-test",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_01",
+      "fid": "run_01/encoder-frozen-in-base-optimizer",
+      "assigned_to": "seed:S01",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_01",
+      "fid": "run_01/cub200-accavg-prose-mismatch",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_02",
+      "fid": "/mynet-model-file-missing",
+      "assigned_to": "seed:S01",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_02",
+      "fid": "/dataset-loaders-missing",
+      "assigned_to": "baseline:1171/missing-dataset-loaders",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_02",
+      "fid": "/broader-experiments-no-code",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_02",
+      "fid": "/no-dependency-spec",
+      "assigned_to": "baseline:1171/no-dependency-spec",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_02",
+      "fid": "/incremental-support-from-test-split",
+      "assigned_to": "seed:S06",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "1171",
+      "run": "run_02",
+      "fid": "/base-encoder-maybe-frozen",
+      "assigned_to": "seed:S07",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "/attention-not-attention",
+      "assigned_to": "seed:S03",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "/metrics-json-missing-crash",
+      "assigned_to": "seed:S06",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "/ensemble-chunk-crash",
+      "assigned_to": "baseline:3463/channel-discard-missing",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "/test-set-checkpoint-selection",
+      "assigned_to": "seed:S06",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "/onlyflux-other-dits-missing",
+      "assigned_to": "baseline:3463/nonflux-and-otherdataset-evals-missing",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "/dinov2-fusion-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "/channel-discard-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "/nonspair-benchmarks-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "/othertasks-analysis-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "/repro-infra-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_01",
+      "fid": "/img-size-768-vs-960",
+      "assigned_to": "baseline:3463/imgsize-768-vs-960",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/nonflux-dit-extractors-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/dinov2-integration-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/ap10k-pfpascal-eval-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/channel-discard-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/ablation-harness-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/aux-tasks-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/deps-readme-missing",
+      "assigned_to": "baseline:3463/no-readme-no-deps",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/analysis-viz-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/pck-single-threshold-missing",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/chunk2-unpack-crash",
+      "assigned_to": "baseline:3463/channel-discard-missing",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/img-size-960-vs-768",
+      "assigned_to": "baseline:3463/imgsize-768-vs-960",
+      "method": "anchor",
+      "mechanism_correct": null
+    },
+    {
+      "paper": "3463",
+      "run": "run_02",
+      "fid": "run_02/hyperparam-search-split",
+      "assigned_to": "unassigned",
+      "method": "anchor",
+      "mechanism_correct": null
+    }
+  ]
+}

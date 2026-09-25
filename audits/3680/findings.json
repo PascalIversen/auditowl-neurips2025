@@ -1,0 +1,118 @@
+{
+  "schema_version": "1",
+  "audit": "3680_Mitigating_Instability_in_High_Residual_Adaptive_Sampling_fo",
+  "audit_md": "audits/3680_Mitigating_Instability_in_High_Residual_Adaptive_Sampling_fo/audit.md",
+  "generated_at": "2026-05-30T05:12:43.877340+00:00",
+  "findings": [
+    {
+      "id": "3680_Mitigating_Instability_in_High_Residual_Adaptive_Sampling_fo/no-result-aggregation-or-figures",
+      "category": "missing",
+      "topic": "result traceability",
+      "title": "No code aggregates per-run arrays into Table 1 / figures or runs Appendix G/H/J experiments",
+      "severity": "high",
+      "confidence": "high",
+      "status": "finding",
+      "file": "LAS-mains/Allen-Cahn-equation1D/code/PINN_training.ipynb",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "import matplotlib.pyplot as plt\n",
+      "claim": "Each notebook's `__main__` only `torch.save`s per-run loss and relative-L2 arrays to ../models/ (e.g. `.rel_l2_<method>_<layers>_<Nf>_<i>`); the repo contains no script that reads these arrays and computes the Table 1 mean±std values, produces any figure (Fig. 3 Hessian-eigenvalue/steepness, Fig. 4 boxplots, Fig. 5 cost), or runs the Appendix G loss-balance search, Appendix H architecture, or Appendix J tuning experiments.",
+      "concern": "None of the paper's quantitative artefacts (Table 1 numbers, every figure, the baseline loss-balance search, the architecture and tuning studies) can be reproduced from the repo without re-implementing the entire aggregation/selection/plotting pipeline, and the rule used to reduce each per-run array to a single reported number (final epoch vs. minimum over training) is not in the code.",
+      "resolution": "Provide the aggregation/plotting scripts that turn the saved per-run arrays into Table 1 and Figures 3-5, and the driver code for the Appendix G/H/J experiments; state explicitly whether the reported relative L2 is the final-epoch value or the minimum over the recorded curve.",
+      "cross_refs": [
+        "no-rng-seed-control"
+      ],
+      "check_script": "_audit_code/check_seeds.py",
+      "paper_ref": "Table 1; Figures 3-5; Appendix G, H, I, J",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-result-aggregation-or-figures",
+      "audit": "3680_Mitigating_Instability_in_High_Residual_Adaptive_Sampling_fo",
+      "audit_md_line": 53
+    },
+    {
+      "id": "3680_Mitigating_Instability_in_High_Residual_Adaptive_Sampling_fo/no-dependency-specification",
+      "category": "missing",
+      "topic": "environment / dependencies",
+      "title": "No requirements.txt / environment.yml / pinned versions",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "README.md",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "# Mitigating Instability in High Residual Adaptive Sampling for PINNs via Langevin Dynamics [Neurips 2025 Spotlight]\n",
+      "claim": "The repo has no dependency specification of any kind (no requirements.txt, environment.yml, setup.py, or pyproject.toml anywhere outside .git); the only stated versions are implicit imports of torch, numpy, scipy, matplotlib.",
+      "concern": "Without pinned dependency versions the environment cannot be reconstructed, and PINN training results are sensitive to PyTorch/CUDA numerical behaviour, which matters given the paper's central claims are about training stability.",
+      "resolution": "Add a requirements.txt or environment.yml pinning at least torch, numpy, scipy versions used for the reported runs.",
+      "cross_refs": [],
+      "paper_ref": "Reproducibility checklist (paper_text.txt:1157-1201)",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-dependency-specification",
+      "audit": "3680_Mitigating_Instability_in_High_Residual_Adaptive_Sampling_fo",
+      "audit_md_line": 79
+    },
+    {
+      "id": "3680_Mitigating_Instability_in_High_Residual_Adaptive_Sampling_fo/no-rng-seed-control",
+      "category": "bug",
+      "topic": "reproducibility / seeding",
+      "title": "No RNG seeded despite paper's repeated 'five random seeds' claim",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "finding",
+      "file": "LAS-mains/Allen-Cahn-equation1D/code/PINN_training.ipynb",
+      "line_start": 455,
+      "line_end": 456,
+      "quote": "repeat = [0, 1, 2, 3, 4]\nfor i in repeat:\n",
+      "claim": "Every one of the ten notebooks runs five repetitions via `repeat = [0,1,2,3,4]` but never calls `torch.manual_seed`, `np.random.seed`, `random.seed`, or `torch.cuda.manual_seed` (verified across all 10 notebooks: 0 seed calls each, see _audit_code/out/seeds.txt); the loop index `i` is used only to name output files, not to seed anything.",
+      "concern": "The paper repeatedly states results are over 'five random seeds' (§5.1, Fig. 4 caption, §5.3), but no seeds exist: the five runs differ only by uncontrolled nondeterminism (weight init, collocation sampling, GPU nondeterminism), so the runs are not reproducible and 'seed' is a misnomer for what the code does.",
+      "resolution": "Either seed each of the five runs deterministically (e.g. `torch.manual_seed(i)`, `np.random.seed(i)`) and document it, or correct the paper to say 'five independent runs' rather than 'five random seeds'.",
+      "cross_refs": [
+        "no-result-aggregation-or-figures"
+      ],
+      "check_script": "_audit_code/check_seeds.py",
+      "paper_ref": "paper_text.txt:570, 658, 677 ('five random seeds')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "no-rng-seed-control",
+      "audit": "3680_Mitigating_Instability_in_High_Residual_Adaptive_Sampling_fo",
+      "audit_md_line": 106
+    },
+    {
+      "id": "3680_Mitigating_Instability_in_High_Residual_Adaptive_Sampling_fo/las-k-exponent-unused",
+      "category": "difference",
+      "topic": "method hyperparameters",
+      "title": "Paper states LAS uses residual exponent k=2; LAS sampler normalizes the raw gradient and ignores k",
+      "severity": "low",
+      "confidence": "medium",
+      "status": "finding",
+      "file": "LAS-mains/Allen-Cahn-equation1D/code/PINN_training.ipynb",
+      "line_start": 99,
+      "line_end": 104,
+      "quote": "for t in range(1, self.L_iter + 1):\n    grad = phy_lf(model, samples, self.device)\n    scaler = torch.sqrt(torch.sum((grad+1e-16)**2, axis = 1)).reshape(-1,1)\n    grad = grad/scaler\n    with torch.no_grad():\n        samples = samples + self.tau * grad + self.beta*torch.sqrt(torch.tensor(2 * self.tau, device=self.device)) * torch.randn(samples.shape, device=self.device)\n",
+      "claim": "`LASSampler.update` drives the Langevin step with the gradient of the (squared) residual produced by `cal_domain_grad`, then L2-normalizes it (`grad/scaler`); it never applies the residual exponent `k`. The paper (§5.2) lists 'the residual exponent k = 2' as part of the LAS configuration.",
+      "concern": "The k value reported as part of LAS's configuration has no effect in the LAS code path (it is consumed only by RADSampler), so the paper's hyperparameter description does not correspond to what LAS actually computes; the implemented LAS update (gradient of squared residual, unit-normalized) is itself a valid sampling rule.",
+      "resolution": "Clarify in the paper whether k=2 refers to the residual definition used to form the LAS energy/gradient, or remove it from the LAS configuration; confirm the unit-normalized squared-residual gradient is the intended LAS update.",
+      "cross_refs": [],
+      "paper_ref": "paper_text.txt:560-562 ('the residual exponent k = 2 ... for the LAS configuration')",
+      "validator_pass": {
+        "quote_match": true,
+        "control_flow": true,
+        "condition_satisfiable": true
+      },
+      "id_local": "las-k-exponent-unused",
+      "audit": "3680_Mitigating_Instability_in_High_Residual_Adaptive_Sampling_fo",
+      "audit_md_line": 135
+    }
+  ]
+}
