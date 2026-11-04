@@ -9,6 +9,11 @@ apply this to a random sample of NeurIPS 2025 main-track papers and validate the
 output four ways: expert human review, seeded-defect recall, cross-model-family
 re-verification, and repeated-run reliability.
 
+The paper's audits and results were produced at commit
+[`6f0bf12`](https://github.com/PascalIversen/auditowl-neurips2025/tree/6f0bf1266b81c5217207f2b536d4d3c2e5e3f266)
+(tag `neurips2025-v1`). Later commits change the pipeline, so check out that
+commit to rerun exactly what the paper used.
+
 ## Run AuditOwl on your own paper
 
 The audit is a prompt that an agent follows, so all you need is an agentic
@@ -233,3 +238,7 @@ by the fraction of *traced result artifacts* whose producing code was found.
 `analysis/aggregate.py` also computes a stricter scorecard funnel that layers
 install, entrypoint and completeness gates on top, so it ends lower. They answer
 different questions; the paper cites the former.
+
+## Known issue
+
+43 of the 322 `check_script` links (13%) point to a script that checks something other than the finding it is attached to. The finding's own `file`/`quote` evidence is not affected. Fixed after `6f0bf12`: the extractor and verifier now drop links that do not check their finding.
