@@ -26,7 +26,11 @@ right there prove the claim?**
 - The bug's code path can't actually run, or its trigger condition can't happen
   → **reject**.
 - A `check_script` is cited → copy it to `_verifier_code/`, run it, save output to
-  `_verifier_code/out/`. Crashes or disagrees with the claim → **reject**.
+  `_verifier_code/out/`. Judge the link separately from the finding: quote in
+  `reason` the output line that shows *this* finding's claim. If there is none
+  (not a script, it crashes, or it checks something else) → set `check_script`
+  to `null` and say so in `changed`. The link never decides the verdict; judge
+  that from the cited file and quote as usual.
 - Can't verify (missing dep, GPU, paywall, dead link) → **reject** with reason
   `cannot-verify`. Never guess. Count these apart from real rejections.
 - Everything checks out, but it's milder than claimed → **keep, lower the severity.**
@@ -61,7 +65,8 @@ ones — don't delete any), and add these fields to each:
 ```
 
 For `lowered`, also overwrite the top-level `severity` / `confidence` / `status`
-with the reduced values so the JSON reflects reality.
+with the reduced values so the JSON reflects reality. Set `check_script` to
+`null` when its link fails the check above; leave every other field as it was.
 
 That's it. End your reply with a one-line tally:
 `N findings: X kept, Y lowered, Z rejected (of which W cannot-verify).`

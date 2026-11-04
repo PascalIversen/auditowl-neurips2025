@@ -78,7 +78,7 @@ and may add narrative; tools consume the YAML. Keep them consistent.
 | `line_start` | int \| null | First line of the cited range. Null for paper / URL evidence. |
 | `line_end` | int \| null | Last line of the cited range. Equal to `line_start` for a single line. |
 | `cross_refs` | list[string] | Ids of related findings the same defect touches (`["random-pair-split", "shortcut-baseline"]`); free-form paper-section pointers (`"§4.2"`) are also allowed. Empty list if none. |
-| `check_script` | string | Path to a `_audit_code/` script that supports the finding. |
+| `check_script` | string | Path to a `_audit_code/` `.py` script whose output shows the finding's claim and whose `Supports finding:` line names its id. Omit if none fits; the extractor drops a link that fails this. |
 | `paper_ref` | string | Free-form pointer into the paper (`"Table 2, row 3"`, `"Methods §3.2"`). |
 | `validator_pass` | object | Rule I self-check. Keys: `quote_match`, `control_flow`, `condition_satisfiable`, all booleans. All `true` for findings; if any are `false`, downgrade to `status: question`. |
 | `csv_row` | int | If `file` is a CSV from `scripts/check_*.py`, the row index of the finding within that CSV. |

@@ -259,10 +259,15 @@ J. THE `_audit_code/` FOLDER.
    and ground truth, shortcut-only baselines, label-shuffle sanity checks.
    Always write them in a separate `_audit_code/` folder at the repo root;
    never modify the repo's own scripts. Each script runs read-only, has a
-   one-line docstring stating what it checks and which finding it supports,
-   saves outputs under `_audit_code/out/`, and is referenced by file:line from
-   the finding. A reviewer should be able to `cd _audit_code && python
-   check_xyz.py` and see the same output you saw.
+   docstring stating what it checks plus a line
+   `Supports finding: <id>[, <id> ...]` with the final ids of the findings it
+   supports (update it when you rename or drop a finding), saves outputs under
+   `_audit_code/out/`, and is referenced by file:line from the finding. A
+   reviewer should be able to `cd _audit_code && python check_xyz.py` and see
+   the same output you saw. Cite a script as `check_script` only if its output
+   shows that finding's claim; never cite a saved output file. If no script
+   fits, leave `check_script` out: the extractor drops a link to anything that
+   is not a `.py` script naming the finding's id.
 
 K. BOUNDED OUTPUT.
    Cap the *Top take-aways* list at **k=6** findings. The prose body may

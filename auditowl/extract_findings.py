@@ -8,6 +8,8 @@ a flat findings.json on stdout (or to --out).
 The extractor:
 - Prepends the audit's folder name to each `id`, so ids are globally unique
   across the audits/ tree (used for cross-audit dedup).
+- Drops a `check_script` that is not an existing `.py` file naming the
+  finding's id, and reports it; the finding itself is kept.
 - Always emits JSON (invalid blocks are dropped from `findings`, valid ones kept);
   prints all validation errors to stderr and exits 1 if `--strict` was passed
   or if zero findings survived, exits 0 otherwise.
@@ -147,6 +149,26 @@ def validate(finding: dict, audit_md_line: int) -> list[str]:
     return errors
 
 
+def check_script_problem(finding: dict, audit_dir: Path) -> str | None:
+    """Why `check_script` cannot be the script behind this finding, or None.
+
+    The link is a pointer, not evidence, so a bad one is dropped (with a
+    warning) instead of failing the finding. It must be an existing `.py` file
+    that names the finding's id, i.e. lists it on its `Supports finding:` line.
+    """
+    cited = finding.get("check_script")
+    if not cited:
+        return None
+    path = audit_dir / str(cited).split(":")[0]
+    if path.suffix != ".py":
+        return "not a .py script (cite the script, not its output)"
+    if not path.is_file():
+        return "file not found"
+    if str(finding["id"]).strip() not in path.read_text(encoding="utf-8", errors="replace"):
+        return f"script does not name finding `{finding['id']}` (add it to its `Supports finding:` line)"
+    return None
+
+
 def normalize(
     raw: dict, audit_name: str, audit_md_line: int
 ) -> dict:
@@ -189,6 +211,12 @@ def extract(audit_path: Path) -> tuple[list[dict], list[str]]:
         errors.extend(block_errors)
         if block_errors:
             continue
+
+        if problem := check_script_problem(raw, audit_path.parent):
+            errors.append(
+                f"audit.md:{line}: dropped check_script `{raw['check_script']}`: {problem}"
+            )
+            raw.pop("check_script")
 
         finding = normalize(raw, audit_name, line)
         prev_line = seen_ids.get(finding["id_local"])
