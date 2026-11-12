@@ -20,6 +20,8 @@ The audit is a prompt that an agent follows, so all you need is an agentic
 coding tool (we used [Claude Code](https://claude.com/claude-code) with Claude
 Opus 4.8, 1M context) and this repository.
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/PascalIversen/auditowl-neurips2025/blob/main/examples/colab_audit.ipynb) runs the steps below in Colab.
+
 1. **Make a folder for your paper** with the PDF, a plain-text copy of it, and
    your code:
 
@@ -72,6 +74,7 @@ audits/       the dataset: one directory per audited paper
 analysis/     the cross-paper data layer most figures read
 studies/      the four validation studies, each self-contained
 figures/      one script per paper figure, named after the figure
+examples/     Colab notebook
 ```
 
 ## Reproducing the figures
