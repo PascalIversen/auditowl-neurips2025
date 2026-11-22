@@ -1,6 +1,13 @@
 # AuditOwl: agentic code auditing of NeurIPS 2025 papers
 
-Code and data for *"AuditOwl: evidence-trace agentic code auditing"*.
+Code and data for the paper
+[*Evaluating the evidence trace of NeurIPS 2025 contributions with agentic code auditing*](https://openreview.net/forum?id=xjCJY8Xxcm)
+by Pascal Iversen\*, Ferdous Nasri\*, Bernhard Y. Renard and Katharina Baum
+(\*joint first authors, equal contribution).
+
+Published in *Transactions on Machine Learning Research* (TMLR) with J2C
+Certification. Presented at NeurIPS 2026 in Sydney, where it received the Best
+Paper Award in the MLRC track. To cite it, see [Citation](#citation).
 
 An LLM agent audits a paper against its released code, tracing each headline
 claim to the code that produces it and recording every discrepancy with a
@@ -8,6 +15,8 @@ re-runnable check. A second agent adversarially re-verifies each finding. We
 apply this to a random sample of NeurIPS 2025 main-track papers and validate the
 output four ways: expert human review, seeded-defect recall, cross-model-family
 re-verification, and repeated-run reliability.
+
+[![AuditOwl workflow: the audit agent checks the paper against its code and records each discrepancy with its evidence; an adversarial verifier re-checks every discrepancy; the pipeline runs once per paper over 100 NeurIPS 2025 papers.](figures/fig01_workflow.png)](figures/fig01_workflow.pdf)
 
 The paper's audits and results were produced at commit
 [`6f0bf12`](https://github.com/PascalIversen/auditowl-neurips2025/tree/6f0bf1266b81c5217207f2b536d4d3c2e5e3f266)
@@ -97,7 +106,8 @@ python figures/figS3_cost_runtime.py          # Fig S3 cost and runtime
 python figures/figS4_reviewer_time.py         # Fig S4 reviewer time
 ```
 
-Figure 1 is a hand-drawn schematic and has no script.
+Figure 1 is a hand-drawn schematic and has no script; it is
+`figures/fig01_workflow.pdf`.
 
 Other entry points:
 
@@ -245,3 +255,20 @@ different questions; the paper cites the former.
 ## Known issue
 
 43 of the 322 `check_script` links (13%) point to a script that checks something other than the finding it is attached to. The finding's own `file`/`quote` evidence is not affected. Fixed after `6f0bf12`: the extractor and verifier now drop links that do not check their finding.
+
+## Citation
+
+If you use this code or data, please cite:
+
+```bibtex
+@article{
+iversennasri2026evaluating,
+title={Evaluating the evidence trace of Neur{IPS} 2025 contributions with agentic code auditing},
+author={Pascal Iversen and Ferdous Nasri and Bernhard Y Renard and Katharina Baum},
+journal={Transactions on Machine Learning Research},
+issn={2835-8856},
+year={2026},
+url={https://openreview.net/forum?id=xjCJY8Xxcm},
+note={J2C Certification}
+}
+```
